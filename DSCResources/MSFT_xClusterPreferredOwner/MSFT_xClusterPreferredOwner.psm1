@@ -7,10 +7,11 @@
 #
 function Get-TargetResource
 {
+    [OutputType([Hashtable])]
     param
     (	
         [parameter(Mandatory)]
-        [string[]]
+        [string]
         $ClusterGroup,
 
         [parameter(Mandatory)]
@@ -56,7 +57,7 @@ function Set-TargetResource
     param
     (	
         [parameter(Mandatory)]
-        [string[]]
+        [string]
         $ClusterGroup,
 
         [parameter(Mandatory)]
@@ -138,10 +139,11 @@ function Set-TargetResource
 
 function Test-TargetResource  
 {
+    [OutputType([Boolean])]
     param
     (	
         [parameter(Mandatory)]
-        [string[]]
+        [string]
         $ClusterGroup,
 
         [parameter(Mandatory)]

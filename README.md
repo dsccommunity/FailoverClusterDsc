@@ -1,4 +1,4 @@
-[![Build status](https://ci.appveyor.com/api/projects/status/6a59vfritv4kbc7d/branch/master?svg=true)](https://ci.appveyor.com/project/PowerShell/xfailovercluster/branch/master)
+﻿[![Build status](https://ci.appveyor.com/api/projects/status/6a59vfritv4kbc7d/branch/master?svg=true)](https://ci.appveyor.com/project/PowerShell/xfailovercluster/branch/master)
 
 # xFailOverCluster
 
@@ -26,7 +26,19 @@ Please check out common DSC Resources [contributing guidelines](https://github.c
 * **RetryCount**: Maximum number of retries to check for cluster existance
 * **Credential**: Credential used to join or leave domain
 
+### xClusterPreferredOwner
+
+* **ClusterGroup**: Name of the Cluster Group
+* **Clustername**: Name of the Cluster
+* **Nodes**: Name of the Clusternode(s)
+* **ClusterResources**: Name of the Cluster Resource(s)
+* **Ensure**: Ensure that the selected nodes become the only owner (present), or are removed from ownership (absent)
+
 ## Versions
+
+### Unreleased
+
+* Added new resource xClusterPreferredOwner
 
 ### 1.1.0.0
 

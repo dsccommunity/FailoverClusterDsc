@@ -1,0 +1,11 @@
+[ClassVersion("1.0.0.0"), FriendlyName("xClusterPreferredOwner")]
+class MSFT_xClusterPreferredOwner : OMI_BaseResource
+{
+    [key] string ClusterGroup;
+    [required] string Clustername;
+    [required] string Nodes[];
+    [write] string ClusterResources[];
+    [write, valuemap{"Present", "Absent"}, values{"Present", "Absent"}] string Ensure;
+};
+
+

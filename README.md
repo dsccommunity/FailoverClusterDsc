@@ -168,3 +168,10 @@ $domainAdminCred = Get-Credential -UserName "ClusterDemo\Administrator" -Message
 
 ClusterDemo -ConfigurationData $ConfigData -domainAdminCred $domainAdminCred
 ```
+
+### Unreleased
+xCluster: Added -NoStorage switch to add-clusterNode
+
+This prevents disks from being automatically added when joining a node to a cluster
+
+Addressed Issue #4

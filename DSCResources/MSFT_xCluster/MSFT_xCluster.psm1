@@ -104,6 +104,8 @@ function Set-TargetResource
 
             New-Cluster -Name $Name -Node $env:COMPUTERNAME -StaticAddress $StaticIPAddress -NoStorage -Force
 
+            Start-Sleep -Seconds 60
+
             Write-Verbose -Message "Created Cluster $Name"
         }
         else

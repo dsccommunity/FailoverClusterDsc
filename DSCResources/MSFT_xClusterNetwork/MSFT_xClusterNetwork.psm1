@@ -1,25 +1,25 @@
 
 function Get-TargetResource
 {
-	[CmdletBinding()]
-	[OutputType([Hashtable])]
-	param
+    [CmdletBinding()]
+    [OutputType([Hashtable])]
+    param
     (
-		[Parameter(Mandatory = $true)]
-		[String] $Address,
+        [Parameter(Mandatory = $true)]
+        [String] $Address,
 
-		[Parameter(Mandatory = $true)]
-		[String] $AddressMask,
+        [Parameter(Mandatory = $true)]
+        [String] $AddressMask,
 
-		[Parameter(Mandatory = $false)]
-		[String] $Name,
+        [Parameter(Mandatory = $false)]
+        [String] $Name,
 
-		[Parameter(Mandatory = $false)]
-		[ValidateSet("0","1","3")]
-		[String] $Role,
+        [Parameter(Mandatory = $false)]
+        [ValidateSet("0","1","3")]
+        [String] $Role,
 
-		[Parameter(Mandatory = $false)]
-		[String] $Metric
+        [Parameter(Mandatory = $false)]
+        [String] $Metric
     )
 
     $NetworkResource = Get-ClusterNetwork | Where-Object { $_.Address -eq $Address -and $_.AddressMask -eq $AddressMask }
@@ -35,24 +35,24 @@ function Get-TargetResource
 
 function Set-TargetResource
 {
-	[CmdletBinding()]
-	param
-	(
-		[Parameter(Mandatory = $true)]
-		[String] $Address,
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [String] $Address,
 
-		[Parameter(Mandatory = $true)]
-		[String] $AddressMask,
+        [Parameter(Mandatory = $true)]
+        [String] $AddressMask,
 
-		[Parameter(Mandatory = $false)]
-		[String] $Name,
+        [Parameter(Mandatory = $false)]
+        [String] $Name,
 
-		[Parameter(Mandatory = $false)]
-		[ValidateSet("0","1","3")]
-		[String] $Role,
+        [Parameter(Mandatory = $false)]
+        [ValidateSet("0","1","3")]
+        [String] $Role,
 
-		[Parameter(Mandatory = $false)]
-		[String] $Metric
+        [Parameter(Mandatory = $false)]
+        [String] $Metric
     )
 
     
@@ -91,25 +91,25 @@ function Set-TargetResource
 
 function Test-TargetResource
 {
-	[CmdletBinding()]
-	[OutputType([Boolean])]
-	param
-	(
-		[Parameter(Mandatory = $true)]
-		[String] $Address,
+    [CmdletBinding()]
+    [OutputType([Boolean])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [String] $Address,
 
-		[Parameter(Mandatory = $true)]
-		[String] $AddressMask,
+        [Parameter(Mandatory = $true)]
+        [String] $AddressMask,
 
-		[Parameter(Mandatory = $false)]
-		[String] $Name,
+        [Parameter(Mandatory = $false)]
+        [String] $Name,
 
-		[Parameter(Mandatory = $false)]
-		[ValidateSet("0","1","3")]
-		[String] $Role,
+        [Parameter(Mandatory = $false)]
+        [ValidateSet("0","1","3")]
+        [String] $Role,
 
-		[Parameter(Mandatory = $false)]
-		[String] $Metric
+        [Parameter(Mandatory = $false)]
+        [String] $Metric
     )
 
     $CurrentNetwork = Get-TargetResource -Address $Address -AddressMask $AddressMask

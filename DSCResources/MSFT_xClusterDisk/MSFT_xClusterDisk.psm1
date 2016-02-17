@@ -1,10 +1,10 @@
 
 function Get-TargetResource
 {
-	[CmdletBinding()]
-	[OutputType([Hashtable])]
-	param
-	(
+    [CmdletBinding()]
+    [OutputType([Hashtable])]
+    param
+    (
         [Parameter(Mandatory = $true)]
         [String] $Number,
         
@@ -14,7 +14,7 @@ function Get-TargetResource
 
         [Parameter(Mandatory = $false)]
         [String] $Label
-	)
+    )
         
     if ($null -ne ($DiskInstance = Get-CimInstance -ClassName MSCluster_Disk -Namespace 'Root\MSCluster' -Filter "Number = $Number"))
     {
@@ -40,9 +40,9 @@ function Get-TargetResource
 
 function Set-TargetResource
 {
-	[CmdletBinding()]
-	param
-	(
+    [CmdletBinding()]
+    param
+    (
         [Parameter(Mandatory = $true)]
         [String] $Number,
         
@@ -52,7 +52,7 @@ function Set-TargetResource
 
         [Parameter(Mandatory = $false)]
         [String] $Label
-	)
+    )
 
     if (-not (Test-TargetResource -Number $Number -Ensure $Ensure -Label $Label))
     {
@@ -101,10 +101,10 @@ function Set-TargetResource
 
 function Test-TargetResource
 {
-	[CmdletBinding()]
-	[OutputType([Boolean])]
-	param
-	(
+    [CmdletBinding()]
+    [OutputType([Boolean])]
+    param
+    (
         [Parameter(Mandatory = $true)]
         [String] $Number,
         
@@ -114,7 +114,7 @@ function Test-TargetResource
 
         [Parameter(Mandatory = $false)]
         [String] $Label
-	)
+    )
     
     $CurrentDisk = Get-TargetResource -Number $Number
     

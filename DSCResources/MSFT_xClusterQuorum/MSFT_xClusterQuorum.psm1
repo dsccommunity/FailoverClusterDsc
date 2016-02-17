@@ -17,13 +17,21 @@ function Get-TargetResource
         [String] $Resource
     )
 
-    
     $ClusterQuorum = Get-ClusterQuorum
-        
+
+    if ('NodeAndFileShareMajority' -eq [String] $ClusterQuorum.QuorumType)
+    {
+        $ClusterQuorumResource = $ClusterQuorum.QuorumResource | Get-ClusterParameter -Name SharePath | Select-Object -ExpandProperty Value
+    }
+    else
+    {
+        $ClusterQuorumResource = [String] $ClusterQuorum.QuorumResource
+    }
+
     @{
         IsSingleInstance = $IsSingleInstance
-        Type             = [String] $ClusterQuorum.QuorumType
-        Resource         = [String] $ClusterQuorum.QuorumResource
+        Type             = $ClusterQuorum.QuorumType.ToString()
+        Resource         = $ClusterQuorumResource
     }
 }
 

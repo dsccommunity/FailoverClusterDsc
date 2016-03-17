@@ -19,6 +19,12 @@ Please check out common DSC Resources [contributing guidelines](https://github.c
 * **StaticIPAddress**: Static IP Address of the cluster
 * **DomainAdministratorCredential**: Credential used to create the cluster
 
+### xClusterQuorum (Unreleased)
+
+* **IsSingleInstance** Always set to `Yes` to prevent multiple quorum settings per cluster.
+* **Type** Quorum type to use: *NodeMajority*, *NodeAndDiskMajority*, *NodeAndFileShareMajority*, *DiskOnly*
+* **Resource** The name of the disk or file share resource to use as witness. Is optional with *NodeMajority* type.  
+
 ### xWaitForCluster
 
 * **Name**: Name of the cluster to wait for
@@ -29,6 +35,8 @@ Please check out common DSC Resources [contributing guidelines](https://github.c
 ## Versions
 
 ### Unreleased
+
+* Added xClusterQuorum resource with options *NodeMajority*, *NodeAndDiskMajority*, *NodeAndFileShareMajority*, *DiskOnly*
 
 ### 1.1.0.0
 

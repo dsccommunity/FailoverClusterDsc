@@ -30,6 +30,8 @@ Please check out common DSC Resources [contributing guidelines](https://github.c
 
 ### Unreleased
 
+* xCluster: Added -NoStorage switch to add-clusterNode. This prevents disks from being automatically added when joining a node to a cluster
+
 ### 1.1.0.0
 
 * Removed requirement for CredSSP
@@ -168,10 +170,3 @@ $domainAdminCred = Get-Credential -UserName "ClusterDemo\Administrator" -Message
 
 ClusterDemo -ConfigurationData $ConfigData -domainAdminCred $domainAdminCred
 ```
-
-### Unreleased
-xCluster: Added -NoStorage switch to add-clusterNode
-
-This prevents disks from being automatically added when joining a node to a cluster
-
-Addressed Issue #4

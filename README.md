@@ -19,6 +19,12 @@ Please check out common DSC Resources [contributing guidelines](https://github.c
 * **StaticIPAddress**: Static IP Address of the cluster
 * **DomainAdministratorCredential**: Credential used to create the cluster
 
+### xClusterDisk (Unreleased)
+
+* **Number**: Number of the cluster disk
+* **Ensure**: Define if the cluster disk should be added (Present) or removed (Absent)
+* **Label**: The disk label inside the Failover Cluster
+
 ### xWaitForCluster
 
 * **Name**: Name of the cluster to wait for
@@ -27,6 +33,10 @@ Please check out common DSC Resources [contributing guidelines](https://github.c
 * **Credential**: Credential used to join or leave domain
 
 ## Versions
+
+### Unreleased
+
+* Added xClusterDisk resource
 
 ### 1.1.0.0
 

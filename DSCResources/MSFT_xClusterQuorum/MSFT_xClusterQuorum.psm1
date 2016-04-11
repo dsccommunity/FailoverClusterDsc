@@ -19,18 +19,62 @@ function Get-TargetResource
 
     $ClusterQuorum = Get-ClusterQuorum
 
-    if ('NodeAndFileShareMajority' -eq [String] $ClusterQuorum.QuorumType)
+    switch ($ClusterQuorum.QuorumType)
+    {
+        # WS2016 only
+        'Majority' {
+            if ($ClusterQuorum.QuorumResource -eq $null)
+            {
+                $ClusterQuorumType = 'NodeMajority'
+            }
+            elseif ($ClusterQuorum.QuorumResource.ResourceType.DisplayName -eq 'Physical Disk')
+            {
+                $ClusterQuorumType = 'NodeAndDiskMajority'
+            }
+            elseif ($ClusterQuorum.QuorumResource.ResourceType.DisplayName -eq 'File Share Witness')
+            {
+                $ClusterQuorumType = 'NodeAndFileShareMajority'
+            }
+            else
+            {
+                throw "Unknown quorum resource: $($ClusterQuorum.QuorumResource)"
+            }
+        }
+
+        # WS2012R2 only
+        'NodeMajority' {
+            $ClusterQuorumType = 'NodeMajority'
+        }
+        'NodeAndDiskMajority' {
+            $ClusterQuorumType = 'NodeAndDiskMajority'
+        }
+        'NodeAndFileShareMajority' {
+            $ClusterQuorumType = 'NodeAndFileShareMajority'
+        }
+
+        # All
+        'DiskOnly' {
+            $ClusterQuorumType = 'DiskOnly'
+        }
+
+        # Default
+        default {
+            throw "Unknown quorum type: $($ClusterQuorum.QuorumType)"
+        }
+    }
+
+    if ($ClusterQuorumType -eq 'NodeAndFileShareMajority')
     {
         $ClusterQuorumResource = $ClusterQuorum.QuorumResource | Get-ClusterParameter -Name SharePath | Select-Object -ExpandProperty Value
     }
     else
     {
-        $ClusterQuorumResource = [String] $ClusterQuorum.QuorumResource
+        $ClusterQuorumResource = [String] $ClusterQuorum.QuorumResource.Name
     }
 
     @{
         IsSingleInstance = $IsSingleInstance
-        Type             = $ClusterQuorum.QuorumType.ToString()
+        Type             = $ClusterQuorumType
         Resource         = $ClusterQuorumResource
     }
 }

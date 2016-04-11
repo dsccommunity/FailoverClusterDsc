@@ -19,6 +19,14 @@ Please check out common DSC Resources [contributing guidelines](https://github.c
 * **StaticIPAddress**: Static IP Address of the cluster
 * **DomainAdministratorCredential**: Credential used to create the cluster
 
+### xClusterNetwork (Unreleased)
+
+* **Address**: The network address (e.g. 192.168.0.0)
+* **AddressMask**: The network mask (e.g. 255.255.255.0)
+* **Name**: The network label or name
+* **Role**: Network role: *0 = None, 1 = Cluster Only, 3 = Clsuter and Client* 
+* **Metric**: The internal metric for the networks
+
 ### xWaitForCluster
 
 * **Name**: Name of the cluster to wait for
@@ -27,6 +35,10 @@ Please check out common DSC Resources [contributing guidelines](https://github.c
 * **Credential**: Credential used to join or leave domain
 
 ## Versions
+
+### Unreleased
+
+* Added xClusterNetwork resource 
 
 ### 1.1.0.0
 

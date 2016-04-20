@@ -38,6 +38,10 @@ Please check out common DSC Resources [contributing guidelines](https://github.c
 
 * Added xClusterDisk resource
 
+### 1.2.0.0
+
+* xCluster: Added -NoStorage switch to add-clusterNode. This prevents disks from being automatically added when joining a node to a cluster
+
 ### 1.1.0.0
 
 * Removed requirement for CredSSP

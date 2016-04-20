@@ -14,6 +14,7 @@ $ModuleName = 'MSFT_xClusterNetwork'
 
 try
 {
+    if (-not (Get-WindowsFeature -Name RSAT-Clustering-PowerShell -ErrorAction Stop).Installed)
     {
         Add-WindowsFeature -Name RSAT-Clustering-PowerShell -ErrorAction Stop
     }

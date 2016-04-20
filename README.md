@@ -27,6 +27,12 @@ Please check out common DSC Resources [contributing guidelines](https://github.c
 * **Role**: Network role: *0 = None, 1 = Cluster Only, 3 = Clsuter and Client* 
 * **Metric**: The internal metric for the networks
 
+### xClusterDisk (Unreleased)
+
+* **Number**: Number of the cluster disk
+* **Ensure**: Define if the cluster disk should be added (Present) or removed (Absent)
+* **Label**: The disk label inside the Failover Cluster
+
 ### xWaitForCluster
 
 * **Name**: Name of the cluster to wait for
@@ -39,6 +45,7 @@ Please check out common DSC Resources [contributing guidelines](https://github.c
 ### Unreleased
 
 * Added xClusterNetwork resource 
+* Added xClusterDisk resource
 
 ### 1.2.0.0
 

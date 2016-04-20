@@ -12,7 +12,16 @@ if (!$PSScriptRoot)
 $RootPath   = (Resolve-Path -Path "$PSScriptRoot\..").Path
 $ModuleName = 'MSFT_xClusterNetwork'
 
-Add-WindowsFeature -Name RSAT-Clustering-PowerShell -ErrorAction SilentlyContinue
+try
+{
+    {
+        Add-WindowsFeature -Name RSAT-Clustering-PowerShell -ErrorAction Stop
+    }
+}
+catch
+{
+    Write-Warning $_
+}
 
 Import-Module (Join-Path -Path $RootPath -ChildPath "DSCResources\$ModuleName\$ModuleName.psm1") -Force
 

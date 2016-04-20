@@ -25,6 +25,12 @@ Please check out common DSC Resources [contributing guidelines](https://github.c
 * **Type** Quorum type to use: *NodeMajority*, *NodeAndDiskMajority*, *NodeAndFileShareMajority*, *DiskOnly*
 * **Resource** The name of the disk or file share resource to use as witness. Is optional with *NodeMajority* type.  
 
+### xClusterDisk (Unreleased)
+
+* **Number**: Number of the cluster disk
+* **Ensure**: Define if the cluster disk should be added (Present) or removed (Absent)
+* **Label**: The disk label inside the Failover Cluster
+
 ### xWaitForCluster
 
 * **Name**: Name of the cluster to wait for
@@ -37,6 +43,7 @@ Please check out common DSC Resources [contributing guidelines](https://github.c
 ### Unreleased
 
 * Added xClusterQuorum resource with options *NodeMajority*, *NodeAndDiskMajority*, *NodeAndFileShareMajority*, *DiskOnly*
+* Added xClusterDisk resource
 
 ### 1.2.0.0
 

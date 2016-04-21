@@ -19,6 +19,14 @@ Please check out common DSC Resources [contributing guidelines](https://github.c
 * **StaticIPAddress**: Static IP Address of the cluster
 * **DomainAdministratorCredential**: Credential used to create the cluster
 
+### xClusterNetwork (Unreleased)
+
+* **Address**: The network address (e.g. 192.168.0.0)
+* **AddressMask**: The network mask (e.g. 255.255.255.0)
+* **Name**: The network label or name
+* **Role**: Network role: *0 = None, 1 = Cluster Only, 3 = Clsuter and Client* 
+* **Metric**: The internal metric for the networks
+
 ### xClusterDisk (Unreleased)
 
 * **Number**: Number of the cluster disk
@@ -36,11 +44,12 @@ Please check out common DSC Resources [contributing guidelines](https://github.c
 
 ### Unreleased
 
+* Added xClusterNetwork resource 
 * Added xClusterDisk resource
 
 ### 1.2.0.0
 
-* xCluster: Added -NoStorage switch to add-clusterNode. This prevents disks from being automatically added when joining a node to a cluster
+* xCluster: Added -NoStorage switch to add-clusternode. This prevents disks from being automatically added when joining a node to a cluster
 
 ### 1.1.0.0
 

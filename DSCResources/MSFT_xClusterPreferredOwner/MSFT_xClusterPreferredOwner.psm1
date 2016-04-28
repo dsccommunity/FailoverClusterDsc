@@ -1,4 +1,4 @@
-﻿#
+#
 # MSFT_xClusterPreferredOwner: DSC resource to configure the Windows Failover Cluster Preferred Owner.
 #
 
@@ -9,7 +9,7 @@ function Get-TargetResource
 {
     [OutputType([Hashtable])]
     param
-    (	
+    (    
         [parameter(Mandatory)]
         [string]
         $ClusterGroup,
@@ -26,8 +26,8 @@ function Get-TargetResource
         $ClusterResources,
 
         [ValidateSet('Present', 'Absent')]
-		[String]
-		$Ensure = 'Present'
+        [String]
+        $Ensure = 'Present'
     )
     
     Write-Verbose -Message "Retrieving Owner information for cluster $Clustername..."
@@ -65,7 +65,7 @@ function Get-TargetResource
 function Set-TargetResource
 {
     param
-    (	
+    (    
         [parameter(Mandatory)]
         [string]
         $ClusterGroup,
@@ -82,8 +82,8 @@ function Set-TargetResource
         $ClusterResources,
 
         [ValidateSet('Present', 'Absent')]
-		[String]
-		$Ensure = 'Present'
+        [String]
+        $Ensure = 'Present'
     )
 
     Write-Verbose -Message "Retrieving all owners from cluster $Clustername"
@@ -154,7 +154,7 @@ function Test-TargetResource
 {
     [OutputType([Boolean])]
     param
-    (	
+    (    
         [parameter(Mandatory)]
         [string]
         $ClusterGroup,
@@ -171,8 +171,8 @@ function Test-TargetResource
         $ClusterResources,
 
         [ValidateSet('Present', 'Absent')]
-		[String]
-		$Ensure = 'Present'
+        [String]
+        $Ensure = 'Present'
     )
 
     Write-Verbose -Message "Testing Owner information for cluster $Clustername..."

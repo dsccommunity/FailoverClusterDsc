@@ -9,7 +9,7 @@ if (!$PSScriptRoot)
     $PSScriptRoot = [System.IO.Path]::GetDirectoryName($MyInvocation.MyCommand.Path)
 }
 
-$RootPath   = "C:\Program Files\WindowsPowerShell\Modules\xFailOverCluster"
+$RootPath   = (Resolve-Path -Path "$PSScriptRoot\..").Path
 $ModuleName = 'MSFT_xClusterPreferredOwner'
 
 try

@@ -35,14 +35,14 @@ function Get-TargetResource
     $ownernodes = @(
         
         Write-Verbose -Message "Retrieving Owner information for Cluster Group $ClusterGroup"
-        (((Get-ClusterGroup -cluster $Clustername).where{$_.name -like "$ClusterGroup"} | Get-ClusterOwnerNode).ownernodes).name
+        (((Get-ClusterGroup -cluster $Clustername)| Where-Object {$_.name -like "$ClusterGroup"} | Get-ClusterOwnerNode).ownernodes).name
 
         if ($ClusterResources)
         {
             foreach ($resource in $ClusterResources)
             {
                 Write-Verbose -Message "Retrieving Owner information for Cluster Resource $resource"
-                (((Get-ClusterResource -cluster $Clustername).where{$_.name -like "$resource"} | Get-ClusterOwnerNode).ownernodes).name
+                (((Get-ClusterResource -cluster $Clustername)| Where-Object {$_.name -like "$resource"} | Get-ClusterOwnerNode).ownernodes).name
             }
         }
     )
@@ -92,23 +92,23 @@ function Set-TargetResource
     if ($Ensure -eq 'Present')
     {
         Write-Verbose -Message "Setting Cluster owners for Group $ClusterGroup to $nodes"
-        $null = (Get-ClusterGroup -cluster $ClusterName).where{$_.name -like $ClusterGroup} | Set-ClusterOwnerNode $Nodes
-        $null = (Get-ClusterResource).where{$_.OwnerGroup -like $ClusterGroup} | Set-ClusterOwnerNode $allnodes
+        $null = (Get-ClusterGroup -cluster $ClusterName)| Where-Object {$_.name -like $ClusterGroup} | Set-ClusterOwnerNode $Nodes
+        $null = (Get-ClusterResource)| Where-Object {$_.OwnerGroup -like $ClusterGroup} | Set-ClusterOwnerNode $allnodes
         
         Write-Verbose -Message "Moving Cluster Group $ClusterGroup to node $($nodes[0])"
-        $null = (Get-ClusterGroup -cluster $ClusterName).where{$_.name -like $ClusterGroup} | Move-ClusterGroup -Node $Nodes[0]
+        $null = (Get-ClusterGroup -cluster $ClusterName)| Where-Object {$_.name -like $ClusterGroup} | Move-ClusterGroup -Node $Nodes[0]
         
         foreach ($resource in $ClusterResources)
         {
             Write-Verbose -Message "Setting Cluster owners for Resource $resource to $nodes"
-            $null = (Get-ClusterResource -cluster $Clustername).where{$_.name -like "$resource"} | Set-ClusterOwnerNode -owners $Nodes
+            $null = (Get-ClusterResource -cluster $Clustername)| Where-Object {$_.name -like "$resource"} | Set-ClusterOwnerNode -owners $Nodes
         }
     }
     if ($Ensure -eq 'Absent')
     {          
 
             Write-Verbose -Message "Retrieving current clusterowners for group $ClusterGroup"
-            $currentowners = (((Get-ClusterGroup -cluster $Clustername).where{$_.name -like "$ClusterGroup"} | Get-ClusterOwnerNode).ownernodes).name | Sort-Object -Unique
+            $currentowners = (((Get-ClusterGroup -cluster $Clustername)| Where-Object {$_.name -like "$ClusterGroup"} | Get-ClusterOwnerNode).ownernodes).name | Sort-Object -Unique
             $newowners = @(
                 foreach ($currentowner in $currentowners)
                 {
@@ -119,13 +119,13 @@ function Set-TargetResource
                 }
             )
             Write-Verbose -Message "Removing owners from group $($ClusterGroup): $Nodes"
-            $null = (Get-ClusterGroup -cluster $ClusterName).where{$_.name -like $ClusterGroup} | Set-ClusterOwnerNode $newowners
+            $null = (Get-ClusterGroup -cluster $ClusterName)| Where-Object {$_.name -like $ClusterGroup} | Set-ClusterOwnerNode $newowners
 
             Write-Verbose -Message "Setting Cluster owners for Group $ClusterGroup to $newowners"
-            $null = (Get-ClusterResource).where{$_.OwnerGroup -like $ClusterGroup} | Set-ClusterOwnerNode $allnodes
+            $null = (Get-ClusterResource)| Where-Object {$_.OwnerGroup -like $ClusterGroup} | Set-ClusterOwnerNode $allnodes
 
             Write-Verbose -Message "Moving Cluster Group $ClusterGroup to node $($newowners[0])"
-            $null = (Get-ClusterGroup -cluster $ClusterName).where{$_.name -like $ClusterGroup} | Move-ClusterGroup -Node $newowners[0]
+            $null = (Get-ClusterGroup -cluster $ClusterName)| Where-Object {$_.name -like $ClusterGroup} | Move-ClusterGroup -Node $newowners[0]
 
         foreach ($resource in $ClusterResources)
         {

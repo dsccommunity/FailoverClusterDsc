@@ -1,4 +1,4 @@
-[![Build status](https://ci.appveyor.com/api/projects/status/6a59vfritv4kbc7d/branch/master?svg=true)](https://ci.appveyor.com/project/PowerShell/xfailovercluster/branch/master)
+﻿[![Build status](https://ci.appveyor.com/api/projects/status/6a59vfritv4kbc7d/branch/master?svg=true)](https://ci.appveyor.com/project/PowerShell/xfailovercluster/branch/master)
 
 # xFailOverCluster
 
@@ -33,6 +33,14 @@ Please check out common DSC Resources [contributing guidelines](https://github.c
 * **Ensure**: Define if the cluster disk should be added (Present) or removed (Absent)
 * **Label**: The disk label inside the Failover Cluster
 
+### xClusterPreferredOwner (Unreleased)
+For more information about cluster preferred owners please see: http://support.microsoft.com/kb/299631
+* **ClusterGroup**: Cluster group name
+* **ClusterName**: Cluster name
+* **Nodes**: Selected cluster nodes.
+* **ClusterResources**: Selected cluster resources
+* **Ensure**: Whether an owner should be present or removed
+
 ### xWaitForCluster
 
 * **Name**: Name of the cluster to wait for
@@ -46,6 +54,7 @@ Please check out common DSC Resources [contributing guidelines](https://github.c
 
 * Added xClusterNetwork resource 
 * Added xClusterDisk resource
+* Added xClusterPreferredOwner resource
 
 ### 1.2.0.0
 

@@ -34,7 +34,7 @@ Please check out common DSC Resources [contributing guidelines](https://github.c
 * **Label**: The disk label inside the Failover Cluster
 
 ### xClusterPreferredOwner (Unreleased)
-
+For more information about cluster preferred owners please see: http://support.microsoft.com/kb/299631
 * **ClusterGroup**: Cluster group name
 * **ClusterName**: Cluster name
 * **Nodes**: Selected cluster nodes.
@@ -54,6 +54,7 @@ Please check out common DSC Resources [contributing guidelines](https://github.c
 
 * Added xClusterNetwork resource 
 * Added xClusterDisk resource
+* Added xClusterPreferredOwner resource
 
 ### 1.2.0.0
 

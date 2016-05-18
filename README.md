@@ -1,4 +1,4 @@
-Ôªø[![Build status](https://ci.appveyor.com/api/projects/status/6a59vfritv4kbc7d/branch/master?svg=true)](https://ci.appveyor.com/project/PowerShell/xfailovercluster/branch/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/6a59vfritv4kbc7d/branch/master?svg=true)](https://ci.appveyor.com/project/PowerShell/xfailovercluster/branch/master)
 
 # xFailOverCluster
 
@@ -51,6 +51,8 @@ For more information about cluster preferred owners please see: http://support.m
 ## Versions
 
 ### Unreleased
+
+### 1.3.0.0
 
 * Added xClusterNetwork resource 
 * Added xClusterDisk resource
@@ -116,7 +118,7 @@ Configuration ClusterDemo
             StaticIPAddress = $Node.ClusterIPAddress
             DomainAdministratorCredential = $domainAdminCred
 
-           DependsOn = ‚Äú[WindowsFeature]RSATClusteringCmdInterface‚Äù
+           DependsOn = ì[WindowsFeature]RSATClusteringCmdInterfaceî
        } 
 
     }
@@ -151,7 +153,7 @@ Configuration ClusterDemo
             RetryIntervalSec = 10
             RetryCount = 60
 
-            DependsOn = ‚Äú[WindowsFeature]RSATClusteringCmdInterface‚Äù 
+            DependsOn = ì[WindowsFeature]RSATClusteringCmdInterfaceî 
         }
 
         xCluster joinCluster

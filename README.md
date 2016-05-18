@@ -19,6 +19,28 @@ Please check out common DSC Resources [contributing guidelines](https://github.c
 * **StaticIPAddress**: Static IP Address of the cluster
 * **DomainAdministratorCredential**: Credential used to create the cluster
 
+### xClusterNetwork (Unreleased)
+
+* **Address**: The network address (e.g. 192.168.0.0)
+* **AddressMask**: The network mask (e.g. 255.255.255.0)
+* **Name**: The network label or name
+* **Role**: Network role: *0 = None, 1 = Cluster Only, 3 = Clsuter and Client* 
+* **Metric**: The internal metric for the networks
+
+### xClusterDisk (Unreleased)
+
+* **Number**: Number of the cluster disk
+* **Ensure**: Define if the cluster disk should be added (Present) or removed (Absent)
+* **Label**: The disk label inside the Failover Cluster
+
+### xClusterPreferredOwner (Unreleased)
+For more information about cluster preferred owners please see: http://support.microsoft.com/kb/299631
+* **ClusterGroup**: Cluster group name
+* **ClusterName**: Cluster name
+* **Nodes**: Selected cluster nodes.
+* **ClusterResources**: Selected cluster resources
+* **Ensure**: Whether an owner should be present or removed
+
 ### xWaitForCluster
 
 * **Name**: Name of the cluster to wait for
@@ -30,9 +52,15 @@ Please check out common DSC Resources [contributing guidelines](https://github.c
 
 ### Unreleased
 
+### 1.3.0.0
+
+* Added xClusterNetwork resource 
+* Added xClusterDisk resource
+* Added xClusterPreferredOwner resource
+
 ### 1.2.0.0
 
-* xCluster: Added -NoStorage switch to add-clusterNode. This prevents disks from being automatically added when joining a node to a cluster
+* xCluster: Added -NoStorage switch to add-clusternode. This prevents disks from being automatically added when joining a node to a cluster
 
 ### 1.1.0.0
 
@@ -90,7 +118,7 @@ Configuration ClusterDemo
             StaticIPAddress = $Node.ClusterIPAddress
             DomainAdministratorCredential = $domainAdminCred
 
-           DependsOn = ‚Äú[WindowsFeature]RSATClusteringCmdInterface‚Äù
+           DependsOn = ì[WindowsFeature]RSATClusteringCmdInterfaceî
        } 
 
     }
@@ -125,7 +153,7 @@ Configuration ClusterDemo
             RetryIntervalSec = 10
             RetryCount = 60
 
-            DependsOn = ‚Äú[WindowsFeature]RSATClusteringCmdInterface‚Äù 
+            DependsOn = ì[WindowsFeature]RSATClusteringCmdInterfaceî 
         }
 
         xCluster joinCluster

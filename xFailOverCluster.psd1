@@ -3,7 +3,7 @@
 @{
 
 
-ModuleVersion = '1.2.0.0'
+ModuleVersion = '1.3.0.0'
 GUID = '026e7fd8-06dd-41bc-b373-59366ab18679'
 
 Author = 'Microsoft Corporation'
@@ -30,7 +30,11 @@ PrivateData = @{
         # IconUri = ''
 
         # ReleaseNotes of this module
-        # ReleaseNotes = ''
+        ReleaseNotes = '* Added xClusterNetwork resource 
+* Added xClusterDisk resource
+* Added xClusterPreferredOwner resource
+
+'
 
     } # End of PSData hashtable
 

@@ -54,7 +54,7 @@ Describe 'xClusterPreferredOwner' {
                 Name              = 'Resource1'
                 State             = 'Online'
                 OwnerGroup        = 'ClusterGroup1'
-                ResourceType      = 'type1'
+                ResourceType      = @{ Name = 'type1', DisplayName = 'type1' }
             }
         }
 

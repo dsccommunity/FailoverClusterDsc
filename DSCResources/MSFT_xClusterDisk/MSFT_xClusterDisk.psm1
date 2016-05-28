@@ -119,8 +119,8 @@ function Test-TargetResource
     $CurrentDisk = Get-TargetResource -Number $Number
     
     return (
-        (($Ensure -eq $CurrentNetwork.Ensure) -or (-not $PSBoundParameters.ContainsKey('Ensure'))) -and
-        (($Ensure -eq $CurrentNetwork.Label) -or (-not $PSBoundParameters.ContainsKey('Label')))
+        (($Ensure -eq $CurrentDisk.Ensure) -or (-not $PSBoundParameters.ContainsKey('Ensure'))) -and
+        (($Ensure -eq $CurrentDisk.Label) -or (-not $PSBoundParameters.ContainsKey('Label')))
     )
 }
 

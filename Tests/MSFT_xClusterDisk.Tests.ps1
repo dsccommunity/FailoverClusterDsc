@@ -169,30 +169,34 @@ Describe 'xClusterDisk' {
 
             It 'Check present disk that is present returns $true' {
 
-                Test-TargetResource -Ensure $TestParameter.Ensure -Label $TestParameter.Label -Number $TestParameter.Number
+                $Result = Test-TargetResource -Ensure $TestParameter.Ensure -Label $TestParameter.Label -Number $TestParameter.Number
 
                 $Result -is [System.Boolean] | Should Be $true
+                $Result | Should Be $true
             }
             
             It 'Check absent disk that should be present returns $false' {
 
-                Test-TargetResource -Ensure $TestParameter2.Ensure -Label $TestParameter2.Label -Number $TestParameter2.Number
+                $Result = Test-TargetResource -Ensure $TestParameter2.Ensure -Label $TestParameter2.Label -Number $TestParameter2.Number
 
-                $Result -is [System.Boolean] | Should Be $false
+                $Result -is [System.Boolean] | Should Be $true
+                $Result | Should Be $false
             }
             
             It 'Check absent disk that is absent returns $true' {
 
-                Test-TargetResource -Ensure $TestParameter3.Ensure -Label $TestParameter3.Label -Number $TestParameter3.Number
+                $Result = Test-TargetResource -Ensure $TestParameter3.Ensure -Label $TestParameter3.Label -Number $TestParameter3.Number
 
                 $Result -is [System.Boolean] | Should Be $true
+                $Result | Should Be $true
             }
             
             It 'Check that present disk but with a wrong label returns $false' {
 
-                Test-TargetResource -Ensure $TestParameter4.Ensure -Label $TestParameter4.Label -Number $TestParameter4.Number
+                $Result = Test-TargetResource -Ensure $TestParameter4.Ensure -Label $TestParameter4.Label -Number $TestParameter4.Number
 
-                $Result -is [System.Boolean] | Should Be $false
+                $Result -is [System.Boolean] | Should Be $true
+                $Result | Should Be $false
             }
         }
     }

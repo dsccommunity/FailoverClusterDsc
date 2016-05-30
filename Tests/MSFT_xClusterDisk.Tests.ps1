@@ -54,6 +54,10 @@ Describe 'xClusterDisk' {
             }
         }
 
+        Mock -CommandName 'Get-CimInstance' -ParameterFilter { $ClassName -eq 'MSCluster_Disk' -and $Namespace -eq 'Root\MSCluster' } -MockWith {
+            $null
+        }
+
         Mock -CommandName 'Get-ClusterResource' -MockWith {
             @(
                 [PSCustomObject] @{

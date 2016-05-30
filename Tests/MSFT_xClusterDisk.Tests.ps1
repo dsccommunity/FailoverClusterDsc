@@ -12,7 +12,7 @@ if (!$PSScriptRoot)
 $RootPath   = (Resolve-Path -Path "$PSScriptRoot\..").Path
 $ModuleName = 'MSFT_xClusterDisk'
 
-Add-WindowsFeature -Name RSAT-Clustering-PowerShell -ErrorAction SilentlyContinue
+Add-WindowsFeature -Name RSAT-Clustering-PowerShell -ErrorAction SilentlyContinue    
 
 Import-Module (Join-Path -Path $RootPath -ChildPath "DSCResources\$ModuleName\$ModuleName.psm1") -Force
 
@@ -47,15 +47,19 @@ Describe 'xClusterDisk' {
             Label  = 'Wrong Label'
         }
         
-        Mock -CommandName 'Get-CimInstance' -ParameterFilter { $ClassName -eq 'MSCluster_Disk' -and $Namespace -eq 'Root\MSCluster' -and $Filter -eq 'Number = 1' } -MockWith {
-            [PSCustomObject] @{
-                Name = '1'
-                Id   = '{0182f270-e2b8-4579-8c0a-176e0e05c30c}'
-            }
-        }
-
         Mock -CommandName 'Get-CimInstance' -ParameterFilter { $ClassName -eq 'MSCluster_Disk' -and $Namespace -eq 'Root\MSCluster' } -MockWith {
-            $null
+            switch($Filter)
+            {
+                'Number = 1' {
+                    [PSCustomObject] @{
+                        Name = '1'
+                        Id   = '{0182f270-e2b8-4579-8c0a-176e0e05c30c}'
+                    }                    
+                }
+                default {
+                    $null
+                }
+            }
         }
 
         Mock -CommandName 'Get-ClusterResource' -MockWith {
@@ -139,12 +143,12 @@ Describe 'xClusterDisk' {
                 $Result -is [System.Collections.Hashtable] | Should Be $true
             }
             
-            It 'Returns absent for a disk that is present but has the wrong label' {
+            It 'Returns present for a disk that is present but has the wrong label' {
 
                 $Result = Get-TargetResource @TestParameter4
                 
                 $Result.Number | Should Be $TestParameter4.Number
-                $Result.Ensure | Should Not Be $TestParameter4.Ensure
+                $Result.Ensure | Should Be $TestParameter4.Ensure
                 $Result.Label  | Should Not Be $TestParameter4.Label
                 
                 $Result -is [System.Collections.Hashtable] | Should Be $true

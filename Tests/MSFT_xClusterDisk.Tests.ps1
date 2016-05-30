@@ -139,12 +139,12 @@ Describe 'xClusterDisk' {
                 $Result -is [System.Collections.Hashtable] | Should Be $true
             }
             
-            It 'Returns present for a disk that is present but has the wrong label' {
+            It 'Returns absent for a disk that is present but has the wrong label' {
 
                 $Result = Get-TargetResource @TestParameter4
                 
                 $Result.Number | Should Be $TestParameter4.Number
-                $Result.Ensure | Should Be $TestParameter4.Ensure
+                $Result.Ensure | Should Not Be $TestParameter4.Ensure
                 $Result.Label  | Should Not Be $TestParameter4.Label
                 
                 $Result -is [System.Collections.Hashtable] | Should Be $true

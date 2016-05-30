@@ -120,7 +120,7 @@ function Test-TargetResource
     
     return (
         (($Ensure -eq $CurrentDisk.Ensure) -or (-not $PSBoundParameters.ContainsKey('Ensure'))) -and
-        (($Ensure -eq $CurrentDisk.Label) -or (-not $PSBoundParameters.ContainsKey('Label')))
+        (($Label -eq $CurrentDisk.Label) -or (-not $PSBoundParameters.ContainsKey('Label')))
     )
 }
 

@@ -19,11 +19,15 @@ Describe 'xCluster' {
 
     InModuleScope $ModuleName {
 
+        [Byte[]] $key = (1..16)
+        $RootPath   = (Resolve-Path -Path "$PSScriptRoot\..").Path
+        $TestPassword = Get-Content (Join-Path -path $RootPath -ChildPath "Tests\MSFT_xCluster.password.txt") | ConvertTo-SecureString -Key $key
+        $TestCredential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList 'domain\administrator', $TestPassword
+
         $TestParameter = @{
             Name = 'CLUS001'
             StaticIPAddress = '192.168.10.10'
-            DomainAdministratorCredential  = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList `
-                                             ('domain\administrator', (ConvertTo-SecureString -String 's0meTh1ng!' -AsPlainText -Force))
+            DomainAdministratorCredential  = $TestCredential
         }
 
         Mock -CommandName 'Get-WmiObject' -ParameterFilter { $Class -eq 'Win32_ComputerSystem'} -MockWith {

@@ -54,6 +54,7 @@ For more information about cluster preferred owners please see: http://support.m
 ## Versions
 
 ### Unreleased
+* xClusterDisk: Fixed Test-TargetResource logic
 
 ### 1.3.0.0
 
@@ -122,7 +123,7 @@ Configuration ClusterDemo
             StaticIPAddress = $Node.ClusterIPAddress
             DomainAdministratorCredential = $domainAdminCred
 
-           DependsOn = ì[WindowsFeature]RSATClusteringCmdInterfaceî
+           DependsOn = ‚Äú[WindowsFeature]RSATClusteringCmdInterface‚Äù
        } 
 
     }
@@ -157,7 +158,7 @@ Configuration ClusterDemo
             RetryIntervalSec = 10
             RetryCount = 60
 
-            DependsOn = ì[WindowsFeature]RSATClusteringCmdInterfaceî 
+            DependsOn = ‚Äú[WindowsFeature]RSATClusteringCmdInterface‚Äù 
         }
 
         xCluster joinCluster

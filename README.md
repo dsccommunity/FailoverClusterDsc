@@ -4,6 +4,9 @@
 
 The **xFailOverCluster** DSC modules contains **xCluster** and **xWaitForCluster** resources for creating and configuring failover clusters. 
 
+This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
+For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+
 ## Contributing
 Please check out common DSC Resources [contributing guidelines](https://github.com/PowerShell/DscResource.Kit/blob/master/CONTRIBUTING.md).
 
@@ -51,12 +54,16 @@ For more information about cluster preferred owners please see: http://support.m
 ## Versions
 
 ### Unreleased
+ 
+### 1.4.0.0
+* xClusterDisk: Fixed Test-TargetResource logic
 
 ### 1.3.0.0
 
 * Added xClusterNetwork resource 
 * Added xClusterDisk resource
 * Added xClusterPreferredOwner resource
+* Resolved issue: Failing Get-TargetResource in xCluster
 
 ### 1.2.0.0
 
@@ -118,7 +125,7 @@ Configuration ClusterDemo
             StaticIPAddress = $Node.ClusterIPAddress
             DomainAdministratorCredential = $domainAdminCred
 
-           DependsOn = ì[WindowsFeature]RSATClusteringCmdInterfaceî
+           DependsOn = ‚Äú[WindowsFeature]RSATClusteringCmdInterface‚Äù
        } 
 
     }
@@ -153,7 +160,7 @@ Configuration ClusterDemo
             RetryIntervalSec = 10
             RetryCount = 60
 
-            DependsOn = ì[WindowsFeature]RSATClusteringCmdInterfaceî 
+            DependsOn = ‚Äú[WindowsFeature]RSATClusteringCmdInterface‚Äù 
         }
 
         xCluster joinCluster

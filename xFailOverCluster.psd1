@@ -3,7 +3,7 @@
 @{
 
 
-ModuleVersion = '1.3.0.0'
+ModuleVersion = '1.4.0.0'
 GUID = '026e7fd8-06dd-41bc-b373-59366ab18679'
 
 Author = 'Microsoft Corporation'
@@ -30,9 +30,7 @@ PrivateData = @{
         # IconUri = ''
 
         # ReleaseNotes of this module
-        ReleaseNotes = '* Added xClusterNetwork resource 
-* Added xClusterDisk resource
-* Added xClusterPreferredOwner resource
+        ReleaseNotes = '* xClusterDisk: Fixed Test-TargetResource logic
 
 '
 
@@ -40,3 +38,4 @@ PrivateData = @{
 
 } # End of PrivateData hashtable
 }
+

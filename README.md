@@ -60,6 +60,7 @@ For more information about cluster preferred owners please see: http://support.m
 * Added xClusterNetwork resource 
 * Added xClusterDisk resource
 * Added xClusterPreferredOwner resource
+* Resolved issue: Failing Get-TargetResource in xCluster
 
 ### 1.2.0.0
 

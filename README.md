@@ -1,4 +1,4 @@
-[![Build status](https://ci.appveyor.com/api/projects/status/6a59vfritv4kbc7d/branch/master?svg=true)](https://ci.appveyor.com/project/PowerShell/xfailovercluster/branch/master)
+﻿[![Build status](https://ci.appveyor.com/api/projects/status/6a59vfritv4kbc7d/branch/master?svg=true)](https://ci.appveyor.com/project/PowerShell/xfailovercluster/branch/master)
 
 # xFailOverCluster
 
@@ -54,6 +54,7 @@ For more information about cluster preferred owners please see: http://support.m
 ## Versions
 
 ### Unreleased
+* Converted appveyor.yml to install Pester from PSGallery instead of from Chocolatey.
  
 ### 1.4.0.0
 * xClusterDisk: Fixed Test-TargetResource logic

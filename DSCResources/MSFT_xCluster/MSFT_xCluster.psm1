@@ -50,7 +50,7 @@ function Get-TargetResource
 
     $retvalue = @{
         Name = $Name
-        IPAddress = $address.Value
+        StaticIPAddress = $address.Value
     }
     $retvalue
 }

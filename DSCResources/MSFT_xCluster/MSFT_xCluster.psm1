@@ -8,6 +8,7 @@
 #
 function Get-TargetResource
 {
+    [OutputType([Hashtable])]
     param
     (    
         [parameter(Mandatory)]

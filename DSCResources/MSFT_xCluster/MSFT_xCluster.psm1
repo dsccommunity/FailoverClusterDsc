@@ -52,6 +52,7 @@ function Get-TargetResource
         Name = $Name
         IPAddress = $address.Value
     }
+    $retvalue
 }
 
 #
@@ -105,7 +106,7 @@ function Set-TargetResource
 
             New-Cluster -Name $Name -Node $env:COMPUTERNAME -StaticAddress $StaticIPAddress -NoStorage -Force
 
-            Start-Sleep -Seconds 60
+            While (!(Get-Cluster)){Start-Sleep 5}
 
             Write-Verbose -Message "Created Cluster $Name"
         }
@@ -159,6 +160,7 @@ function Set-TargetResource
 # 
 function Test-TargetResource  
 {
+    [OutputType([Boolean])]
     param
     (    
         [parameter(Mandatory)]

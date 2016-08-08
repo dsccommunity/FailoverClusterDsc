@@ -1,8 +1,11 @@
-[![Build status](https://ci.appveyor.com/api/projects/status/6a59vfritv4kbc7d/branch/master?svg=true)](https://ci.appveyor.com/project/PowerShell/xfailovercluster/branch/master)
+﻿[![Build status](https://ci.appveyor.com/api/projects/status/6a59vfritv4kbc7d/branch/master?svg=true)](https://ci.appveyor.com/project/PowerShell/xfailovercluster/branch/master)
 
 # xFailOverCluster
 
 The **xFailOverCluster** DSC modules contains **xCluster** and **xWaitForCluster** resources for creating and configuring failover clusters. 
+
+This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
+For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
 
 ## Contributing
 Please check out common DSC Resources [contributing guidelines](https://github.com/PowerShell/DscResource.Kit/blob/master/CONTRIBUTING.md).
@@ -19,6 +22,28 @@ Please check out common DSC Resources [contributing guidelines](https://github.c
 * **StaticIPAddress**: Static IP Address of the cluster
 * **DomainAdministratorCredential**: Credential used to create the cluster
 
+### xClusterNetwork (Unreleased)
+
+* **Address**: The network address (e.g. 192.168.0.0)
+* **AddressMask**: The network mask (e.g. 255.255.255.0)
+* **Name**: The network label or name
+* **Role**: Network role: *0 = None, 1 = Cluster Only, 3 = Clsuter and Client* 
+* **Metric**: The internal metric for the networks
+
+### xClusterDisk (Unreleased)
+
+* **Number**: Number of the cluster disk
+* **Ensure**: Define if the cluster disk should be added (Present) or removed (Absent)
+* **Label**: The disk label inside the Failover Cluster
+
+### xClusterPreferredOwner (Unreleased)
+For more information about cluster preferred owners please see: http://support.microsoft.com/kb/299631
+* **ClusterGroup**: Cluster group name
+* **ClusterName**: Cluster name
+* **Nodes**: Selected cluster nodes.
+* **ClusterResources**: Selected cluster resources
+* **Ensure**: Whether an owner should be present or removed
+
 ### xWaitForCluster
 
 * **Name**: Name of the cluster to wait for
@@ -29,6 +54,21 @@ Please check out common DSC Resources [contributing guidelines](https://github.c
 ## Versions
 
 ### Unreleased
+* Converted appveyor.yml to install Pester from PSGallery instead of from Chocolatey.
+ 
+### 1.4.0.0
+* xClusterDisk: Fixed Test-TargetResource logic
+
+### 1.3.0.0
+
+* Added xClusterNetwork resource 
+* Added xClusterDisk resource
+* Added xClusterPreferredOwner resource
+* Resolved issue: Failing Get-TargetResource in xCluster
+
+### 1.2.0.0
+
+* xCluster: Added -NoStorage switch to add-clusternode. This prevents disks from being automatically added when joining a node to a cluster
 
 ### 1.1.0.0
 
@@ -168,10 +208,3 @@ $domainAdminCred = Get-Credential -UserName "ClusterDemo\Administrator" -Message
 
 ClusterDemo -ConfigurationData $ConfigData -domainAdminCred $domainAdminCred
 ```
-
-### Unreleased
-xCluster: Added -NoStorage switch to add-clusterNode
-
-This prevents disks from being automatically added when joining a node to a cluster
-
-Addressed Issue #4

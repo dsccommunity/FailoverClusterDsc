@@ -42,6 +42,8 @@ Please check out common DSC Resources [contributing guidelines](https://github.c
 
 ### Unreleased
 
+### 1.5.0.0
+
 * Added xClusterQuorum resource with options *NodeMajority*, *NodeAndDiskMajority*, *NodeAndFileShareMajority*, *DiskOnly*
 * Currently does not implement cloudwitness for Windows 2016.
 * Added xClusterDisk resource

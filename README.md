@@ -42,6 +42,8 @@ Please check out common DSC Resources [contributing guidelines](https://github.c
 
 ### Unreleased
 
+* BREAKING CHANGE: Update xClusterDisk from disk number to guid (aka id, signature)
+
 ### 1.5.0.0
 
 * Added xClusterQuorum resource with options *NodeMajority*, *NodeAndDiskMajority*, *NodeAndFileShareMajority*, *DiskOnly*

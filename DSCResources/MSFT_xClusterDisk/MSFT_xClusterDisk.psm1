@@ -5,34 +5,39 @@ function Get-TargetResource
     [OutputType([Hashtable])]
     param
     (
-        [Parameter(Mandatory = $true)]
-        [String] $Number,
-        
         [Parameter(Mandatory = $false)]
         [ValidateSet('Present', 'Absent')]
-        [String] $Ensure = 'Present',
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Guid,
 
         [Parameter(Mandatory = $false)]
-        [String] $Label
+        [System.String]
+        $Label
     )
-        
-    if ($null -ne ($DiskInstance = Get-CimInstance -ClassName MSCluster_Disk -Namespace 'Root\MSCluster' -Filter "Number = $Number"))
+
+    $activeDisks = Get-ClusterActiveDisk
+
+    # Check all active disks, if the specified disk is has already been added to
+    # the cluster or not.
+    if ($activeDisks.Guid -contains $Guid)
     {
-        $DiskResource = Get-ClusterResource |
-                            Where-Object { $_.ResourceType -eq 'Physical Disk' } |
-                                Where-Object { ($_ | Get-ClusterParameter -Name DiskIdGuid).Value -eq $DiskInstance.Id }
+        $activeDisk = $activeDisks | Where-Object { $_.Guid -eq $Guid }
 
         @{
-            Number = $Number
             Ensure = 'Present'
-            Label  = $DiskResource.Name
+            Guid   = $activeDisk.Guid
+            Label  = $activeDisk.Label
         }
     }
     else
     {
         @{
-            Number = $Number
             Ensure = 'Absent'
+            Guid   = $Guid
             Label  = ''
         }
     }
@@ -41,63 +46,81 @@ function Get-TargetResource
 function Set-TargetResource
 {
     [CmdletBinding()]
+    [OutputType([void])]
     param
     (
-        [Parameter(Mandatory = $true)]
-        [String] $Number,
-        
         [Parameter(Mandatory = $false)]
         [ValidateSet('Present', 'Absent')]
-        [String] $Ensure = 'Present',
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Guid,
 
         [Parameter(Mandatory = $false)]
-        [String] $Label
+        [System.String]
+        $Label
     )
 
-    if (-not (Test-TargetResource -Number $Number -Ensure $Ensure -Label $Label))
+    # Only perform any action if the target resource is not in desired state.
+    # Use the test function to verify the desired state.
+    if (-not (Test-TargetResource @PSBoundParameters))
     {
-        $CurrentDisk = Get-TargetResource -Number $Number
+        $currentDisk = Get-TargetResource -Guid $Guid
 
         if ($Ensure -eq 'Present')
         {
-            if ($CurrentDisk.Ensure -ne $Ensure)
+            # If the disk is not present, add it to the cluster.
+            if ($currentDisk.Ensure -ne $Ensure)
             {
-                Write-Verbose "Add the disk $Number to the cluster"
+                try
+                {
+                    Write-Verbose "Add the disk '$Guid' to the cluster"
 
-                Get-ClusterAvailableDisk | Where-Object { $_.Number -eq $Number } | Add-ClusterDisk
+                    Get-ClusterAvailableDisk | Where-Object { $_.Id -eq $Guid } | Add-ClusterDisk
+                }
+                catch
+                {
+                    throw "Unable to add disk with guid '$Guid': $_"
+                }
             }
 
-            if ($CurrentDisk.Label -ne $Label)
+            # If the disk label does not match, set it correctly.
+            if ($PSBoundParameters.ContainsKey('Label') -and $currentDisk.Label -ne $Label)
             {
-                Write-Verbose "Set the disk $Number label to '$Label'"
+                try
+                {
+                    Write-Verbose "Set the disk '$Guid' label to '$Label'"
 
-                $DiskInstance = Get-CimInstance -ClassName MSCluster_Disk -Namespace 'Root\MSCluster' -Filter "Number = $Number"
+                    $activeDisk = Get-ClusterActiveDisk | Where-Object { $_.Guid -eq $Guid }
 
-                $DiskResource = Get-ClusterResource |
-                                    Where-Object { $_.ResourceType -eq 'Physical Disk' } |
-                                        Where-Object { ($_ | Get-ClusterParameter -Name DiskIdGuid).Value -eq $DiskInstance.Id }
-
-                # Set the label of the cluster disk
-                $DiskResource.Name = $Label
-                $DiskResource.Update()
+                    $activeDisk.Resource.Name = $Label
+                    $activeDisk.Resource.Update()
+                }
+                catch
+                {
+                    throw "Unable to update disk '$Guid' label to '$Label': $_"
+                }
             }
         }
         else
         {
-            Write-Verbose "Remove the disk $Number from the cluster"
+            try
+            {
+                Write-Verbose "Remove the disk '$Guid' from the cluster"
 
-            $DiskInstance = Get-CimInstance -ClassName MSCluster_Disk -Namespace 'Root\MSCluster' -Filter "Number = $Number"
+                $activeDisk = Get-ClusterActiveDisk | Where-Object { $_.Guid -eq $Guid }
 
-            $DiskResource = Get-ClusterResource |
-                                Where-Object { $_.ResourceType -eq 'Physical Disk' } |
-                                    Where-Object { ($_ | Get-ClusterParameter -Name DiskIdGuid).Value -eq $DiskInstance.Id }
-            
-            # Remove the cluster disk
-            $DiskResource | Remove-ClusterResource -Force
+                $activeDisk.Resource | Remove-ClusterResource -Force
+            }
+            catch
+            {
+                throw "Unable to remove disk with guid '$Guid': $_"
+            }
         }
     }
 }
-
 
 function Test-TargetResource
 {
@@ -105,29 +128,49 @@ function Test-TargetResource
     [OutputType([Boolean])]
     param
     (
-        [Parameter(Mandatory = $true)]
-        [String] $Number,
-        
         [Parameter(Mandatory = $false)]
         [ValidateSet('Present', 'Absent')]
-        [String] $Ensure = 'Present',
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Guid,
 
         [Parameter(Mandatory = $false)]
-        [String] $Label
+        [System.String]
+        $Label
     )
-    
-    $CurrentDisk = Get-TargetResource -Number $Number
-    
-    if($Ensure -eq 'Present')
+
+    $currentDisk = Get-TargetResource -Guid $Guid
+
+    # If ensure is set to present and a label property was specified as a
+    # parameter, test the ensure and label property. Else, ignore the label.
+    if ($Ensure -eq 'Present' -and $PSBoundParameters.ContainsKey('Label'))
     {
-        return (
-            ($Ensure -eq $CurrentDisk.Ensure) -and
-            (($Label -eq $CurrentDisk.Label) -or (-not $PSBoundParameters.ContainsKey('Label')))
-        )
+        return ($Ensure -eq $currentDisk.Ensure -and $Label -eq $currentDisk.Label)
     }
     else
     {
-        return $Ensure -eq $CurrentDisk.Ensure
+        return ($Ensure -eq $currentDisk.Ensure)
+    }
+}
+
+function Get-ClusterActiveDisk
+{
+    [CmdletBinding()]
+    [OutputType([PSObject[]])]
+    param ()
+
+    $diskResources = Get-ClusterResource | Where-Object { $_.ResourceType -eq 'Physical Disk' }
+
+    foreach ($diskResource in $diskResources)
+    {
+        New-Object -TypeName PSObject -Property @{
+            Guid     = $diskResource | Get-ClusterParameter -Name DiskIdGuid | ForEach-Object { $_.Value.Trim('{}') }
+            Label    = $diskResource.Name
+            Resource = $diskResource
+        }
     }
 }
 

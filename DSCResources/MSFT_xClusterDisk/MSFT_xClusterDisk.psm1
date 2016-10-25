@@ -46,7 +46,6 @@ function Get-TargetResource
 function Set-TargetResource
 {
     [CmdletBinding()]
-    [OutputType([void])]
     param
     (
         [Parameter(Mandatory = $false)]
@@ -78,7 +77,7 @@ function Set-TargetResource
                 {
                     Write-Verbose "Add the disk '$Guid' to the cluster"
 
-                    Get-ClusterAvailableDisk | Where-Object { $_.Id -eq $Guid } | Add-ClusterDisk
+                    Get-ClusterAvailableDisk | Where-Object { $_.Id -eq $Guid } | Add-ClusterDisk | Out-Null
                 }
                 catch
                 {
@@ -96,7 +95,7 @@ function Set-TargetResource
                     $activeDisk = Get-ClusterActiveDisk | Where-Object { $_.Guid -eq $Guid }
 
                     $activeDisk.Resource.Name = $Label
-                    $activeDisk.Resource.Update()
+                    $activeDisk.Resource.Update() | Out-Null
                 }
                 catch
                 {

@@ -27,9 +27,9 @@ Please check out common DSC Resources [contributing guidelines](https://github.c
 
 ### xClusterDisk (Unreleased)
 
-* **Guid**: The guid of the cluster disk (aka disk id, disk signature)
-* **Ensure**: Define if the cluster disk should be added (Present) or removed (Absent)
-* **Label**: The disk label inside the Failover Cluster
+* **Guid**: The guid of the cluster disk, also known as disk id or disk signature.
+* **Ensure**: Define if the cluster disk should be added or removed.
+* **Label**: The disk label within the cluster.
 
 ### xWaitForCluster
 

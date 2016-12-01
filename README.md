@@ -42,7 +42,7 @@ Please check out common DSC Resources [contributing guidelines](https://github.c
 
 ### Unreleased
 
-* BREAKING CHANGE: Update xClusterDisk from disk number to guid (aka id, signature)
+* BREAKING CHANGE: Update xClusterDisk from disk number to guid (aka  disk id or disk signature). The disk number is not unique and stable over the cluster nodes, therefore not usable for configuring a cluster with DSC.
 
 ### 1.5.0.0
 

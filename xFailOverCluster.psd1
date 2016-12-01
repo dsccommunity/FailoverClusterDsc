@@ -1,16 +1,19 @@
-
-
 @{
 
-
 ModuleVersion = '1.5.0.0'
+
 GUID = '026e7fd8-06dd-41bc-b373-59366ab18679'
 
 Author = 'Microsoft Corporation'
+
 CompanyName = 'Microsoft Corporation'
+
 Copyright = '(c) 2014 Microsoft Corporation. All rights reserved.'
 
 Description = 'Module containing DSC resources used to configure Failover Clusters.'
+
+# Minimum version of the Windows PowerShell engine required by this module
+PowerShellVersion = '4.0'
 
 # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
 PrivateData = @{
@@ -40,5 +43,3 @@ PrivateData = @{
 
 } # End of PrivateData hashtable
 }
-
-

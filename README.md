@@ -27,7 +27,7 @@ Please check out common DSC Resources [contributing guidelines](https://github.c
 
 ### xClusterDisk (Unreleased)
 
-* **Number**: Number of the cluster disk
+* **Guid**: The guid of the cluster disk (aka disk id, disk signature)
 * **Ensure**: Define if the cluster disk should be added (Present) or removed (Absent)
 * **Label**: The disk label inside the Failover Cluster
 
@@ -42,7 +42,7 @@ Please check out common DSC Resources [contributing guidelines](https://github.c
 
 ### Unreleased
 
-* BREAKING CHANGE: Update xClusterDisk from disk number to guid (aka  disk id or disk signature). The disk number is not unique and stable over the cluster nodes, therefore not usable for configuring a cluster with DSC.
+* BREAKING CHANGE: Update xClusterDisk from disk number to guid (aka disk id or disk signature). The disk number is not unique and stable over the cluster nodes, therefore not usable for configuring a cluster with DSC.
 
 ### 1.5.0.0
 

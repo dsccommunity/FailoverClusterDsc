@@ -7,15 +7,21 @@ if (!$PSScriptRoot)
 $RootPath   = (Resolve-Path -Path "$PSScriptRoot\..").Path
 $ModuleName = 'MSFT_xClusterDisk'
 
-try
+if((Get-CimInstance -ClassName 'Win32_OperatingSystem').ProductType -ne 1)
 {
     # For server operating system
-    Add-WindowsFeature -Name RSAT-Clustering-PowerShell -ErrorAction Stop
+    if (-not (Get-WindowsFeature -Name RSAT-Clustering-PowerShell).Installed)
+    {
+        Add-WindowsFeature -Name RSAT-Clustering-PowerShell -ErrorAction Stop
+    }
 }
-catch
+else
 {
     # For client operating system
-    Enable-WindowsOptionalFeature -Online -FeatureName 'RSATClient-Features-Clustering' -ErrorAction Stop
+    if ((Get-WindowsOptionalFeature -Online -FeatureName 'RSATClient-Features-Clustering').State -ne 'Enabled')
+    {
+        Enable-WindowsOptionalFeature -Online -FeatureName 'RSATClient-Features-Clustering' -ErrorAction Stop
+    }
 }
 
 Import-Module (Join-Path -Path $RootPath -ChildPath "DSCResources\$ModuleName\$ModuleName.psm1") -Force

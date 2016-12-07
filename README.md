@@ -42,6 +42,8 @@ Please check out common DSC Resources [contributing guidelines](https://github.c
 
 ### Unreleased
 
+* xCluster: Fixed bug in which failure to create a new cluster would hang
+
 ### 1.5.0.0
 
 * Added xClusterQuorum resource with options *NodeMajority*, *NodeAndDiskMajority*, *NodeAndFileShareMajority*, *DiskOnly*

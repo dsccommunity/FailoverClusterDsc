@@ -1,6 +1,6 @@
 @{
 
-ModuleVersion = '1.5.0.0'
+ModuleVersion = '1.6.0.0'
 
 GUID = '026e7fd8-06dd-41bc-b373-59366ab18679'
 
@@ -33,9 +33,7 @@ PrivateData = @{
         # IconUri = ''
 
         # ReleaseNotes of this module
-        ReleaseNotes = '* Added xClusterQuorum resource with options *NodeMajority*, *NodeAndDiskMajority*, *NodeAndFileShareMajority*, *DiskOnly*
-* Currently does not implement cloudwitness for Windows 2016.
-* Added xClusterDisk resource
+        ReleaseNotes = '* xCluster: Fixed bug in which failure to create a new cluster would hang
 
 '
 
@@ -43,3 +41,4 @@ PrivateData = @{
 
 } # End of PrivateData hashtable
 }
+

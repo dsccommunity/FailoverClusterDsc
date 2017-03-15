@@ -66,19 +66,15 @@ Describe 'xClusterDisk' {
             @(
                 [PSCustomObject] @{
                     Name         = 'Cluster IP Address'
-                    ResourceType = 'IP Address'
                 } | Add-Member -MemberType ScriptMethod -Name Update -Value {} -PassThru
                 [PSCustomObject] @{
                     Name         = 'Clsuter Name'
-                    ResourceType = 'Network Name'
                 } | Add-Member -MemberType ScriptMethod -Name Update -Value {} -PassThru
                 [PSCustomObject] @{
                     Name         = 'First Data'
-                    ResourceType = 'Physical Disk'
                 } | Add-Member -MemberType ScriptMethod -Name Update -Value {} -PassThru
                 [PSCustomObject] @{
                     Name         = 'Witness'
-                    ResourceType = 'Physical Disk'
                 } | Add-Member -MemberType ScriptMethod -Name Update -Value {} -PassThru
             )
         }

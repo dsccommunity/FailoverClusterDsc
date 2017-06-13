@@ -51,7 +51,7 @@ Ensures that a group of machines form a cluster.
 
 #### Examples
 
-[Cluster example](#clusterexample)
+[Cluster example](#cluster-example)
 
 ### xClusterDisk
 
@@ -146,7 +146,7 @@ Ensures that a node waits for a remote cluster is created.
 
 #### Examples
 
-[Cluster example](#clusterexample)
+[Cluster example](#cluster-example)
 
 ## xFailOverCluster Examples
 

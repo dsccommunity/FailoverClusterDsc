@@ -30,8 +30,9 @@ A full list of changes in each version can be found in the [change log](CHANGELO
 ## Resources
 
 * [**xCluster**](#xcluster) Ensures that a group of machines form a cluster.
-* [**xClusterQuorum**](#xclusterquorum) Configures quorum in a cluster.
 * [**xClusterDisk**](#xclusterdisk) Configures shared disks in a cluster.
+* [**xClusterPreferredOwner**](#xclusterpreferredowner) Configures preferred owner of a cluster group in a cluster.
+* [**xClusterQuorum**](#xclusterquorum) Configures quorum in a cluster.
 * [**xWaitForCluster**](#xwaitforcluster) Ensures that a node waits for a remote cluster is created.
 
 ### xCluster
@@ -40,35 +41,17 @@ Ensures that a group of machines form a cluster.
 
 #### Requirements
 
-* Target machine must be running Windows Server 2008 R2 or later
+* Target machine must be running Windows Server 2008 R2 or later.
 
 #### Parameters
 
-* **Name**: Name of the cluster
-* **StaticIPAddress**: Static IP Address of the cluster
-* **DomainAdministratorCredential**: Credential used to create the cluster
+* **Name**: Name of the cluster.
+* **StaticIPAddress**: Static IP Address of the cluster.
+* **DomainAdministratorCredential**: Credential used to create the cluster.
 
 #### Examples
 
 [Cluster example](#clusterexample)
-
-### xClusterQuorum
-
-Configures quorum in a cluster.
-
-#### Requirements
-
-* Target machine must be running Windows Server 2008 R2 or later
-
-#### Parameters
-
-* **IsSingleInstance** Always set to `Yes` to prevent multiple quorum settings per cluster.
-* **Type** Quorum type to use: *NodeMajority*, *NodeAndDiskMajority*, *NodeAndFileShareMajority*, *DiskOnly*
-* **Resource** The name of the disk or file share resource to use as witness. Is optional with *NodeMajority* type.
-
-#### Examples
-
-None.
 
 ### xClusterDisk
 
@@ -76,13 +59,71 @@ Configures shared disks in a cluster.
 
 #### Requirements
 
-* Target machine must be running Windows Server 2008 R2 or later
+* Target machine must be running Windows Server 2008 R2 or later.
 
 #### Parameters
 
-* **Number**: Number of the cluster disk
-* **Ensure**: Define if the cluster disk should be added (Present) or removed (Absent)
-* **Label**: The disk label inside the Failover Cluster
+* **Number**: Number of the cluster disk.
+* **Ensure**: Define if the cluster disk should be added (Present) or removed (Absent).
+* **Label**: The disk label inside the Failover Cluster.
+
+#### Examples
+
+None.
+
+### xClusterNetwork
+
+Configures preferred owners of a cluster group in a cluster.
+
+#### Requirements
+
+* Target machine must be running Windows Server 2008 R2 or later.
+
+#### Parameters
+
+* **[String] Address** _(Key)_: None.
+* **[String] AddressMask** _(Key)_: None.
+* **[String] Name** _(Write)_: None.
+* **[String] Role** _(Write)_: None. { 0 | 1 | 3 }
+* **[String] Metric** _(Write)_: None.
+
+#### Examples
+
+None.
+
+### xClusterPreferredOwner
+
+Configures preferred owners of a cluster group in a cluster.
+
+#### Requirements
+
+* Target machine must be running Windows Server 2008 R2 or later.
+
+#### Parameters
+
+* **[String] ClusterGroup** _(Key)_: Name of the cluster group.
+* **[String] ClusterName** _(Key)_: Name of the cluster.
+* **[String[]] Nodes** _(Required)_: The nodes to set as owners.
+* **[String[]] ClusterResources** _(Write)_: The resources to set preferred owner on.
+* **[String] Ensure** _(Write)_: If the preferred owners should be present or absent. { *Present* | Absent }
+
+#### Examples
+
+None.
+
+### xClusterQuorum
+
+Configures quorum in a cluster.
+
+#### Requirements
+
+* Target machine must be running Windows Server 2008 R2 or later.
+
+#### Parameters
+
+* **IsSingleInstance** Always set to `Yes` to prevent multiple quorum settings per cluster.
+* **Type** Quorum type to use: *NodeMajority*, *NodeAndDiskMajority*, *NodeAndFileShareMajority*, *DiskOnly*.
+* **Resource** The name of the disk or file share resource to use as witness. Is optional with *NodeMajority* type.
 
 #### Examples
 
@@ -94,14 +135,14 @@ Ensures that a node waits for a remote cluster is created.
 
 #### Requirements
 
-* Target machine must be running Windows Server 2008 R2 or later
+* Target machine must be running Windows Server 2008 R2 or later.
 
 #### Parameters
 
-* **Name**: Name of the cluster to wait for
-* **RetryIntervalSec**: Interval to check for cluster existence
-* **RetryCount**: Maximum number of retries to check for cluster existance
-* **Credential**: Credential used to join or leave domain
+* **Name**: Name of the cluster to wait for.
+* **RetryIntervalSec**: Interval to check for cluster existence.
+* **RetryCount**: Maximum number of retries to check for cluster existence.
+* **Credential**: Credential used to join or leave domain.
 
 #### Examples
 

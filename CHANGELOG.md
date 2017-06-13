@@ -10,7 +10,9 @@
   - Removed 'Unreleased' "tag" from the resources xClusterQuorum and xClusterDisk (issue #36)
   - Added new sections to each resource (Requirements, Parameters and Examples) in the README.md. Some does not yet have any examples, so they are set to 'None.'.
   - Added GitHub templates PULL\_REQUEST\_TEMPLATE, ISSUE_TEMPLATE and CONTRIBUTING.md (issue #45).
-  - Split the change log from README.md to a seperate file CHANGELOG.md.
+  - Split the change log from README.md to a seperate file CHANGELOG.md (issue #48).
+  - Added the resource xClusterPreferredOwner to README.md (issue #51).
+  - Added the resource xClusterNetwork to README.md (issue #56).
 
 ### 1.6.0.0
 

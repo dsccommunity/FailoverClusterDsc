@@ -12,7 +12,7 @@ if (!$PSScriptRoot)
 $RootPath   = (Resolve-Path -Path "$PSScriptRoot\..").Path
 $ModuleName = 'MSFT_xClusterDisk'
 
-Add-WindowsFeature -Name RSAT-Clustering-PowerShell -ErrorAction SilentlyContinue    
+Add-WindowsFeature -Name RSAT-Clustering-PowerShell -ErrorAction SilentlyContinue
 
 Import-Module (Join-Path -Path $RootPath -ChildPath "DSCResources\$ModuleName\$ModuleName.psm1") -Force
 
@@ -22,7 +22,7 @@ Import-Module (Join-Path -Path $RootPath -ChildPath "DSCResources\$ModuleName\$M
 Describe 'xClusterDisk' {
 
     InModuleScope $ModuleName {
-    
+
         $TestParameter = @{
             Number = 1
             Ensure = 'Present'
@@ -46,7 +46,7 @@ Describe 'xClusterDisk' {
             Ensure = 'Present'
             Label  = 'Wrong Label'
         }
-        
+
         Mock -CommandName 'Get-CimInstance' -ParameterFilter { $ClassName -eq 'MSCluster_Disk' -and $Namespace -eq 'Root\MSCluster' } -MockWith {
             switch($Filter)
             {
@@ -54,7 +54,7 @@ Describe 'xClusterDisk' {
                     [PSCustomObject] @{
                         Name = '1'
                         Id   = '{0182f270-e2b8-4579-8c0a-176e0e05c30c}'
-                    }                    
+                    }
                 }
                 default {
                     $null
@@ -100,7 +100,7 @@ Describe 'xClusterDisk' {
                 }
             }
         }
-        
+
         Context 'Validate Get-TargetResource method' {
 
             It 'Returns a [System.Collection.Hashtable] type' {
@@ -113,48 +113,48 @@ Describe 'xClusterDisk' {
             It 'Returns current configuration' {
 
                 $Result = Get-TargetResource @TestParameter
-                
+
                 $Result.Number | Should Be $TestParameter.Number
                 $Result.Ensure | Should Be $TestParameter.Ensure
                 $Result.Label  | Should Be $TestParameter.Label
-                
+
                 $Result -is [System.Collections.Hashtable] | Should Be $true
             }
 
             It 'Returns absent for a disk that is absent but should be present' {
 
                 $Result = Get-TargetResource @TestParameter2
-                
+
                 $Result.Number | Should Be $TestParameter2.Number
                 $Result.Ensure | Should Not Be $TestParameter2.Ensure
-                $Result.Label  | Should Not Be $TestParameter2 .Label
-                
+                $Result.Label  | Should Not Be $TestParameter2.Label
+
                 $Result -is [System.Collections.Hashtable] | Should Be $true
             }
-            
+
             It 'Returns absent for a disk that is absent as it should be' {
 
                 $Result = Get-TargetResource @TestParameter3
-                
+
                 $Result.Number | Should Be $TestParameter3.Number
                 $Result.Ensure | Should Be $TestParameter3.Ensure
                 $Result.Label  | Should Be ''
-                
+
                 $Result -is [System.Collections.Hashtable] | Should Be $true
             }
-            
+
             It 'Returns present for a disk that is present but has the wrong label' {
 
                 $Result = Get-TargetResource @TestParameter4
-                
+
                 $Result.Number | Should Be $TestParameter4.Number
                 $Result.Ensure | Should Be $TestParameter4.Ensure
                 $Result.Label  | Should Not Be $TestParameter4.Label
-                
+
                 $Result -is [System.Collections.Hashtable] | Should Be $true
             }
         }
-        
+
         Context 'Validate Set-TargetResource method' {
 
             It 'Returns nothing' {
@@ -164,7 +164,7 @@ Describe 'xClusterDisk' {
                 $Result -eq $null | Should Be $true
             }
         }
-        
+
         Context 'Validate Test-TargetResource method' {
 
             It 'Check present disk that is present returns $true' {
@@ -174,7 +174,7 @@ Describe 'xClusterDisk' {
                 $Result -is [System.Boolean] | Should Be $true
                 $Result | Should Be $true
             }
-            
+
             It 'Check absent disk that should be present returns $false' {
 
                 $Result = Test-TargetResource -Ensure $TestParameter2.Ensure -Label $TestParameter2.Label -Number $TestParameter2.Number
@@ -182,7 +182,7 @@ Describe 'xClusterDisk' {
                 $Result -is [System.Boolean] | Should Be $true
                 $Result | Should Be $false
             }
-            
+
             It 'Check absent disk that is absent returns $true' {
 
                 $Result = Test-TargetResource -Ensure $TestParameter3.Ensure -Label $TestParameter3.Label -Number $TestParameter3.Number
@@ -190,7 +190,7 @@ Describe 'xClusterDisk' {
                 $Result -is [System.Boolean] | Should Be $true
                 $Result | Should Be $true
             }
-            
+
             It 'Check that present disk but with a wrong label returns $false' {
 
                 $Result = Test-TargetResource -Ensure $TestParameter4.Ensure -Label $TestParameter4.Label -Number $TestParameter4.Number

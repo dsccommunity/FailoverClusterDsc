@@ -44,6 +44,8 @@ Please check out common DSC Resources [contributing guidelines](https://github.c
 
 * Changes to xClusterPreferredOwner
   * Script Analyzer warnings have been fixed (issue #50). This also failed the tests for the resource.
+* Changes to xClusterDisk
+  * Fixed test that was failing in  AppVeyor (issue #55).
 
 ### 1.6.0.0
 

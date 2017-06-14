@@ -84,8 +84,6 @@ Describe 'xClusterDisk' {
         }
 
         Mock -CommandName 'Get-ClusterParameter' -ParameterFilter { $Name -eq 'DiskIdGuid' } -MockWith {
-            #write-host $args.count -ForegroundColor Cyan
-            #write-host $args -ForegroundColor Cyan
             switch ($InputObject.Name)
             {
                 'First Data' {
@@ -104,98 +102,64 @@ Describe 'xClusterDisk' {
         Context 'Validate Get-TargetResource method' {
 
             It 'Returns a [System.Collection.Hashtable] type' {
-
                 $Result = Get-TargetResource @TestParameter
-
                 $Result -is [System.Collections.Hashtable] | Should Be $true
             }
 
             It 'Returns current configuration' {
-
                 $Result = Get-TargetResource @TestParameter
-
                 $Result.Number | Should Be $TestParameter.Number
                 $Result.Ensure | Should Be $TestParameter.Ensure
                 $Result.Label  | Should Be $TestParameter.Label
-
-                $Result -is [System.Collections.Hashtable] | Should Be $true
             }
 
             It 'Returns absent for a disk that is absent but should be present' {
-
                 $Result = Get-TargetResource @TestParameter2
-
                 $Result.Number | Should Be $TestParameter2.Number
                 $Result.Ensure | Should Not Be $TestParameter2.Ensure
                 $Result.Label  | Should Not Be $TestParameter2.Label
-
-                $Result -is [System.Collections.Hashtable] | Should Be $true
             }
 
             It 'Returns absent for a disk that is absent as it should be' {
-
                 $Result = Get-TargetResource @TestParameter3
-
                 $Result.Number | Should Be $TestParameter3.Number
                 $Result.Ensure | Should Be $TestParameter3.Ensure
                 $Result.Label  | Should Be ''
-
-                $Result -is [System.Collections.Hashtable] | Should Be $true
             }
 
             It 'Returns present for a disk that is present but has the wrong label' {
-
                 $Result = Get-TargetResource @TestParameter4
-
                 $Result.Number | Should Be $TestParameter4.Number
                 $Result.Ensure | Should Be $TestParameter4.Ensure
                 $Result.Label  | Should Not Be $TestParameter4.Label
-
-                $Result -is [System.Collections.Hashtable] | Should Be $true
             }
         }
 
         Context 'Validate Set-TargetResource method' {
-
             It 'Returns nothing' {
-
                 $Result = Set-TargetResource @TestParameter
-
                 $Result -eq $null | Should Be $true
             }
         }
 
         Context 'Validate Test-TargetResource method' {
-
             It 'Check present disk that is present returns $true' {
-
                 $Result = Test-TargetResource -Ensure $TestParameter.Ensure -Label $TestParameter.Label -Number $TestParameter.Number
-
-                $Result -is [System.Boolean] | Should Be $true
                 $Result | Should Be $true
             }
 
             It 'Check absent disk that should be present returns $false' {
-
                 $Result = Test-TargetResource -Ensure $TestParameter2.Ensure -Label $TestParameter2.Label -Number $TestParameter2.Number
-
-                $Result -is [System.Boolean] | Should Be $true
                 $Result | Should Be $false
             }
 
             It 'Check absent disk that is absent returns $true' {
-
                 $Result = Test-TargetResource -Ensure $TestParameter3.Ensure -Label $TestParameter3.Label -Number $TestParameter3.Number
-
-                $Result -is [System.Boolean] | Should Be $true
                 $Result | Should Be $true
             }
 
             It 'Check that present disk but with a wrong label returns $false' {
-
                 $Result = Test-TargetResource -Ensure $TestParameter4.Ensure -Label $TestParameter4.Label -Number $TestParameter4.Number
-
-                $Result -is [System.Boolean] | Should Be $true
                 $Result | Should Be $false
             }
         }

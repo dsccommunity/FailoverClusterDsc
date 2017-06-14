@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Changes to xClusterPreferredOwner
+  - Script Analyzer warnings have been fixed (issue #50). This also failed the tests for the resource.
+- Changes to xClusterDisk
+  - Fixed test that was failing in  AppVeyor (issue #55).
 - Changes to xFailOverCluster
   - Added 'Code of Conduct' text to the README.md (issue #44).
   - Added TOC for all resources in the README.md (issue #43).

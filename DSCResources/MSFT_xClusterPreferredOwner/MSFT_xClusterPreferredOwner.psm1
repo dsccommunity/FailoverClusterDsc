@@ -9,31 +9,33 @@ function Get-TargetResource
 {
     [OutputType([Hashtable])]
     param
-    (    
-        [parameter(Mandatory)]
+    (
+        [Parameter(Mandatory = $true)]
         [string]
         $ClusterGroup,
 
-        [parameter(Mandatory)]
+        [parameter(Mandatory = $true)]
         [string]
-        $Clustername,
+        $ClusterName,
 
-        [parameter(Mandatory)]
+        [Parameter(Mandatory = $true)]
         [string[]]
         $Nodes,
 
+        [Parameter()]
         [string[]]
         $ClusterResources,
 
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [String]
         $Ensure = 'Present'
     )
-    
+
     Write-Verbose -Message "Retrieving Owner information for cluster $Clustername..."
 
     $ownernodes = @(
-        
+
         Write-Verbose -Message "Retrieving Owner information for Cluster Group $ClusterGroup"
         (((Get-ClusterGroup -cluster $Clustername)| Where-Object {$_.name -like "$ClusterGroup"} | Get-ClusterOwnerNode).ownernodes).name
 
@@ -47,7 +49,7 @@ function Get-TargetResource
         }
     )
     $ownernodes = $ownernodes | Select-Object -Unique
-    
+
     $returnValue = @{
         ClusterGroup = $ClusterGroup
         Clustername = $Clustername
@@ -65,22 +67,24 @@ function Get-TargetResource
 function Set-TargetResource
 {
     param
-    (    
-        [parameter(Mandatory)]
+    (
+        [Parameter(Mandatory = $true)]
         [string]
         $ClusterGroup,
 
-        [parameter(Mandatory)]
+        [Parameter(Mandatory = $true)]
         [string]
-        $Clustername,
+        $ClusterName,
 
-        [parameter(Mandatory)]
+        [Parameter(Mandatory = $true)]
         [string[]]
         $Nodes,
 
+        [Parameter()]
         [string[]]
         $ClusterResources,
 
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [String]
         $Ensure = 'Present'
@@ -94,10 +98,10 @@ function Set-TargetResource
         Write-Verbose -Message "Setting Cluster owners for Group $ClusterGroup to $nodes"
         $null = (Get-ClusterGroup -cluster $ClusterName)| Where-Object {$_.name -like $ClusterGroup} | Set-ClusterOwnerNode $Nodes
         $null = (Get-ClusterResource)| Where-Object {$_.OwnerGroup -like $ClusterGroup} | Set-ClusterOwnerNode $allnodes
-        
+
         Write-Verbose -Message "Moving Cluster Group $ClusterGroup to node $($nodes[0])"
         $null = (Get-ClusterGroup -cluster $ClusterName)| Where-Object {$_.name -like $ClusterGroup} | Move-ClusterGroup -Node $Nodes[0]
-        
+
         foreach ($resource in $ClusterResources)
         {
             Write-Verbose -Message "Setting Cluster owners for Resource $resource to $nodes"
@@ -105,7 +109,7 @@ function Set-TargetResource
         }
     }
     if ($Ensure -eq 'Absent')
-    {          
+    {
 
             Write-Verbose -Message "Retrieving current clusterowners for group $ClusterGroup"
             $currentowners = (((Get-ClusterGroup -cluster $Clustername)| Where-Object {$_.name -like "$ClusterGroup"} | Get-ClusterOwnerNode).ownernodes).name | Sort-Object -Unique
@@ -143,33 +147,35 @@ function Set-TargetResource
             Write-Verbose -Message "Setting Cluster owners for Resource $resource to $newowners"
             $null = Get-ClusterResource -cluster $Clustername | Where-Object {$_.name -like "$resource"} | Set-ClusterOwnerNode -owners $newowners
         }
-    } 
+    }
 }
 
-# 
+#
 # Test-TargetResource
 #
 
-function Test-TargetResource  
+function Test-TargetResource
 {
     [OutputType([Boolean])]
     param
-    (    
-        [parameter(Mandatory)]
+    (
+        [Parameter(Mandatory = $true)]
         [string]
         $ClusterGroup,
 
-        [parameter(Mandatory)]
+        [Parameter(Mandatory = $true)]
         [string]
-        $Clustername,
+        $ClusterName,
 
-        [parameter(Mandatory)]
+        [Parameter(Mandatory = $true)]
         [string[]]
         $Nodes,
 
+        [Parameter()]
         [string[]]
         $ClusterResources,
 
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [String]
         $Ensure = 'Present'

@@ -2,7 +2,7 @@
 
 # xFailOverCluster
 
-The **xFailOverCluster** DSC modules contains **xCluster** and **xWaitForCluster** resources for creating and configuring failover clusters. 
+The **xFailOverCluster** DSC modules contains **xCluster** and **xWaitForCluster** resources for creating and configuring failover clusters.
 
 ## Contributing
 Please check out common DSC Resources [contributing guidelines](https://github.com/PowerShell/DscResource.Kit/blob/master/CONTRIBUTING.md).
@@ -23,7 +23,7 @@ Please check out common DSC Resources [contributing guidelines](https://github.c
 
 * **IsSingleInstance** Always set to `Yes` to prevent multiple quorum settings per cluster.
 * **Type** Quorum type to use: *NodeMajority*, *NodeAndDiskMajority*, *NodeAndFileShareMajority*, *DiskOnly*
-* **Resource** The name of the disk or file share resource to use as witness. Is optional with *NodeMajority* type.  
+* **Resource** The name of the disk or file share resource to use as witness. Is optional with *NodeMajority* type.
 
 ### xClusterDisk (Unreleased)
 
@@ -41,6 +41,9 @@ Please check out common DSC Resources [contributing guidelines](https://github.c
 ## Versions
 
 ### Unreleased
+
+* Changes to xClusterPreferredOwner
+  * Script Analyzer warnings have been fixed (issue #50). This also failed the tests for the resource.
 
 ### 1.6.0.0
 
@@ -69,8 +72,8 @@ Please check out common DSC Resources [contributing guidelines](https://github.c
 
 ### Cluster example
 
-In this example, we will create a failover cluster from two VMs. 
-We will assume that a Domain Controller already exists, and that both VMs are already domain joined. 
+In this example, we will create a failover cluster from two VMs.
+We will assume that a Domain Controller already exists, and that both VMs are already domain joined.
 Furthermore, the example assumes that your certificates are installed such that DSC can appropriately handle secrets such as the Domain Administrator Credential.
 Finally, the xCluster module must also be installed on the VMs, as specified above.
 For an example of an end to end scenario, check out the SQL HA Group blog post on the PowerShell Team Blog.
@@ -78,8 +81,8 @@ For an example of an end to end scenario, check out the SQL HA Group blog post o
 ```powershell
 Configuration ClusterDemo
 {
-    param([Parameter(Mandatory=$true)] 
-          [ValidateNotNullorEmpty()] 
+    param([Parameter(Mandatory=$true)]
+          [ValidateNotNullorEmpty()]
           [PsCredential] $domainAdminCred)
 
     Node $AllNodes.Where{$_.Role -eq "PrimaryClusterNode" }.NodeName
@@ -93,7 +96,7 @@ Configuration ClusterDemo
         WindowsFeature RSATClusteringPowerShell
         {
             Ensure = "Present"
-            Name   = "RSAT-Clustering-PowerShell"   
+            Name   = "RSAT-Clustering-PowerShell"
 
             DependsOn = "[WindowsFeature]FailoverFeature"
         }
@@ -113,12 +116,12 @@ Configuration ClusterDemo
             DomainAdministratorCredential = $domainAdminCred
 
            DependsOn = “[WindowsFeature]RSATClusteringCmdInterface”
-       } 
+       }
 
     }
 
     Node $AllNodes.Where{ $_.Role -eq "ReplicaServerNode" }.NodeName
-    {         
+    {
         WindowsFeature FailoverFeature
         {
             Ensure = "Present"
@@ -128,7 +131,7 @@ Configuration ClusterDemo
         WindowsFeature RSATClusteringPowerShell
         {
             Ensure = "Present"
-            Name   = "RSAT-Clustering-PowerShell"   
+            Name   = "RSAT-Clustering-PowerShell"
 
             DependsOn = "[WindowsFeature]FailoverFeature"
         }
@@ -147,7 +150,7 @@ Configuration ClusterDemo
             RetryIntervalSec = 10
             RetryCount = 60
 
-            DependsOn = “[WindowsFeature]RSATClusteringCmdInterface” 
+            DependsOn = “[WindowsFeature]RSATClusteringCmdInterface”
         }
 
         xCluster joinCluster
@@ -157,7 +160,7 @@ Configuration ClusterDemo
             DomainAdministratorCredential = $domainAdminCred
 
             DependsOn = "[xWaitForCluster]waitForCluster"
-        }  
+        }
 
     }
 }

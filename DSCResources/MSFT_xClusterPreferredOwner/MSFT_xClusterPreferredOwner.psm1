@@ -9,49 +9,52 @@ function Get-TargetResource
 {
     [OutputType([Hashtable])]
     param
-    (    
-        [parameter(Mandatory)]
+    (
+        [Parameter(Mandatory = $true)]
         [string]
         $ClusterGroup,
 
-        [parameter(Mandatory)]
+        [parameter(Mandatory = $true)]
         [string]
-        $Clustername,
+        $ClusterName,
 
-        [parameter(Mandatory)]
+        [Parameter(Mandatory = $true)]
         [string[]]
         $Nodes,
 
+        [Parameter()]
         [string[]]
         $ClusterResources,
 
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [String]
         $Ensure = 'Present'
     )
-    
-    Write-Verbose -Message "Retrieving Owner information for cluster $Clustername..."
 
-    $ownernodes = @(
-        
+    Write-Verbose -Message "Retrieving Owner information for cluster $ClusterName..."
+
+    $ownerNodes = @(
+
         Write-Verbose -Message "Retrieving Owner information for Cluster Group $ClusterGroup"
-        (((Get-ClusterGroup -cluster $Clustername)| Where-Object {$_.name -like "$ClusterGroup"} | Get-ClusterOwnerNode).ownernodes).name
+        (((Get-ClusterGroup -Cluster $ClusterName) | Where-Object -FilterScript {$_.Name -like "$ClusterGroup"} | Get-ClusterOwnerNode).OwnerNodes).Name
 
         if ($ClusterResources)
         {
             foreach ($resource in $ClusterResources)
             {
                 Write-Verbose -Message "Retrieving Owner information for Cluster Resource $resource"
-                (((Get-ClusterResource -cluster $Clustername)| Where-Object {$_.name -like "$resource"} | Get-ClusterOwnerNode).ownernodes).name
+                (((Get-ClusterResource -Cluster $ClusterName) | Where-Object -FilterScript {$_.Name -like "$resource"} | Get-ClusterOwnerNode).OwnerNodes).Name
             }
         }
     )
-    $ownernodes = $ownernodes | Select-Object -Unique
-    
+
+    $ownerNodes = $ownerNodes | Select-Object -Unique
+
     $returnValue = @{
         ClusterGroup = $ClusterGroup
-        Clustername = $Clustername
-        Nodes = $ownernodes
+        Clustername = $ClusterName
+        Nodes = $ownerNodes
         ClusterResources = $ClusterResources
         Ensure = $Ensure
     }
@@ -65,124 +68,128 @@ function Get-TargetResource
 function Set-TargetResource
 {
     param
-    (    
-        [parameter(Mandatory)]
+    (
+        [Parameter(Mandatory = $true)]
         [string]
         $ClusterGroup,
 
-        [parameter(Mandatory)]
+        [Parameter(Mandatory = $true)]
         [string]
-        $Clustername,
+        $ClusterName,
 
-        [parameter(Mandatory)]
+        [Parameter(Mandatory = $true)]
         [string[]]
         $Nodes,
 
+        [Parameter()]
         [string[]]
         $ClusterResources,
 
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [String]
         $Ensure = 'Present'
     )
 
-    Write-Verbose -Message "Retrieving all owners from cluster $Clustername"
-    $allnodes = (Get-ClusterNode -cluster $ClusterName).name
+    Write-Verbose -Message "Retrieving all owners from cluster $ClusterName"
+    $allNodes = (Get-ClusterNode -Cluster $ClusterName).Name
 
     if ($Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Setting Cluster owners for Group $ClusterGroup to $nodes"
-        $null = (Get-ClusterGroup -cluster $ClusterName)| Where-Object {$_.name -like $ClusterGroup} | Set-ClusterOwnerNode $Nodes
-        $null = (Get-ClusterResource)| Where-Object {$_.OwnerGroup -like $ClusterGroup} | Set-ClusterOwnerNode $allnodes
-        
-        Write-Verbose -Message "Moving Cluster Group $ClusterGroup to node $($nodes[0])"
-        $null = (Get-ClusterGroup -cluster $ClusterName)| Where-Object {$_.name -like $ClusterGroup} | Move-ClusterGroup -Node $Nodes[0]
-        
+        Write-Verbose -Message "Setting Cluster owners for Group $ClusterGroup to $Nodes"
+        $null = (Get-ClusterGroup -Cluster $ClusterName) | Where-Object -FilterScript {$_.Name -like $ClusterGroup} | Set-ClusterOwnerNode -Owners $Nodes
+        $null = (Get-ClusterResource) | Where-Object {$_.OwnerGroup -like $ClusterGroup} | Set-ClusterOwnerNode -Owners $allNodes
+
+        Write-Verbose -Message "Moving Cluster Group $ClusterGroup to node $($Nodes[0])"
+        $null = (Get-ClusterGroup -Cluster $ClusterName) | Where-Object -FilterScript {$_.name -like $ClusterGroup} | Move-ClusterGroup -Node $Nodes[0]
+
         foreach ($resource in $ClusterResources)
         {
-            Write-Verbose -Message "Setting Cluster owners for Resource $resource to $nodes"
-            $null = (Get-ClusterResource -cluster $Clustername)| Where-Object {$_.name -like "$resource"} | Set-ClusterOwnerNode -owners $Nodes
+            Write-Verbose -Message "Setting Cluster owners for Resource $resource to $Nodes"
+            $null = (Get-ClusterResource -Cluster $ClusterName)| Where-Object -FilterScript {$_.Name -like "$resource"} | Set-ClusterOwnerNode -Owners $Nodes
         }
     }
+
     if ($Ensure -eq 'Absent')
-    {          
-
-            Write-Verbose -Message "Retrieving current clusterowners for group $ClusterGroup"
-            $currentowners = (((Get-ClusterGroup -cluster $Clustername)| Where-Object {$_.name -like "$ClusterGroup"} | Get-ClusterOwnerNode).ownernodes).name | Sort-Object -Unique
-            $newowners = @(
-                foreach ($currentowner in $currentowners)
+    {
+        Write-Verbose -Message "Retrieving current cluster owners for group $ClusterGroup"
+        $currentOwners = (((Get-ClusterGroup -Cluster $ClusterName)| Where-Object -FilterScript {$_.Name -like "$ClusterGroup"} | Get-ClusterOwnerNode).OwnerNodes).Name | Sort-Object -Unique
+        $newOwners = @(
+            foreach ($currentOwner in $currentOwners)
+            {
+                if ($Nodes -notcontains $currentOwner)
                 {
-                    if ($Nodes -notcontains $currentowner)
-                    {
-                        $currentowner
-                    }
+                    $currentOwner
                 }
-            )
-            Write-Verbose -Message "Removing owners from group $($ClusterGroup): $Nodes"
-            $null = (Get-ClusterGroup -cluster $ClusterName)| Where-Object {$_.name -like $ClusterGroup} | Set-ClusterOwnerNode $newowners
+            }
+        )
+        Write-Verbose -Message "Removing owners from group $($ClusterGroup): $Nodes"
+        $null = (Get-ClusterGroup -Cluster $ClusterName)| Where-Object -FilterScript {$_.Name -like $ClusterGroup} | Set-ClusterOwnerNode $newOwners
 
-            Write-Verbose -Message "Setting Cluster owners for Group $ClusterGroup to $newowners"
-            $null = (Get-ClusterResource)| Where-Object {$_.OwnerGroup -like $ClusterGroup} | Set-ClusterOwnerNode $allnodes
+        Write-Verbose -Message "Setting Cluster owners for Group $ClusterGroup to $newOwners"
+        $null = (Get-ClusterResource)| Where-Object -FilterScript {$_.OwnerGroup -like $ClusterGroup} | Set-ClusterOwnerNode $allNodes
 
-            Write-Verbose -Message "Moving Cluster Group $ClusterGroup to node $($newowners[0])"
-            $null = (Get-ClusterGroup -cluster $ClusterName)| Where-Object {$_.name -like $ClusterGroup} | Move-ClusterGroup -Node $newowners[0]
+        Write-Verbose -Message "Moving Cluster Group $ClusterGroup to node $($newOwners[0])"
+        $null = (Get-ClusterGroup -Cluster $ClusterName)| Where-Object -FilterScript {$_.Name -like $ClusterGroup} | Move-ClusterGroup -Node $newOwners[0]
 
         foreach ($resource in $ClusterResources)
         {
             Write-Verbose -Message "Retrieving current clusterowners for resource $resource"
-            $currentowners = ((Get-ClusterResource -cluster $Clustername | Where-Object {$_.name -like "$resource"} | Get-ClusterOwnerNode).ownernodes).name | Sort-Object -Unique
-            $newowners = @(
-                foreach ($currentowner in $currentowners)
+            $currentOwners = ((Get-ClusterResource -Cluster $ClusterName | Where-Object -FilterScript {$_.Name -like "$resource"} | Get-ClusterOwnerNode).OwnerNodes).Name | Sort-Object -Unique
+            $newOwners = @(
+                foreach ($currentOwner in $currentOwners)
                 {
-                    if ($Nodes -notcontains $currentowner)
+                    if ($Nodes -notcontains $currentOwner)
                     {
-                        $currentowner
+                        $currentOwner
                     }
                 }
             )
-            Write-Verbose -Message "Setting Cluster owners for Resource $resource to $newowners"
-            $null = Get-ClusterResource -cluster $Clustername | Where-Object {$_.name -like "$resource"} | Set-ClusterOwnerNode -owners $newowners
+            Write-Verbose -Message "Setting Cluster owners for Resource $resource to $newOwners"
+            $null = Get-ClusterResource -Cluster $ClusterName | Where-Object -FilterScript {$_.Name -like "$resource"} | Set-ClusterOwnerNode -Owners $newOwners
         }
-    } 
+    }
 }
 
-# 
+#
 # Test-TargetResource
 #
 
-function Test-TargetResource  
+function Test-TargetResource
 {
     [OutputType([Boolean])]
     param
-    (    
-        [parameter(Mandatory)]
+    (
+        [Parameter(Mandatory = $true)]
         [string]
         $ClusterGroup,
 
-        [parameter(Mandatory)]
+        [Parameter(Mandatory = $true)]
         [string]
-        $Clustername,
+        $ClusterName,
 
-        [parameter(Mandatory)]
+        [Parameter(Mandatory = $true)]
         [string[]]
         $Nodes,
 
+        [Parameter()]
         [string[]]
         $ClusterResources,
 
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [String]
         $Ensure = 'Present'
     )
 
-    Write-Verbose -Message "Testing Owner information for cluster $Clustername..."
+    Write-Verbose -Message "Testing Owner information for cluster $ClusterName..."
 
-    $getinfo = (Get-TargetResource @PSBoundParameters).Nodes
+    $getTargetResourceResult = (Get-TargetResource @PSBoundParameters).Nodes
     $result = $true
 
     if ($Ensure -eq 'Present')
-        {
-        foreach ($object in $getinfo)
+    {
+        foreach ($object in $getTargetResourceResult)
         {
             if ($Nodes -notcontains $object)
             {
@@ -190,9 +197,10 @@ function Test-TargetResource
                 $result = $false
             }
         }
-        foreach ($object in $nodes)
+
+        foreach ($object in $Nodes)
         {
-            if ($getinfo -notcontains $object)
+            if ($getTargetResourceResult -notcontains $object)
             {
                 Write-Verbose -Message "$object was NOT found as possible owner"
                 $result = $false
@@ -201,8 +209,8 @@ function Test-TargetResource
     }
 
     if ($Ensure -eq 'Absent')
-        {
-        foreach ($object in $getinfo)
+    {
+        foreach ($object in $getTargetResourceResult)
         {
             if ($Nodes -contains $object)
             {
@@ -210,9 +218,10 @@ function Test-TargetResource
                 $result = $false
             }
         }
-        foreach ($object in $nodes)
+
+        foreach ($object in $Nodes)
         {
-            if ($getinfo -contains $object)
+            if ($getTargetResourceResult -contains $object)
             {
                 Write-Verbose -Message "$object WAS found as possible owner"
                 $result = $false

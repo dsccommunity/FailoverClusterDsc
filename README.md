@@ -45,9 +45,9 @@ Ensures that a group of machines form a cluster.
 
 #### Parameters
 
-* **Name**: Name of the cluster.
-* **StaticIPAddress**: Static IP Address of the cluster.
-* **DomainAdministratorCredential**: Credential used to create the cluster.
+* **[String] Name** _(Key)_: Name of the cluster.
+* **[String] StaticIPAddress** _(Required)_: Static IP Address of the cluster.
+* **[String] DomainAdministratorCredential** _(Required)_:: Credential used to create the cluster.
 
 #### Examples
 
@@ -63,9 +63,9 @@ Configures shared disks in a cluster.
 
 #### Parameters
 
-* **Number**: Number of the cluster disk.
-* **Ensure**: Define if the cluster disk should be added (Present) or removed (Absent).
-* **Label**: The disk label inside the Failover Cluster.
+* **[String] Number** _(Key)_: Number of the cluster disk.
+* **[String] Ensure** _(Write)_: Define if the cluster disk should be added (Present) or removed (Absent). Default value is 'Present'. { *Present* | Absent }
+* **[String] Label** _(Write)_: The disk label inside the Failover Cluster.
 
 #### Examples
 
@@ -105,7 +105,7 @@ Configures preferred owners of a cluster group in a cluster.
 * **[String] ClusterName** _(Key)_: Name of the cluster.
 * **[String[]] Nodes** _(Required)_: The nodes to set as owners.
 * **[String[]] ClusterResources** _(Write)_: The resources to set preferred owner on.
-* **[String] Ensure** _(Write)_: If the preferred owners should be present or absent. { *Present* | Absent }
+* **[String] Ensure** _(Write)_: If the preferred owners should be present or absent. Default value is 'Present'. { *Present* | Absent }
 
 #### Examples
 
@@ -121,9 +121,9 @@ Configures quorum in a cluster.
 
 #### Parameters
 
-* **IsSingleInstance** Always set to `Yes` to prevent multiple quorum settings per cluster.
-* **Type** Quorum type to use: *NodeMajority*, *NodeAndDiskMajority*, *NodeAndFileShareMajority*, *DiskOnly*.
-* **Resource** The name of the disk or file share resource to use as witness. Is optional with *NodeMajority* type.
+* **[String] IsSingleInstance** _(Key)_: Specifies the resource is a single instance, the value must be 'Yes'.
+* **[String] Type** _(Write)_: Quorum type to use. { NodeMajority | NodeAndDiskMajority | NodeAndFileShareMajority, DiskOnly }.
+* **[String] Resource** _(Write)_: The name of the disk or file share resource to use as witness. This parameter is optional if the quorum type is set to NodeMajority.
 
 #### Examples
 
@@ -139,10 +139,9 @@ Ensures that a node waits for a remote cluster is created.
 
 #### Parameters
 
-* **Name**: Name of the cluster to wait for.
-* **RetryIntervalSec**: Interval to check for cluster existence.
-* **RetryCount**: Maximum number of retries to check for cluster existence.
-* **Credential**: Credential used to join or leave domain.
+* **[String] Name** _(Key)_: Name of the cluster to wait for.
+* **[UInt64] RetryIntervalSec** _(Write)_: Interval to check for cluster existence. Default values is 10 seconds.
+* **[UInt32] RetryCount** _(Write)_: Maximum number of retries to check for cluster existence. Default value is 50 retries.
 
 #### Examples
 
@@ -166,84 +165,78 @@ Configuration ClusterDemo
         [Parameter(Mandatory = $true)]
         [ValidateNotNullorEmpty()]
         [PsCredential]
-        $domainAdminCredential
+        $DomainAdminCredential
     )
+
+    Import-DscResource -ModuleName xFailOverCluster
 
     Node $AllNodes.Where{$_.Role -eq 'PrimaryClusterNode' }.NodeName
     {
-        WindowsFeature FailoverFeature
+        WindowsFeature AddFailoverFeature
         {
             Ensure = 'Present'
-            Name   = 'Failover-clustering'
+            Name = 'Failover-clustering'
         }
 
-        WindowsFeature RSATClusteringPowerShell
+        WindowsFeature AddRemoteServerAdministrationToolsClusteringPowerShellFeature
         {
             Ensure = 'Present'
-            Name   = 'RSAT-Clustering-PowerShell'
-
-            DependsOn = '[WindowsFeature]FailoverFeature'
+            Name = 'RSAT-Clustering-PowerShell'
+            DependsOn = '[WindowsFeature]AddFailoverFeature'
         }
 
-        WindowsFeature RSATClusteringCmdInterface
+        WindowsFeature AddRemoteServerAdministrationToolsClusteringCmdInterfaceFeature
         {
             Ensure = 'Present'
-            Name   = 'RSAT-Clustering-CmdInterface'
-
-            DependsOn = '[WindowsFeature]RSATClusteringPowerShell'
+            Name = 'RSAT-Clustering-CmdInterface'
+            DependsOn = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringPowerShellFeature'
         }
 
-        xCluster ensureCreated
+        xCluster CreateCluster
         {
             Name = $Node.ClusterName
             StaticIPAddress = $Node.ClusterIPAddress
-            DomainAdministratorCredential = $domainAdminCredential
-
-           DependsOn = “[WindowsFeature]RSATClusteringCmdInterface”
+            DomainAdministratorCredential = $DomainAdminCredential
+            DependsOn = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringCmdInterfaceFeature'
        }
-
     }
 
     Node $AllNodes.Where{ $_.Role -eq 'ReplicaServerNode' }.NodeName
     {
-        WindowsFeature FailoverFeature
+        WindowsFeature AddFailoverFeature
         {
             Ensure = 'Present'
-            Name      = 'Failover-clustering'
+            Name = 'Failover-clustering'
         }
 
-        WindowsFeature RSATClusteringPowerShell
+        WindowsFeature AddRemoteServerAdministrationToolsClusteringPowerShellFeature
         {
             Ensure = 'Present'
-            Name   = 'RSAT-Clustering-PowerShell'
-
-            DependsOn = '[WindowsFeature]FailoverFeature'
+            Name = 'RSAT-Clustering-PowerShell'
+            DependsOn = '[WindowsFeature]AddFailoverFeature'
         }
 
-        WindowsFeature RSATClusteringCmdInterface
+        WindowsFeature AddRemoteServerAdministrationToolsClusteringCmdInterfaceFeature
         {
             Ensure = 'Present'
-            Name   = 'RSAT-Clustering-CmdInterface'
-
-            DependsOn = '[WindowsFeature]RSATClusteringPowerShell'
+            Name = 'RSAT-Clustering-CmdInterface'
+            DependsOn = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringPowerShellFeature'
         }
 
-        xWaitForCluster waitForCluster
+        xWaitForCluster WaitForCluster
         {
             Name = $Node.ClusterName
             RetryIntervalSec = 10
             RetryCount = 60
-
-            DependsOn = '[WindowsFeature]RSATClusteringCmdInterface'
+            DependsOn = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringCmdInterfaceFeature'
         }
 
-        xCluster joinCluster
+        xCluster JoinSecondNodeToCluster
         {
             Name = $Node.ClusterName
             StaticIPAddress = $Node.ClusterIPAddress
-            DomainAdministratorCredential = $domainAdminCredential
-
-            DependsOn = '[xWaitForCluster]waitForCluster'
+            DomainAdministratorCredential = $DomainAdminCredential
+            DependsOn = '[xWaitForCluster]WaitForCluster'
         }
     }
 }
@@ -254,29 +247,51 @@ $ConfigData = @{
         @{
             NodeName= '*'
 
-            CertificateFile = 'C:\keys\Dscdemo.cer'                 # use your own certificate
-            Thumbprint = "E513EEFCB763E6954C52BA66A1A81231BF3F551E" # assume both machines have the same certificate to hold private key
-                                                                    # replace the value of thumbprint with your own.
+            # Use your own public certificate of the same certificate that are installed on the target nodes.
+            CertificateFile = 'C:\Certificates\DscDemo.cer'
 
+            <#
+                Replace with the thumbprint of certificate that are installed on both the target nodes.
+                This must be the private certificate of the same public certificate used in the previous
+                parameter CertificateFile.
+                For this example it is assumed that both machines have the same certificate installed.
+            #>
+            Thumbprint = "E513EEFCB763E6954C52BA66A1A81231BF3F551E"
+
+            <#
+                Replace with your own CNO (Cluster Name Object) and IP address.
+
+                Please note that if the CNO is prestaged, then the computer object must be disabled for the
+                resource xCluster to be able to create the cluster.
+                If the CNO is not prestaged, then the credential used in the xCluster resource must have
+                the permission in Active Directory to create the CNO (Cluster Name Object).
+            #>
             ClusterName = 'Cluster'
-            ClusterIPAddress = '192.168.100.20/24'    # replace the ip address of your own.
+            ClusterIPAddress = '192.168.100.20/24'
         },
 
-         # Node01
+        # Node01 - Primary cluster node.
         @{
-            NodeName= 'Node01'   # rename to actual machine name of VM
+            # Replace with the name of the actual target node.
+            NodeName= 'Node01'
+
+            # This is used in the configuration to know which resource to compile.
             Role = 'PrimaryClusterNode'
          },
 
-         # Node02
+         # Node02 - Secondary cluster node
          @{
-            NodeName= 'Node02'   # rename to actual machine name of VM
+            # Replace with the name of the actual target node.
+            NodeName= 'Node02'
+
+            # This is used in the configuration to know which resource to compile.
             Role = 'ReplicaServerNode'
          }
     )
 }
 
-$domainAdminCred = Get-Credential -UserName 'ClusterDemo\Administrator' -Message 'Enter password for private domain Administrator'
+# This user must have the permission to create the CNO (Cluster Name Object) in Active Directory, unless it is prestaged.
+$domainAdminCredential = Get-Credential -UserName 'ClusterDemo\Administrator' -Message 'Enter password for private domain Administrator'
 
-ClusterDemo -ConfigurationData $ConfigData -domainAdminCred $domainAdminCredential
+ClusterDemo -ConfigurationData $ConfigData -DomainAdminCredential $domainAdminCredential
 ```

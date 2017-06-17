@@ -62,7 +62,9 @@ create the cluster.
 
 #### Examples
 
-[Cluster example](#cluster-example)
+* [Create first node of a failover cluster](/Examples/Resources/xCluster/1-CreateFirstNodeOfAFailoverCluster.ps1)
+* [Join additional node to a failover cluster](/Examples/Resources/xCluster/2-JoinAdditionalNodeToFailoverCluster.ps1)
+* [Create failover cluster with two nodes](/Examples/Resources/xCluster/3-CreateFailoverClusterWithTwoNodes.ps1)
 
 ### xClusterDisk
 
@@ -166,4 +168,4 @@ cluster existence. Default value is 50 retries.
 
 #### Examples
 
-[Cluster example](#cluster-example)
+* [Wait for failover cluster to be present](/Examples/Resources/xWaitForCluster/1-WaitForFailoverClusterToBePresent.ps1)

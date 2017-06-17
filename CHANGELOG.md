@@ -42,9 +42,11 @@
     - 2-JoinAdditionalNodeToFailoverCluster.ps1
     - 3-CreateFailoverClusterWithTwoNodes.ps1 (this is the example from README.md)
   - Fixed typo in xCluster parameter description.
+  - Added links to examples from README.md
 - Changes to xWaitForCluster
   - Added example
     - 1-WaitForFailoverClusterToBePresent.ps1
+  - Added link to example from README.md
 
 ### 1.6.0.0
 

@@ -14,12 +14,13 @@
   - Removed 'Unreleased' "tag" from the resources xClusterQuorum and xClusterDisk (issue #36)
   - Added new sections to each resource (Requirements, Parameters and Examples) in the README.md. Some does not yet have any examples, so they are set to 'None.'.
   - Added GitHub templates PULL\_REQUEST\_TEMPLATE, ISSUE_TEMPLATE and CONTRIBUTING.md (issue #45).
-  - Split the change log from README.md to a seperate file CHANGELOG.md (issue #48).
+  - Split the change log from README.md to a separate file CHANGELOG.md (issue #48).
   - Added the resource xClusterPreferredOwner to README.md (issue #51).
   - Added the resource xClusterNetwork to README.md (issue #56).
   - Removed Credential parameter from parameter list for xWaitForCluster. Parameter Credential does not exist in the schema.mof of the resource (issue #62).
   - Now all parameters in the README.md list their data type and type qualifier (issue #58.)
   - Added Import-DscResource to example in README.md.
+  - Added CodeCov and opt-in for all common tests (issue #41).
 
 ### 1.6.0.0
 

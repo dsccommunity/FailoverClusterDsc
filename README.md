@@ -57,7 +57,7 @@ Ensures that a group of machines form a cluster.
 
 * **[String] Name** _(Key)_: Name of the cluster.
 * **[String] StaticIPAddress** _(Required)_: Static IP Address of the cluster.
-* **[String] DomainAdministratorCredential** _(Required)_:: Credential used to
+* **[String] DomainAdministratorCredential** _(Required)_: Credential used to
 create the cluster.
 
 #### Examples

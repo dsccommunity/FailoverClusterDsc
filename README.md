@@ -49,18 +49,18 @@ cluster is created.
 
 Ensures that a group of machines form a cluster.
 
-#### Requirements
+#### Requirements for xCluster
 
 * Target machine must be running Windows Server 2008 R2 or later.
 
-#### Parameters
+#### Parameters for xCluster
 
 * **[String] Name** _(Key)_: Name of the cluster.
 * **[String] StaticIPAddress** _(Required)_: Static IP Address of the cluster.
 * **[String] DomainAdministratorCredential** _(Required)_: Credential used to
 create the cluster.
 
-#### Examples
+#### Examples for xCluster
 
 * [Create first node of a failover cluster](/Examples/Resources/xCluster/1-CreateFirstNodeOfAFailoverCluster.ps1)
 * [Join additional node to a failover cluster](/Examples/Resources/xCluster/2-JoinAdditionalNodeToFailoverCluster.ps1)
@@ -70,11 +70,11 @@ create the cluster.
 
 Configures shared disks in a cluster.
 
-#### Requirements
+#### Requirements for xClusterDisk
 
 * Target machine must be running Windows Server 2008 R2 or later.
 
-#### Parameters
+#### Parameters for xClusterDisk
 
 * **[String] Number** _(Key)_: Number of the cluster disk.
 * **[String] Ensure** _(Write)_: Define if the cluster disk should be added
@@ -82,7 +82,7 @@ Configures shared disks in a cluster.
 { *Present* | Absent }
 * **[String] Label** _(Write)_: The disk label inside the Failover Cluster.
 
-#### Examples
+#### Examples for xClusterDisk
 
 None.
 
@@ -90,11 +90,11 @@ None.
 
 Configures preferred owners of a cluster group in a cluster.
 
-#### Requirements
+#### Requirements for xClusterNetwork
 
 * Target machine must be running Windows Server 2008 R2 or later.
 
-#### Parameters
+#### Parameters for xClusterNetwork
 
 * **[String] Address** _(Key)_: None.
 * **[String] AddressMask** _(Key)_: None.
@@ -102,7 +102,7 @@ Configures preferred owners of a cluster group in a cluster.
 * **[String] Role** _(Write)_: None. { 0 | 1 | 3 }
 * **[String] Metric** _(Write)_: None.
 
-#### Examples
+#### Examples for xClusterNetwork
 
 None.
 
@@ -110,11 +110,11 @@ None.
 
 Configures preferred owners of a cluster group in a cluster.
 
-#### Requirements
+#### Requirements for xClusterPreferredOwner
 
 * Target machine must be running Windows Server 2008 R2 or later.
 
-#### Parameters
+#### Parameters for xClusterPreferredOwner
 
 * **[String] ClusterGroup** _(Key)_: Name of the cluster group.
 * **[String] ClusterName** _(Key)_: Name of the cluster.
@@ -124,7 +124,7 @@ owner on.
 * **[String] Ensure** _(Write)_: If the preferred owners should be present or
 absent. Default value is 'Present'. { *Present* | Absent }
 
-#### Examples
+#### Examples for xClusterPreferredOwner
 
 None.
 
@@ -132,11 +132,11 @@ None.
 
 Configures quorum in a cluster.
 
-#### Requirements
+#### Requirements for xClusterQuorum
 
 * Target machine must be running Windows Server 2008 R2 or later.
 
-#### Parameters
+#### Parameters for xClusterQuorum
 
 * **[String] IsSingleInstance** _(Key)_: Specifies the resource is a single
 instance, the value must be 'Yes'.
@@ -146,7 +146,7 @@ NodeAndDiskMajority | NodeAndFileShareMajority, DiskOnly }.
 to use as witness. This parameter is optional if the quorum type is set to
 NodeMajority.
 
-#### Examples
+#### Examples for xClusterQuorum
 
 None.
 
@@ -154,11 +154,11 @@ None.
 
 Ensures that a node waits for a remote cluster is created.
 
-#### Requirements
+#### Requirements for xWaitForCluster
 
 * Target machine must be running Windows Server 2008 R2 or later.
 
-#### Parameters
+#### Parameters for xWaitForCluster
 
 * **[String] Name** _(Key)_: Name of the cluster to wait for.
 * **[UInt64] RetryIntervalSec** _(Write)_: Interval to check for cluster
@@ -166,6 +166,6 @@ existence. Default values is 10 seconds.
 * **[UInt32] RetryCount** _(Write)_: Maximum number of retries to check for
 cluster existence. Default value is 50 retries.
 
-#### Examples
+#### Examples for xWaitForCluster
 
 * [Wait for failover cluster to be present](/Examples/Resources/xWaitForCluster/1-WaitForFailoverClusterToBePresent.ps1)

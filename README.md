@@ -40,10 +40,10 @@ A full list of changes in each version can be found in the [change log](CHANGELO
 * [**xCluster**](#xcluster) Ensures that a group of machines form a cluster.
 * [**xClusterDisk**](#xclusterdisk) Configures shared disks in a cluster.
 * [**xClusterPreferredOwner**](#xclusterpreferredowner) Configures preferred
-owner of a cluster group in a cluster.
+  owner of a cluster group in a cluster.
 * [**xClusterQuorum**](#xclusterquorum) Configures quorum in a cluster.
 * [**xWaitForCluster**](#xwaitforcluster) Ensures that a node waits for a remote
-cluster is created.
+  cluster is created.
 
 ### xCluster
 
@@ -58,7 +58,7 @@ Ensures that a group of machines form a cluster.
 * **[String] Name** _(Key)_: Name of the cluster.
 * **[String] StaticIPAddress** _(Required)_: Static IP Address of the cluster.
 * **[String] DomainAdministratorCredential** _(Required)_: Credential used to
-create the cluster.
+  create the cluster.
 
 #### Examples for xCluster
 
@@ -78,8 +78,8 @@ Configures shared disks in a cluster.
 
 * **[String] Number** _(Key)_: Number of the cluster disk.
 * **[String] Ensure** _(Write)_: Define if the cluster disk should be added
-(Present) or removed (Absent). Default value is 'Present'.
-{ *Present* | Absent }
+  (Present) or removed (Absent). Default value is 'Present'.
+  { *Present* | Absent }
 * **[String] Label** _(Write)_: The disk label inside the Failover Cluster.
 
 #### Examples for xClusterDisk
@@ -120,9 +120,9 @@ Configures preferred owners of a cluster group in a cluster.
 * **[String] ClusterName** _(Key)_: Name of the cluster.
 * **[String[]] Nodes** _(Required)_: The nodes to set as owners.
 * **[String[]] ClusterResources** _(Write)_: The resources to set preferred
-owner on.
+  owner on.
 * **[String] Ensure** _(Write)_: If the preferred owners should be present or
-absent. Default value is 'Present'. { *Present* | Absent }
+  absent. Default value is 'Present'. { *Present* | Absent }
 
 #### Examples for xClusterPreferredOwner
 
@@ -139,12 +139,12 @@ Configures quorum in a cluster.
 #### Parameters for xClusterQuorum
 
 * **[String] IsSingleInstance** _(Key)_: Specifies the resource is a single
-instance, the value must be 'Yes'.
+  instance, the value must be 'Yes'.
 * **[String] Type** _(Write)_: Quorum type to use. { NodeMajority |
-NodeAndDiskMajority | NodeAndFileShareMajority, DiskOnly }.
+  NodeAndDiskMajority | NodeAndFileShareMajority, DiskOnly }.
 * **[String] Resource** _(Write)_: The name of the disk or file share resource
-to use as witness. This parameter is optional if the quorum type is set to
-NodeMajority.
+  to use as witness. This parameter is optional if the quorum type is set to
+  NodeMajority.
 
 #### Examples for xClusterQuorum
 
@@ -162,9 +162,9 @@ Ensures that a node waits for a remote cluster is created.
 
 * **[String] Name** _(Key)_: Name of the cluster to wait for.
 * **[UInt64] RetryIntervalSec** _(Write)_: Interval to check for cluster
-existence. Default values is 10 seconds.
+  existence. Default values is 10 seconds.
 * **[UInt32] RetryCount** _(Write)_: Maximum number of retries to check for
-cluster existence. Default value is 50 retries.
+  cluster existence. Default value is 50 retries.
 
 #### Examples for xWaitForCluster
 

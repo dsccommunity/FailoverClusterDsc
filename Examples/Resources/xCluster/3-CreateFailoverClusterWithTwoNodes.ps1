@@ -1,11 +1,14 @@
 <#
 .EXAMPLE
     In this example, we will create a failover cluster with two servers.
-    We will assume that a Domain Controller already exists, and that both VMs are already domain joined.
-    Furthermore, the example assumes that your certificates are installed such that DSC can appropriately
-    handle secrets such as the Active Directory administrator credential. The example also assumes that
-    the CNO (Cluster Name Object) is either prestaged or that the Active Directory administrator credential
-    has the appropriate permission to create the CNO (Cluster Name Object).
+
+    Assumptions:
+    - We will assume that a Domain Controller already exists, and that both servers are already domain joined.
+    - Both servers are using the same certificate, and that the certificate are installed on both servers so
+      that LCM (Local Configuration Manager) can appropriately handle secrets such as the Active Directory
+      administrator credential.
+    - The example also assumes that the CNO (Cluster Name Object) is either prestaged or that the Active Directory
+      administrator credential has the appropriate permission to create the CNO (Cluster Name Object).
 #>
 
 $ConfigurationData = @{
@@ -13,8 +16,15 @@ $ConfigurationData = @{
         @{
             NodeName= '*'
 
-            # Use your own public certificate of the same certificate that are installed on the target nodes.
-            CertificateFile = 'C:\Certificates\DscDemo.cer'
+            <#
+                Replace with the correct path to your own public certificate part of the same certificate
+                that are installed on the target nodes.
+
+                NOTE! This is commented so that AppVeyor automatic tests can pass, otherwise it will
+                fail on missing certificate.
+                Please remove comment from this row to be able to use your certificate.
+            #>
+            #CertificateFile = 'C:\Certificates\DscDemo.cer'
 
             <#
                 Replace with the thumbprint of certificate that are installed on both the target nodes.

@@ -32,6 +32,7 @@
   - Added CodeCov and opt-in for all common tests (issue #41).
   - Added CodeCov badge to README.md
   - Fixed lint rule MD013 in CHANGELOG.md.
+  - Fixed lint rule MD013 in README.md.
   - Removed example from README.md (issue #42).
   - Fixed typo in filename for ISSUE\_TEMPLATE. Was 'ISSUE\_TEMPLATE', now it is
     correctly 'ISSUE\_TEMPLATE.md'.

@@ -32,6 +32,15 @@
   - Added CodeCov and opt-in for all common tests (issue #41).
   - Added CodeCov badge to README.md
   - Fixed lint rule MD013 in CHANGELOG.md.
+  - Removed example from README.md (issue #42).
+- Changes to xCluster
+  - Added examples
+    - 1-CreateFirstNodeOfAFailoverCluster.ps1
+    - 2-JoinAdditionalNodeToFailoverCluster.ps1
+    - 3-CreateFailoverClusterWithTwoNodes.ps1 (this is the example from README.md)
+- Changes to xWaitForCluster
+  - Added example
+    - 1-WaitForFailoverClusterToBePresent.ps1
 
 ### 1.6.0.0
 

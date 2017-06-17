@@ -20,11 +20,20 @@ $ConfigurationData = @{
                 Replace with the correct path to your own public certificate part of the same certificate
                 that are installed on the target nodes.
 
-                NOTE! This is commented so that AppVeyor automatic tests can pass, otherwise it will
-                fail on missing certificate.
-                Please remove comment from this row to be able to use your certificate.
+                NOTE! Please remove comment from this row to be able to use your certificate. This is commented
+                so that AppVeyor automatic tests can pass, otherwise it will fail on missing certificate.
             #>
             #CertificateFile = 'C:\Certificates\DscDemo.cer'
+
+            <#
+                NOTE! THIS IS NOT RECOMMENDED IN PRODUCTION.
+                This is added so that AppVeyor automatic tests can pass, otherwise the tests will fail on
+                passwords being in plain text and not being encrypted. Because there is not possible to have
+                a certificate in AppVeyor to encrypt the passwords we need to add parameter
+                'PSDscAllowPlainTextPassword'.
+                NOTE! THIS IS NOT RECOMMENDED IN PRODUCTION.
+            #>
+            PSDscAllowPlainTextPassword = $true
 
             <#
                 Replace with the thumbprint of certificate that are installed on both the target nodes.

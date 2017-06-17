@@ -33,6 +33,8 @@
   - Added CodeCov badge to README.md
   - Fixed lint rule MD013 in CHANGELOG.md.
   - Removed example from README.md (issue #42).
+  - Fixed typo in filename for ISSUE\_TEMPLATE. Was 'ISSUE\_TEMPLATE', now it is
+    correctly 'ISSUE\_TEMPLATE.md'.
 - Changes to xCluster
   - Added examples
     - 1-CreateFirstNodeOfAFailoverCluster.ps1

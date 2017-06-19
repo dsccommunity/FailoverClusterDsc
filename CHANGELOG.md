@@ -31,6 +31,7 @@
   - Added Import-DscResource to example in README.md.
   - Added CodeCov and opt-in for all common tests (issue #41).
   - Added CodeCov badge to README.md
+    - Fixed CodeCov badge links so they now can be clicked on.
   - Fixed lint rule MD013 in CHANGELOG.md.
   - Fixed lint rule MD013 in README.md.
   - Fixed lint rule MD024 in README.md.

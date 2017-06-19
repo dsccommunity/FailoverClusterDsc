@@ -1,23 +1,31 @@
 # xFailOverCluster
 
-The **xFailOverCluster** module contains DSC resources for deployment and configuration of Failover Clustering.
+The **xFailOverCluster** module contains DSC resources for deployment and
+configuration of Failover Clustering.
 
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
-For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/)
+or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any
+additional questions or comments.
 
 ## Branches
 
 ### master
 
 [![Build status](https://ci.appveyor.com/api/projects/status/6a59vfritv4kbc7d/branch/master?svg=true)](https://ci.appveyor.com/project/PowerShell/xfailovercluster/branch/master)
+[![codecov](https://codecov.io/gh/PowerShell/xFailOverCluster/branch/master/graph/badge.svg)](https://codecov.io/gh/PowerShell/xFailOverCluster/branch/master>)
 
-This is the branch containing the latest release - no contributions should be made directly to this branch.
+This is the branch containing the latest release - no contributions should be
+made directly to this branch.
 
 ### dev
 
 [![Build status](https://ci.appveyor.com/api/projects/status/6a59vfritv4kbc7d/branch/dev?svg=true)](https://ci.appveyor.com/project/PowerShell/xfailovercluster/branch/dev)
+[![codecov](https://codecov.io/gh/PowerShell/xFailOverCluster/branch/dev/graph/badge.svg)](https://codecov.io/gh/PowerShell/xFailOverCluster/branch/dev>)
 
-This is the development branch to which contributions should be proposed by contributors as pull requests. This development branch will periodically be merged to the master branch, and be released to [PowerShell Gallery](https://www.powershellgallery.com/).
+This is the development branch to which contributions should be proposed by
+contributors as pull requests. This development branch will periodically be
+merged to the master branch, and be released to [PowerShell Gallery](https://www.powershellgallery.com/).
 
 ## Contributing
 
@@ -31,43 +39,50 @@ A full list of changes in each version can be found in the [change log](CHANGELO
 
 * [**xCluster**](#xcluster) Ensures that a group of machines form a cluster.
 * [**xClusterDisk**](#xclusterdisk) Configures shared disks in a cluster.
-* [**xClusterPreferredOwner**](#xclusterpreferredowner) Configures preferred owner of a cluster group in a cluster.
+* [**xClusterPreferredOwner**](#xclusterpreferredowner) Configures preferred
+  owner of a cluster group in a cluster.
 * [**xClusterQuorum**](#xclusterquorum) Configures quorum in a cluster.
-* [**xWaitForCluster**](#xwaitforcluster) Ensures that a node waits for a remote cluster is created.
+* [**xWaitForCluster**](#xwaitforcluster) Ensures that a node waits for a remote
+  cluster is created.
 
 ### xCluster
 
 Ensures that a group of machines form a cluster.
 
-#### Requirements
+#### Requirements for xCluster
 
 * Target machine must be running Windows Server 2008 R2 or later.
 
-#### Parameters
+#### Parameters for xCluster
 
 * **[String] Name** _(Key)_: Name of the cluster.
 * **[String] StaticIPAddress** _(Required)_: Static IP Address of the cluster.
-* **[String] DomainAdministratorCredential** _(Required)_:: Credential used to create the cluster.
+* **[String] DomainAdministratorCredential** _(Required)_: Credential used to
+  create the cluster.
 
-#### Examples
+#### Examples for xCluster
 
-[Cluster example](#cluster-example)
+* [Create first node of a failover cluster](/Examples/Resources/xCluster/1-CreateFirstNodeOfAFailoverCluster.ps1)
+* [Join additional node to a failover cluster](/Examples/Resources/xCluster/2-JoinAdditionalNodeToFailoverCluster.ps1)
+* [Create failover cluster with two nodes](/Examples/Resources/xCluster/3-CreateFailoverClusterWithTwoNodes.ps1)
 
 ### xClusterDisk
 
 Configures shared disks in a cluster.
 
-#### Requirements
+#### Requirements for xClusterDisk
 
 * Target machine must be running Windows Server 2008 R2 or later.
 
-#### Parameters
+#### Parameters for xClusterDisk
 
 * **[String] Number** _(Key)_: Number of the cluster disk.
-* **[String] Ensure** _(Write)_: Define if the cluster disk should be added (Present) or removed (Absent). Default value is 'Present'. { *Present* | Absent }
+* **[String] Ensure** _(Write)_: Define if the cluster disk should be added
+  (Present) or removed (Absent). Default value is 'Present'.
+  { *Present* | Absent }
 * **[String] Label** _(Write)_: The disk label inside the Failover Cluster.
 
-#### Examples
+#### Examples for xClusterDisk
 
 None.
 
@@ -75,11 +90,11 @@ None.
 
 Configures preferred owners of a cluster group in a cluster.
 
-#### Requirements
+#### Requirements for xClusterNetwork
 
 * Target machine must be running Windows Server 2008 R2 or later.
 
-#### Parameters
+#### Parameters for xClusterNetwork
 
 * **[String] Address** _(Key)_: None.
 * **[String] AddressMask** _(Key)_: None.
@@ -87,7 +102,7 @@ Configures preferred owners of a cluster group in a cluster.
 * **[String] Role** _(Write)_: None. { 0 | 1 | 3 }
 * **[String] Metric** _(Write)_: None.
 
-#### Examples
+#### Examples for xClusterNetwork
 
 None.
 
@@ -95,19 +110,21 @@ None.
 
 Configures preferred owners of a cluster group in a cluster.
 
-#### Requirements
+#### Requirements for xClusterPreferredOwner
 
 * Target machine must be running Windows Server 2008 R2 or later.
 
-#### Parameters
+#### Parameters for xClusterPreferredOwner
 
 * **[String] ClusterGroup** _(Key)_: Name of the cluster group.
 * **[String] ClusterName** _(Key)_: Name of the cluster.
 * **[String[]] Nodes** _(Required)_: The nodes to set as owners.
-* **[String[]] ClusterResources** _(Write)_: The resources to set preferred owner on.
-* **[String] Ensure** _(Write)_: If the preferred owners should be present or absent. Default value is 'Present'. { *Present* | Absent }
+* **[String[]] ClusterResources** _(Write)_: The resources to set preferred
+  owner on.
+* **[String] Ensure** _(Write)_: If the preferred owners should be present or
+  absent. Default value is 'Present'. { *Present* | Absent }
 
-#### Examples
+#### Examples for xClusterPreferredOwner
 
 None.
 
@@ -115,17 +132,21 @@ None.
 
 Configures quorum in a cluster.
 
-#### Requirements
+#### Requirements for xClusterQuorum
 
 * Target machine must be running Windows Server 2008 R2 or later.
 
-#### Parameters
+#### Parameters for xClusterQuorum
 
-* **[String] IsSingleInstance** _(Key)_: Specifies the resource is a single instance, the value must be 'Yes'.
-* **[String] Type** _(Write)_: Quorum type to use. { NodeMajority | NodeAndDiskMajority | NodeAndFileShareMajority, DiskOnly }.
-* **[String] Resource** _(Write)_: The name of the disk or file share resource to use as witness. This parameter is optional if the quorum type is set to NodeMajority.
+* **[String] IsSingleInstance** _(Key)_: Specifies the resource is a single
+  instance, the value must be 'Yes'.
+* **[String] Type** _(Write)_: Quorum type to use. { NodeMajority |
+  NodeAndDiskMajority | NodeAndFileShareMajority, DiskOnly }.
+* **[String] Resource** _(Write)_: The name of the disk or file share resource
+  to use as witness. This parameter is optional if the quorum type is set to
+  NodeMajority.
 
-#### Examples
+#### Examples for xClusterQuorum
 
 None.
 
@@ -133,165 +154,18 @@ None.
 
 Ensures that a node waits for a remote cluster is created.
 
-#### Requirements
+#### Requirements for xWaitForCluster
 
 * Target machine must be running Windows Server 2008 R2 or later.
 
-#### Parameters
+#### Parameters for xWaitForCluster
 
 * **[String] Name** _(Key)_: Name of the cluster to wait for.
-* **[UInt64] RetryIntervalSec** _(Write)_: Interval to check for cluster existence. Default values is 10 seconds.
-* **[UInt32] RetryCount** _(Write)_: Maximum number of retries to check for cluster existence. Default value is 50 retries.
+* **[UInt64] RetryIntervalSec** _(Write)_: Interval to check for cluster
+  existence. Default values is 10 seconds.
+* **[UInt32] RetryCount** _(Write)_: Maximum number of retries to check for
+  cluster existence. Default value is 50 retries.
 
-#### Examples
+#### Examples for xWaitForCluster
 
-[Cluster example](#cluster-example)
-
-## xFailOverCluster Examples
-
-### Cluster example
-
-In this example, we will create a failover cluster from two VMs.
-We will assume that a Domain Controller already exists, and that both VMs are already domain joined.
-Furthermore, the example assumes that your certificates are installed such that DSC can appropriately handle secrets such as the Domain Administrator Credential.
-Finally, the xCluster module must also be installed on the VMs, as specified above.
-For an example of an end to end scenario, check out the SQL HA Group blog post on the PowerShell Team Blog.
-
-```powershell
-Configuration ClusterDemo
-{
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [ValidateNotNullorEmpty()]
-        [PsCredential]
-        $DomainAdminCredential
-    )
-
-    Import-DscResource -ModuleName xFailOverCluster
-
-    Node $AllNodes.Where{$_.Role -eq 'PrimaryClusterNode' }.NodeName
-    {
-        WindowsFeature AddFailoverFeature
-        {
-            Ensure = 'Present'
-            Name = 'Failover-clustering'
-        }
-
-        WindowsFeature AddRemoteServerAdministrationToolsClusteringPowerShellFeature
-        {
-            Ensure = 'Present'
-            Name = 'RSAT-Clustering-PowerShell'
-            DependsOn = '[WindowsFeature]AddFailoverFeature'
-        }
-
-        WindowsFeature AddRemoteServerAdministrationToolsClusteringCmdInterfaceFeature
-        {
-            Ensure = 'Present'
-            Name = 'RSAT-Clustering-CmdInterface'
-            DependsOn = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringPowerShellFeature'
-        }
-
-        xCluster CreateCluster
-        {
-            Name = $Node.ClusterName
-            StaticIPAddress = $Node.ClusterIPAddress
-            DomainAdministratorCredential = $DomainAdminCredential
-            DependsOn = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringCmdInterfaceFeature'
-       }
-    }
-
-    Node $AllNodes.Where{ $_.Role -eq 'ReplicaServerNode' }.NodeName
-    {
-        WindowsFeature AddFailoverFeature
-        {
-            Ensure = 'Present'
-            Name = 'Failover-clustering'
-        }
-
-        WindowsFeature AddRemoteServerAdministrationToolsClusteringPowerShellFeature
-        {
-            Ensure = 'Present'
-            Name = 'RSAT-Clustering-PowerShell'
-            DependsOn = '[WindowsFeature]AddFailoverFeature'
-        }
-
-        WindowsFeature AddRemoteServerAdministrationToolsClusteringCmdInterfaceFeature
-        {
-            Ensure = 'Present'
-            Name = 'RSAT-Clustering-CmdInterface'
-            DependsOn = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringPowerShellFeature'
-        }
-
-        xWaitForCluster WaitForCluster
-        {
-            Name = $Node.ClusterName
-            RetryIntervalSec = 10
-            RetryCount = 60
-            DependsOn = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringCmdInterfaceFeature'
-        }
-
-        xCluster JoinSecondNodeToCluster
-        {
-            Name = $Node.ClusterName
-            StaticIPAddress = $Node.ClusterIPAddress
-            DomainAdministratorCredential = $DomainAdminCredential
-            DependsOn = '[xWaitForCluster]WaitForCluster'
-        }
-    }
-}
-
-$ConfigData = @{
-    AllNodes = @(
-
-        @{
-            NodeName= '*'
-
-            # Use your own public certificate of the same certificate that are installed on the target nodes.
-            CertificateFile = 'C:\Certificates\DscDemo.cer'
-
-            <#
-                Replace with the thumbprint of certificate that are installed on both the target nodes.
-                This must be the private certificate of the same public certificate used in the previous
-                parameter CertificateFile.
-                For this example it is assumed that both machines have the same certificate installed.
-            #>
-            Thumbprint = "E513EEFCB763E6954C52BA66A1A81231BF3F551E"
-
-            <#
-                Replace with your own CNO (Cluster Name Object) and IP address.
-
-                Please note that if the CNO is prestaged, then the computer object must be disabled for the
-                resource xCluster to be able to create the cluster.
-                If the CNO is not prestaged, then the credential used in the xCluster resource must have
-                the permission in Active Directory to create the CNO (Cluster Name Object).
-            #>
-            ClusterName = 'Cluster'
-            ClusterIPAddress = '192.168.100.20/24'
-        },
-
-        # Node01 - Primary cluster node.
-        @{
-            # Replace with the name of the actual target node.
-            NodeName= 'Node01'
-
-            # This is used in the configuration to know which resource to compile.
-            Role = 'PrimaryClusterNode'
-         },
-
-         # Node02 - Secondary cluster node
-         @{
-            # Replace with the name of the actual target node.
-            NodeName= 'Node02'
-
-            # This is used in the configuration to know which resource to compile.
-            Role = 'ReplicaServerNode'
-         }
-    )
-}
-
-# This user must have the permission to create the CNO (Cluster Name Object) in Active Directory, unless it is prestaged.
-$domainAdminCredential = Get-Credential -UserName 'ClusterDemo\Administrator' -Message 'Enter password for private domain Administrator'
-
-ClusterDemo -ConfigurationData $ConfigData -DomainAdminCredential $domainAdminCredential
-```
+* [Wait for failover cluster to be present](/Examples/Resources/xWaitForCluster/1-WaitForFailoverClusterToBePresent.ps1)

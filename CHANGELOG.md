@@ -38,6 +38,8 @@
   - Removed example from README.md (issue #42).
   - Fixed typo in filename for ISSUE\_TEMPLATE. Was 'ISSUE\_TEMPLATE', now it is
     correctly 'ISSUE\_TEMPLATE.md'.
+  - Changed appveyor.yml to use the new default test framework in the AppVeyor
+    module in DscResource.Tests (AppVeyor.psm1).
 - Changes to xCluster
   - Added examples
     - 1-CreateFirstNodeOfAFailoverCluster.ps1

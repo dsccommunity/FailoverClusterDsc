@@ -342,7 +342,7 @@ function Set-ImpersonateAs
 {
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
         $Credential
     )
@@ -382,7 +382,7 @@ function Close-UserToken
 {
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.IntPtr]
         $Token
     )

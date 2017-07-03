@@ -36,7 +36,7 @@ function Get-TargetResource
             throw "Can't find the cluster $Name"
         }
 
-        $address = Get-ClusterGroup -Cluster $Name -Name "Cluster IP Address" | Get-ClusterParameter "Address"
+        $address = Get-ClusterResource -Cluster $Name -Name "Cluster IP Address" | Get-ClusterParameter "Address"
     }
     finally
     {

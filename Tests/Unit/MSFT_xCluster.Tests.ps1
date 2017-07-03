@@ -13,7 +13,6 @@ if ( (-not (Test-Path -Path (Join-Path -Path $script:moduleRoot -ChildPath 'DSCR
 
 Import-Module -Name (Join-Path -Path $script:moduleRoot -ChildPath (Join-Path -Path 'DSCResource.Tests' -ChildPath 'TestHelper.psm1')) -Force
 
-# TODO: Insert the correct <ModuleName> and <ResourceName> for your resource
 $TestEnvironment = Initialize-TestEnvironment `
     -DSCModuleName $script:DSCModuleName `
     -DSCResourceName $script:DSCResourceName `
@@ -37,9 +36,9 @@ try
     Invoke-TestSetup
 
     InModuleScope $script:DSCResourceName {
-        $mockAdministratorUserName = "COMPANY\clusteradmin"
-        $mockAdministratorPassword = "dummyPassw0rd" | ConvertTo-SecureString -AsPlainText -Force
-        $mockAdministratorCredential = New-Object System.Management.Automation.PSCredential( $mockAdministratorUserName, $mockAdministratorPassword )
+        $mockAdministratorUserName = 'COMPANY\ClusterAdmin'
+        $mockAdministratorPassword = ConvertTo-SecureString -String 'dummyPassW0rd' -AsPlainText -Force
+        $mockAdministratorCredential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList @($mockAdministratorUserName, $mockAdministratorPassword)
 
         $mockDomainName = 'domain.local'
         $mockServerName = $env:COMPUTERNAME

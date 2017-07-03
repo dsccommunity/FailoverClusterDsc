@@ -47,7 +47,10 @@ A full list of changes in each version can be found in the [change log](CHANGELO
 
 ### xCluster
 
-Ensures that a group of machines form a cluster.
+Used to configure a failover cluster. If the cluster does not exist, it will be
+created in the domain and the static IP address will be assigned to the cluster.
+When the cluster exist (either it was created or already existed), it will add
+the target node ($env:COMPUTERNAME) to the cluster.
 
 #### Requirements for xCluster
 
@@ -55,10 +58,11 @@ Ensures that a group of machines form a cluster.
 
 #### Parameters for xCluster
 
-* **[String] Name** _(Key)_: Name of the cluster.
-* **[String] StaticIPAddress** _(Required)_: Static IP Address of the cluster.
+* **[String] Name** _(Key)_: Name of the failover cluster.
+* **[String] StaticIPAddress** _(Required)_: Static IP Address of the failover
+  cluster.
 * **[String] DomainAdministratorCredential** _(Required)_: Credential used to
-  create the cluster.
+  create the failover cluster in Active Directory.
 
 #### Examples for xCluster
 

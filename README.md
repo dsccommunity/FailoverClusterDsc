@@ -58,10 +58,10 @@ the target node ($env:COMPUTERNAME) to the cluster.
 
 #### Parameters for xCluster
 
-* **[String] Name** _(Key)_: Name of the failover cluster.
-* **[String] StaticIPAddress** _(Required)_: Static IP Address of the failover
+* **`[String]` Name** _(Key)_: Name of the failover cluster.
+* **`[String]` StaticIPAddress** _(Required)_: Static IP Address of the failover
   cluster.
-* **[String] DomainAdministratorCredential** _(Required)_: Credential used to
+* **`[String]` DomainAdministratorCredential** _(Required)_: Credential used to
   create the failover cluster in Active Directory.
 
 #### Examples for xCluster
@@ -80,11 +80,11 @@ Configures shared disks in a cluster.
 
 #### Parameters for xClusterDisk
 
-* **[String] Number** _(Key)_: Number of the cluster disk.
-* **[String] Ensure** _(Write)_: Define if the cluster disk should be added
+* **`[String]` Number** _(Key)_: Number of the cluster disk.
+* **`[String]` Ensure** _(Write)_: Define if the cluster disk should be added
   (Present) or removed (Absent). Default value is 'Present'.
   { *Present* | Absent }
-* **[String] Label** _(Write)_: The disk label inside the Failover Cluster.
+* **`[String]` Label** _(Write)_: The disk label inside the Failover Cluster.
 
 #### Examples for xClusterDisk
 
@@ -100,11 +100,11 @@ Configures preferred owners of a cluster group in a cluster.
 
 #### Parameters for xClusterNetwork
 
-* **[String] Address** _(Key)_: None.
-* **[String] AddressMask** _(Key)_: None.
-* **[String] Name** _(Write)_: None.
-* **[String] Role** _(Write)_: None. { 0 | 1 | 3 }
-* **[String] Metric** _(Write)_: None.
+* **`[String]` Address** _(Key)_: None.
+* **`[String]` AddressMask** _(Key)_: None.
+* **`[String]` Name** _(Write)_: None.
+* **`[String]` Role** _(Write)_: None. { 0 | 1 | 3 }
+* **`[String]` Metric** _(Write)_: None.
 
 #### Examples for xClusterNetwork
 
@@ -120,12 +120,12 @@ Configures preferred owners of a cluster group in a cluster.
 
 #### Parameters for xClusterPreferredOwner
 
-* **[String] ClusterGroup** _(Key)_: Name of the cluster group.
-* **[String] ClusterName** _(Key)_: Name of the cluster.
-* **[String[]] Nodes** _(Required)_: The nodes to set as owners.
-* **[String[]] ClusterResources** _(Write)_: The resources to set preferred
+* **`[String]` ClusterGroup** _(Key)_: Name of the cluster group.
+* **`[String]` ClusterName** _(Key)_: Name of the cluster.
+* **`[String[]]` Nodes** _(Required)_: The nodes to set as owners.
+* **`[String[]]` ClusterResources** _(Write)_: The resources to set preferred
   owner on.
-* **[String] Ensure** _(Write)_: If the preferred owners should be present or
+* **`[String]` Ensure** _(Write)_: If the preferred owners should be present or
   absent. Default value is 'Present'. { *Present* | Absent }
 
 #### Examples for xClusterPreferredOwner
@@ -142,11 +142,11 @@ Configures quorum in a cluster.
 
 #### Parameters for xClusterQuorum
 
-* **[String] IsSingleInstance** _(Key)_: Specifies the resource is a single
+* **`[String]` IsSingleInstance** _(Key)_: Specifies the resource is a single
   instance, the value must be 'Yes'.
-* **[String] Type** _(Write)_: Quorum type to use. { NodeMajority |
+* **`[String]` Type** _(Write)_: Quorum type to use. { NodeMajority |
   NodeAndDiskMajority | NodeAndFileShareMajority, DiskOnly }.
-* **[String] Resource** _(Write)_: The name of the disk or file share resource
+* **`[String]` Resource** _(Write)_: The name of the disk or file share resource
   to use as witness. This parameter is optional if the quorum type is set to
   NodeMajority.
 
@@ -164,10 +164,10 @@ Ensures that a node waits for a remote cluster is created.
 
 #### Parameters for xWaitForCluster
 
-* **[String] Name** _(Key)_: Name of the cluster to wait for.
-* **[UInt64] RetryIntervalSec** _(Write)_: Interval to check for cluster
+* **`[String]` Name** _(Key)_: Name of the cluster to wait for.
+* **`[UInt64]` RetryIntervalSec** _(Write)_: Interval to check for cluster
   existence. Default values is 10 seconds.
-* **[UInt32] RetryCount** _(Write)_: Maximum number of retries to check for
+* **`[UInt32]` RetryCount** _(Write)_: Maximum number of retries to check for
   cluster existence. Default value is 50 retries.
 
 #### Examples for xWaitForCluster

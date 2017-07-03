@@ -138,20 +138,18 @@ try
                 $mockDynamicDomainName = $mockDomainName
                 $mockDynamicServerName = $mockServerName
 
-                Context 'Validate Get-TargetResource method' {
-                    It 'Returns a [System.Collection.Hashtable] type' {
-                        $getTargetResourceResult = Get-TargetResource @mockDefaultParameters
-                        $getTargetResourceResult | Should BeOfType [System.Collections.Hashtable]
-                    }
-
-                    It 'Returns current configuration' {
-                        $getTargetResourceResult = Get-TargetResource @mockDefaultParameters
-                        $getTargetResourceResult.Name             | Should Be $mockDefaultParameters.Name
-                        $getTargetResourceResult.StaticIPAddress  | Should Be $mockDefaultParameters.StaticIPAddress
-                    }
-
-                    Assert-VerifiableMocks
+                It 'Returns a [System.Collection.Hashtable] type' {
+                    $getTargetResourceResult = Get-TargetResource @mockDefaultParameters
+                    $getTargetResourceResult | Should BeOfType [System.Collections.Hashtable]
                 }
+
+                It 'Returns current configuration' {
+                    $getTargetResourceResult = Get-TargetResource @mockDefaultParameters
+                    $getTargetResourceResult.Name             | Should Be $mockDefaultParameters.Name
+                    $getTargetResourceResult.StaticIPAddress  | Should Be $mockDefaultParameters.StaticIPAddress
+                }
+
+                Assert-VerifiableMocks
             }
         }
 

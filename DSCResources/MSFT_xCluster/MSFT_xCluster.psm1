@@ -11,32 +11,36 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [parameter(Mandatory)]
-        [string] $Name,
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
 
-        [parameter(Mandatory)]
-        [string] $StaticIPAddress,
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $StaticIPAddress,
 
-        [parameter(Mandatory)]
-        [PSCredential] $DomainAdministratorCredential
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $DomainAdministratorCredential
     )
 
-    $ComputerInfo = Get-WmiObject Win32_ComputerSystem
-    if (($ComputerInfo -eq $null) -or ($ComputerInfo.Domain -eq $null))
+    $computerInformation = Get-WmiObject -Class Win32_ComputerSystem
+    if (($null -eq $computerInformation) -or ($null -eq $computerInformation.Domain))
     {
-        throw "Can't find machine's domain name"
+        throw 'Can''t find machine''s domain name'
     }
 
     try
     {
-        ($oldToken, $context, $newToken) = ImpersonateAs -cred $DomainAdministratorCredential
-        $cluster = Get-Cluster -Name $Name -Domain $ComputerInfo.Domain
+        ($oldToken, $context, $newToken) = ImpersonateAs -Credential $DomainAdministratorCredential
+
+        $cluster = Get-Cluster -Name $Name -Domain $computerInformation.Domain
         if ($null -eq $cluster)
         {
             throw "Can't find the cluster $Name"
         }
 
-        $address = Get-ClusterGroup -Cluster $Name -Name "Cluster IP Address" | Get-ClusterParameter "Address"
+        $address = Get-ClusterGroup -Cluster $Name -Name 'Cluster IP Address' | Get-ClusterParameter -Name 'Address'
     }
     finally
     {
@@ -44,13 +48,14 @@ function Get-TargetResource
         {
             $context.Undo()
             $context.Dispose()
-            CloseUserToken($newToken)
+            Close-UserToken -Token $newToken
         }
     }
 
-    return  @{
-        Name            = $Name
-        StaticIPAddress = $address.Value
+    @{
+        Name                          = $Name
+        StaticIPAddress               = $address.Value
+        DomainAdministratorCredential = $DomainAdministratorCredential
     }
 }
 
@@ -61,29 +66,32 @@ function Set-TargetResource
 {
     param
     (
-        [parameter(Mandatory)]
-        [string] $Name,
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
 
-        [parameter(Mandatory)]
-        [string] $StaticIPAddress,
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $StaticIPAddress,
 
-        [parameter(Mandatory)]
-        [PSCredential] $DomainAdministratorCredential
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $DomainAdministratorCredential
     )
 
     $bCreate = $true
 
     Write-Verbose -Message "Checking if Cluster $Name is present ..."
 
-    $ComputerInfo = Get-WmiObject Win32_ComputerSystem
-    if (($ComputerInfo -eq $null) -or ($ComputerInfo.Domain -eq $null))
+    $computerInformation = Get-WmiObject -Class Win32_ComputerSystem
+    if (($null -eq $computerInformation) -or ($null -eq $computerInformation.Domain))
     {
-        throw "Can't find machine's domain name"
+        throw 'Can''t find machine''s domain name'
     }
 
     try
     {
-        $cluster = Get-Cluster -Name $Name -Domain $ComputerInfo.Domain
+        $cluster = Get-Cluster -Name $Name -Domain $computerInformation.Domain
 
         if ($cluster)
         {
@@ -97,7 +105,7 @@ function Set-TargetResource
 
     try
     {
-        ($oldToken, $context, $newToken) = ImpersonateAs -cred $DomainAdministratorCredential
+        ($oldToken, $context, $newToken) = ImpersonateAs -Credential $DomainAdministratorCredential
 
         if ($bCreate)
         {
@@ -105,9 +113,9 @@ function Set-TargetResource
 
             New-Cluster -Name $Name -Node $env:COMPUTERNAME -StaticAddress $StaticIPAddress -NoStorage -Force -ErrorAction Stop
 
-            if (!(Get-Cluster))
+            if ( -not (Get-Cluster))
             {
-                throw "Cluster creation failed. Please verify output of 'Get-Cluster' command"
+                throw 'Cluster creation failed. Please verify output of ''Get-Cluster'' command'
             }
 
             Write-Verbose -Message "Created Cluster $Name"
@@ -123,16 +131,16 @@ function Set-TargetResource
             {
                 if ($node.Name -eq $env:COMPUTERNAME)
                 {
-                    if ($node.State -eq "Down")
+                    if ($node.State -eq 'Down')
                     {
-                        Write-Verbose -Message "node $env:COMPUTERNAME was down, need remove it from the list."
+                        Write-Verbose -Message "Node $env:COMPUTERNAME was down, need remove it from the list."
 
-                        Remove-ClusterNode $env:COMPUTERNAME -Cluster $Name -Force
+                        Remove-ClusterNode -Name $env:COMPUTERNAME -Cluster $Name -Force
                     }
                 }
             }
 
-            Add-ClusterNode $env:COMPUTERNAME -Cluster $Name -NoStorage
+            Add-ClusterNode -Name $env:COMPUTERNAME -Cluster $Name -NoStorage
 
             Write-Verbose -Message "Added node to Cluster $Name"
         }
@@ -143,7 +151,7 @@ function Set-TargetResource
         {
             $context.Undo()
             $context.Dispose()
-            CloseUserToken($newToken)
+            Close-UserToken -Token $newToken
         }
     }
 }
@@ -164,29 +172,32 @@ function Test-TargetResource
     [OutputType([Boolean])]
     param
     (
-        [parameter(Mandatory)]
-        [string] $Name,
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
 
-        [parameter(Mandatory)]
-        [string] $StaticIPAddress,
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $StaticIPAddress,
 
-        [parameter(Mandatory)]
-        [PSCredential] $DomainAdministratorCredential
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $DomainAdministratorCredential
     )
 
-    $bRet = $false
+    $returnValue = $false
 
     Write-Verbose -Message "Checking if Cluster $Name is present ..."
 
-    $ComputerInfo = Get-WmiObject Win32_ComputerSystem
-    if (($ComputerInfo -eq $null) -or ($ComputerInfo.Domain -eq $null))
+    $ComputerInfo = Get-WmiObject -Class Win32_ComputerSystem
+    if (($null -eq $ComputerInfo) -or ($null -eq $ComputerInfo.Domain))
     {
         throw "Can't find machine's domain name"
     }
 
     try
     {
-        ($oldToken, $context, $newToken) = ImpersonateAs -cred $DomainAdministratorCredential
+        ($oldToken, $context, $newToken) = ImpersonateAs -Credential $DomainAdministratorCredential
 
         $cluster = Get-Cluster -Name $Name -Domain $ComputerInfo.Domain
 
@@ -202,9 +213,9 @@ function Test-TargetResource
             {
                 if ($node.Name -eq $env:COMPUTERNAME)
                 {
-                    if ($node.State -eq "Up")
+                    if ($node.State -eq 'Up')
                     {
-                        $bRet = $true
+                        $returnValue = $true
                     }
                     else
                     {
@@ -215,7 +226,7 @@ function Test-TargetResource
                 }
             }
 
-            if ($bRet)
+            if ($returnValue)
             {
                 Write-Verbose -Message "Node is in cluster $Name"
             }
@@ -236,15 +247,15 @@ function Test-TargetResource
             $context.Undo()
             $context.Dispose()
 
-            CloseUserToken($newToken)
+            Close-UserToken -Token $newToken
         }
     }
 
-    $bRet
+    $returnValue
 }
 
 
-function Get-ImpersonatetLib
+function Get-ImpersonateLib
 {
     if ($script:ImpersonateLib)
     {
@@ -261,16 +272,22 @@ public static extern Boolean CloseHandle(IntPtr hObject);
     $script:ImpersonateLib = Add-Type -PassThru -Namespace 'Lib.Impersonation' -Name ImpersonationLib -MemberDefinition $sig
 
     return $script:ImpersonateLib
-
 }
 
-function ImpersonateAs([PSCredential] $cred)
+function ImpersonateAs
 {
+    param
+    (
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential
+    )
+
     [IntPtr] $userToken = [Security.Principal.WindowsIdentity]::GetCurrent().Token
     $userToken
-    $ImpersonateLib = Get-ImpersonatetLib
+    $ImpersonateLib = Get-ImpersonateLib
 
-    $bLogin = $ImpersonateLib::LogonUser($cred.GetNetworkCredential().UserName, $cred.GetNetworkCredential().Domain, $cred.GetNetworkCredential().Password,
+    $bLogin = $ImpersonateLib::LogonUser($Credential.GetNetworkCredential().UserName, $Credential.GetNetworkCredential().Domain, $Credential.GetNetworkCredential().Password,
         9, 0, [ref]$userToken)
 
     if ($bLogin)
@@ -280,18 +297,26 @@ function ImpersonateAs([PSCredential] $cred)
     }
     else
     {
-        throw "Can't Logon as User $cred.GetNetworkCredential().UserName."
+        throw "Can't Logon as User $($Credential.GetNetworkCredential().UserName)."
     }
+
     $context, $userToken
 }
 
-function CloseUserToken([IntPtr] $token)
+function Close-UserToken
 {
-    $ImpersonateLib = Get-ImpersonatetLib
+    param
+    (
+        [Parameter()]
+        [System.IntPtr]
+        $Token
+    )
 
-    $bLogin = $ImpersonateLib::CloseHandle($token)
-    if (!$bLogin)
+    $ImpersonateLib = Get-ImpersonateLib
+
+    $bLogin = $ImpersonateLib::CloseHandle($Token)
+    if (-not $bLogin)
     {
-        throw "Can't close token"
+        throw 'Can''t close token'
     }
 }

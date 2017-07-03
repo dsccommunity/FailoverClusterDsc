@@ -41,6 +41,11 @@
     correctly 'ISSUE\_TEMPLATE.md'.
   - Changed appveyor.yml to use the new default test framework in the AppVeyor
     module in DscResource.Tests (AppVeyor.psm1).
+  - Added VS Code workspace settings file with formatting settings matching the
+    Style Guideline (issue #67). That will make it possible inside VS Code to
+    press SHIFT+ALT+F, or press F1 and choose 'Format document' in the list. The
+    PowerShell code will then be formatted according to the Style Guideline
+    (although maybe not complete, but would help a long way).
 - Changes to xCluster
   - Added examples
     - 1-CreateFirstNodeOfAFailoverCluster.ps1

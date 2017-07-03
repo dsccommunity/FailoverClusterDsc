@@ -1,11 +1,16 @@
-#
-# xCluster: DSC resource to configure a Windows Cluster. If the cluster does not exist, it will create one in the
-# domain and assign the StaticIPAddress to the cluster. Then, it will add current node to the cluster.
-#
+<#
+    .SYNOPSIS
+        Returns the current state of the failover cluster.
 
-#
-# The Get-TargetResource cmdlet.
-#
+    .PARAMETER Name
+        Name of the failover cluster.
+
+    .PARAMETER StaticIPAddress
+        Static IP Address of the failover cluster.
+
+    .PARAMETER DomainAdministratorCredential
+        Credential used to create the failover cluster in Active Directory.
+#>
 function Get-TargetResource
 {
     [OutputType([System.Collections.Hashtable])]
@@ -32,7 +37,7 @@ function Get-TargetResource
 
     try
     {
-        ($oldToken, $context, $newToken) = ImpersonateAs -Credential $DomainAdministratorCredential
+        ($oldToken, $context, $newToken) = Set-ImpersonateAs -Credential $DomainAdministratorCredential
 
         $cluster = Get-Cluster -Name $Name -Domain $computerInformation.Domain
         if ($null -eq $cluster)
@@ -59,9 +64,28 @@ function Get-TargetResource
     }
 }
 
-#
-# The Set-TargetResource cmdlet.
-#
+<#
+    .SYNOPSIS
+        Creates the failover cluster and adds a node to the failover cluster.
+
+    .PARAMETER Name
+        Name of the failover cluster.
+
+    .PARAMETER StaticIPAddress
+        Static IP Address of the failover cluster.
+
+    .PARAMETER DomainAdministratorCredential
+        Credential used to create the failover cluster in Active Directory.
+
+    .NOTES
+        If the cluster does not exist, it will be created in the domain and the
+        static IP address will be assigned to the cluster.
+        When the cluster exist (either it was created or already existed), it
+        will add the target node ($env:COMPUTERNAME) to the cluster.
+        If the target node already is a member of the failover cluster but has
+        status down, it will be removed and then added again to the failover
+        cluster.
+#>
 function Set-TargetResource
 {
     param
@@ -105,7 +129,7 @@ function Set-TargetResource
 
     try
     {
-        ($oldToken, $context, $newToken) = ImpersonateAs -Credential $DomainAdministratorCredential
+        ($oldToken, $context, $newToken) = Set-ImpersonateAs -Credential $DomainAdministratorCredential
 
         if ($bCreate)
         {
@@ -156,17 +180,32 @@ function Set-TargetResource
     }
 }
 
-#
-# Test-TargetResource
-#
-# The code will check the following in order:
-# 1. Is machine in domain?
-# 2. Does the cluster exist in the domain?
-# 3. Is the machine is in the cluster's nodelist?
-# 4. Does the cluster node is UP?
-#
-# Function will return FALSE if any above is not true. Which causes cluster to be configured.
-#
+<#
+    .SYNOPSIS
+        Test the failover cluster exist and that the node is a member of the
+        failover cluster.
+
+    .PARAMETER Name
+        Name of the failover cluster.
+
+    .PARAMETER StaticIPAddress
+        Static IP Address of the failover cluster.
+
+    .PARAMETER DomainAdministratorCredential
+        Credential used to create the failover cluster in Active Directory.
+
+    .NOTES
+        The code will check the following in order:
+
+          1. Is target node a member of the Active Directory domain?
+          2. Does the failover cluster exist in the Active Directory domain?
+          3. Is the target node a member of the failover cluster?
+          4. Does the cluster node have the status UP?
+
+        If the first return false an error will be thrown. If either of the
+        other return $false, then the cluster will be created, if it does not
+        exist and then the node will be added to the failover cluster.
+#>
 function Test-TargetResource
 {
     [OutputType([Boolean])]
@@ -197,7 +236,7 @@ function Test-TargetResource
 
     try
     {
-        ($oldToken, $context, $newToken) = ImpersonateAs -Credential $DomainAdministratorCredential
+        ($oldToken, $context, $newToken) = Set-ImpersonateAs -Credential $DomainAdministratorCredential
 
         $cluster = Get-Cluster -Name $Name -Domain $ComputerInfo.Domain
 
@@ -254,7 +293,11 @@ function Test-TargetResource
     $returnValue
 }
 
+<#
+    .SYNOPSIS
+        Loads and returns a reference to the impersonation library.
 
+#>
 function Get-ImpersonateLib
 {
     if ($script:ImpersonateLib)
@@ -274,7 +317,28 @@ public static extern Boolean CloseHandle(IntPtr hObject);
     return $script:ImpersonateLib
 }
 
-function ImpersonateAs
+<#
+    .SYNOPSIS
+        Starts to impersonate the credentials provided in parameter Credential on the current user context.
+
+    .PARAMETER Credential
+        The credentials that should be impersonated.
+
+    .OUTPUTS
+        Returns three values.
+
+        First value: The current user token before impersonation.
+        Second value: The impersonation context returned when impersonation is started.
+        Third value: The impersonated user token.
+
+    .NOTES
+        LogonUser function
+        https://msdn.microsoft.com/en-us/library/windows/desktop/aa378184(v=vs.85).aspx
+
+        WindowsIdentity.Impersonate Method ()
+        https://msdn.microsoft.com/en-us/library/w070t6ka(v=vs.110).aspx
+#>
+function Set-ImpersonateAs
 {
     param
     (
@@ -303,6 +367,17 @@ function ImpersonateAs
     $context, $userToken
 }
 
+<#
+    .SYNOPSIS
+        Closes a (impersonation) user token.
+
+    .PARAMETER Token
+        The user token to close.
+
+    .NOTES
+        CloseHandle function
+        https://msdn.microsoft.com/en-us/library/windows/desktop/ms724211(v=vs.85).aspx
+#>
 function Close-UserToken
 {
     param

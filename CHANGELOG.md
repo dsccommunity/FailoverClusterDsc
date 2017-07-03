@@ -52,9 +52,6 @@
     PowerShell module.
   - Added a script file (Tests\Unit\Stubs\Write-ModuleStubFile.ps1) to be able
     to rebuild the stub file (FailoverClusters.stubs.psm1) whenever needed.
-  - Added settings file for VS Code extension markdownlint (.markdownlint.json).
-    This will help keeping the line-length (MD013) in markdown file for contributors
-    using VS Code.
 - Changes to xCluster
   - Added examples
     - 1-CreateFirstNodeOfAFailoverCluster.ps1

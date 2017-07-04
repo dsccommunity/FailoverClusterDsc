@@ -78,6 +78,10 @@
     method and instead added logic so that Set-TargetResource evaluates if it
     should remove a disk (issue #90).
   - Changed the code to be more aligned with the style guideline.
+  - Added examples
+    - 1-AddClusterDisk.ps1
+    - 2-RemoveClusterDisk.ps1
+  - Added links to examples from README.md.
 
 ### 1.6.0.0
 

@@ -71,6 +71,13 @@
   - Added example
     - 1-WaitForFailoverClusterToBePresent.ps1
   - Added link to example from README.md
+- Changes to xClusterDisk
+  - Refactored the unit test for this resource to use stubs and increase coverage
+    (issue #74).
+  - Removed an evaluation that called Test-TargetResource in Set-TargetResource
+    method and instead added logic so that Set-TargetResource evaluates if it
+    should remove a disk (issue #90).
+  - Changed the code to be more aligned with the style guideline.
 
 ### 1.6.0.0
 

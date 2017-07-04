@@ -92,7 +92,6 @@ Configures shared disks in a cluster.
 * [Add a cluster disk to the failover cluster](/Examples/Resources/xClusterDisk/1-AddClusterDisk.ps1)
 * [Remove a cluster disk from the failover cluster](/Examples/Resources/xClusterDisk/2-RemoveClusterDisk.ps1)
 
-
 ### xClusterNetwork
 
 Configures preferred owners of a cluster group in a cluster.

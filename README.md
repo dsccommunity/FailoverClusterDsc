@@ -80,15 +80,17 @@ Configures shared disks in a cluster.
 
 #### Parameters for xClusterDisk
 
-* **`[String]` Number** _(Key)_: Number of the cluster disk.
+* **`[String]` Number** _(Key)_: The disk number of the cluster disk.
 * **`[String]` Ensure** _(Write)_: Define if the cluster disk should be added
   (Present) or removed (Absent). Default value is 'Present'.
   { *Present* | Absent }
-* **`[String]` Label** _(Write)_: The disk label inside the Failover Cluster.
+* **`[String]` Label** _(Write)_: The disk label that should be assigned to the
+  disk on the Failover Cluster disk resource.
 
 #### Examples for xClusterDisk
 
-None.
+* [Add a cluster disk to the failover cluster](/Examples/Resources/xClusterDisk/1-AddClusterDisk.ps1)
+* [Remove a cluster disk from the failover cluster](/Examples/Resources/xClusterDisk/2-RemoveClusterDisk.ps1)
 
 ### xClusterNetwork
 

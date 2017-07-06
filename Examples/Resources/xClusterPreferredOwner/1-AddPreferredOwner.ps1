@@ -21,7 +21,7 @@ Configuration Example
             ClusterResources = @('Resource1','Resource2')
         }
 
-        xClusterPreferredOwner 'AddOwnersForClusterGroup1'
+        xClusterPreferredOwner 'AddOwnersForClusterGroup2'
         {
             Ensure = 'Present'
             ClusterName = 'TESTCLU1'

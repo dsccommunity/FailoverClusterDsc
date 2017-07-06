@@ -95,6 +95,9 @@
     (issue #75).
   - Changed the code to be more aligned with the style guideline.
   - Updated resource and parameter description in README.md and schema.mof.
+  - Added example (issue #57)
+    - 1-ChangeClusterNetwork.ps1
+  - Added links to examples from README.md.
 
 ### 1.6.0.0
 

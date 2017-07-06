@@ -136,7 +136,7 @@ https://technet.microsoft.com/en-us/library/dn550728(v=ws.11).aspx
 
 #### Examples for xClusterNetwork
 
-None.
+* [Change properties of two cluster network resources in the failover cluster](/Examples/Resources/xClusterNetwork/1-ChangeClusterNetwork.ps1)
 
 ### xClusterPreferredOwner
 

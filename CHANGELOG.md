@@ -90,6 +90,9 @@
     - 1-AddPreferredOwner.ps1
     - 2-RemovePreferredOwner.ps1
   - Added links to examples from README.md.
+- Changes to xClusterNetwork
+  - Refactored the unit test for this resource to use stubs and increase coverage
+    (issue #75).
 
 ### 1.6.0.0
 

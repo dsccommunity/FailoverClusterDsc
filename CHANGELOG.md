@@ -78,7 +78,7 @@
     method and instead added logic so that Set-TargetResource evaluates if it
     should remove a disk (issue #90).
   - Changed the code to be more aligned with the style guideline.
-  - Added examples
+  - Added examples (issue ¤46)
     - 1-AddClusterDisk.ps1
     - 2-RemoveClusterDisk.ps1
   - Added links to examples from README.md.
@@ -86,7 +86,7 @@
   - Refactored the unit test for this resource to use stubs and increase coverage
     (issue #76).
   - Changed the code to be more aligned with the style guideline.
-  - Added examples
+  - Added examples (issue #52)
     - 1-AddPreferredOwner.ps1
     - 2-RemovePreferredOwner.ps1
   - Added links to examples from README.md.

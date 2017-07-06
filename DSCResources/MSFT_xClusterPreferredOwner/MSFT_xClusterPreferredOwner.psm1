@@ -1,34 +1,48 @@
-#
-# MSFT_xClusterPreferredOwner: DSC resource to configure the Windows Failover Cluster Preferred Owner.
-#
+<#
+    .SYNOPSIS
+        Returns the current state of the failover cluster group and cluster
+        resource preferred owners.
 
-#
-# The Get-TargetResource cmdlet.
-#
+    .PARAMETER ClusterGroup
+        Name of the cluster group.
+
+    .PARAMETER ClusterName
+        Name of the cluster.
+
+    .PARAMETER Nodes
+        The nodes to set as owners.
+
+    .PARAMETER ClusterResources
+        The resources to set preferred owners on.
+
+    .PARAMETER Ensure
+        If the preferred owners should be present or absent. Default value is
+        'Present'.
+#>
 function Get-TargetResource
 {
-    [OutputType([Hashtable])]
+    [OutputType([System.Collections.Hashtable])]
     param
     (
         [Parameter(Mandatory = $true)]
-        [string]
+        [System.String]
         $ClusterGroup,
 
-        [parameter(Mandatory = $true)]
-        [string]
+        [Parameter(Mandatory = $true)]
+        [System.String]
         $ClusterName,
 
         [Parameter(Mandatory = $true)]
-        [string[]]
+        [System.String[]]
         $Nodes,
 
         [Parameter()]
-        [string[]]
+        [System.String[]]
         $ClusterResources,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
-        [String]
+        [System.String]
         $Ensure = 'Present'
     )
 
@@ -37,57 +51,77 @@ function Get-TargetResource
     $ownerNodes = @(
 
         Write-Verbose -Message "Retrieving Owner information for Cluster Group $ClusterGroup"
-        (((Get-ClusterGroup -Cluster $ClusterName) | Where-Object -FilterScript {$_.Name -like "$ClusterGroup"} | Get-ClusterOwnerNode).OwnerNodes).Name
+        (((Get-ClusterGroup -Cluster $ClusterName) | Where-Object -FilterScript {
+            $_.Name -like $ClusterGroup
+        } | Get-ClusterOwnerNode).OwnerNodes).Name
 
         if ($ClusterResources)
         {
             foreach ($resource in $ClusterResources)
             {
                 Write-Verbose -Message "Retrieving Owner information for Cluster Resource $resource"
-                (((Get-ClusterResource -Cluster $ClusterName) | Where-Object -FilterScript {$_.Name -like "$resource"} | Get-ClusterOwnerNode).OwnerNodes).Name
+                (((Get-ClusterResource -Cluster $ClusterName) | Where-Object -FilterScript {
+                    $_.Name -like $resource
+                } | Get-ClusterOwnerNode).OwnerNodes).Name
             }
         }
     )
 
     $ownerNodes = $ownerNodes | Select-Object -Unique
 
-    $returnValue = @{
+    @{
         ClusterGroup = $ClusterGroup
         Clustername = $ClusterName
         Nodes = $ownerNodes
         ClusterResources = $ClusterResources
         Ensure = $Ensure
     }
-
-    $returnValue
 }
 
-#
-# The Set-TargetResource cmdlet.
-#
+<#
+    .SYNOPSIS
+        Configures the desired preferred owners on the failover cluster group and cluster
+        resource.
+
+    .PARAMETER ClusterGroup
+        Name of the cluster group.
+
+    .PARAMETER ClusterName
+        Name of the cluster.
+
+    .PARAMETER Nodes
+        The nodes to set as owners.
+
+    .PARAMETER ClusterResources
+        The resources to set preferred owners on.
+
+    .PARAMETER Ensure
+        If the preferred owners should be present or absent. Default value is
+        'Present'.
+#>
 function Set-TargetResource
 {
     param
     (
         [Parameter(Mandatory = $true)]
-        [string]
+        [System.String]
         $ClusterGroup,
 
         [Parameter(Mandatory = $true)]
-        [string]
+        [System.String]
         $ClusterName,
 
         [Parameter(Mandatory = $true)]
-        [string[]]
+        [System.String[]]
         $Nodes,
 
         [Parameter()]
-        [string[]]
+        [System.String[]]
         $ClusterResources,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
-        [String]
+        [System.String]
         $Ensure = 'Present'
     )
 
@@ -97,23 +131,35 @@ function Set-TargetResource
     if ($Ensure -eq 'Present')
     {
         Write-Verbose -Message "Setting Cluster owners for Group $ClusterGroup to $Nodes"
-        $null = (Get-ClusterGroup -Cluster $ClusterName) | Where-Object -FilterScript {$_.Name -like $ClusterGroup} | Set-ClusterOwnerNode -Owners $Nodes
-        $null = (Get-ClusterResource) | Where-Object {$_.OwnerGroup -like $ClusterGroup} | Set-ClusterOwnerNode -Owners $allNodes
+        $null = (Get-ClusterGroup -Cluster $ClusterName) | Where-Object -FilterScript {
+            $_.Name -like $ClusterGroup
+        } | Set-ClusterOwnerNode -Owners $Nodes
+
+        $null = (Get-ClusterResource) | Where-Object {
+            $_.OwnerGroup -like $ClusterGroup
+        } | Set-ClusterOwnerNode -Owners $allNodes
 
         Write-Verbose -Message "Moving Cluster Group $ClusterGroup to node $($Nodes[0])"
-        $null = (Get-ClusterGroup -Cluster $ClusterName) | Where-Object -FilterScript {$_.name -like $ClusterGroup} | Move-ClusterGroup -Node $Nodes[0]
+        $null = (Get-ClusterGroup -Cluster $ClusterName) | Where-Object -FilterScript {
+            $_.name -like $ClusterGroup
+        } | Move-ClusterGroup -Node $Nodes[0]
 
         foreach ($resource in $ClusterResources)
         {
             Write-Verbose -Message "Setting Cluster owners for Resource $resource to $Nodes"
-            $null = (Get-ClusterResource -Cluster $ClusterName)| Where-Object -FilterScript {$_.Name -like "$resource"} | Set-ClusterOwnerNode -Owners $Nodes
+            $null = (Get-ClusterResource -Cluster $ClusterName) | Where-Object -FilterScript {
+                $_.Name -like $resource
+            } | Set-ClusterOwnerNode -Owners $Nodes
         }
     }
 
     if ($Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Retrieving current cluster owners for group $ClusterGroup"
-        $currentOwners = (((Get-ClusterGroup -Cluster $ClusterName)| Where-Object -FilterScript {$_.Name -like "$ClusterGroup"} | Get-ClusterOwnerNode).OwnerNodes).Name | Sort-Object -Unique
+        $currentOwners = (((Get-ClusterGroup -Cluster $ClusterName) | Where-Object -FilterScript {
+            $_.Name -like $ClusterGroup
+        } | Get-ClusterOwnerNode).OwnerNodes).Name | Sort-Object -Unique
+
         $newOwners = @(
             foreach ($currentOwner in $currentOwners)
             {
@@ -123,19 +169,29 @@ function Set-TargetResource
                 }
             }
         )
+
         Write-Verbose -Message "Removing owners from group $($ClusterGroup): $Nodes"
-        $null = (Get-ClusterGroup -Cluster $ClusterName)| Where-Object -FilterScript {$_.Name -like $ClusterGroup} | Set-ClusterOwnerNode $newOwners
+        $null = (Get-ClusterGroup -Cluster $ClusterName) | Where-Object -FilterScript {
+            $_.Name -like $ClusterGroup
+        } | Set-ClusterOwnerNode $newOwners
 
         Write-Verbose -Message "Setting Cluster owners for Group $ClusterGroup to $newOwners"
-        $null = (Get-ClusterResource)| Where-Object -FilterScript {$_.OwnerGroup -like $ClusterGroup} | Set-ClusterOwnerNode $allNodes
+        $null = (Get-ClusterResource) | Where-Object -FilterScript {
+            $_.OwnerGroup -like $ClusterGroup
+        } | Set-ClusterOwnerNode $allNodes
 
         Write-Verbose -Message "Moving Cluster Group $ClusterGroup to node $($newOwners[0])"
-        $null = (Get-ClusterGroup -Cluster $ClusterName)| Where-Object -FilterScript {$_.Name -like $ClusterGroup} | Move-ClusterGroup -Node $newOwners[0]
+        $null = (Get-ClusterGroup -Cluster $ClusterName) | Where-Object -FilterScript {
+            $_.Name -like $ClusterGroup
+        } | Move-ClusterGroup -Node $newOwners[0]
 
         foreach ($resource in $ClusterResources)
         {
-            Write-Verbose -Message "Retrieving current clusterowners for resource $resource"
-            $currentOwners = ((Get-ClusterResource -Cluster $ClusterName | Where-Object -FilterScript {$_.Name -like "$resource"} | Get-ClusterOwnerNode).OwnerNodes).Name | Sort-Object -Unique
+            Write-Verbose -Message "Retrieving current cluster owners for resource $resource"
+            $currentOwners = ((Get-ClusterResource -Cluster $ClusterName | Where-Object -FilterScript {
+                $_.Name -like $resource
+            } | Get-ClusterOwnerNode).OwnerNodes).Name | Sort-Object -Unique
+
             $newOwners = @(
                 foreach ($currentOwner in $currentOwners)
                 {
@@ -145,40 +201,61 @@ function Set-TargetResource
                     }
                 }
             )
+
             Write-Verbose -Message "Setting Cluster owners for Resource $resource to $newOwners"
-            $null = Get-ClusterResource -Cluster $ClusterName | Where-Object -FilterScript {$_.Name -like "$resource"} | Set-ClusterOwnerNode -Owners $newOwners
+            $null = Get-ClusterResource -Cluster $ClusterName | Where-Object -FilterScript {
+                $_.Name -like $resource
+            } | Set-ClusterOwnerNode -Owners $newOwners
         }
     }
 }
 
-#
-# Test-TargetResource
-#
+<#
+    .SYNOPSIS
+        Tests so that the desired preferred owners on the failover cluster group
+        and cluster resource are in desired state.
+
+    .PARAMETER ClusterGroup
+        Name of the cluster group.
+
+    .PARAMETER ClusterName
+        Name of the cluster.
+
+    .PARAMETER Nodes
+        The nodes to set as owners.
+
+    .PARAMETER ClusterResources
+        The resources to set preferred owners on.
+
+    .PARAMETER Ensure
+        If the preferred owners should be present or absent. Default value is
+        'Present'.
+#>
 
 function Test-TargetResource
 {
-    [OutputType([Boolean])]
+    [OutputType([System.Boolean])]
     param
     (
         [Parameter(Mandatory = $true)]
-        [string]
+        [System.String]
         $ClusterGroup,
 
         [Parameter(Mandatory = $true)]
-        [string]
+        [System.String]
         $ClusterName,
 
         [Parameter(Mandatory = $true)]
-        [string[]]
+        [System.String[]]
         $Nodes,
 
         [Parameter()]
-        [string[]]
+        [System.String[]]
         $ClusterResources,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
-        [String]
+        [System.String]
         $Ensure = 'Present'
     )
 

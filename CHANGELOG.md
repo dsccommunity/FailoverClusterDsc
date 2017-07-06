@@ -93,6 +93,8 @@
 - Changes to xClusterNetwork
   - Refactored the unit test for this resource to use stubs and increase coverage
     (issue #75).
+  - Changed the code to be more aligned with the style guideline.
+  - Updated resource and parameter description in README.md and schema.mof.
 
 ### 1.6.0.0
 

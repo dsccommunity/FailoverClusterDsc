@@ -39,6 +39,8 @@ A full list of changes in each version can be found in the [change log](CHANGELO
 
 * [**xCluster**](#xcluster) Ensures that a group of machines form a cluster.
 * [**xClusterDisk**](#xclusterdisk) Configures shared disks in a cluster.
+* [**xClusterNetwork**](#xclusternetwork) Configures as cluster network in a failover
+  cluster.
 * [**xClusterPreferredOwner**](#xclusterpreferredowner) Configures preferred
   owner of a cluster group in a cluster.
 * [**xClusterQuorum**](#xclusterquorum) Configures quorum in a cluster.
@@ -94,7 +96,24 @@ Configures shared disks in a cluster.
 
 ### xClusterNetwork
 
-Configures preferred owners of a cluster group in a cluster.
+Configures as cluster network in a failover cluster.
+
+>Note: Currently this resource is only able to change the properties Name, Role
+>and Metric. It is not possible to add or remove cluster networks (issue #92).
+
+#### Role parameter
+
+This parameter sets the role of the cluster network. If the cluster network role
+is not in desired state it will change to match this role.
+
+The cluster network role can be set to either the value 0, 1 or 3.
+
+0 = Do not allow cluster network communication
+1 = Allow cluster network communication only
+3 = Allow cluster network communication and client connectivity
+
+See this article for more information about cluster network role values;
+https://technet.microsoft.com/en-us/library/dn550728(v=ws.11).aspx
 
 #### Requirements for xClusterNetwork
 
@@ -102,11 +121,18 @@ Configures preferred owners of a cluster group in a cluster.
 
 #### Parameters for xClusterNetwork
 
-* **`[String]` Address** _(Key)_: None.
-* **`[String]` AddressMask** _(Key)_: None.
-* **`[String]` Name** _(Write)_: None.
-* **`[String]` Role** _(Write)_: None. { 0 | 1 | 3 }
-* **`[String]` Metric** _(Write)_: None.
+* **`[String]` Address** _(Key)_: The adress for the cluster network in the format
+  '10.0.0.0'.
+* **`[String]` AddressMask** _(Key)_: The adress mask for the cluster network in
+  the format '255.255.255.0'.
+* **`[String]` Name** _(Write)_: The name of the cluster network. If the cluster
+  network name is not in desired state it will be renamed to match this name.
+* **`[String]` Role** _(Write)_: The role of the cluster network. If the cluster
+  network role is not in desired state it will changed to match this role.
+  { 0 | 1 | 3 }.
+* **`[String]` Metric** _(Write)_: The metric number for the cluster network. If
+  the cluster network metric number is not in desired state it will be changed to
+  match this metric number.
 
 #### Examples for xClusterNetwork
 

@@ -82,7 +82,10 @@ try
 
             Context 'When the system is not in the desired state' {
                 BeforeAll {
-                    $mockTestParameters = $mockTestParameters_PresentNetwork_WrongValues
+                    $mockTestParameters = $mockTestParameters_PresentNetwork_WrongValues.Clone()
+                    $mockTestParameters.Remove('Name')
+                    $mockTestParameters.Remove('Role')
+                    $mockTestParameters.Remove('Metric')
                 }
 
                 It 'Should return the correct type' {
@@ -98,9 +101,9 @@ try
 
                 It 'Should not return the the correct values for the cluster network' {
                     $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                    $getTargetResourceResult.Name         | Should Not Be $mockTestParameters.Name
-                    $getTargetResourceResult.Role         | Should Not Be $mockTestParameters.Role
-                    $getTargetResourceResult.Metric       | Should Not Be $mockTestParameters.Metric
+                    $getTargetResourceResult.Name         | Should Not Be $mockAbsentClusterNetworkName
+                    $getTargetResourceResult.Role         | Should Not Be $mockAbsentClusterNetworkRole
+                    $getTargetResourceResult.Metric       | Should Not Be $mockAbsentClusterNetworkMetric
 
                     Assert-MockCalled -CommandName Get-ClusterNetwork -Exactly -Times 1 -Scope It
                 }
@@ -108,7 +111,10 @@ try
 
             Context 'When the system is in the desired state' {
                 BeforeAll {
-                    $mockTestParameters = $mockTestParameters_PresentNetwork
+                    $mockTestParameters = $mockTestParameters_PresentNetwork.Clone()
+                    $mockTestParameters.Remove('Name')
+                    $mockTestParameters.Remove('Role')
+                    $mockTestParameters.Remove('Metric')
                 }
 
                 It 'Should return the correct type' {
@@ -124,9 +130,9 @@ try
 
                 It 'Should return the the correct values for the cluster network' {
                     $Result = Get-TargetResource @mockTestParameters
-                    $Result.Name         | Should Be $mockTestParameters.Name
-                    $Result.Role         | Should Be $mockTestParameters.Role
-                    $Result.Metric       | Should Be $mockTestParameters.Metric
+                    $Result.Name         | Should Be $mockPresentClusterNetworkName
+                    $Result.Role         | Should Be $mockPresentClusterNetworkRole
+                    $Result.Metric       | Should Be $mockPresentClusterNetworkMetric
 
                     Assert-MockCalled -CommandName Get-ClusterNetwork -Exactly -Times 1 -Scope It
                 }

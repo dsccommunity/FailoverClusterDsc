@@ -53,6 +53,7 @@
   - Added a script file (Tests\Unit\Stubs\Write-ModuleStubFile.ps1) to be able
     to rebuild the stub file (FailoverClusters.stubs.psm1) whenever needed.
   - Added code block around types in README.md.
+  - Switched AppVoyer build worker to Visual Studio 2017 (Windows Server 2016).
 - Changes to xCluster
   - Added examples
     - 1-CreateFirstNodeOfAFailoverCluster.ps1

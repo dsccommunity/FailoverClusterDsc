@@ -96,24 +96,10 @@ Configures shared disks in a cluster.
 
 ### xClusterNetwork
 
-Configures as cluster network in a failover cluster.
+Configures as cluster networks in a failover cluster.
 
 >Note: Currently this resource is only able to change the properties Name, Role
 >and Metric. It is not possible to add or remove cluster networks (issue #92).
-
-#### Role parameter
-
-This parameter sets the role of the cluster network. If the cluster network role
-is not in desired state it will change to match this role.
-
-The cluster network role can be set to either the value 0, 1 or 3.
-
-0 = Do not allow cluster network communication
-1 = Allow cluster network communication only
-3 = Allow cluster network communication and client connectivity
-
-See this article for more information about cluster network role values;
-https://technet.microsoft.com/en-us/library/dn550728(v=ws.11).aspx
 
 #### Requirements for xClusterNetwork
 
@@ -133,6 +119,20 @@ https://technet.microsoft.com/en-us/library/dn550728(v=ws.11).aspx
 * **`[String]` Metric** _(Write)_: The metric number for the cluster network. If
   the cluster network metric number is not in desired state it will be changed to
   match this metric number.
+
+#### Role parameter
+
+This parameter sets the role of the cluster network. If the cluster network role
+is not in desired state it will change to match this role.
+
+The cluster network role can be set to either the value 0, 1 or 3.
+
+0 = Do not allow cluster network communication
+1 = Allow cluster network communication only
+3 = Allow cluster network communication and client connectivity
+
+See this article for more information about cluster network role values;
+https://technet.microsoft.com/en-us/library/dn550728(v=ws.11).aspx
 
 #### Examples for xClusterNetwork
 

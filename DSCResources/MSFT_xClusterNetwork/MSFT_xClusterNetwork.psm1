@@ -11,7 +11,7 @@
 function Get-TargetResource
 {
     [CmdletBinding()]
-    [OutputType([Hashtable])]
+    [OutputType([System.Collections.Hashtable])]
     param
     (
         [Parameter(Mandatory = $true)]
@@ -87,7 +87,7 @@ function Set-TargetResource
         $Name,
 
         [Parameter()]
-        [ValidateSet('0','1','3')]
+        [ValidateSet('0', '1', '3')]
         [System.String]
         $Role,
 
@@ -168,7 +168,7 @@ function Set-TargetResource
 function Test-TargetResource
 {
     [CmdletBinding()]
-    [OutputType([Boolean])]
+    [OutputType([System.Boolean])]
     param
     (
         [Parameter(Mandatory = $true)]
@@ -184,7 +184,7 @@ function Test-TargetResource
         $Name,
 
         [Parameter()]
-        [ValidateSet('0','1','3')]
+        [ValidateSet('0', '1', '3')]
         [System.String]
         $Role,
 
@@ -195,11 +195,33 @@ function Test-TargetResource
 
     $getTargetResourceResult = Get-TargetResource -Address $Address -AddressMask $AddressMask
 
-    return (
-        (($Name -eq $getTargetResourceResult.Name) -or (-not $PSBoundParameters.ContainsKey('Name'))) -and
-        (($Role -eq $getTargetResourceResult.Role) -or (-not $PSBoundParameters.ContainsKey('Role'))) -and
-        (($Metric -eq $getTargetResourceResult.Metric) -or (-not $PSBoundParameters.ContainsKey('Metric')))
-    )
+    $testTargetResourceReturnValue = $true
+
+    if ($PSBoundParameters.ContainsKey('Name'))
+    {
+        if ($Name -ne $getTargetResourceResult.Name)
+        {
+            $testTargetResourceReturnValue = $false
+        }
+    }
+
+    if ($PSBoundParameters.ContainsKey('Role'))
+    {
+        if ($Role -ne $getTargetResourceResult.Role)
+        {
+            $testTargetResourceReturnValue = $false
+        }
+    }
+
+    if ($PSBoundParameters.ContainsKey('Metric'))
+    {
+        if ($Metric -ne $getTargetResourceResult.Metric)
+        {
+            $testTargetResourceReturnValue = $false
+        }
+    }
+
+    $testTargetResourceReturnValue
 }
 
 Export-ModuleMember -Function *-TargetResource

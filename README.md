@@ -114,7 +114,8 @@ None.
 
 ### xClusterPreferredOwner
 
-Configures preferred owners of a cluster group in a cluster.
+Configures preferred owners of a cluster group and cluster resources in a failover
+cluster.
 
 #### Requirements for xClusterPreferredOwner
 
@@ -126,13 +127,14 @@ Configures preferred owners of a cluster group in a cluster.
 * **`[String]` ClusterName** _(Key)_: Name of the cluster.
 * **`[String[]]` Nodes** _(Required)_: The nodes to set as owners.
 * **`[String[]]` ClusterResources** _(Write)_: The resources to set preferred
-  owner on.
+  owners on.
 * **`[String]` Ensure** _(Write)_: If the preferred owners should be present or
   absent. Default value is 'Present'. { *Present* | Absent }
 
 #### Examples for xClusterPreferredOwner
 
-None.
+* [Add preferred owners to a cluster group and cluster resources](/Examples/Resources/xClusterDisk/1-AddPreferredOwner.ps1)
+* [Remove preferred owners from a cluster group and cluster resources](/Examples/Resources/xClusterDisk/2-RemovePreferredOwner.ps1)
 
 ### xClusterQuorum
 

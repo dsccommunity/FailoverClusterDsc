@@ -1,6 +1,7 @@
 #---------------------------------#
 #      environment configuration  #
 #---------------------------------#
+image: Visual Studio 2017
 version: 1.6.{build}.0
 install:
     - git clone https://github.com/PowerShell/DscResource.Tests

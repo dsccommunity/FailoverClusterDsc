@@ -96,7 +96,7 @@ Configures shared disks in a cluster.
 
 ### xClusterNetwork
 
-Configures as cluster networks in a failover cluster.
+Configures a cluster network in a failover cluster.
 
 >Note: Currently this resource is only able to change the properties Name, Role
 >and Metric. It is not possible to add or remove cluster networks (issue #92).

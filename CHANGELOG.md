@@ -134,7 +134,7 @@
     (issue #77).
   - Changed the code to be more aligned with the style guideline.
   - Updated parameter description in the schema.mof.
-  - Added example (issue #57)
+  - Added example (issue #47)
     - 1-SetQuorumToNodeMajority.ps1
     - 2-SetQuorumToNodeAndDiskMajority.ps1
     - 3-SetQuorumToNodeAndFileShareMajority.ps1

@@ -123,9 +123,12 @@
     (issue #78).
   - Now the Test-TargetResource correctly returns false if the domain namn cannot
     be evaluated  (issue #107).
+  - Changed the code to be more aligned with the style guideline.
+  - Updated parameter description in the schema.mof.
   - Added example
     - 1-WaitForFailoverClusterToBePresent.ps1
   - Added link to example from README.md
+  - Resolved Script Analyzer warnings (issue #54).
 
 ### 1.6.0.0
 

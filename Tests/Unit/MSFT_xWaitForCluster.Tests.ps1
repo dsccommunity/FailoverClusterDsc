@@ -41,14 +41,14 @@ try
         $mockRetryIntervalSec = '1'
         $mockRetryCount = '1'
 
-        $mockGetWmiObject = {
+        $mockGetCimInstance = {
             return [PSCustomObject] @{
                 Domain = $mockDynamicDomainName
             }
         }
 
         $mockGetWmiObject_ParameterFilter = {
-            $Class -eq 'Win32_ComputerSystem'
+            $ClassName -eq 'Win32_ComputerSystem'
         }
 
         $mockGetCluster = {
@@ -91,15 +91,15 @@ try
                 $mockDynamicDomainName = $null
 
                 It 'Should throw the correct error message' {
-                    Mock -CommandName Get-WmiObject -MockWith $mockGetWmiObject -ParameterFilter $mockGetWmiObject_ParameterFilter -Verifiable
+                    Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetWmiObject_ParameterFilter -Verifiable
 
-                    { Set-TargetResource @mockDefaultParameters } | Should -Throw ('Cluster {0} not found after {1} attempts with {2} sec interval' -f $mockClusterName, ($mockRetryCount-1), $mockRetryIntervalSec)
+                    { Set-TargetResource @mockDefaultParameters } | Should -Throw ('Failover cluster {0} not found after {1} attempts with {2} sec interval' -f $mockClusterName, ($mockRetryCount-1), $mockRetryIntervalSec)
                 }
             }
 
             Context 'When the system is not in the desired state' {
                 BeforeEach {
-                    Mock -CommandName Get-WmiObject -MockWith $mockGetWmiObject -ParameterFilter $mockGetWmiObject_ParameterFilter -Verifiable
+                    Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetWmiObject_ParameterFilter -Verifiable
                 }
 
                 Context 'When the cluster does not exist' {
@@ -114,7 +114,7 @@ try
                         $mockDynamicDomainName = $mockDomainName
 
                         It 'Should throw the correct error message' {
-                            { Set-TargetResource @mockDefaultParameters } | Should -Throw ('Cluster {0} not found after {1} attempts with {2} sec interval' -f $mockClusterName, $mockRetryCount, $mockRetryIntervalSec)
+                            { Set-TargetResource @mockDefaultParameters } | Should -Throw ('Failover cluster {0} not found after {1} attempts with {2} sec interval' -f $mockClusterName, $mockRetryCount, $mockRetryIntervalSec)
                         }
 
                         Assert-VerifiableMocks
@@ -125,7 +125,7 @@ try
             Context 'When the system is in the desired state' {
                 Context 'When the cluster exist' {
                     BeforeEach {
-                        Mock -CommandName Get-WmiObject -MockWith $mockGetWmiObject -ParameterFilter $mockGetWmiObject_ParameterFilter -Verifiable
+                        Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetWmiObject_ParameterFilter -Verifiable
                         Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter -Verifiable
                     }
 
@@ -142,7 +142,7 @@ try
 
         Describe 'xCluster\Test-TargetResource' -Tag Test {
             BeforeEach {
-                Mock -CommandName Get-WmiObject -MockWith $mockGetWmiObject -ParameterFilter $mockGetWmiObject_ParameterFilter -Verifiable
+                Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetWmiObject_ParameterFilter -Verifiable
             }
 
             Context 'When computers domain name cannot be evaluated' {

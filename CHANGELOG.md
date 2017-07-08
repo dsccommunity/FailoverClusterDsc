@@ -132,6 +132,14 @@
 - Changes to xClusterQuorum
   - Refactored the unit test for this resource to use stubs and increase coverage
     (issue #77).
+  - Changed the code to be more aligned with the style guideline.
+  - Updated parameter description in the schema.mof.
+  - Added example (issue #57)
+    - 1-SetQuorumToNodeMajority.ps1
+    - 2-SetQuorumToNodeAndDiskMajority.ps1
+    - 3-SetQuorumToNodeAndFileShareMajority.ps1
+    - 4-SetQuorumToDiskOnly.ps1
+  - Added links to examples from README.md.
 
 ### 1.6.0.0
 

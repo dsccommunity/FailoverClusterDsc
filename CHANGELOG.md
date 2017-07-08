@@ -118,6 +118,14 @@
   - Added example ([issue #57](https://github.com/PowerShell/xFailOverCluster/issues/57))
     - 1-ChangeClusterNetwork.ps1
   - Added links to examples from README.md.
+- Changes to xWaitForCluster
+  - Refactored the unit test for this resource to use stubs and increase coverage
+    (issue #78).
+  - Now the Test-TargetResource correctly returns false if the domain namn cannot
+    be evaluated  (issue #107).
+  - Added example
+    - 1-WaitForFailoverClusterToBePresent.ps1
+  - Added link to example from README.md
 
 ### 1.6.0.0
 

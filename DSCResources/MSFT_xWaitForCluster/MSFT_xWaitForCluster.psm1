@@ -1,7 +1,7 @@
 #
 # xWaitForCluster: DSC Resource that will wait for given name of Cluster, it checks the state of the cluster for given # interval until the cluster is found or the number of retries is reached.
 #
-# 
+#
 
 
 #
@@ -11,7 +11,7 @@ function Get-TargetResource
 {
     [OutputType([Hashtable])]
     param
-    (    
+    (
         [parameter(Mandatory)][string] $Name,
 
         [UInt64] $RetryIntervalSec = 10,
@@ -31,7 +31,7 @@ function Get-TargetResource
 function Set-TargetResource
 {
     param
-    (    
+    (
         [parameter(Mandatory)][string] $Name,
 
         [UInt64] $RetryIntervalSec = 10,
@@ -61,13 +61,13 @@ function Set-TargetResource
 
                 break;
             }
-            
+
         }
         catch
         {
              Write-Verbose -Message "Cluster $Name not found. Will retry again after $RetryIntervalSec sec"
         }
-            
+
         Write-Verbose -Message "Cluster $Name not found. Will retry again after $RetryIntervalSec sec"
         Start-Sleep -Seconds $RetryIntervalSec
     }
@@ -85,7 +85,7 @@ function Test-TargetResource
 {
     [OutputType([Boolean])]
     param
-    (    
+    (
         [parameter(Mandatory)][string] $Name,
 
         [UInt64] $RetryIntervalSec = 10,
@@ -102,17 +102,19 @@ function Test-TargetResource
             Write-Verbose -Message "Can't find machine's domain name"
             $false
         }
-
-        $cluster = Get-Cluster -Name $Name -Domain $ComputerInfo.Domain
-        if ($cluster -eq $null)
-        {
-            Write-Verbose -Message "Cluster $Name not found in domain $ComputerInfo.Domain"
-            $false
-        }
         else
         {
-            Write-Verbose -Message "Found cluster $Name"
-            $true
+            $cluster = Get-Cluster -Name $Name -Domain $ComputerInfo.Domain
+            if ($cluster -eq $null)
+            {
+                Write-Verbose -Message "Cluster $Name not found in domain $ComputerInfo.Domain"
+                $false
+            }
+            else
+            {
+                Write-Verbose -Message "Found cluster $Name"
+                $true
+            }
         }
     }
     catch

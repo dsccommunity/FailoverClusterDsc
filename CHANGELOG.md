@@ -55,6 +55,10 @@
   - Added a script file (Tests\Unit\Stubs\Write-ModuleStubFile.ps1) to be able
     to rebuild the stub file (FailoverClusters.stubs.psm1) whenever needed.
   - Added code block around types in README.md.
+  - Added a common resource helper module with helper functions for localization.
+    - Added helper functions; Get-LocalizedData, New-InvalidResultException,
+      New-ObjectNotFoundException, InvalidOperationException and InvalidArgumentException.
+  - Fixed lint error MD034 and fixed typos in README.md.
 - Changes to xCluster
   - Added examples
     - 1-CreateFirstNodeOfAFailoverCluster.ps1
@@ -74,6 +78,7 @@
     - 1-WaitForFailoverClusterToBePresent.ps1
   - Added link to example from README.md
 - Changes to xClusterDisk
+  - Fixed test that was failing in AppVeyor (issue #55).
   - Refactored the unit test for this resource to use stubs and increase coverage
     (issue #74).
   - Removed an evaluation that called Test-TargetResource in Set-TargetResource
@@ -84,7 +89,10 @@
     - 1-AddClusterDisk.ps1
     - 2-RemoveClusterDisk.ps1
   - Added links to examples from README.md.
+  - Enabled localization for all strings (issue #84).
 - Changes to xClusterPreferredOwner
+  - Script Analyzer warnings have been fixed (issue #50). This also failed the
+    tests for the resource.
   - Refactored the unit test for this resource to use stubs and increase coverage
     (issue #76).
   - Changed the code to be more aligned with the style guideline.
@@ -100,6 +108,7 @@
   - Added example (issue #57)
     - 1-ChangeClusterNetwork.ps1
   - Added links to examples from README.md.
+  - Replace an URL which describes more generic the Role setting for xClusterNetwork.
 
 ### 1.6.0.0
 

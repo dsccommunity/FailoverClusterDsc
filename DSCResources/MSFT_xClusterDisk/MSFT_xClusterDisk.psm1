@@ -1,3 +1,8 @@
+Import-Module -Name (Join-Path -Path (Split-Path -Path $PSScriptRoot -Parent) `
+                               -ChildPath 'CommonResourceHelper.psm1')
+
+$script:localizedData = Get-LocalizedData -ResourceName 'MSFT_xClusterDisk'
+
 <#
     .SYNOPSIS
         Returns the current state of the failover cluster disk resource.
@@ -78,14 +83,14 @@ function Set-TargetResource
     {
         if ($getTargetResourceResult.Ensure -ne $Ensure)
         {
-            Write-Verbose "Add the disk $Number to the cluster"
+            Write-Verbose -Message ($script:localizedData.AddDiskToCluster -f $Number)
 
             Get-ClusterAvailableDisk | Where-Object -FilterScript { $_.Number -eq $Number } | Add-ClusterDisk
         }
 
         if ($getTargetResourceResult.Label -ne $Label)
         {
-            Write-Verbose "Set the disk $Number label to '$Label'"
+            Write-Verbose -Message ($script:localizedData.SetDiskLabel -f $Number, $Label)
 
             $diskInstance = Get-CimInstance -ClassName MSCluster_Disk -Namespace 'Root\MSCluster' -Filter "Number = $Number"
 
@@ -102,7 +107,7 @@ function Set-TargetResource
     {
         if ($getTargetResourceResult.Ensure -eq 'Present' -and $Ensure -eq 'Absent')
         {
-            Write-Verbose "Remove the disk $Number from the cluster"
+            Write-Verbose -Message ($script:localizedData.RemoveDiskFromCluster -f $Number)
 
             $diskInstance = Get-CimInstance -ClassName MSCluster_Disk -Namespace 'Root\MSCluster' -Filter "Number = $Number"
 

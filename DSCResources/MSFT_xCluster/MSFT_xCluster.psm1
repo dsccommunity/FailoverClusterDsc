@@ -29,7 +29,7 @@ function Get-TargetResource
         $DomainAdministratorCredential
     )
 
-    $computerInformation = Get-WmiObject -Class Win32_ComputerSystem
+    $computerInformation = Get-CimInstance -ClassName Win32_ComputerSystem
     if (($null -eq $computerInformation) -or ($null -eq $computerInformation.Domain))
     {
         throw 'Can''t find machine''s domain name'
@@ -107,7 +107,7 @@ function Set-TargetResource
 
     Write-Verbose -Message "Checking if Cluster $Name is present ..."
 
-    $computerInformation = Get-WmiObject -Class Win32_ComputerSystem
+    $computerInformation = Get-CimInstance -ClassName Win32_ComputerSystem
     if (($null -eq $computerInformation) -or ($null -eq $computerInformation.Domain))
     {
         throw 'Can''t find machine''s domain name'
@@ -228,7 +228,7 @@ function Test-TargetResource
 
     Write-Verbose -Message "Checking if Cluster $Name is present ..."
 
-    $ComputerInfo = Get-WmiObject -Class Win32_ComputerSystem
+    $ComputerInfo = Get-CimInstance -ClassName Win32_ComputerSystem
     if (($null -eq $ComputerInfo) -or ($null -eq $ComputerInfo.Domain))
     {
         throw "Can't find machine's domain name"

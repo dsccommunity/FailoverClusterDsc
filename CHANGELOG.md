@@ -84,6 +84,8 @@
     ([issue #72](https://github.com/PowerShell/xFailOverCluster/issues/72)).
   - Set-TargetResource now correctly throws and error if domain name cannot be
     evaluated ([issue #71](https://github.com/PowerShell/xFailOverCluster/issues/71)).
+  - Resolved Script Analyzer rule warnings by changing Get-WmiObject to
+    Get-CimInstance (issue #49).
 - Changes to xWaitForCluster
   - Added example
     - 1-WaitForFailoverClusterToBePresent.ps1

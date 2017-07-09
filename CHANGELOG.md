@@ -94,6 +94,7 @@
     method and instead added logic so that Set-TargetResource evaluates if it
     should remove a disk ([issue #90](https://github.com/PowerShell/xFailOverCluster/issues/90)).
   - Changed the code to be more aligned with the style guideline.
+    - Fixed a data type that was not fully qualified.
   - Added examples ([issue #46](https://github.com/PowerShell/xFailOverCluster/issues/46))
     - 1-AddClusterDisk.ps1
     - 2-RemoveClusterDisk.ps1

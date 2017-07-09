@@ -54,7 +54,7 @@ function Get-TargetResource
             New-ObjectNotFoundException -Message $errorMessage
         }
 
-        $address = Get-ClusterGroup -Cluster $Name -Name 'Cluster IP Address' | Get-ClusterParameter -Name 'Address'
+        $address = Get-ClusterGroup -Cluster $Name -Name 'Cluster IP Address' -ErrorAction SilentlyContinue | Get-ClusterParameter -Name 'Address' -ErrorAction SilentlyContinue
     }
     finally
     {
@@ -103,7 +103,7 @@ function Set-TargetResource
         [System.String]
         $Name,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $false)]
         [System.String]
         $StaticIPAddress,
 
@@ -145,7 +145,14 @@ function Set-TargetResource
         {
             Write-Verbose -Message ($script:localizedData.ClusterAbsent -f $Name)
 
-            New-Cluster -Name $Name -Node $env:COMPUTERNAME -StaticAddress $StaticIPAddress -NoStorage -Force -ErrorAction Stop
+            if ($StaticIPAddress)
+            {
+                New-Cluster -Name $Name -Node $env:COMPUTERNAME -StaticAddress $StaticIPAddress -NoStorage -Force -ErrorAction Stop
+            }
+            else
+            {
+                New-Cluster -Name $Name -Node $env:COMPUTERNAME -NoStorage -Force -ErrorAction Stop
+            }
 
             if ( -not (Get-Cluster))
             {

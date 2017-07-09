@@ -233,7 +233,7 @@ function Test-TargetResource
         [System.String]
         $Name,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $false)]
         [System.String]
         $StaticIPAddress,
 

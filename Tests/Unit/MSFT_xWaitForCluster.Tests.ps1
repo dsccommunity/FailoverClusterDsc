@@ -47,7 +47,7 @@ try
             }
         }
 
-        $mockGetWmiObject_ParameterFilter = {
+        $mockCimInstance_ParameterFilter = {
             $ClassName -eq 'Win32_ComputerSystem'
         }
 
@@ -91,7 +91,7 @@ try
                 $mockDynamicDomainName = $null
 
                 It 'Should throw the correct error message' {
-                    Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetWmiObject_ParameterFilter -Verifiable
+                    Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockCimInstance_ParameterFilter -Verifiable
 
                     { Set-TargetResource @mockDefaultParameters } | Should -Throw ('Failover cluster {0} not found after {1} attempts with {2} sec interval' -f $mockClusterName, ($mockRetryCount-1), $mockRetryIntervalSec)
                 }
@@ -99,7 +99,7 @@ try
 
             Context 'When the system is not in the desired state' {
                 BeforeEach {
-                    Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetWmiObject_ParameterFilter -Verifiable
+                    Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockCimInstance_ParameterFilter -Verifiable
                 }
 
                 Context 'When the cluster does not exist' {
@@ -125,7 +125,7 @@ try
             Context 'When the system is in the desired state' {
                 Context 'When the cluster exist' {
                     BeforeEach {
-                        Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetWmiObject_ParameterFilter -Verifiable
+                        Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockCimInstance_ParameterFilter -Verifiable
                         Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter -Verifiable
                     }
 
@@ -142,7 +142,7 @@ try
 
         Describe 'xCluster\Test-TargetResource' -Tag Test {
             BeforeEach {
-                Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetWmiObject_ParameterFilter -Verifiable
+                Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockCimInstance_ParameterFilter -Verifiable
             }
 
             Context 'When computers domain name cannot be evaluated' {

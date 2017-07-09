@@ -77,7 +77,7 @@ function Set-TargetResource
     {
         try
         {
-            $computerObject = Get-CimInstance -Class Win32_ComputerSystem
+            $computerObject = Get-CimInstance -ClassName Win32_ComputerSystem
             if ($null -eq $computerObject -or $null -eq $computerObject.Domain)
             {
                 Write-Verbose -Message "Can't find machine's domain name"
@@ -146,7 +146,7 @@ function Test-TargetResource
 
     try
     {
-        $computerObject = Get-CimInstance -Class Win32_ComputerSystem
+        $computerObject = Get-CimInstance -ClassName Win32_ComputerSystem
         if ($null -eq $computerObject -or $null -eq $computerObject.Domain)
         {
             Write-Verbose -Message "Can't find machine's domain name"

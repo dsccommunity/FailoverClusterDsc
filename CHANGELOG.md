@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 1.7.0.0
+
 - Changes to xClusterPreferredOwner
   - Script Analyzer warnings have been fixed (issue #50). This also failed the
     tests for the resource.

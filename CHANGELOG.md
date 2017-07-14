@@ -16,6 +16,9 @@
     generic description of the possible settings for the Role parameter. The
     previous URL was still correct but focused on Hyper-V in particular.
   - Fixed typos in parameter descriptions in README.md.
+- Changes to xCluster
+  - Resolved Script Analyzer rule warnings by changing Get-WmiObject to
+    Get-CimInstance (issue #49).
 
 ## 1.7.0.0
 
@@ -83,9 +86,13 @@
   - Test-TargetResource now throws and error if domain name cannot be evaluated
     ([issue #72](https://github.com/PowerShell/xFailOverCluster/issues/72)).
   - Set-TargetResource now correctly throws and error if domain name cannot be
+<<<<<<< HEAD
     evaluated ([issue #71](https://github.com/PowerShell/xFailOverCluster/issues/71)).
   - Resolved Script Analyzer rule warnings by changing Get-WmiObject to
     Get-CimInstance (issue #49).
+=======
+    evaluated (issue #71).
+>>>>>>> Updated CHANGELOG.md
 - Changes to xWaitForCluster
   - Added example
     - 1-WaitForFailoverClusterToBePresent.ps1

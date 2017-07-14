@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+<<<<<<< HEAD
 - Changes to xFailOverCluster
   - Added a common resource helper module with helper functions for localization.
     - Added helper functions; Get-LocalizedData, New-InvalidResultException,
@@ -15,6 +16,10 @@
     generic description of the possible settings for the Role parameter. The
     previous URL was still correct but focused on Hyper-V in particular.
   - Fixed typos in parameter descriptions in README.md.
+=======
+- Changes to xClusterDisk
+  - Fixed the OutputType data type that was not fully qualified.
+>>>>>>> Updated CHANGELOG.md
 
 ## 1.7.0.0
 

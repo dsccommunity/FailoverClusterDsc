@@ -11,7 +11,9 @@
 - Changes to xClusterDisk
   - Enabled localization for all strings ([issue #84](https://github.com/PowerShell/xFailOverCluster/issues/84)).
 - Changes to xClusterNetwork
-  - Replaced an URL which describes more generic the Role setting for xClusterNetwork.
+  - Replaced the URL for the parameter Role in README.md. The new URL is a more
+    generic description of the possible settings for the Role parameter. The
+    previous URL was still correct but focused on Hyper-V in particular.
   - Fixed typos in parameter descriptions in README.md.
 
 ## 1.7.0.0

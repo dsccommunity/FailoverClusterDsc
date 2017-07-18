@@ -13,7 +13,7 @@ $script:localizedData = Get-LocalizedData -ResourceName 'MSFT_xClusterDisk'
 function Get-TargetResource
 {
     [CmdletBinding()]
-    [OutputType([Hashtable])]
+    [OutputType([System.Collections.Hashtable])]
     param
     (
         [Parameter(Mandatory = $true)]

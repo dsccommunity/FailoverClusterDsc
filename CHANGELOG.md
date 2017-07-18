@@ -10,6 +10,7 @@
   - Fixed lint error MD034 and fixed typos in README.md.
 - Changes to xClusterDisk
   - Enabled localization for all strings ([issue #84](https://github.com/PowerShell/xFailOverCluster/issues/84)).
+  - Fixed the OutputType data type that was not fully qualified.
 - Changes to xClusterNetwork
   - Replaced the URL for the parameter Role in README.md. The new URL is a more
     generic description of the possible settings for the Role parameter. The

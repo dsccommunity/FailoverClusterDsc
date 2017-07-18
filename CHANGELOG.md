@@ -2,7 +2,6 @@
 
 ## Unreleased
 
-<<<<<<< HEAD
 - Changes to xFailOverCluster
   - Added a common resource helper module with helper functions for localization.
     - Added helper functions; Get-LocalizedData, New-InvalidResultException,
@@ -11,15 +10,12 @@
   - Fixed lint error MD034 and fixed typos in README.md.
 - Changes to xClusterDisk
   - Enabled localization for all strings ([issue #84](https://github.com/PowerShell/xFailOverCluster/issues/84)).
+  - Fixed the OutputType data type that was not fully qualified.
 - Changes to xClusterNetwork
   - Replaced the URL for the parameter Role in README.md. The new URL is a more
     generic description of the possible settings for the Role parameter. The
     previous URL was still correct but focused on Hyper-V in particular.
   - Fixed typos in parameter descriptions in README.md.
-=======
-- Changes to xClusterDisk
-  - Fixed the OutputType data type that was not fully qualified.
->>>>>>> Updated CHANGELOG.md
 
 ## 1.7.0.0
 
@@ -99,7 +95,6 @@
     method and instead added logic so that Set-TargetResource evaluates if it
     should remove a disk ([issue #90](https://github.com/PowerShell/xFailOverCluster/issues/90)).
   - Changed the code to be more aligned with the style guideline.
-    - Fixed a data type that was not fully qualified.
   - Added examples ([issue #46](https://github.com/PowerShell/xFailOverCluster/issues/46))
     - 1-AddClusterDisk.ps1
     - 2-RemoveClusterDisk.ps1

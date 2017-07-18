@@ -2,49 +2,63 @@
 
 ## Unreleased
 
+- Changes to xFailOverCluster
+  - Added a common resource helper module with helper functions for localization.
+    - Added helper functions; Get-LocalizedData, New-InvalidResultException,
+      New-ObjectNotFoundException, New-InvalidOperationException and
+      New-InvalidArgumentException.
+  - Fixed lint error MD034 and fixed typos in README.md.
+- Changes to xClusterDisk
+  - Enabled localization for all strings ([issue #84](https://github.com/PowerShell/xFailOverCluster/issues/84)).
+- Changes to xClusterNetwork
+  - Replaced the URL for the parameter Role in README.md. The new URL is a more
+    generic description of the possible settings for the Role parameter. The
+    previous URL was still correct but focused on Hyper-V in particular.
+  - Fixed typos in parameter descriptions in README.md.
+
 ## 1.7.0.0
 
 - Changes to xClusterPreferredOwner
-  - Script Analyzer warnings have been fixed (issue #50). This also failed the
+  - Script Analyzer warnings have been fixed ([issue #50](https://github.com/PowerShell/xFailOverCluster/issues/50)). This also failed the
     tests for the resource.
 - Changes to xClusterDisk
-  - Fixed test that was failing in  AppVeyor (issue #55).
+  - Fixed test that was failing in  AppVeyor ([issue #55](https://github.com/PowerShell/xFailOverCluster/issues/55)).
 - Changes to xFailOverCluster
-  - Added 'Code of Conduct' text to the README.md (issue #44).
-  - Added TOC for all resources in the README.md (issue #43).
+  - Added 'Code of Conduct' text to the README.md ([issue #44](https://github.com/PowerShell/xFailOverCluster/issues/44)).
+  - Added TOC for all resources in the README.md ([issue #43](https://github.com/PowerShell/xFailOverCluster/issues/43)).
   - Fixed typos and lint errors in README.md.
   - Fixed style issue in example in README.md.
   - Removed 'Unreleased' "tag" from the resources xClusterQuorum and
-    xClusterDisk (issue #36)
+    xClusterDisk ([issue #36](https://github.com/PowerShell/xFailOverCluster/issues/36))
   - Added new sections to each resource (Requirements, Parameters and Examples)
     in the README.md. Some does not yet have any examples, so they are set to
     'None.'.
   - Added GitHub templates PULL\_REQUEST\_TEMPLATE, ISSUE_TEMPLATE and
-    CONTRIBUTING.md (issue #45).
+    CONTRIBUTING.md ([issue #45](https://github.com/PowerShell/xFailOverCluster/issues/45)).
   - Split the change log from README.md to a separate file CHANGELOG.md
-    (issue #48).
-  - Added the resource xClusterPreferredOwner to README.md (issue #51).
-  - Added the resource xClusterNetwork to README.md (issue #56).
+    [issue #48](https://github.com/PowerShell/xFailOverCluster/issues/48).
+  - Added the resource xClusterPreferredOwner to README.md ([issue #51](https://github.com/PowerShell/xFailOverCluster/issues/51)).
+  - Added the resource xClusterNetwork to README.md ([issue #56](https://github.com/PowerShell/xFailOverCluster/issues/56)).
   - Removed Credential parameter from parameter list for xWaitForCluster.
     Parameter Credential does not exist in the schema.mof of the resource
-    (issue #62).
+    ([issue #62](https://github.com/PowerShell/xFailOverCluster/issues/62)).
   - Now all parameters in the README.md list their data type and type qualifier
-    (issue #58.)
+    ([issue #58](https://github.com/PowerShell/xFailOverCluster/issues/58)).
   - Added Import-DscResource to example in README.md.
-  - Added CodeCov and opt-in for all common tests (issue #41).
+  - Added CodeCov and opt-in for all common tests ([issue #41](https://github.com/PowerShell/xFailOverCluster/issues/41)).
   - Added CodeCov badge to README.md
     - Fixed CodeCov badge links so they now can be clicked on.
   - Fixed lint rule MD013 in CHANGELOG.md.
   - Fixed lint rule MD013 in README.md.
   - Fixed lint rule MD024 in README.md.
   - Fixed lint rule MD032 in README.md.
-  - Removed example from README.md (issue #42).
+  - Removed example from README.md ([issue #42](https://github.com/PowerShell/xFailOverCluster/issues/42)).
   - Fixed typo in filename for ISSUE\_TEMPLATE. Was 'ISSUE\_TEMPLATE', now it is
     correctly 'ISSUE\_TEMPLATE.md'.
   - Changed appveyor.yml to use the new default test framework in the AppVeyor
     module in DscResource.Tests (AppVeyor.psm1).
   - Added VS Code workspace settings file with formatting settings matching the
-    Style Guideline (issue #67). That will make it possible inside VS Code to
+    Style Guideline ([issue #67](https://github.com/PowerShell/xFailOverCluster/issues/67)). That will make it possible inside VS Code to
     press SHIFT+ALT+F, or press F1 and choose 'Format document' in the list. The
     PowerShell code will then be formatted according to the Style Guideline
     (although maybe not complete, but would help a long way).
@@ -63,41 +77,41 @@
   - Fixed typo in xCluster parameter description.
   - Added links to examples from README.md
   - Refactored the unit test for this resource to use stubs and increase coverage
-    (issue #73).
+    ([issue #73](https://github.com/PowerShell/xFailOverCluster/issues/73)).
     - Removed the password file (MSFT_xCluster.password.txt) which seemed unnecessary.
   - Test-TargetResource now throws and error if domain name cannot be evaluated
-    (issue #72).
+    ([issue #72](https://github.com/PowerShell/xFailOverCluster/issues/72)).
   - Set-TargetResource now correctly throws and error if domain name cannot be
-    evaluated (issue #71).
+    evaluated ([issue #71](https://github.com/PowerShell/xFailOverCluster/issues/71)).
 - Changes to xWaitForCluster
   - Added example
     - 1-WaitForFailoverClusterToBePresent.ps1
   - Added link to example from README.md
 - Changes to xClusterDisk
   - Refactored the unit test for this resource to use stubs and increase coverage
-    (issue #74).
+    ([issue #74](https://github.com/PowerShell/xFailOverCluster/issues/74)).
   - Removed an evaluation that called Test-TargetResource in Set-TargetResource
     method and instead added logic so that Set-TargetResource evaluates if it
-    should remove a disk (issue #90).
+    should remove a disk ([issue #90](https://github.com/PowerShell/xFailOverCluster/issues/90)).
   - Changed the code to be more aligned with the style guideline.
-  - Added examples (issue #46)
+  - Added examples ([issue #46](https://github.com/PowerShell/xFailOverCluster/issues/46))
     - 1-AddClusterDisk.ps1
     - 2-RemoveClusterDisk.ps1
   - Added links to examples from README.md.
 - Changes to xClusterPreferredOwner
   - Refactored the unit test for this resource to use stubs and increase coverage
-    (issue #76).
+    ([issue #76](https://github.com/PowerShell/xFailOverCluster/issues/76)).
   - Changed the code to be more aligned with the style guideline.
-  - Added examples (issue #52)
+  - Added examples ([issue #52](https://github.com/PowerShell/xFailOverCluster/issues/52))
     - 1-AddPreferredOwner.ps1
     - 2-RemovePreferredOwner.ps1
   - Added links to examples from README.md.
 - Changes to xClusterNetwork
   - Refactored the unit test for this resource to use stubs and increase coverage
-    (issue #75).
+    ([issue #75](https://github.com/PowerShell/xFailOverCluster/issues/75)).
   - Changed the code to be more aligned with the style guideline.
   - Updated resource and parameter description in README.md and schema.mof.
-  - Added example (issue #57)
+  - Added example ([issue #57](https://github.com/PowerShell/xFailOverCluster/issues/57))
     - 1-ChangeClusterNetwork.ps1
   - Added links to examples from README.md.
 

@@ -1,3 +1,8 @@
+Import-Module -Name (Join-Path -Path (Split-Path -Path $PSScriptRoot -Parent) `
+                               -ChildPath 'CommonResourceHelper.psm1')
+
+$script:localizedData = Get-LocalizedData -ResourceName 'MSFT_xClusterPreferredOwner'
+
 <#
     .SYNOPSIS
         Returns the current state of the failover cluster group and cluster
@@ -46,11 +51,10 @@ function Get-TargetResource
         $Ensure = 'Present'
     )
 
-    Write-Verbose -Message "Retrieving Owner information for cluster $ClusterName..."
+    Write-Verbose -Message ($script:localizedData.GetOwnerInformationForCluster -f $ClusterName)
 
     $ownerNodes = @(
-
-        Write-Verbose -Message "Retrieving Owner information for Cluster Group $ClusterGroup"
+        Write-Verbose -Message ($script:localizedData.GetOwnerInformationForClusterGroup -f $ClusterGroup)
         (((Get-ClusterGroup -Cluster $ClusterName) | Where-Object -FilterScript {
             $_.Name -like $ClusterGroup
         } | Get-ClusterOwnerNode).OwnerNodes).Name
@@ -59,7 +63,7 @@ function Get-TargetResource
         {
             foreach ($resource in $ClusterResources)
             {
-                Write-Verbose -Message "Retrieving Owner information for Cluster Resource $resource"
+                Write-Verbose -Message ($script:localizedData.GetOwnerInformationForClusterResource -f $resource)
                 (((Get-ClusterResource -Cluster $ClusterName) | Where-Object -FilterScript {
                     $_.Name -like $resource
                 } | Get-ClusterOwnerNode).OwnerNodes).Name
@@ -71,7 +75,7 @@ function Get-TargetResource
 
     @{
         ClusterGroup = $ClusterGroup
-        Clustername = $ClusterName
+        ClusterName = $ClusterName
         Nodes = $ownerNodes
         ClusterResources = $ClusterResources
         Ensure = $Ensure
@@ -125,12 +129,12 @@ function Set-TargetResource
         $Ensure = 'Present'
     )
 
-    Write-Verbose -Message "Retrieving all owners from cluster $ClusterName"
+    Write-Verbose -Message ($script:localizedData.GetAllNodesOfCluster -f $ClusterName)
     $allNodes = (Get-ClusterNode -Cluster $ClusterName).Name
 
     if ($Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Setting Cluster owners for Group $ClusterGroup to $Nodes"
+        Write-Verbose -Message ($script:localizedData.SetOwnerForClusterGroup -f $ClusterGroup, $Nodes)
         $null = (Get-ClusterGroup -Cluster $ClusterName) | Where-Object -FilterScript {
             $_.Name -like $ClusterGroup
         } | Set-ClusterOwnerNode -Owners $Nodes
@@ -139,14 +143,14 @@ function Set-TargetResource
             $_.OwnerGroup -like $ClusterGroup
         } | Set-ClusterOwnerNode -Owners $allNodes
 
-        Write-Verbose -Message "Moving Cluster Group $ClusterGroup to node $($Nodes[0])"
+        Write-Verbose -Message ($script:localizedData.MoveClusterGroup -f $ClusterGroup, $Nodes[0])
         $null = (Get-ClusterGroup -Cluster $ClusterName) | Where-Object -FilterScript {
             $_.name -like $ClusterGroup
         } | Move-ClusterGroup -Node $Nodes[0]
 
         foreach ($resource in $ClusterResources)
         {
-            Write-Verbose -Message "Setting Cluster owners for Resource $resource to $Nodes"
+            Write-Verbose -Message ($script:localizedData.SetOwnerForClusterResource -f $resource, $Nodes)
             $null = (Get-ClusterResource -Cluster $ClusterName) | Where-Object -FilterScript {
                 $_.Name -like $resource
             } | Set-ClusterOwnerNode -Owners $Nodes
@@ -155,7 +159,7 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Retrieving current cluster owners for group $ClusterGroup"
+        Write-Verbose -Message ($script:localizedData.GetOwnerInformationForClusterGroup -f $ClusterGroup)
         $currentOwners = (((Get-ClusterGroup -Cluster $ClusterName) | Where-Object -FilterScript {
             $_.Name -like $ClusterGroup
         } | Get-ClusterOwnerNode).OwnerNodes).Name | Sort-Object -Unique
@@ -170,24 +174,24 @@ function Set-TargetResource
             }
         )
 
-        Write-Verbose -Message "Removing owners from group $($ClusterGroup): $Nodes"
+        Write-Verbose -Message ($script:localizedData.RemoveOwnerFromClusterGroup -f $ClusterGroup, $Nodes)
         $null = (Get-ClusterGroup -Cluster $ClusterName) | Where-Object -FilterScript {
             $_.Name -like $ClusterGroup
         } | Set-ClusterOwnerNode $newOwners
 
-        Write-Verbose -Message "Setting Cluster owners for Group $ClusterGroup to $newOwners"
+        Write-Verbose -Message ($script:localizedData.SetOwnerForClusterGroup -f $ClusterGroup, $newOwners)
         $null = (Get-ClusterResource) | Where-Object -FilterScript {
             $_.OwnerGroup -like $ClusterGroup
         } | Set-ClusterOwnerNode $allNodes
 
-        Write-Verbose -Message "Moving Cluster Group $ClusterGroup to node $($newOwners[0])"
+        Write-Verbose -Message ($script:localizedData.MoveClusterGroup -f $ClusterGroup, $newOwners[0])
         $null = (Get-ClusterGroup -Cluster $ClusterName) | Where-Object -FilterScript {
             $_.Name -like $ClusterGroup
         } | Move-ClusterGroup -Node $newOwners[0]
 
         foreach ($resource in $ClusterResources)
         {
-            Write-Verbose -Message "Retrieving current cluster owners for resource $resource"
+            Write-Verbose -Message ($script:localizedData.GetOwnerInformationForClusterResource -f $resource)
             $currentOwners = ((Get-ClusterResource -Cluster $ClusterName | Where-Object -FilterScript {
                 $_.Name -like $resource
             } | Get-ClusterOwnerNode).OwnerNodes).Name | Sort-Object -Unique
@@ -202,7 +206,7 @@ function Set-TargetResource
                 }
             )
 
-            Write-Verbose -Message "Setting Cluster owners for Resource $resource to $newOwners"
+            Write-Verbose -Message ($script:localizedData.SetOwnerForClusterResource -f $resource, $newOwners)
             $null = Get-ClusterResource -Cluster $ClusterName | Where-Object -FilterScript {
                 $_.Name -like $resource
             } | Set-ClusterOwnerNode -Owners $newOwners
@@ -259,7 +263,7 @@ function Test-TargetResource
         $Ensure = 'Present'
     )
 
-    Write-Verbose -Message "Testing Owner information for cluster $ClusterName..."
+    Write-Verbose -Message ($script:localizedData.TestOwnerInformationForCluster -f $ClusterName)
 
     $getTargetResourceResult = (Get-TargetResource @PSBoundParameters).Nodes
     $result = $true
@@ -270,7 +274,7 @@ function Test-TargetResource
         {
             if ($Nodes -notcontains $object)
             {
-                Write-Verbose -Message "$object was NOT found as possible owner"
+                Write-Verbose -Message ($script:localizedData.WasNotFoundAsPossibleOwner -f $object)
                 $result = $false
             }
         }
@@ -279,7 +283,7 @@ function Test-TargetResource
         {
             if ($getTargetResourceResult -notcontains $object)
             {
-                Write-Verbose -Message "$object was NOT found as possible owner"
+                Write-Verbose -Message ($script:localizedData.WasNotFoundAsPossibleOwner -f $object)
                 $result = $false
             }
         }
@@ -291,7 +295,7 @@ function Test-TargetResource
         {
             if ($Nodes -contains $object)
             {
-                Write-Verbose -Message "$object WAS found as possible owner"
+                Write-Verbose -Message ($script:localizedData.WasFoundAsPossibleOwner -f $object)
                 $result = $false
             }
         }
@@ -300,7 +304,7 @@ function Test-TargetResource
         {
             if ($getTargetResourceResult -contains $object)
             {
-                Write-Verbose -Message "$object WAS found as possible owner"
+                Write-Verbose -Message ($script:localizedData.WasFoundAsPossibleOwner -f $object)
                 $result = $false
             }
         }

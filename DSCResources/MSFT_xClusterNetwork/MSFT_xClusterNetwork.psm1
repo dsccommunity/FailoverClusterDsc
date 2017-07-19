@@ -1,12 +1,17 @@
+Import-Module -Name (Join-Path -Path (Split-Path -Path $PSScriptRoot -Parent) `
+                               -ChildPath 'CommonResourceHelper.psm1')
+
+$script:localizedData = Get-LocalizedData -ResourceName 'MSFT_xClusterNetwork'
+
 <#
     .SYNOPSIS
         Returns the current state of the failover cluster network resource.
 
     .PARAMETER Address
-        The adress for the cluster network in the format '10.0.0.0'.
+        The address for the cluster network in the format '10.0.0.0'.
 
     .PARAMETER AddressMask
-        The adress mask for the cluster network in the format '255.255.255.0'.
+        The address mask for the cluster network in the format '255.255.255.0'.
 #>
 function Get-TargetResource
 {
@@ -42,10 +47,10 @@ function Get-TargetResource
         network resource.
 
     .PARAMETER Address
-        The adress for the cluster network in the format '10.0.0.0'.
+        The address for the cluster network in the format '10.0.0.0'.
 
     .PARAMETER AddressMask
-        The adress mask for the cluster network in the format '255.255.255.0'.
+        The address mask for the cluster network in the format '255.255.255.0'.
 
     .PARAMETER Name
         The name of the cluster network. If the cluster network name is not in
@@ -100,7 +105,7 @@ function Set-TargetResource
 
     if ($PSBoundParameters.ContainsKey('Name') -and $getTargetResourceResult.Name -ne $Name)
     {
-        Write-Verbose "Changing the name of network $Address/$AddressMask to '$Name'"
+        Write-Verbose -Message ($script:localizedData.ChangeNetworkName -f $Address, $AddressMask, $Name)
 
         $clusterNetworkResource = Get-ClusterNetwork | Where-Object -FilterScript {
             $_.Address -eq $Address -and $_.AddressMask -eq $AddressMask
@@ -111,7 +116,7 @@ function Set-TargetResource
 
     if ($PSBoundParameters.ContainsKey('Role') -and $getTargetResourceResult.Role -ne $Role)
     {
-        Write-Verbose "Changing the role of network $Address/$AddressMask to '$Role'"
+        Write-Verbose -Message ($script:localizedData.ChangeNetworkName -f $Address, $AddressMask, $Role)
 
         $clusterNetworkResource = Get-ClusterNetwork | Where-Object -FilterScript {
             $_.Address -eq $Address -and $_.AddressMask -eq $AddressMask
@@ -122,7 +127,7 @@ function Set-TargetResource
 
     if ($PSBoundParameters.ContainsKey('Metric') -and $getTargetResourceResult.Metric -ne $Metric)
     {
-        Write-Verbose "Changing the metric of network $Address/$AddressMask to '$Metric'"
+        Write-Verbose -Message ($script:localizedData.ChangeNetworkName -f $Address, $AddressMask, $Metric)
 
         $clusterNetworkResource = Get-ClusterNetwork | Where-Object -FilterScript {
             $_.Address -eq $Address -and $_.AddressMask -eq $AddressMask
@@ -138,10 +143,10 @@ function Set-TargetResource
         values for the properties Name, Role and Metric.
 
     .PARAMETER Address
-        The adress for the cluster network in the format '10.0.0.0'.
+        The address for the cluster network in the format '10.0.0.0'.
 
     .PARAMETER AddressMask
-        The adress mask for the cluster network in the format '255.255.255.0'.
+        The address mask for the cluster network in the format '255.255.255.0'.
 
     .PARAMETER Name
         The name of the cluster network. If the cluster network name is not in

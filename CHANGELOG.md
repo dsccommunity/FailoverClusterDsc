@@ -14,6 +14,11 @@
     - Removed Byte Order Mark (BOM) from the files; CommonResourceHelper.Tests.ps1,
       MSFT\_xCluster.Tests.ps1, MSFT\_xClusterDisk.Tests.ps1,
       MSFT\_xClusterPreferredOwner.Tests.ps1, MSFT_xWaitForCluster.Tests.ps1.
+  - Added common test helper functions to help test the throwing of localized error strings.
+    - Get-InvalidArgumentRecord
+    - Get-InvalidOperationRecord
+    - Get-ObjectNotFoundException
+    - Get-InvalidResultException.
 - Changes to xClusterDisk
   - Enabled localization for all strings ([issue #84](https://github.com/PowerShell/xFailOverCluster/issues/84)).
   - Fixed the OutputType data type that was not fully qualified.
@@ -27,6 +32,7 @@
     Get-CimInstance ([issue #49](https://github.com/PowerShell/xFailOverCluster/issues/49)).
   - Minor style change in tests. Removed '-' in front of '-Be', '-Not', '-Throw',
     etc.
+  - Enabled localization for all strings ([issue #83](https://github.com/PowerShell/xFailOverCluster/issues/83)).
 - Changes to xWaitForCluster
   - Refactored the unit test for this resource to use stubs and increase coverage
     ([issue #78](https://github.com/PowerShell/xFailOverCluster/issues/78)).

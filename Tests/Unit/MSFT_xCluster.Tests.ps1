@@ -45,15 +45,15 @@ try
         $mockClusterName = 'CLUSTER001'
         $mockStaticIpAddress = '192.168.10.10'
 
-        $mockGetWmiObject = {
+        $mockGetCimInstance = {
             return [PSCustomObject] @{
                 Domain = $mockDynamicDomainName
                 Name   = $mockDynamicServerName
             }
         }
 
-        $mockGetWmiObject_ParameterFilter = {
-            $Class -eq 'Win32_ComputerSystem'
+        $mockGetCimInstance_ParameterFilter = {
+            $ClassName -eq 'Win32_ComputerSystem'
         }
 
         $mockGetCluster = {
@@ -108,7 +108,7 @@ try
                     $mockDynamicDomainName = $null
                     $mockDynamicServerName = $mockServerName
 
-                    Mock -CommandName Get-WmiObject -MockWith $mockGetWmiObject -ParameterFilter $mockGetWmiObject_ParameterFilter -Verifiable
+                    Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
 
                     { Get-TargetResource @mockDefaultParameters } | Should -Throw "Can't find machine's domain name"
                 }
@@ -120,7 +120,7 @@ try
                     $mockDynamicServerName = $mockServerName
 
                     Mock -CommandName Get-Cluster -Verifiable
-                    Mock -CommandName Get-WmiObject -MockWith $mockGetWmiObject -ParameterFilter $mockGetWmiObject_ParameterFilter -Verifiable
+                    Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
 
                     { Get-TargetResource @mockDefaultParameters } | Should -Throw ("Can't find the cluster {0}" -f $mockClusterName)
                 }
@@ -128,7 +128,7 @@ try
 
             Context 'When the system is not in the desired state' {
                 BeforeEach {
-                    Mock -CommandName Get-WmiObject -MockWith $mockGetWmiObject -ParameterFilter $mockGetWmiObject_ParameterFilter -Verifiable
+                    Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
                     Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter -Verifiable
                     Mock -CommandName Get-ClusterGroup -MockWith $mockGetClusterGroup -ParameterFilter $mockGetClusterGroup_ParameterFilter -Verifiable
                     Mock -CommandName Get-ClusterParameter -MockWith $mockGetClusterParameter -Verifiable
@@ -158,7 +158,7 @@ try
                     $mockDynamicDomainName = $null
                     $mockDynamicServerName = $mockServerName
 
-                    Mock -CommandName Get-WmiObject -MockWith $mockGetWmiObject -ParameterFilter $mockGetWmiObject_ParameterFilter -Verifiable
+                    Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
 
                     { Set-TargetResource @mockDefaultParameters } | Should -Throw "Can't find machine's domain name"
                 }
@@ -169,7 +169,7 @@ try
                     Mock -CommandName New-Cluster -Verifiable
                     Mock -CommandName Remove-ClusterNode -Verifiable
                     Mock -CommandName Add-ClusterNode -Verifiable
-                    Mock -CommandName Get-WmiObject -MockWith $mockGetWmiObject -ParameterFilter $mockGetWmiObject_ParameterFilter -Verifiable
+                    Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
                 }
 
                 $mockDynamicDomainName = $mockDomainName
@@ -261,7 +261,7 @@ try
                     Mock -CommandName New-Cluster -Verifiable
                     Mock -CommandName Remove-ClusterNode -Verifiable
                     Mock -CommandName Add-ClusterNode -Verifiable
-                    Mock -CommandName Get-WmiObject -MockWith $mockGetWmiObject -ParameterFilter $mockGetWmiObject_ParameterFilter -Verifiable
+                    Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
                     Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter -Verifiable
                     Mock -CommandName Get-ClusterParameter -MockWith $mockGetClusterParameter -Verifiable
 
@@ -301,7 +301,7 @@ try
                     $mockDynamicDomainName = $null
                     $mockDynamicServerName = $mockServerName
 
-                    Mock -CommandName Get-WmiObject -MockWith $mockGetWmiObject -ParameterFilter $mockGetWmiObject_ParameterFilter -Verifiable
+                    Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
 
                     { Test-TargetResource @mockDefaultParameters } | Should -Throw "Can't find machine's domain name"
                 }
@@ -309,7 +309,7 @@ try
 
             Context 'When the system is not in the desired state' {
                 BeforeEach {
-                    Mock -CommandName Get-WmiObject -MockWith $mockGetWmiObject -ParameterFilter $mockGetWmiObject_ParameterFilter -Verifiable
+                    Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
                 }
 
                 $mockDynamicDomainName = $mockDomainName
@@ -374,7 +374,7 @@ try
             Context 'When the system is in the desired state' {
                 BeforeEach {
                     Mock -CommandName Get-ClusterNode -MockWith $mockGetClusterNode -Verifiable
-                    Mock -CommandName Get-WmiObject -MockWith $mockGetWmiObject -ParameterFilter $mockGetWmiObject_ParameterFilter -Verifiable
+                    Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
                     Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter -Verifiable
                 }
 

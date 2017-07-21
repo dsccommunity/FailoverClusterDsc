@@ -16,6 +16,9 @@
     generic description of the possible settings for the Role parameter. The
     previous URL was still correct but focused on Hyper-V in particular.
   - Fixed typos in parameter descriptions in README.md.
+- Changes to xCluster
+  - Resolved Script Analyzer rule warnings by changing Get-WmiObject to
+    Get-CimInstance ([issue #49](https://github.com/PowerShell/xFailOverCluster/issues/49)).
 
 ## 1.7.0.0
 

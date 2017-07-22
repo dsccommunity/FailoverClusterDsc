@@ -45,9 +45,11 @@ function Get-TargetResource
         'NodeMajority' {
             $clusterQuorumType = 'NodeMajority'
         }
+
         'NodeAndDiskMajority' {
             $clusterQuorumType = 'NodeAndDiskMajority'
         }
+
         'NodeAndFileShareMajority' {
             $clusterQuorumType = 'NodeAndFileShareMajority'
         }
@@ -65,7 +67,9 @@ function Get-TargetResource
 
     if ($clusterQuorumType -eq 'NodeAndFileShareMajority')
     {
-        $clusterQuorumResource = $getClusterQuorumResult.QuorumResource | Get-ClusterParameter -Name SharePath | Select-Object -ExpandProperty Value
+        $clusterQuorumResource = $getClusterQuorumResult.QuorumResource |
+            Get-ClusterParameter -Name SharePath |
+            Select-Object -ExpandProperty Value
     }
     else
     {

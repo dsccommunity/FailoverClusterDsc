@@ -340,9 +340,6 @@ try
                     }
                 }
             }
-
-            Context 'When the system is not in the desired state' {
-            }
         }
 
         Describe 'xClusterQuorum\Test-TargetResource' {

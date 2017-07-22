@@ -93,7 +93,7 @@ try
                 It 'Should throw the correct error message' {
                     Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockCimInstance_ParameterFilter -Verifiable
 
-                    { Set-TargetResource @mockDefaultParameters } | Should -Throw ('Failover cluster {0} not found after {1} attempts with {2} sec interval' -f $mockClusterName, ($mockRetryCount-1), $mockRetryIntervalSec)
+                    { Set-TargetResource @mockDefaultParameters } | Should Throw ('Failover cluster {0} not found after {1} attempts with {2} sec interval' -f $mockClusterName, ($mockRetryCount-1), $mockRetryIntervalSec)
                 }
             }
 
@@ -105,7 +105,7 @@ try
                 Context 'When the cluster does not exist' {
                     Context 'When Get-Cluster throws an error' {
                         BeforeEach {
-                            # This is used for the evaluation of that cluster do not exist.
+                            # This is used for the evaluation of a cluster that does not exist
                             Mock -CommandName Get-Cluster -MockWith {
                                 throw 'Mock Get-Cluster throw error'
                             } -ParameterFilter $mockGetCluster_ParameterFilter
@@ -114,7 +114,7 @@ try
                         $mockDynamicDomainName = $mockDomainName
 
                         It 'Should throw the correct error message' {
-                            { Set-TargetResource @mockDefaultParameters } | Should -Throw ('Failover cluster {0} not found after {1} attempts with {2} sec interval' -f $mockClusterName, $mockRetryCount, $mockRetryIntervalSec)
+                            { Set-TargetResource @mockDefaultParameters } | Should Throw ('Failover cluster {0} not found after {1} attempts with {2} sec interval' -f $mockClusterName, $mockRetryCount, $mockRetryIntervalSec)
                         }
 
                         Assert-VerifiableMocks
@@ -132,7 +132,7 @@ try
                     $mockDynamicDomainName = $mockDomainName
 
                     It 'Should not throw any error' {
-                        { Set-TargetResource @mockDefaultParameters } | Should -Not -Throw
+                        { Set-TargetResource @mockDefaultParameters } | Should Not Throw
                     }
 
                     Assert-VerifiableMocks
@@ -158,7 +158,7 @@ try
                 Context 'When the cluster does not exist' {
                     Context 'When Get-Cluster throws an error' {
                         BeforeEach {
-                            # This is used for the evaluation of that cluster do not exist.
+                            # This is used for the evaluation of a cluster that does not exist.
                             Mock -CommandName Get-Cluster -MockWith {
                                 throw 'Mock Get-Cluster throw error'
                             } -ParameterFilter $mockGetCluster_ParameterFilter
@@ -176,7 +176,7 @@ try
 
                     Context 'When Get-Cluster returns nothing' {
                         BeforeEach {
-                            # This is used for the evaluation of that cluster do not exist.
+                            # This is used for the evaluation of a cluster that does not exist.
                             Mock -CommandName Get-Cluster -MockWith {
                                 $null
                             } -ParameterFilter $mockGetCluster_ParameterFilter
@@ -190,7 +190,8 @@ try
                         }
 
                         Assert-VerifiableMocks
-                    }                }
+                    }
+                }
             }
 
             Context 'When the system is in the desired state' {

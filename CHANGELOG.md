@@ -10,6 +10,10 @@
   - Fixed lint error MD034 and fixed typos in README.md.
   - Opt-in for module files common tests ([issue #119](https://github.com/PowerShell/xFailOverCluster/issues/119)).
     - Removed Byte Order Mark (BOM) from the files; CommonResourceHelper.psm1 and FailoverClusters.stubs.psm1.
+  - Opt-in for script files common tests ([issue #121](https://github.com/PowerShell/xFailOverCluster/issues/121)).
+    - Removed Byte Order Mark (BOM) from the files; CommonResourceHelper.Tests.ps1,
+      MSFT\_xCluster.Tests.ps1, MSFT\_xClusterDisk.Tests.ps1,
+      MSFT\_xClusterPreferredOwner.Tests.ps1.
 - Changes to xClusterDisk
   - Enabled localization for all strings ([issue #84](https://github.com/PowerShell/xFailOverCluster/issues/84)).
   - Fixed the OutputType data type that was not fully qualified.

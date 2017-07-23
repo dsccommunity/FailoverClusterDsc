@@ -13,7 +13,7 @@
   - Opt-in for script files common tests ([issue #121](https://github.com/PowerShell/xFailOverCluster/issues/121)).
     - Removed Byte Order Mark (BOM) from the files; CommonResourceHelper.Tests.ps1,
       MSFT\_xCluster.Tests.ps1, MSFT\_xClusterDisk.Tests.ps1,
-      MSFT\_xClusterPreferredOwner.Tests.ps1.
+      MSFT\_xClusterPreferredOwner.Tests.ps1, MSFT_xWaitForCluster.Tests.ps1.
 - Changes to xClusterDisk
   - Enabled localization for all strings ([issue #84](https://github.com/PowerShell/xFailOverCluster/issues/84)).
   - Fixed the OutputType data type that was not fully qualified.

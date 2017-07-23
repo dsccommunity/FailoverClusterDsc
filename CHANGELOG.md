@@ -21,7 +21,8 @@
 - Changes to xCluster
   - Resolved Script Analyzer rule warnings by changing Get-WmiObject to
     Get-CimInstance ([issue #49](https://github.com/PowerShell/xFailOverCluster/issues/49)).
-    Minor style change in tests. Removed '-' infront of '-Be', '-Not', '-Throw', etc.
+  - Minor style change in tests. Removed '-' in front of '-Be', '-Not', '-Throw',
+    etc.
 - Changes to xWaitForCluster
   - Refactored the unit test for this resource to use stubs and increase coverage
     ([issue #78](https://github.com/PowerShell/xFailOverCluster/issues/78)).

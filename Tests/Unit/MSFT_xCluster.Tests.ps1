@@ -110,7 +110,7 @@ try
 
                     Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
 
-                    { Get-TargetResource @mockDefaultParameters } | Should -Throw "Can't find machine's domain name"
+                    { Get-TargetResource @mockDefaultParameters } | Should Throw "Can't find machine's domain name"
                 }
             }
 
@@ -122,7 +122,7 @@ try
                     Mock -CommandName Get-Cluster -Verifiable
                     Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
 
-                    { Get-TargetResource @mockDefaultParameters } | Should -Throw ("Can't find the cluster {0}" -f $mockClusterName)
+                    { Get-TargetResource @mockDefaultParameters } | Should Throw ("Can't find the cluster {0}" -f $mockClusterName)
                 }
             }
 
@@ -160,7 +160,7 @@ try
 
                     Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
 
-                    { Set-TargetResource @mockDefaultParameters } | Should -Throw "Can't find machine's domain name"
+                    { Set-TargetResource @mockDefaultParameters } | Should Throw "Can't find machine's domain name"
                 }
             }
 
@@ -184,7 +184,7 @@ try
                             # This is used to evaluate that cluster do exists after New-Cluster cmdlet has been run.
                             Mock -CommandName Get-Cluster -MockWith $mockGetCluster
 
-                            { Set-TargetResource @mockDefaultParameters } | Should -Not -Throw
+                            { Set-TargetResource @mockDefaultParameters } | Should Not Throw
 
                             Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It
                             Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
@@ -202,7 +202,7 @@ try
                             # This is used to evaluate that cluster do exists after New-Cluster cmdlet has been run.
                             Mock -CommandName Get-Cluster -MockWith $mockGetCluster
 
-                            { Set-TargetResource @mockDefaultParameters } | Should -Not -Throw
+                            { Set-TargetResource @mockDefaultParameters } | Should Not Throw
 
                             Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It
                             Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
@@ -215,7 +215,7 @@ try
                     It 'Should throw the correct error message' {
                         Mock -CommandName Get-Cluster
 
-                        { Set-TargetResource @mockDefaultParameters } | Should -Throw 'Cluster creation failed. Please verify output of ''Get-Cluster'' command'
+                        { Set-TargetResource @mockDefaultParameters } | Should Throw 'Cluster creation failed. Please verify output of ''Get-Cluster'' command'
 
                         Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It
                         Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
@@ -228,7 +228,7 @@ try
                         Mock -CommandName Get-ClusterNode
                         Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter
 
-                        { Set-TargetResource @mockDefaultParameters } | Should -Not -Throw
+                        { Set-TargetResource @mockDefaultParameters } | Should Not Throw
 
                         Assert-MockCalled -CommandName New-Cluster -Exactly -Times 0 -Scope It
                         Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
@@ -246,7 +246,7 @@ try
                     It 'Should call both Remove-ClusterNode and Add-ClusterNode cmdlet' {
                         Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter
 
-                        { Set-TargetResource @mockDefaultParameters } | Should -Not -Throw
+                        { Set-TargetResource @mockDefaultParameters } | Should Not Throw
 
                         Assert-MockCalled -CommandName New-Cluster -Exactly -Times 0 -Scope It
                         Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 1 -Scope It
@@ -283,7 +283,7 @@ try
                     It 'Should not call any of the cluster cmdlets' -Skip {
                         Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter -Verifiable
 
-                        { Set-TargetResource @mockDefaultParameters } | Should -Not -Throw
+                        { Set-TargetResource @mockDefaultParameters } | Should Not Throw
 
                         Assert-MockCalled -CommandName New-Cluster -Exactly -Times 0 -Scope It
                         Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
@@ -303,7 +303,7 @@ try
 
                     Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
 
-                    { Test-TargetResource @mockDefaultParameters } | Should -Throw "Can't find machine's domain name"
+                    { Test-TargetResource @mockDefaultParameters } | Should Throw "Can't find machine's domain name"
                 }
             }
 
@@ -320,7 +320,7 @@ try
                         Mock -CommandName Get-Cluster -Verifiable
 
                         $testTargetResourceResult = Test-TargetResource @mockDefaultParameters
-                        $testTargetResourceResult | Should -Be $false
+                        $testTargetResourceResult | Should Be $false
                     }
 
                     Assert-VerifiableMocks
@@ -333,7 +333,7 @@ try
                         } -Verifiable
 
                         $testTargetResourceResult = Test-TargetResource @mockDefaultParameters
-                        $testTargetResourceResult | Should -Be $false
+                        $testTargetResourceResult | Should Be $false
                     }
 
                     Assert-VerifiableMocks
@@ -346,7 +346,7 @@ try
 
                         $testTargetResourceResult = Test-TargetResource @mockDefaultParameters
 
-                        $testTargetResourceResult | Should -Be $false
+                        $testTargetResourceResult | Should Be $false
                     }
 
                     Assert-VerifiableMocks
@@ -363,7 +363,7 @@ try
                     It 'Should return $false' {
                         $testTargetResourceResult = Test-TargetResource @mockDefaultParameters
 
-                        $testTargetResourceResult | Should -Be $false
+                        $testTargetResourceResult | Should Be $false
                     }
 
                     Assert-VerifiableMocks
@@ -385,7 +385,7 @@ try
                 Context 'When the node already exist' {
                     It 'Should return $true' {
                         $testTargetResourceResult = Test-TargetResource @mockDefaultParameters
-                        $testTargetResourceResult | Should -Be $true
+                        $testTargetResourceResult | Should Be $true
                     }
 
                     Assert-VerifiableMocks

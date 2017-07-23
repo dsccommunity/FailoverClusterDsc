@@ -21,6 +21,15 @@
 - Changes to xCluster
   - Resolved Script Analyzer rule warnings by changing Get-WmiObject to
     Get-CimInstance ([issue #49](https://github.com/PowerShell/xFailOverCluster/issues/49)).
+    Minor style change in tests. Removed '-' infront of '-Be', '-Not', '-Throw', etc.
+- Changes to xWaitForCluster
+  - Refactored the unit test for this resource to use stubs and increase coverage
+    ([issue #78](https://github.com/PowerShell/xFailOverCluster/issues/78)).
+  - Now the Test-TargetResource correctly returns false if the domain name cannot
+    be evaluated  ([issue #107](https://github.com/PowerShell/xFailOverCluster/issues/107)).
+  - Changed the code to be more aligned with the style guideline.
+  - Updated parameter description in the schema.mof.
+  - Resolved Script Analyzer warnings ([issue #54](https://github.com/PowerShell/xFailOverCluster/issues/54)).
 
 ## 1.7.0.0
 

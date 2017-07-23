@@ -1,21 +1,34 @@
-#
-# xWaitForCluster: DSC Resource that will wait for given name of Cluster, it checks the state of the cluster for given # interval until the cluster is found or the number of retries is reached.
-#
-# 
+<#
+    .SYNOPSIS
+        Get the values for which failover cluster and for how long to wait for the
+        cluster to exist.
 
+    .PARAMETER Name
+        Name of the cluster to wait for.
 
-#
-# The Get-TargetResource cmdlet.
-#
+    .PARAMETER RetryIntervalSec
+        Interval to check for cluster existence. Default values is 10 seconds.
+
+    .PARAMETER RetryCount
+        Maximum number of retries to check for cluster existence. Default value
+        is 50 retries.
+#>
 function Get-TargetResource
 {
-    [OutputType([Hashtable])]
+    [OutputType([System.Collections.Hashtable])]
     param
-    (    
-        [parameter(Mandatory)][string] $Name,
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
 
-        [UInt64] $RetryIntervalSec = 10,
-        [UInt32] $RetryCount = 50
+        [Parameter()]
+        [System.UInt64]
+        $RetryIntervalSec = 10,
+
+        [Parameter()]
+        [System.UInt32]
+        $RetryCount = 50
     )
 
     @{
@@ -25,100 +38,138 @@ function Get-TargetResource
     }
 }
 
-#
-# The Set-TargetResource cmdlet.
-#
+<#
+    .SYNOPSIS
+        Waits for the specific failover cluster to exist. It will throw an error if the
+        cluster has not been detected during the timeout period.
+
+    .PARAMETER Name
+        Name of the cluster to wait for.
+
+    .PARAMETER RetryIntervalSec
+        Interval to check for cluster existence. Default values is 10 seconds.
+
+    .PARAMETER RetryCount
+        Maximum number of retries to check for cluster existence. Default value
+        is 50 retries.
+#>
 function Set-TargetResource
 {
     param
-    (    
-        [parameter(Mandatory)][string] $Name,
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
 
-        [UInt64] $RetryIntervalSec = 10,
-        [UInt32] $RetryCount = 50
+        [Parameter()]
+        [System.UInt64]
+        $RetryIntervalSec = 10,
+
+        [Parameter()]
+        [System.UInt32]
+        $RetryCount = 50
     )
 
     $clusterFound = $false
-    Write-Verbose -Message "Checking for cluster $Name ..."
+    Write-Verbose -Message "Checking for the existance of failover cluster $Name."
 
     for ($count = 0; $count -lt $RetryCount; $count++)
     {
         try
         {
-            $ComputerInfo = Get-WmiObject Win32_ComputerSystem
-            if (($ComputerInfo -eq $null) -or ($ComputerInfo.Domain -eq $null))
+            $computerObject = Get-CimInstance -ClassName Win32_ComputerSystem
+            if ($null -eq $computerObject -or $null -eq $computerObject.Domain)
             {
                 Write-Verbose -Message "Can't find machine's domain name"
-                break;
+                break
             }
 
-            $cluster = Get-Cluster -Name $Name -Domain $ComputerInfo.Domain
+            $cluster = Get-Cluster -Name $Name -Domain $computerObject.Domain
 
-            if ($cluster -ne $null)
+            if ($null -ne $cluster)
             {
-                Write-Verbose -Message "Found cluster $Name"
+                Write-Verbose -Message "Found failover cluster $Name"
                 $clusterFound = $true
-
-                break;
+                break
             }
-            
         }
         catch
         {
-             Write-Verbose -Message "Cluster $Name not found. Will retry again after $RetryIntervalSec sec"
+             Write-Verbose -Message "Failover cluster $Name not found. Will retry again after $RetryIntervalSec sec"
         }
-            
-        Write-Verbose -Message "Cluster $Name not found. Will retry again after $RetryIntervalSec sec"
+
+        Write-Verbose -Message "Failover cluster $Name not found. Will retry again after $RetryIntervalSec sec"
         Start-Sleep -Seconds $RetryIntervalSec
     }
 
     if (! $clusterFound)
     {
-        throw "Cluster $Name not found after $count attempts with $RetryIntervalSec sec interval"
+        throw "Failover cluster $Name not found after $count attempts with $RetryIntervalSec sec interval"
     }
 }
 
-#
-# The Test-TargetResource cmdlet.
-#
+<#
+    .SYNOPSIS
+        Test if the specific failover cluster exist.
+
+    .PARAMETER Name
+        Name of the cluster to wait for.
+
+    .PARAMETER RetryIntervalSec
+        Interval to check for cluster existence. Default values is 10 seconds.
+
+    .PARAMETER RetryCount
+        Maximum number of retries to check for cluster existence. Default value
+        is 50 retries.
+#>
 function Test-TargetResource
 {
     [OutputType([Boolean])]
     param
-    (    
-        [parameter(Mandatory)][string] $Name,
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name,
 
-        [UInt64] $RetryIntervalSec = 10,
-        [UInt32] $RetryCount = 50
+        [Parameter()]
+        [System.UInt64]
+        $RetryIntervalSec = 10,
+
+        [Parameter()]
+        [System.UInt32]
+        $RetryCount = 50
     )
 
     Write-Verbose -Message "Checking for Cluster $Name ..."
 
+    $testTargetResourceReturnValue = $false
+
     try
     {
-        $ComputerInfo = Get-WmiObject Win32_ComputerSystem
-        if (($ComputerInfo -eq $null) -or ($ComputerInfo.Domain -eq $null))
+        $computerObject = Get-CimInstance -ClassName Win32_ComputerSystem
+        if ($null -eq $computerObject -or $null -eq $computerObject.Domain)
         {
             Write-Verbose -Message "Can't find machine's domain name"
-            $false
-        }
-
-        $cluster = Get-Cluster -Name $Name -Domain $ComputerInfo.Domain
-        if ($cluster -eq $null)
-        {
-            Write-Verbose -Message "Cluster $Name not found in domain $ComputerInfo.Domain"
-            $false
         }
         else
         {
-            Write-Verbose -Message "Found cluster $Name"
-            $true
+            $cluster = Get-Cluster -Name $Name -Domain $computerObject.Domain
+            if ($null -eq $cluster)
+            {
+                Write-Verbose -Message "Cluster $Name not found in domain $computerObject.Domain"
+            }
+            else
+            {
+                Write-Verbose -Message "Found cluster $Name"
+                $testTargetResourceReturnValue = $true
+            }
         }
     }
     catch
     {
         Write-Verbose -Message "Cluster $Name not found"
-        $false
     }
+
+    $testTargetResourceReturnValue
 }
 

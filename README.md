@@ -182,7 +182,10 @@ Configures quorum in a cluster.
 
 #### Examples for xClusterQuorum
 
-None.
+* [Set quorum to node majority](/Examples/Resources/xClusterQuorum/1-SetQuorumToNodeMajority.ps1)
+* [Set quorum to node and disk majority](/Examples/Resources/xClusterQuorum/2-SetQuorumToNodeAndDiskMajority.ps1)
+* [Set quorum to node and file share majority](/Examples/Resources/xClusterQuorum/3-SetQuorumToNodeAndFileShareMajority.ps1)
+* [Set quorum to disk only](/Examples/Resources/xClusterQuorum/4-SetQuorumToDiskOnly.ps1)
 
 ### xWaitForCluster
 

@@ -1,3 +1,10 @@
+<#
+    Suppressing this rule because a plain text password variable is used to mock the LogonUser static
+    method and is required for the tests.
+#>
+[System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingPlainTextForPassword', '')]
+param()
+
 $script:DSCModuleName = 'xFailOverCluster'
 $script:DSCResourceName = 'MSFT_xCluster'
 
@@ -103,7 +110,38 @@ try
             DomainAdministratorCredential = $mockAdministratorCredential
         }
 
+        class MockLibImpersonation
+        {
+            static [bool] $ReturnValue = $false
+
+            static [bool]LogonUser(
+                [string] $userName,
+                [string] $domain,
+                [string] $password,
+                [int] $logonType,
+                [int] $logonProvider,
+                [ref] $token
+            )
+            {
+                return [MockLibImpersonation]::ReturnValue
+            }
+
+            static [bool]CloseHandle([System.IntPtr]$Token)
+            {
+                return [MockLibImpersonation]::ReturnValue
+            }
+        }
+
+        [MockLibImpersonation]::ReturnValue = $true
+        $mockLibImpersonationObject = [MockLibImpersonation]::New()
+
         Describe 'xCluster\Get-TargetResource' {
+            BeforeAll {
+                Mock -CommandName Add-Type -MockWith {
+                    return $mockLibImpersonationObject
+                }
+            }
+
             Context 'When the computers domain name cannot be evaluated' {
                 It 'Should throw the correct error message' {
                     $mockDynamicDomainName = $null
@@ -399,25 +437,14 @@ try
             }
         }
 
-        class MockLibImpersonation
-        {
-
-            static [bool]LogonUser([string]$userName, [string]$domain, [string]$password, [int]$logonType, [int]$logonProvider,[ref]$token)
-            {
-                return $false
-            }
-
-            static [bool]CloseHandle([System.IntPtr]$Token)
-            {
-                return $false
-            }
-        }
+        [MockLibImpersonation]::ReturnValue = $false
+        $mockLibImpersonationObject = [MockLibImpersonation]::New()
 
         Describe 'xCluster\Set-ImpersonateAs' -Tag 'Helper' {
             Context 'When impersonating credentials fails' {
                 It 'Should throw the correct error message' {
                     Mock -CommandName Add-Type -MockWith {
-                        return [MockLibImpersonation]::New()
+                        return $mockLibImpersonationObject
                     }
 
                     $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message ($script:localizedData.UnableToImpersonateUser -f $mockAdministratorCredential.GetNetworkCredential().UserName)
@@ -430,7 +457,7 @@ try
             Context 'When closing user token fails' {
                 It 'Should throw the correct error message' {
                     Mock -CommandName Add-Type -MockWith {
-                        return [MockLibImpersonation]::New()
+                        return $mockLibImpersonationObject
                     } -Verifiable
 
                     $mockToken = [System.IntPtr]::New(12345)

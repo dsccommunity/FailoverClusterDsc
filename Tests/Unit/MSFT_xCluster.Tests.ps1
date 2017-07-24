@@ -111,12 +111,8 @@ try
 
                     Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
 
-<<<<<<< HEAD
-                    { Get-TargetResource @mockDefaultParameters } | Should Throw "Can't find machine's domain name"
-=======
                     $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message $script:localizedData.TargetNodeDomainMissing
-                    { Get-TargetResource @mockDefaultParameters } | Should -Throw $mockCorrectErrorRecord
->>>>>>> Changes to xCluster
+                    { Get-TargetResource @mockDefaultParameters } | Should Throw $mockCorrectErrorRecord
                 }
             }
 
@@ -128,12 +124,8 @@ try
                     Mock -CommandName Get-Cluster -Verifiable
                     Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
 
-<<<<<<< HEAD
-                    { Get-TargetResource @mockDefaultParameters } | Should Throw ("Can't find the cluster {0}" -f $mockClusterName)
-=======
                     $mockCorrectErrorRecord = Get-ObjectNotFoundException -Message ($script:localizedData.ClusterNameNotFound -f $mockClusterName)
-                    { Get-TargetResource @mockDefaultParameters } | Should -Throw $mockCorrectErrorRecord
->>>>>>> Changes to xCluster
+                    { Get-TargetResource @mockDefaultParameters } | Should Throw $mockCorrectErrorRecord
                 }
             }
 
@@ -171,12 +163,8 @@ try
 
                     Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
 
-<<<<<<< HEAD
-                    { Set-TargetResource @mockDefaultParameters } | Should Throw "Can't find machine's domain name"
-=======
                     $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message $script:localizedData.TargetNodeDomainMissing
-                    { Set-TargetResource @mockDefaultParameters } | Should -Throw $mockCorrectErrorRecord
->>>>>>> Changes to xCluster
+                    { Set-TargetResource @mockDefaultParameters } | Should Throw $mockCorrectErrorRecord
                 }
             }
 
@@ -231,12 +219,8 @@ try
                     It 'Should throw the correct error message' {
                         Mock -CommandName Get-Cluster
 
-<<<<<<< HEAD
-                        { Set-TargetResource @mockDefaultParameters } | Should Throw 'Cluster creation failed. Please verify output of ''Get-Cluster'' command'
-=======
                         $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message $script:localizedData.FailedCreatingCluster
-                        { Set-TargetResource @mockDefaultParameters } | Should -Throw $mockCorrectErrorRecord
->>>>>>> Changes to xCluster
+                        { Set-TargetResource @mockDefaultParameters } | Should Throw $mockCorrectErrorRecord
 
                         Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It
                         Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It

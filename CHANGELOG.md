@@ -33,6 +33,7 @@
   - Minor style change in tests. Removed '-' in front of '-Be', '-Not', '-Throw',
     etc.
   - Enabled localization for all strings ([issue #83](https://github.com/PowerShell/xFailOverCluster/issues/83)).
+  - Added tests to improve code coverage.
 - Changes to xWaitForCluster
   - Refactored the unit test for this resource to use stubs and increase coverage
     ([issue #78](https://github.com/PowerShell/xFailOverCluster/issues/78)).

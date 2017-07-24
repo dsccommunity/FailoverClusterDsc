@@ -398,6 +398,48 @@ try
                 }
             }
         }
+
+        class MockLibImpersonation
+        {
+
+            static [bool]LogonUser([string]$userName, [string]$domain, [string]$password, [int]$logonType, [int]$logonProvider,[ref]$token)
+            {
+                return $false
+            }
+
+            static [bool]CloseHandle([System.IntPtr]$Token)
+            {
+                return $false
+            }
+        }
+
+        Describe 'xCluster\Set-ImpersonateAs' -Tag 'Helper' {
+            Context 'When impersonating credentials fails' {
+                It 'Should throw the correct error message' {
+                    Mock -CommandName Add-Type -MockWith {
+                        return [MockLibImpersonation]::New()
+                    }
+
+                    $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message ($script:localizedData.UnableToImpersonateUser -f $mockAdministratorCredential.GetNetworkCredential().UserName)
+                    { Set-ImpersonateAs -Credential $mockAdministratorCredential } | Should Throw $mockCorrectErrorRecord
+                }
+            }
+        }
+
+        Describe 'xCluster\Close-UserToken' -Tag 'Helper' {
+            Context 'When closing user token fails' {
+                It 'Should throw the correct error message' {
+                    Mock -CommandName Add-Type -MockWith {
+                        return [MockLibImpersonation]::New()
+                    } -Verifiable
+
+                    $mockToken = [System.IntPtr]::New(12345)
+
+                    $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message ($script:localizedData.UnableToCloseToken -f $mockToken.ToString())
+                    { Close-UserToken -Token $mockToken } | Should Throw $mockCorrectErrorRecord
+                }
+            }
+        }
     }
 }
 finally

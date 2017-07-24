@@ -405,7 +405,7 @@ function Close-UserToken
     $bLogin = $ImpersonateLib::CloseHandle($Token)
     if (-not $bLogin)
     {
-        $errorMessage = $script:localizedData.UnableToCloseToken
+        $errorMessage = $script:localizedData.UnableToCloseToken -f $Token.ToString()
         New-InvalidOperationException -Message $errorMessage
     }
 }

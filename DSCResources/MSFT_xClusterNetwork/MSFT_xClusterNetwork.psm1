@@ -116,7 +116,7 @@ function Set-TargetResource
 
     if ($PSBoundParameters.ContainsKey('Role') -and $getTargetResourceResult.Role -ne $Role)
     {
-        Write-Verbose -Message ($script:localizedData.ChangeNetworkName -f $Address, $AddressMask, $Role)
+        Write-Verbose -Message ($script:localizedData.ChangeNetworkRole -f $Address, $AddressMask, $Role)
 
         $clusterNetworkResource = Get-ClusterNetwork | Where-Object -FilterScript {
             $_.Address -eq $Address -and $_.AddressMask -eq $AddressMask
@@ -127,7 +127,7 @@ function Set-TargetResource
 
     if ($PSBoundParameters.ContainsKey('Metric') -and $getTargetResourceResult.Metric -ne $Metric)
     {
-        Write-Verbose -Message ($script:localizedData.ChangeNetworkName -f $Address, $AddressMask, $Metric)
+        Write-Verbose -Message ($script:localizedData.ChangeNetworkMetric -f $Address, $AddressMask, $Metric)
 
         $clusterNetworkResource = Get-ClusterNetwork | Where-Object -FilterScript {
             $_.Address -eq $Address -and $_.AddressMask -eq $AddressMask

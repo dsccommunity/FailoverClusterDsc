@@ -21,7 +21,8 @@
   - Replaced the URL for the parameter Role in README.md. The new URL is a more
     generic description of the possible settings for the Role parameter. The
     previous URL was still correct but focused on Hyper-V in particular.
-  - Fixed typos in parameter descriptions in README.md.
+  - Fixed typos in parameter descriptions in README.md, comment-based help and schema.mof.
+  - Enabled localization for all strings ([issue #85](https://github.com/PowerShell/xFailOverCluster/issues/85)).
 - Changes to xCluster
   - Resolved Script Analyzer rule warnings by changing Get-WmiObject to
     Get-CimInstance ([issue #49](https://github.com/PowerShell/xFailOverCluster/issues/49)).

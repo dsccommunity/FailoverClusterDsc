@@ -1,3 +1,8 @@
+Import-Module -Name (Join-Path -Path (Split-Path -Path $PSScriptRoot -Parent) `
+                               -ChildPath 'CommonResourceHelper.psm1')
+
+$script:localizedData = Get-LocalizedData -ResourceName 'MSFT_xCluster'
+
 <#
     .SYNOPSIS
         Returns the current state of the failover cluster.
@@ -32,7 +37,8 @@ function Get-TargetResource
     $computerInformation = Get-CimInstance -ClassName Win32_ComputerSystem
     if (($null -eq $computerInformation) -or ($null -eq $computerInformation.Domain))
     {
-        throw 'Can''t find machine''s domain name'
+        $errorMessage = $script:localizedData.TargetNodeDomainMissing
+        New-InvalidOperationException -Message $errorMessage
     }
 
     try
@@ -42,7 +48,8 @@ function Get-TargetResource
         $cluster = Get-Cluster -Name $Name -Domain $computerInformation.Domain
         if ($null -eq $cluster)
         {
-            throw "Can't find the cluster $Name"
+            $errorMessage = $script:localizedData.ClusterNameNotFound -f $Name
+            New-ObjectNotFoundException -Message $errorMessage
         }
 
         $address = Get-ClusterGroup -Cluster $Name -Name 'Cluster IP Address' | Get-ClusterParameter -Name 'Address'
@@ -105,12 +112,13 @@ function Set-TargetResource
 
     $bCreate = $true
 
-    Write-Verbose -Message "Checking if Cluster $Name is present ..."
+    Write-Verbose -Message ($script:localizedData.CheckClusterPresent -f $Name)
 
     $computerInformation = Get-CimInstance -ClassName Win32_ComputerSystem
     if (($null -eq $computerInformation) -or ($null -eq $computerInformation.Domain))
     {
-        throw 'Can''t find machine''s domain name'
+        $errorMessage = $script:localizedData.TargetNodeDomainMissing
+        New-InvalidOperationException -Message $errorMessage
     }
 
     try
@@ -133,40 +141,41 @@ function Set-TargetResource
 
         if ($bCreate)
         {
-            Write-Verbose -Message "Cluster $Name is NOT present"
+            Write-Verbose -Message ($script:localizedData.ClusterAbsent -f $Name)
 
             New-Cluster -Name $Name -Node $env:COMPUTERNAME -StaticAddress $StaticIPAddress -NoStorage -Force -ErrorAction Stop
 
             if ( -not (Get-Cluster))
             {
-                throw 'Cluster creation failed. Please verify output of ''Get-Cluster'' command'
+                $errorMessage = $script:localizedData.FailedCreatingCluster
+                New-InvalidOperationException -Message $errorMessage
             }
 
-            Write-Verbose -Message "Created Cluster $Name"
+            Write-Verbose -Message ($script:localizedData.ClusterCreated -f $Name)
         }
         else
         {
-            Write-Verbose -Message "Add node to Cluster $Name ..."
+            $targetNodeName = $env:COMPUTERNAME
 
-            Write-Verbose -Message "Add-ClusterNode $env:COMPUTERNAME to cluster $Name"
+            Write-Verbose -Message ($script:localizedData.AddNodeToCluster -f $targetNodeName, $Name)
 
             $list = Get-ClusterNode -Cluster $Name
             foreach ($node in $list)
             {
-                if ($node.Name -eq $env:COMPUTERNAME)
+                if ($node.Name -eq $targetNodeName)
                 {
                     if ($node.State -eq 'Down')
                     {
-                        Write-Verbose -Message "Node $env:COMPUTERNAME was down, need remove it from the list."
+                        Write-Verbose -Message ($script:localizedData.RemoveOfflineNodeFromCluster -f $targetNodeName, $Name)
 
-                        Remove-ClusterNode -Name $env:COMPUTERNAME -Cluster $Name -Force
+                        Remove-ClusterNode -Name $targetNodeName -Cluster $Name -Force
                     }
                 }
             }
 
-            Add-ClusterNode -Name $env:COMPUTERNAME -Cluster $Name -NoStorage
+            Add-ClusterNode -Name $targetNodeName -Cluster $Name -NoStorage
 
-            Write-Verbose -Message "Added node to Cluster $Name"
+            Write-Verbose -Message ($script:localizedData.AddNodeToClusterSuccessful -f $targetNodeName, $Name)
         }
     }
     finally
@@ -226,12 +235,13 @@ function Test-TargetResource
 
     $returnValue = $false
 
-    Write-Verbose -Message "Checking if Cluster $Name is present ..."
+    Write-Verbose -Message ($script:localizedData.CheckClusterPresent -f $Name)
 
     $ComputerInfo = Get-CimInstance -ClassName Win32_ComputerSystem
     if (($null -eq $ComputerInfo) -or ($null -eq $ComputerInfo.Domain))
     {
-        throw "Can't find machine's domain name"
+        $errorMessage = $script:localizedData.TargetNodeDomainMissing
+        New-InvalidOperationException -Message $errorMessage
     }
 
     try
@@ -240,17 +250,19 @@ function Test-TargetResource
 
         $cluster = Get-Cluster -Name $Name -Domain $ComputerInfo.Domain
 
-        Write-Verbose -Message "Cluster $Name is present"
+        Write-Verbose -Message ($script:localizedData.ClusterPresent -f $Name)
 
         if ($cluster)
         {
-            Write-Verbose -Message "Checking if the node is in cluster $Name ..."
+            $targetNodeName = $env:COMPUTERNAME
+
+            Write-Verbose -Message ($script:localizedData.CheckClusterNodeIsUp -f $targetNodeName, $Name)
 
             $allNodes = Get-ClusterNode -Cluster $Name
 
             foreach ($node in $allNodes)
             {
-                if ($node.Name -eq $env:COMPUTERNAME)
+                if ($node.Name -eq $targetNodeName)
                 {
                     if ($node.State -eq 'Up')
                     {
@@ -258,7 +270,7 @@ function Test-TargetResource
                     }
                     else
                     {
-                        Write-Verbose -Message "Node is in cluster $Name but is NOT up, treat as NOT in cluster."
+                        Write-Verbose -Message ($script:localizedData.ClusterNodeIsDown -f $targetNodeName, $Name)
                     }
 
                     break
@@ -267,17 +279,17 @@ function Test-TargetResource
 
             if ($returnValue)
             {
-                Write-Verbose -Message "Node is in cluster $Name"
+                Write-Verbose -Message ($script:localizedData.ClusterNodePresent -f $targetNodeName, $Name)
             }
             else
             {
-                Write-Verbose -Message "Node is NOT in cluster $Name"
+                Write-Verbose -Message ($script:localizedData.ClusterNodeAbsent -f $targetNodeName, $Name)
             }
         }
     }
     catch
     {
-        Write-Verbose -Message "Cluster $Name is NOT present with Error $_.Message"
+        Write-Verbose -Message ($script:localizedData.ClusterAbsentWithError -f $Name, $_.Message)
     }
     finally
     {
@@ -361,7 +373,8 @@ function Set-ImpersonateAs
     }
     else
     {
-        throw "Can't Logon as User $($Credential.GetNetworkCredential().UserName)."
+        $errorMessage = $script:localizedData.UnableToImpersonateUser -f $Credential.GetNetworkCredential().UserName
+        New-InvalidOperationException -Message $errorMessage
     }
 
     $context, $userToken
@@ -392,6 +405,7 @@ function Close-UserToken
     $bLogin = $ImpersonateLib::CloseHandle($Token)
     if (-not $bLogin)
     {
-        throw 'Can''t close token'
+        $errorMessage = $script:localizedData.UnableToCloseToken -f $Token.ToString()
+        New-InvalidOperationException -Message $errorMessage
     }
 }

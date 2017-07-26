@@ -1,3 +1,10 @@
+<#
+    Suppressing this rule because a plain text password variable is used to mock the LogonUser static
+    method and is required for the tests.
+#>
+[System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingPlainTextForPassword', '')]
+param()
+
 $script:DSCModuleName = 'xFailOverCluster'
 $script:DSCResourceName = 'MSFT_xCluster'
 
@@ -23,6 +30,7 @@ $TestEnvironment = Initialize-TestEnvironment `
 function Invoke-TestSetup
 {
     Import-Module -Name (Join-Path -Path (Join-Path -Path (Join-Path -Path (Join-Path -Path $script:moduleRoot -ChildPath 'Tests') -ChildPath 'Unit') -ChildPath 'Stubs') -ChildPath 'FailoverClusters.stubs.psm1') -Global -Force
+    Import-Module -Name (Join-Path -Path (Join-Path -Path (Join-Path -Path $script:moduleRoot -ChildPath 'Tests') -ChildPath 'TestHelpers') -ChildPath 'CommonTestHelper.psm1') -Global -Force
 }
 
 function Invoke-TestCleanup
@@ -102,7 +110,38 @@ try
             DomainAdministratorCredential = $mockAdministratorCredential
         }
 
+        class MockLibImpersonation
+        {
+            static [bool] $ReturnValue = $false
+
+            static [bool]LogonUser(
+                [string] $userName,
+                [string] $domain,
+                [string] $password,
+                [int] $logonType,
+                [int] $logonProvider,
+                [ref] $token
+            )
+            {
+                return [MockLibImpersonation]::ReturnValue
+            }
+
+            static [bool]CloseHandle([System.IntPtr]$Token)
+            {
+                return [MockLibImpersonation]::ReturnValue
+            }
+        }
+
+        [MockLibImpersonation]::ReturnValue = $true
+        $mockLibImpersonationObject = [MockLibImpersonation]::New()
+
         Describe 'xCluster\Get-TargetResource' {
+            BeforeAll {
+                Mock -CommandName Add-Type -MockWith {
+                    return $mockLibImpersonationObject
+                }
+            }
+
             Context 'When the computers domain name cannot be evaluated' {
                 It 'Should throw the correct error message' {
                     $mockDynamicDomainName = $null
@@ -110,7 +149,8 @@ try
 
                     Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
 
-                    { Get-TargetResource @mockDefaultParameters } | Should Throw "Can't find machine's domain name"
+                    $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message $script:localizedData.TargetNodeDomainMissing
+                    { Get-TargetResource @mockDefaultParameters } | Should Throw $mockCorrectErrorRecord
                 }
             }
 
@@ -122,7 +162,8 @@ try
                     Mock -CommandName Get-Cluster -Verifiable
                     Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
 
-                    { Get-TargetResource @mockDefaultParameters } | Should Throw ("Can't find the cluster {0}" -f $mockClusterName)
+                    $mockCorrectErrorRecord = Get-ObjectNotFoundException -Message ($script:localizedData.ClusterNameNotFound -f $mockClusterName)
+                    { Get-TargetResource @mockDefaultParameters } | Should Throw $mockCorrectErrorRecord
                 }
             }
 
@@ -160,7 +201,8 @@ try
 
                     Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
 
-                    { Set-TargetResource @mockDefaultParameters } | Should Throw "Can't find machine's domain name"
+                    $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message $script:localizedData.TargetNodeDomainMissing
+                    { Set-TargetResource @mockDefaultParameters } | Should Throw $mockCorrectErrorRecord
                 }
             }
 
@@ -215,7 +257,8 @@ try
                     It 'Should throw the correct error message' {
                         Mock -CommandName Get-Cluster
 
-                        { Set-TargetResource @mockDefaultParameters } | Should Throw 'Cluster creation failed. Please verify output of ''Get-Cluster'' command'
+                        $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message $script:localizedData.FailedCreatingCluster
+                        { Set-TargetResource @mockDefaultParameters } | Should Throw $mockCorrectErrorRecord
 
                         Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It
                         Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
@@ -303,7 +346,8 @@ try
 
                     Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
 
-                    { Test-TargetResource @mockDefaultParameters } | Should Throw "Can't find machine's domain name"
+                    $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message $script:localizedData.TargetNodeDomainMissing
+                    { Test-TargetResource @mockDefaultParameters } | Should Throw $mockCorrectErrorRecord
                 }
             }
 
@@ -389,6 +433,37 @@ try
                     }
 
                     Assert-VerifiableMocks
+                }
+            }
+        }
+
+        [MockLibImpersonation]::ReturnValue = $false
+        $mockLibImpersonationObject = [MockLibImpersonation]::New()
+
+        Describe 'xCluster\Set-ImpersonateAs' -Tag 'Helper' {
+            Context 'When impersonating credentials fails' {
+                It 'Should throw the correct error message' {
+                    Mock -CommandName Add-Type -MockWith {
+                        return $mockLibImpersonationObject
+                    }
+
+                    $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message ($script:localizedData.UnableToImpersonateUser -f $mockAdministratorCredential.GetNetworkCredential().UserName)
+                    { Set-ImpersonateAs -Credential $mockAdministratorCredential } | Should Throw $mockCorrectErrorRecord
+                }
+            }
+        }
+
+        Describe 'xCluster\Close-UserToken' -Tag 'Helper' {
+            Context 'When closing user token fails' {
+                It 'Should throw the correct error message' {
+                    Mock -CommandName Add-Type -MockWith {
+                        return $mockLibImpersonationObject
+                    } -Verifiable
+
+                    $mockToken = [System.IntPtr]::New(12345)
+
+                    $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message ($script:localizedData.UnableToCloseToken -f $mockToken.ToString())
+                    { Close-UserToken -Token $mockToken } | Should Throw $mockCorrectErrorRecord
                 }
             }
         }

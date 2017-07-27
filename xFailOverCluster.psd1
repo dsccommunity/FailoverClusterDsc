@@ -8,7 +8,7 @@ Author = 'Microsoft Corporation'
 
 CompanyName = 'Microsoft Corporation'
 
-Copyright = '(c) 2014 Microsoft Corporation. All rights reserved.'
+Copyright = '(c) 2017 Microsoft Corporation. All rights reserved.'
 
 Description = 'Module containing DSC resources used to configure Failover Clusters.'
 

@@ -23,6 +23,7 @@
 - Changes to xClusterDisk
   - Enabled localization for all strings ([issue #84](https://github.com/PowerShell/xFailOverCluster/issues/84)).
   - Fixed the OutputType data type that was not fully qualified.
+  - Minor style changes.
 - Changes to xClusterNetwork
   - Replaced the URL for the parameter Role in README.md. The new URL is a more
     generic description of the possible settings for the Role parameter. The
@@ -38,6 +39,7 @@
   - Added tests to improve code coverage.
     - Fixed random problem with tests failing with error "Invalid token for
       impersonation - it cannot be duplicated." ([issue #133](https://github.com/PowerShell/xFailOverCluster/issues/133)).
+  - Minor style changes.
 - Changes to xWaitForCluster
   - Refactored the unit test for this resource to use stubs and increase coverage
     ([issue #78](https://github.com/PowerShell/xFailOverCluster/issues/78)).
@@ -61,6 +63,7 @@
 - Changes to xClusterPreferredOwner
   - Enabled localization for all strings ([issue #86](https://github.com/PowerShell/xFailOverCluster/issues/86)).
   - Fixed typo in the returned hash table from Get-TargetResource.
+  - Minor style changes.
 
 ## 1.7.0.0
 

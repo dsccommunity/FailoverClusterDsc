@@ -368,7 +368,7 @@ function Set-ImpersonateAs
 
     if ($bLogin)
     {
-        $Identity = New-Object Security.Principal.WindowsIdentity $userToken
+        $Identity = New-Object -TypeName Security.Principal.WindowsIdentity -ArgumentList $userToken
         $context = $Identity.Impersonate()
     }
     else

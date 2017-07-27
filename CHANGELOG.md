@@ -35,6 +35,8 @@
     etc.
   - Enabled localization for all strings ([issue #83](https://github.com/PowerShell/xFailOverCluster/issues/83)).
   - Added tests to improve code coverage.
+    - Fixed random problem with tests failing with error "Invalid token for
+      impersonation - it cannot be duplicated." ([issue #133](https://github.com/PowerShell/xFailOverCluster/issues/133)).
 - Changes to xWaitForCluster
   - Refactored the unit test for this resource to use stubs and increase coverage
     ([issue #78](https://github.com/PowerShell/xFailOverCluster/issues/78)).

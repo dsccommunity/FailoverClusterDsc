@@ -104,6 +104,19 @@ try
             )
         }
 
+        $mockNewObjectWindowsIdentity = {
+            return [PSCustomObject] @{} |
+                Add-Member -MemberType ScriptMethod -Name Impersonate -Value {
+                    return [PSCustomObject] @{} |
+                        Add-Member -MemberType ScriptMethod -Name Undo -Value {} -PassThru |
+                        Add-Member -MemberType ScriptMethod -Name Dispose -Value {} -PassThru -Force
+                } -PassThru -Force
+        }
+
+        $mockNewObjectWindowsIdentity_ParameterFilter = {
+            $TypeName -eq 'Security.Principal.WindowsIdentity'
+        }
+
         $mockDefaultParameters = @{
             Name                          = $mockClusterName
             StaticIPAddress               = $mockStaticIpAddress
@@ -140,6 +153,8 @@ try
                 Mock -CommandName Add-Type -MockWith {
                     return $mockLibImpersonationObject
                 }
+
+                Mock -CommandName New-Object -MockWith $mockNewObjectWindowsIdentity -ParameterFilter $mockNewObjectWindowsIdentity_ParameterFilter -Verifiable
             }
 
             Context 'When the computers domain name cannot be evaluated' {
@@ -194,6 +209,14 @@ try
         }
 
         Describe 'xCluster\Set-TargetResource' {
+            BeforeAll {
+                Mock -CommandName Add-Type -MockWith {
+                    return $mockLibImpersonationObject
+                }
+
+                Mock -CommandName New-Object -MockWith $mockNewObjectWindowsIdentity -ParameterFilter $mockNewObjectWindowsIdentity_ParameterFilter -Verifiable
+            }
+
             Context 'When computers domain name cannot be evaluated' {
                 It 'Should throw the correct error message' {
                     $mockDynamicDomainName = $null
@@ -339,6 +362,14 @@ try
         }
 
         Describe 'xCluster\Test-TargetResource' {
+            BeforeAll {
+                Mock -CommandName Add-Type -MockWith {
+                    return $mockLibImpersonationObject
+                }
+
+                Mock -CommandName New-Object -MockWith $mockNewObjectWindowsIdentity -ParameterFilter $mockNewObjectWindowsIdentity_ParameterFilter -Verifiable
+            }
+
             Context 'When computers domain name cannot be evaluated' {
                 It 'Should throw the correct error message' {
                     $mockDynamicDomainName = $null

@@ -1,3 +1,8 @@
+Import-Module -Name (Join-Path -Path (Split-Path -Path $PSScriptRoot -Parent) `
+-ChildPath 'CommonResourceHelper.psm1')
+
+$script:localizedData = Get-LocalizedData -ResourceName 'MSFT_xClusterQuorum'
+
 <#
     .SYNOPSIS
         Returns the current state of the failover cluster quorum.
@@ -16,6 +21,8 @@ function Get-TargetResource
         [System.String]
         $IsSingleInstance
     )
+
+    Write-Verbose -Message $script:localizedData.GetClusterQuorumInformation
 
     $getClusterQuorumResult = Get-ClusterQuorum
 
@@ -124,6 +131,8 @@ function Set-TargetResource
         $Resource
     )
 
+    Write-Verbose -Message ($script:localizedData.SetClusterQuorum -f $Type)
+
     switch ($Type)
     {
         'NodeMajority'
@@ -183,6 +192,8 @@ function Test-TargetResource
         [System.String]
         $Resource
     )
+
+    Write-Verbose -Message $script:localizedData.EvaluatingClusterQuorumInformation
 
     $getGetTargetResourceResult = Get-TargetResource -IsSingleInstance $IsSingleInstance
 

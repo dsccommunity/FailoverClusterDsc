@@ -46,6 +46,7 @@
   - Changed the code to be more aligned with the style guideline.
   - Updated parameter description in the schema.mof.
   - Resolved Script Analyzer warnings ([issue #54](https://github.com/PowerShell/xFailOverCluster/issues/54)).
+  - Enabled localization for all strings ([issue #88](https://github.com/PowerShell/xFailOverCluster/issues/88)).
 - Changes to xClusterQuorum
   - Refactored the unit test for this resource to use stubs and increase coverage
     ([issue #77](https://github.com/PowerShell/xFailOverCluster/issues/77)).

@@ -93,7 +93,8 @@ try
                 It 'Should throw the correct error message' {
                     Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockCimInstance_ParameterFilter -Verifiable
 
-                    { Set-TargetResource @mockDefaultParameters } | Should Throw ('Failover cluster {0} not found after {1} attempts with {2} sec interval' -f $mockClusterName, ($mockRetryCount-1), $mockRetryIntervalSec)
+                    $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message ($script:localizedData.ClusterAbsentAfterTimeOut -f $mockClusterName, ($mockRetryCount-1), $mockRetryIntervalSec)
+                    { Set-TargetResource @mockDefaultParameters } | Should Throw $mockCorrectErrorRecord
                 }
             }
 
@@ -114,7 +115,8 @@ try
                         $mockDynamicDomainName = $mockDomainName
 
                         It 'Should throw the correct error message' {
-                            { Set-TargetResource @mockDefaultParameters } | Should Throw ('Failover cluster {0} not found after {1} attempts with {2} sec interval' -f $mockClusterName, $mockRetryCount, $mockRetryIntervalSec)
+                            $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message ($script:localizedData.ClusterAbsentAfterTimeOut -f $mockClusterName, $mockRetryCount, $mockRetryIntervalSec)
+                            { Set-TargetResource @mockDefaultParameters } | Should Throw $mockCorrectErrorRecord
                         }
 
                         Assert-VerifiableMocks

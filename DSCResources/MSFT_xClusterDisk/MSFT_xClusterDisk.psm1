@@ -21,6 +21,8 @@ function Get-TargetResource
         $Number
     )
 
+    Write-Verbose -Message ($script:localizedData.GetClusterDiskInformation -f $Number)
+
     if ($null -ne ($diskInstance = Get-CimInstance -ClassName MSCluster_Disk -Namespace 'Root\MSCluster' -Filter "Number = $Number"))
     {
         $diskResource = Get-ClusterResource |
@@ -162,6 +164,8 @@ function Test-TargetResource
         [System.String]
         $Label
     )
+
+    Write-Verbose -Message ($script:localizedData.EvaluatingClusterDiskInformation -f $Number)
 
     $getTargetResourceResult = Get-TargetResource -Number $Number
 

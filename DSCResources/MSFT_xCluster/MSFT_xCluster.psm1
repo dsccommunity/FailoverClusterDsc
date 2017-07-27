@@ -34,6 +34,8 @@ function Get-TargetResource
         $DomainAdministratorCredential
     )
 
+    Write-Verbose -Message ($script:localizedData.GetClusterInformation -f $Name)
+
     $computerInformation = Get-CimInstance -ClassName Win32_ComputerSystem
     if (($null -eq $computerInformation) -or ($null -eq $computerInformation.Domain))
     {

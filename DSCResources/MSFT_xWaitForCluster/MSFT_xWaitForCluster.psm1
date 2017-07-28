@@ -1,3 +1,8 @@
+Import-Module -Name (Join-Path -Path (Split-Path -Path $PSScriptRoot -Parent) `
+-ChildPath 'CommonResourceHelper.psm1')
+
+$script:localizedData = Get-LocalizedData -ResourceName 'MSFT_xWaitForCluster'
+
 <#
     .SYNOPSIS
         Get the values for which failover cluster and for how long to wait for the
@@ -30,6 +35,8 @@ function Get-TargetResource
         [System.UInt32]
         $RetryCount = 50
     )
+
+    Write-Verbose -Message $script:localizedData.ReturnParameterValues
 
     @{
         Name = $Name
@@ -71,7 +78,7 @@ function Set-TargetResource
     )
 
     $clusterFound = $false
-    Write-Verbose -Message "Checking for the existance of failover cluster $Name."
+    Write-Verbose -Message ($script:localizedData.CheckClusterPresent -f $Name)
 
     for ($count = 0; $count -lt $RetryCount; $count++)
     {
@@ -80,7 +87,7 @@ function Set-TargetResource
             $computerObject = Get-CimInstance -ClassName Win32_ComputerSystem
             if ($null -eq $computerObject -or $null -eq $computerObject.Domain)
             {
-                Write-Verbose -Message "Can't find machine's domain name"
+                Write-Verbose -Message $script:localizedData.TargetNodeDomainMissing
                 break
             }
 
@@ -88,23 +95,24 @@ function Set-TargetResource
 
             if ($null -ne $cluster)
             {
-                Write-Verbose -Message "Found failover cluster $Name"
+                Write-Verbose -Message ($script:localizedData.ClusterPresent -f $Name)
                 $clusterFound = $true
                 break
             }
         }
         catch
         {
-             Write-Verbose -Message "Failover cluster $Name not found. Will retry again after $RetryIntervalSec sec"
+            Write-Verbose -Message ($script:localizedData.ClusterAbsent -f $Name, $RetryIntervalSec)
         }
 
-        Write-Verbose -Message "Failover cluster $Name not found. Will retry again after $RetryIntervalSec sec"
+        Write-Verbose -Message ($script:localizedData.ClusterAbsent -f $Name, $RetryIntervalSec)
         Start-Sleep -Seconds $RetryIntervalSec
     }
 
-    if (! $clusterFound)
+    if (-not $clusterFound)
     {
-        throw "Failover cluster $Name not found after $count attempts with $RetryIntervalSec sec interval"
+        $errorMessage = $script:localizedData.ClusterAbsentAfterTimeOut -f $Name, $count, $RetryIntervalSec
+        New-InvalidOperationException -Message $errorMessage
     }
 }
 
@@ -140,7 +148,7 @@ function Test-TargetResource
         $RetryCount = 50
     )
 
-    Write-Verbose -Message "Checking for Cluster $Name ..."
+    Write-Verbose -Message ($script:localizedData.EvaluatingClusterPresent -f $Name)
 
     $testTargetResourceReturnValue = $false
 
@@ -149,25 +157,25 @@ function Test-TargetResource
         $computerObject = Get-CimInstance -ClassName Win32_ComputerSystem
         if ($null -eq $computerObject -or $null -eq $computerObject.Domain)
         {
-            Write-Verbose -Message "Can't find machine's domain name"
+            Write-Verbose -Message $script:localizedData.TargetNodeDomainMissing
         }
         else
         {
             $cluster = Get-Cluster -Name $Name -Domain $computerObject.Domain
             if ($null -eq $cluster)
             {
-                Write-Verbose -Message "Cluster $Name not found in domain $computerObject.Domain"
+                Write-Verbose -Message ($script:localizedData.ClusterAbsentWithDomain -f $Name, $computerObject.Domain)
             }
             else
             {
-                Write-Verbose -Message "Found cluster $Name"
+                Write-Verbose -Message ($script:localizedData.ClusterPresent -f $Name)
                 $testTargetResourceReturnValue = $true
             }
         }
     }
     catch
     {
-        Write-Verbose -Message "Cluster $Name not found"
+        Write-Verbose -Message ($script:localizedData.ClusterAbsentWithError -f $Name, $_.Message)
     }
 
     $testTargetResourceReturnValue

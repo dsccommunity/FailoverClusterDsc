@@ -18,27 +18,27 @@ Configuration Example
         WindowsFeature AddFailoverFeature
         {
             Ensure = 'Present'
-            Name = 'Failover-clustering'
+            Name   = 'Failover-clustering'
         }
 
         WindowsFeature AddRemoteServerAdministrationToolsClusteringPowerShellFeature
         {
-            Ensure = 'Present'
-            Name = 'RSAT-Clustering-PowerShell'
+            Ensure    = 'Present'
+            Name      = 'RSAT-Clustering-PowerShell'
             DependsOn = '[WindowsFeature]AddFailoverFeature'
         }
 
         WindowsFeature AddRemoteServerAdministrationToolsClusteringCmdInterfaceFeature
         {
-            Ensure = 'Present'
-            Name = 'RSAT-Clustering-CmdInterface'
+            Ensure    = 'Present'
+            Name      = 'RSAT-Clustering-CmdInterface'
             DependsOn = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringPowerShellFeature'
         }
 
         xCluster CreateCluster
         {
-            Name = 'Cluster01'
-            StaticIPAddress = '192.168.100.20/24'
+            Name                          = 'Cluster01'
+            StaticIPAddress               = '192.168.100.20/24'
 
             <#
                 This user must have the permission to create the CNO (Cluster Name Object) in Active Directory,
@@ -46,7 +46,7 @@ Configuration Example
             #>
             DomainAdministratorCredential = $ActiveDirectoryAdministratorCredential
 
-            DependsOn = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringCmdInterfaceFeature'
-       }
+            DependsOn                     = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringCmdInterfaceFeature'
+        }
     }
 }

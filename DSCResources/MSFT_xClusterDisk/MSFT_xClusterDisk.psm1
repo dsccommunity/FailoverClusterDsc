@@ -97,10 +97,10 @@ function Set-TargetResource
             $diskInstance = Get-CimInstance -ClassName MSCluster_Disk -Namespace 'Root\MSCluster' -Filter "Number = $Number"
 
             $diskResource = Get-ClusterResource |
-                                Where-Object -FilterScript { $_.ResourceType -eq 'Physical Disk' } |
-                                    Where-Object -FilterScript {
-                                        ($_ | Get-ClusterParameter -Name DiskIdGuid).Value -eq $diskInstance.Id
-                                    }
+                Where-Object -FilterScript { $_.ResourceType -eq 'Physical Disk' } |
+                    Where-Object -FilterScript {
+                        ($_ | Get-ClusterParameter -Name DiskIdGuid).Value -eq $diskInstance.Id
+                    }
 
             # Set the label of the cluster disk
             $diskResource.Name = $Label
@@ -116,10 +116,10 @@ function Set-TargetResource
             $diskInstance = Get-CimInstance -ClassName MSCluster_Disk -Namespace 'Root\MSCluster' -Filter "Number = $Number"
 
             $diskResource = Get-ClusterResource |
-                                Where-Object -FilterScript { $_.ResourceType -eq 'Physical Disk' } |
-                                    Where-Object -FilterScript {
-                                        ($_ | Get-ClusterParameter -Name DiskIdGuid).Value -eq $diskInstance.Id
-                                    }
+                Where-Object -FilterScript { $_.ResourceType -eq 'Physical Disk' } |
+                    Where-Object -FilterScript {
+                        ($_ | Get-ClusterParameter -Name DiskIdGuid).Value -eq $diskInstance.Id
+                    }
 
             # Remove the cluster disk
             $diskResource | Remove-ClusterResource -Force

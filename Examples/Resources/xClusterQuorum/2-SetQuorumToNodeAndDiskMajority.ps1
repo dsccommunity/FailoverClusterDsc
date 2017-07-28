@@ -15,8 +15,8 @@ Configuration Example
         xClusterQuorum 'SetQuorumToNodeAndDiskMajority'
         {
             IsSingleInstance = 'Yes'
-            Type = 'NodeAndDiskMajority'
-            Resource = 'Witness Cluster Disk'
+            Type             = 'NodeAndDiskMajority'
+            Resource         = 'Witness Cluster Disk'
         }
     }
 }

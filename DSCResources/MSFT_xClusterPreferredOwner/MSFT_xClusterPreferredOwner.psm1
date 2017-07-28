@@ -1,5 +1,5 @@
 Import-Module -Name (Join-Path -Path (Split-Path -Path $PSScriptRoot -Parent) `
-                               -ChildPath 'CommonResourceHelper.psm1')
+        -ChildPath 'CommonResourceHelper.psm1')
 
 $script:localizedData = Get-LocalizedData -ResourceName 'MSFT_xClusterPreferredOwner'
 
@@ -56,8 +56,8 @@ function Get-TargetResource
     $ownerNodes = @(
         Write-Verbose -Message ($script:localizedData.GetOwnerInformationForClusterGroup -f $ClusterGroup)
         ((Get-ClusterGroup -Cluster $ClusterName | Where-Object -FilterScript {
-            $_.Name -like $ClusterGroup
-        } | Get-ClusterOwnerNode).OwnerNodes).Name
+                    $_.Name -like $ClusterGroup
+                } | Get-ClusterOwnerNode).OwnerNodes).Name
 
         if ($ClusterResources)
         {
@@ -65,8 +65,8 @@ function Get-TargetResource
             {
                 Write-Verbose -Message ($script:localizedData.GetOwnerInformationForClusterResource -f $resource)
                 ((Get-ClusterResource -Cluster $ClusterName | Where-Object -FilterScript {
-                    $_.Name -like $resource
-                } | Get-ClusterOwnerNode).OwnerNodes).Name
+                            $_.Name -like $resource
+                        } | Get-ClusterOwnerNode).OwnerNodes).Name
             }
         }
     )
@@ -74,11 +74,11 @@ function Get-TargetResource
     $ownerNodes = $ownerNodes | Select-Object -Unique
 
     @{
-        ClusterGroup = $ClusterGroup
-        ClusterName = $ClusterName
-        Nodes = $ownerNodes
+        ClusterGroup     = $ClusterGroup
+        ClusterName      = $ClusterName
+        Nodes            = $ownerNodes
         ClusterResources = $ClusterResources
-        Ensure = $Ensure
+        Ensure           = $Ensure
     }
 }
 
@@ -161,8 +161,8 @@ function Set-TargetResource
     {
         Write-Verbose -Message ($script:localizedData.GetOwnerInformationForClusterGroup -f $ClusterGroup)
         $currentOwners = ((Get-ClusterGroup -Cluster $ClusterName | Where-Object -FilterScript {
-            $_.Name -like $ClusterGroup
-        } | Get-ClusterOwnerNode).OwnerNodes).Name | Sort-Object -Unique
+                    $_.Name -like $ClusterGroup
+                } | Get-ClusterOwnerNode).OwnerNodes).Name | Sort-Object -Unique
 
         $newOwners = @(
             foreach ($currentOwner in $currentOwners)
@@ -193,8 +193,8 @@ function Set-TargetResource
         {
             Write-Verbose -Message ($script:localizedData.GetOwnerInformationForClusterResource -f $resource)
             $currentOwners = ((Get-ClusterResource -Cluster $ClusterName | Where-Object -FilterScript {
-                $_.Name -like $resource
-            } | Get-ClusterOwnerNode).OwnerNodes).Name | Sort-Object -Unique
+                        $_.Name -like $resource
+                    } | Get-ClusterOwnerNode).OwnerNodes).Name | Sort-Object -Unique
 
             $newOwners = @(
                 foreach ($currentOwner in $currentOwners)

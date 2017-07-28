@@ -39,9 +39,9 @@ function Get-TargetResource
     Write-Verbose -Message $script:localizedData.ReturnParameterValues
 
     @{
-        Name = $Name
+        Name             = $Name
         RetryIntervalSec = $RetryIntervalSec
-        RetryCount = $RetryCount
+        RetryCount       = $RetryCount
     }
 }
 

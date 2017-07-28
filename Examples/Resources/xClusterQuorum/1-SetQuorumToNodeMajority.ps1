@@ -15,7 +15,7 @@ Configuration Example
         xClusterQuorum 'SetQuorumToNodeMajority'
         {
             IsSingleInstance = 'Yes'
-            Type = 'NodeMajority'
+            Type             = 'NodeMajority'
         }
     }
 }

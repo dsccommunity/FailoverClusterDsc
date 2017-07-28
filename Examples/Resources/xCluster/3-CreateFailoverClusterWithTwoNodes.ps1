@@ -14,7 +14,7 @@
 $ConfigurationData = @{
     AllNodes = @(
         @{
-            NodeName= '*'
+            NodeName                    = '*'
 
             <#
                 Replace with the correct path to your own public certificate part of the same certificate
@@ -41,7 +41,7 @@ $ConfigurationData = @{
                 parameter CertificateFile.
                 For this example it is assumed that both machines have the same certificate installed.
             #>
-            Thumbprint = "E513EEFCB763E6954C52BA66A1A81231BF3F551E"
+            Thumbprint                  = "E513EEFCB763E6954C52BA66A1A81231BF3F551E"
 
             <#
                 Replace with your own CNO (Cluster Name Object) and IP address.
@@ -51,27 +51,27 @@ $ConfigurationData = @{
                 If the CNO is not prestaged, then the credential used in the xCluster resource must have
                 the permission in Active Directory to create the CNO (Cluster Name Object).
             #>
-            ClusterName = 'Cluster01'
-            ClusterIPAddress = '192.168.100.20/24'
+            ClusterName                 = 'Cluster01'
+            ClusterIPAddress            = '192.168.100.20/24'
         },
 
         # Node01 - First cluster node.
         @{
             # Replace with the name of the actual target node.
-            NodeName= 'Node01'
+            NodeName = 'Node01'
 
             # This is used in the configuration to know which resource to compile.
-            Role = 'FirstServerNode'
-         },
+            Role     = 'FirstServerNode'
+        },
 
-         # Node02 - Second cluster node
-         @{
+        # Node02 - Second cluster node
+        @{
             # Replace with the name of the actual target node.
-            NodeName= 'Node02'
+            NodeName = 'Node02'
 
             # This is used in the configuration to know which resource to compile.
-            Role = 'AdditionalServerNode'
-         }
+            Role     = 'AdditionalServerNode'
+        }
     )
 }
 
@@ -90,31 +90,31 @@ Configuration Example
         WindowsFeature AddFailoverFeature
         {
             Ensure = 'Present'
-            Name = 'Failover-clustering'
+            Name   = 'Failover-clustering'
         }
 
         WindowsFeature AddRemoteServerAdministrationToolsClusteringPowerShellFeature
         {
-            Ensure = 'Present'
-            Name = 'RSAT-Clustering-PowerShell'
+            Ensure    = 'Present'
+            Name      = 'RSAT-Clustering-PowerShell'
             DependsOn = '[WindowsFeature]AddFailoverFeature'
         }
 
         WindowsFeature AddRemoteServerAdministrationToolsClusteringCmdInterfaceFeature
         {
-            Ensure = 'Present'
-            Name = 'RSAT-Clustering-CmdInterface'
+            Ensure    = 'Present'
+            Name      = 'RSAT-Clustering-CmdInterface'
             DependsOn = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringPowerShellFeature'
         }
 
         xCluster CreateCluster
         {
-            Name = $Node.ClusterName
-            StaticIPAddress = $Node.ClusterIPAddress
+            Name                          = $Node.ClusterName
+            StaticIPAddress               = $Node.ClusterIPAddress
             # This user must have the permission to create the CNO (Cluster Name Object) in Active Directory, unless it is prestaged.
             DomainAdministratorCredential = $ActiveDirectoryAdministratorCredential
-            DependsOn = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringCmdInterfaceFeature'
-       }
+            DependsOn                     = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringCmdInterfaceFeature'
+        }
     }
 
     Node $AllNodes.Where{ $_.Role -eq 'AdditionalServerNode' }.NodeName
@@ -122,37 +122,37 @@ Configuration Example
         WindowsFeature AddFailoverFeature
         {
             Ensure = 'Present'
-            Name = 'Failover-clustering'
+            Name   = 'Failover-clustering'
         }
 
         WindowsFeature AddRemoteServerAdministrationToolsClusteringPowerShellFeature
         {
-            Ensure = 'Present'
-            Name = 'RSAT-Clustering-PowerShell'
+            Ensure    = 'Present'
+            Name      = 'RSAT-Clustering-PowerShell'
             DependsOn = '[WindowsFeature]AddFailoverFeature'
         }
 
         WindowsFeature AddRemoteServerAdministrationToolsClusteringCmdInterfaceFeature
         {
-            Ensure = 'Present'
-            Name = 'RSAT-Clustering-CmdInterface'
+            Ensure    = 'Present'
+            Name      = 'RSAT-Clustering-CmdInterface'
             DependsOn = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringPowerShellFeature'
         }
 
         xWaitForCluster WaitForCluster
         {
-            Name = $Node.ClusterName
+            Name             = $Node.ClusterName
             RetryIntervalSec = 10
-            RetryCount = 60
-            DependsOn = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringCmdInterfaceFeature'
+            RetryCount       = 60
+            DependsOn        = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringCmdInterfaceFeature'
         }
 
         xCluster JoinSecondNodeToCluster
         {
-            Name = $Node.ClusterName
-            StaticIPAddress = $Node.ClusterIPAddress
+            Name                          = $Node.ClusterName
+            StaticIPAddress               = $Node.ClusterIPAddress
             DomainAdministratorCredential = $ActiveDirectoryAdministratorCredential
-            DependsOn = '[xWaitForCluster]WaitForCluster'
+            DependsOn                     = '[xWaitForCluster]WaitForCluster'
         }
     }
 }

@@ -63,6 +63,7 @@
     - 4-SetQuorumToDiskOnly.ps1
   - Added links to examples from README.md.
   - Minor style changes.
+  - Enabled localization for all strings ([issue #87](https://github.com/PowerShell/xFailOverCluster/issues/87)).
 - Changes to xClusterPreferredOwner
   - Enabled localization for all strings ([issue #86](https://github.com/PowerShell/xFailOverCluster/issues/86)).
   - Fixed typo in the returned hash table from Get-TargetResource.

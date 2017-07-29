@@ -24,6 +24,7 @@
   - Enabled localization for all strings ([issue #84](https://github.com/PowerShell/xFailOverCluster/issues/84)).
   - Fixed the OutputType data type that was not fully qualified.
   - Minor style changes.
+  - Fixed Script Analyzer warnings for Write-Verbose.
 - Changes to xClusterNetwork
   - Replaced the URL for the parameter Role in README.md. The new URL is a more
     generic description of the possible settings for the Role parameter. The
@@ -31,6 +32,7 @@
   - Fixed typos in parameter descriptions in README.md, comment-based help and schema.mof.
   - Enabled localization for all strings ([issue #85](https://github.com/PowerShell/xFailOverCluster/issues/85)).
   - Minor style changes.
+  - Fixed Script Analyzer warnings for Write-Verbose.
 - Changes to xCluster
   - Resolved Script Analyzer rule warnings by changing Get-WmiObject to
     Get-CimInstance ([issue #49](https://github.com/PowerShell/xFailOverCluster/issues/49)).
@@ -41,6 +43,7 @@
     - Fixed random problem with tests failing with error "Invalid token for
       impersonation - it cannot be duplicated." ([issue #133](https://github.com/PowerShell/xFailOverCluster/issues/133)).
   - Minor style changes.
+  - Fixed Script Analyzer warnings for Write-Verbose.
 - Changes to xWaitForCluster
   - Refactored the unit test for this resource to use stubs and increase coverage
     ([issue #78](https://github.com/PowerShell/xFailOverCluster/issues/78)).

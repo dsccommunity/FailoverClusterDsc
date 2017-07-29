@@ -18,4 +18,5 @@ ConvertFrom-StringData @'
     FailedCreatingCluster = Cluster creation failed. Please verify output of 'Get-Cluster' command.
     UnableToImpersonateUser = Can't logon as user {0}.
     UnableToCloseToken = Can't close impersonation token {0}.
+    GetClusterInformation = Retrieving information for cluster {0}.
 '@

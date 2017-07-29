@@ -15,8 +15,8 @@ Configuration Example
         xClusterQuorum 'SetQuorumToDiskOnly'
         {
             IsSingleInstance = 'Yes'
-            Type = 'DiskOnly'
-            Resource = 'Witness Cluster Disk'
+            Type             = 'DiskOnly'
+            Resource         = 'Witness Cluster Disk'
         }
     }
 }

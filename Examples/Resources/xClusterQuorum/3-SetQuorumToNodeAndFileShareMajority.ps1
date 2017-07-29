@@ -23,8 +23,8 @@ Configuration Example
         xClusterQuorum 'SetQuorumToNodeAndDiskMajority'
         {
             IsSingleInstance = 'Yes'
-            Type = 'NodeAndFileShareMajority'
-            Resource = '\\witness.company.local\witness$'
+            Type             = 'NodeAndFileShareMajority'
+            Resource         = '\\witness.company.local\witness$'
         }
     }
 }

@@ -22,7 +22,8 @@ function Get-TargetResource
     switch ($getClusterQuorumResult.QuorumType)
     {
         # WS2016 only
-        'Majority' {
+        'Majority'
+        {
             if ($null -eq $getClusterQuorumResult.QuorumResource)
             {
                 $clusterQuorumType = 'NodeMajority'
@@ -42,25 +43,30 @@ function Get-TargetResource
         }
 
         # WS2012R2 only
-        'NodeMajority' {
+        'NodeMajority'
+        {
             $clusterQuorumType = 'NodeMajority'
         }
 
-        'NodeAndDiskMajority' {
+        'NodeAndDiskMajority'
+        {
             $clusterQuorumType = 'NodeAndDiskMajority'
         }
 
-        'NodeAndFileShareMajority' {
+        'NodeAndFileShareMajority'
+        {
             $clusterQuorumType = 'NodeAndFileShareMajority'
         }
 
         # All
-        'DiskOnly' {
+        'DiskOnly'
+        {
             $clusterQuorumType = 'DiskOnly'
         }
 
         # Default
-        default {
+        default
+        {
             throw "Unknown quorum type: $($getClusterQuorumResult.QuorumType)"
         }
     }
@@ -120,19 +126,23 @@ function Set-TargetResource
 
     switch ($Type)
     {
-        'NodeMajority' {
+        'NodeMajority'
+        {
             Set-ClusterQuorum -NoWitness
         }
 
-        'NodeAndDiskMajority' {
+        'NodeAndDiskMajority'
+        {
             Set-ClusterQuorum -DiskWitness $Resource
         }
 
-        'NodeAndFileShareMajority' {
+        'NodeAndFileShareMajority'
+        {
             Set-ClusterQuorum -FileShareWitness $Resource
         }
 
-        'DiskOnly' {
+        'DiskOnly'
+        {
             Set-ClusterQuorum -DiskOnly $Resource
         }
     }

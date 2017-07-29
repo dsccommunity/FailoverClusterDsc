@@ -14,20 +14,20 @@ Configuration Example
     {
         xClusterNetwork 'ChangeNetwork-10'
         {
-            Address = '10.0.0.0'
+            Address     = '10.0.0.0'
             AddressMask = '255.255.255.0'
-            Name = 'Client1'
-            Role = '3'
-            Metric = '10'
+            Name        = 'Client1'
+            Role        = '3'
+            Metric      = '10'
         }
 
         xClusterNetwork 'ChangeNetwork-192'
         {
-            Address = '192.168.0.0'
+            Address     = '192.168.0.0'
             AddressMask = '255.255.255.0'
-            Name = 'Heartbeat'
-            Role = '1'
-            Metric = '200'
+            Name        = 'Heartbeat'
+            Role        = '1'
+            Metric      = '200'
         }
     }
 }

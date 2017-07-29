@@ -2,10 +2,10 @@ Describe 'CommonResourceHelper Unit Tests' {
     BeforeAll {
         # Import the CommonResourceHelper module to test
         $dscResourcesFolderFilePath = Join-Path -Path (Split-Path -Path (Split-Path -Path $PSScriptRoot -Parent) -Parent) `
-                                                -ChildPath 'DscResources'
+            -ChildPath 'DscResources'
 
         Import-Module -Name (Join-Path -Path $dscResourcesFolderFilePath `
-                                       -ChildPath 'CommonResourceHelper.psm1') -Force
+                -ChildPath 'CommonResourceHelper.psm1') -Force
     }
 
     InModuleScope 'CommonResourceHelper' {

@@ -18,37 +18,37 @@ Configuration Example
         WindowsFeature AddFailoverFeature
         {
             Ensure = 'Present'
-            Name = 'Failover-clustering'
+            Name   = 'Failover-clustering'
         }
 
         WindowsFeature AddRemoteServerAdministrationToolsClusteringPowerShellFeature
         {
-            Ensure = 'Present'
-            Name = 'RSAT-Clustering-PowerShell'
+            Ensure    = 'Present'
+            Name      = 'RSAT-Clustering-PowerShell'
             DependsOn = '[WindowsFeature]AddFailoverFeature'
         }
 
         WindowsFeature AddRemoteServerAdministrationToolsClusteringCmdInterfaceFeature
         {
-            Ensure = 'Present'
-            Name = 'RSAT-Clustering-CmdInterface'
+            Ensure    = 'Present'
+            Name      = 'RSAT-Clustering-CmdInterface'
             DependsOn = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringPowerShellFeature'
         }
 
         xWaitForCluster WaitForCluster
         {
-            Name = 'Cluster01'
+            Name             = 'Cluster01'
             RetryIntervalSec = 10
-            RetryCount = 60
-            DependsOn = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringCmdInterfaceFeature'
+            RetryCount       = 60
+            DependsOn        = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringCmdInterfaceFeature'
         }
 
         xCluster JoinSecondNodeToCluster
         {
-            Name = 'Cluster01'
-            StaticIPAddress = '192.168.100.20/24'
+            Name                          = 'Cluster01'
+            StaticIPAddress               = '192.168.100.20/24'
             DomainAdministratorCredential = $ActiveDirectoryAdministratorCredential
-            DependsOn = '[xWaitForCluster]WaitForCluster'
+            DependsOn                     = '[xWaitForCluster]WaitForCluster'
         }
     }
 }

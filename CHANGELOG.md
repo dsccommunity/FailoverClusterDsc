@@ -23,12 +23,14 @@
 - Changes to xClusterDisk
   - Enabled localization for all strings ([issue #84](https://github.com/PowerShell/xFailOverCluster/issues/84)).
   - Fixed the OutputType data type that was not fully qualified.
+  - Minor style changes.
 - Changes to xClusterNetwork
   - Replaced the URL for the parameter Role in README.md. The new URL is a more
     generic description of the possible settings for the Role parameter. The
     previous URL was still correct but focused on Hyper-V in particular.
   - Fixed typos in parameter descriptions in README.md, comment-based help and schema.mof.
   - Enabled localization for all strings ([issue #85](https://github.com/PowerShell/xFailOverCluster/issues/85)).
+  - Minor style changes.
 - Changes to xCluster
   - Resolved Script Analyzer rule warnings by changing Get-WmiObject to
     Get-CimInstance ([issue #49](https://github.com/PowerShell/xFailOverCluster/issues/49)).
@@ -38,6 +40,7 @@
   - Added tests to improve code coverage.
     - Fixed random problem with tests failing with error "Invalid token for
       impersonation - it cannot be duplicated." ([issue #133](https://github.com/PowerShell/xFailOverCluster/issues/133)).
+  - Minor style changes.
 - Changes to xWaitForCluster
   - Refactored the unit test for this resource to use stubs and increase coverage
     ([issue #78](https://github.com/PowerShell/xFailOverCluster/issues/78)).
@@ -47,6 +50,7 @@
   - Updated parameter description in the schema.mof.
   - Resolved Script Analyzer warnings ([issue #54](https://github.com/PowerShell/xFailOverCluster/issues/54)).
   - Enabled localization for all strings ([issue #88](https://github.com/PowerShell/xFailOverCluster/issues/88)).
+  - Minor style changes.
 - Changes to xClusterQuorum
   - Refactored the unit test for this resource to use stubs and increase coverage
     ([issue #77](https://github.com/PowerShell/xFailOverCluster/issues/77)).
@@ -58,9 +62,11 @@
     - 3-SetQuorumToNodeAndFileShareMajority.ps1
     - 4-SetQuorumToDiskOnly.ps1
   - Added links to examples from README.md.
+  - Minor style changes.
 - Changes to xClusterPreferredOwner
   - Enabled localization for all strings ([issue #86](https://github.com/PowerShell/xFailOverCluster/issues/86)).
   - Fixed typo in the returned hash table from Get-TargetResource.
+  - Minor style changes.
 
 ## 1.7.0.0
 

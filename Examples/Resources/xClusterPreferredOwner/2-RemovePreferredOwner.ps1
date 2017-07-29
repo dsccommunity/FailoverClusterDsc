@@ -19,20 +19,20 @@ Configuration Example
     {
         xClusterPreferredOwner 'RemoveOwnersForClusterGroup1'
         {
-            Ensure = 'Absent'
-            ClusterName = 'TESTCLU1'
-            ClusterGroup = 'Cluster Group 1'
-            Nodes = @('Node1', 'Node2')
-            ClusterResources = @('Resource1','Resource2')
+            Ensure           = 'Absent'
+            ClusterName      = 'TESTCLU1'
+            ClusterGroup     = 'Cluster Group 1'
+            Nodes            = @('Node1', 'Node2')
+            ClusterResources = @('Resource1', 'Resource2')
         }
 
         xClusterPreferredOwner 'RemoveOwnersForClusterGroup2'
         {
-            Ensure = 'Absent'
-            ClusterName = 'TESTCLU1'
-            ClusterGroup = 'Cluster Group 2'
-            Nodes = @('Node1', 'Node2')
-            ClusterResources = @('Resource3','Resource4')
+            Ensure           = 'Absent'
+            ClusterName      = 'TESTCLU1'
+            ClusterGroup     = 'Cluster Group 2'
+            Nodes            = @('Node1', 'Node2')
+            ClusterResources = @('Resource3', 'Resource4')
         }
     }
 }

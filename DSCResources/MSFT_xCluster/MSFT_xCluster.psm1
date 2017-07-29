@@ -1,5 +1,5 @@
 Import-Module -Name (Join-Path -Path (Split-Path -Path $PSScriptRoot -Parent) `
-                               -ChildPath 'CommonResourceHelper.psm1')
+        -ChildPath 'CommonResourceHelper.psm1')
 
 $script:localizedData = Get-LocalizedData -ResourceName 'MSFT_xCluster'
 
@@ -368,7 +368,7 @@ function Set-ImpersonateAs
 
     if ($bLogin)
     {
-        $Identity = New-Object Security.Principal.WindowsIdentity $userToken
+        $Identity = New-Object -TypeName Security.Principal.WindowsIdentity -ArgumentList $userToken
         $context = $Identity.Impersonate()
     }
     else

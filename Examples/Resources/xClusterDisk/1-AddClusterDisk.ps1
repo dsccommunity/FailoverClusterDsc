@@ -16,14 +16,14 @@ Configuration Example
         {
             Number = 1
             Ensure = 'Present'
-            Label = 'SQL2016-DATA'
+            Label  = 'SQL2016-DATA'
         }
 
         xClusterDisk 'AddClusterDisk-SQL2017-LOG'
         {
             Number = 2
             Ensure = 'Present'
-            Label = 'SQL2016-LOG'
+            Label  = 'SQL2016-LOG'
         }
     }
 }

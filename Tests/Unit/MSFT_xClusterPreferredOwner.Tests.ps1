@@ -1,4 +1,4 @@
-﻿$script:DSCModuleName = 'xFailOverCluster'
+$script:DSCModuleName = 'xFailOverCluster'
 $script:DSCResourceName = 'MSFT_xClusterPreferredOwner'
 
 #region Header

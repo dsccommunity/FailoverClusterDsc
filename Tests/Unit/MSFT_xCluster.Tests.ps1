@@ -1,4 +1,11 @@
-﻿$script:DSCModuleName = 'xFailOverCluster'
+<#
+    Suppressing this rule because a plain text password variable is used to mock the LogonUser static
+    method and is required for the tests.
+#>
+[System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingPlainTextForPassword', '')]
+param()
+
+$script:DSCModuleName = 'xFailOverCluster'
 $script:DSCResourceName = 'MSFT_xCluster'
 
 #region HEADER
@@ -23,6 +30,7 @@ $TestEnvironment = Initialize-TestEnvironment `
 function Invoke-TestSetup
 {
     Import-Module -Name (Join-Path -Path (Join-Path -Path (Join-Path -Path (Join-Path -Path $script:moduleRoot -ChildPath 'Tests') -ChildPath 'Unit') -ChildPath 'Stubs') -ChildPath 'FailoverClusters.stubs.psm1') -Global -Force
+    Import-Module -Name (Join-Path -Path (Join-Path -Path (Join-Path -Path $script:moduleRoot -ChildPath 'Tests') -ChildPath 'TestHelpers') -ChildPath 'CommonTestHelper.psm1') -Global -Force
 }
 
 function Invoke-TestCleanup
@@ -45,15 +53,15 @@ try
         $mockClusterName = 'CLUSTER001'
         $mockStaticIpAddress = '192.168.10.10'
 
-        $mockGetWmiObject = {
+        $mockGetCimInstance = {
             return [PSCustomObject] @{
                 Domain = $mockDynamicDomainName
                 Name   = $mockDynamicServerName
             }
         }
 
-        $mockGetWmiObject_ParameterFilter = {
-            $Class -eq 'Win32_ComputerSystem'
+        $mockGetCimInstance_ParameterFilter = {
+            $ClassName -eq 'Win32_ComputerSystem'
         }
 
         $mockGetCluster = {
@@ -96,21 +104,68 @@ try
             )
         }
 
+        $mockNewObjectWindowsIdentity = {
+            return [PSCustomObject] @{} |
+                Add-Member -MemberType ScriptMethod -Name Impersonate -Value {
+                    return [PSCustomObject] @{} |
+                        Add-Member -MemberType ScriptMethod -Name Undo -Value {} -PassThru |
+                        Add-Member -MemberType ScriptMethod -Name Dispose -Value {} -PassThru -Force
+                } -PassThru -Force
+        }
+
+        $mockNewObjectWindowsIdentity_ParameterFilter = {
+            $TypeName -eq 'Security.Principal.WindowsIdentity'
+        }
+
         $mockDefaultParameters = @{
             Name                          = $mockClusterName
             StaticIPAddress               = $mockStaticIpAddress
             DomainAdministratorCredential = $mockAdministratorCredential
         }
 
+        class MockLibImpersonation
+        {
+            static [bool] $ReturnValue = $false
+
+            static [bool]LogonUser(
+                [string] $userName,
+                [string] $domain,
+                [string] $password,
+                [int] $logonType,
+                [int] $logonProvider,
+                [ref] $token
+            )
+            {
+                return [MockLibImpersonation]::ReturnValue
+            }
+
+            static [bool]CloseHandle([System.IntPtr]$Token)
+            {
+                return [MockLibImpersonation]::ReturnValue
+            }
+        }
+
+        [MockLibImpersonation]::ReturnValue = $true
+        $mockLibImpersonationObject = [MockLibImpersonation]::New()
+
         Describe 'xCluster\Get-TargetResource' {
+            BeforeAll {
+                Mock -CommandName Add-Type -MockWith {
+                    return $mockLibImpersonationObject
+                }
+
+                Mock -CommandName New-Object -MockWith $mockNewObjectWindowsIdentity -ParameterFilter $mockNewObjectWindowsIdentity_ParameterFilter -Verifiable
+            }
+
             Context 'When the computers domain name cannot be evaluated' {
                 It 'Should throw the correct error message' {
                     $mockDynamicDomainName = $null
                     $mockDynamicServerName = $mockServerName
 
-                    Mock -CommandName Get-WmiObject -MockWith $mockGetWmiObject -ParameterFilter $mockGetWmiObject_ParameterFilter -Verifiable
+                    Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
 
-                    { Get-TargetResource @mockDefaultParameters } | Should -Throw "Can't find machine's domain name"
+                    $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message $script:localizedData.TargetNodeDomainMissing
+                    { Get-TargetResource @mockDefaultParameters } | Should Throw $mockCorrectErrorRecord
                 }
             }
 
@@ -120,15 +175,16 @@ try
                     $mockDynamicServerName = $mockServerName
 
                     Mock -CommandName Get-Cluster -Verifiable
-                    Mock -CommandName Get-WmiObject -MockWith $mockGetWmiObject -ParameterFilter $mockGetWmiObject_ParameterFilter -Verifiable
+                    Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
 
-                    { Get-TargetResource @mockDefaultParameters } | Should -Throw ("Can't find the cluster {0}" -f $mockClusterName)
+                    $mockCorrectErrorRecord = Get-ObjectNotFoundException -Message ($script:localizedData.ClusterNameNotFound -f $mockClusterName)
+                    { Get-TargetResource @mockDefaultParameters } | Should Throw $mockCorrectErrorRecord
                 }
             }
 
             Context 'When the system is not in the desired state' {
                 BeforeEach {
-                    Mock -CommandName Get-WmiObject -MockWith $mockGetWmiObject -ParameterFilter $mockGetWmiObject_ParameterFilter -Verifiable
+                    Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
                     Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter -Verifiable
                     Mock -CommandName Get-ClusterGroup -MockWith $mockGetClusterGroup -ParameterFilter $mockGetClusterGroup_ParameterFilter -Verifiable
                     Mock -CommandName Get-ClusterParameter -MockWith $mockGetClusterParameter -Verifiable
@@ -153,14 +209,23 @@ try
         }
 
         Describe 'xCluster\Set-TargetResource' {
+            BeforeAll {
+                Mock -CommandName Add-Type -MockWith {
+                    return $mockLibImpersonationObject
+                }
+
+                Mock -CommandName New-Object -MockWith $mockNewObjectWindowsIdentity -ParameterFilter $mockNewObjectWindowsIdentity_ParameterFilter -Verifiable
+            }
+
             Context 'When computers domain name cannot be evaluated' {
                 It 'Should throw the correct error message' {
                     $mockDynamicDomainName = $null
                     $mockDynamicServerName = $mockServerName
 
-                    Mock -CommandName Get-WmiObject -MockWith $mockGetWmiObject -ParameterFilter $mockGetWmiObject_ParameterFilter -Verifiable
+                    Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
 
-                    { Set-TargetResource @mockDefaultParameters } | Should -Throw "Can't find machine's domain name"
+                    $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message $script:localizedData.TargetNodeDomainMissing
+                    { Set-TargetResource @mockDefaultParameters } | Should Throw $mockCorrectErrorRecord
                 }
             }
 
@@ -169,7 +234,7 @@ try
                     Mock -CommandName New-Cluster -Verifiable
                     Mock -CommandName Remove-ClusterNode -Verifiable
                     Mock -CommandName Add-ClusterNode -Verifiable
-                    Mock -CommandName Get-WmiObject -MockWith $mockGetWmiObject -ParameterFilter $mockGetWmiObject_ParameterFilter -Verifiable
+                    Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
                 }
 
                 $mockDynamicDomainName = $mockDomainName
@@ -184,7 +249,7 @@ try
                             # This is used to evaluate that cluster do exists after New-Cluster cmdlet has been run.
                             Mock -CommandName Get-Cluster -MockWith $mockGetCluster
 
-                            { Set-TargetResource @mockDefaultParameters } | Should -Not -Throw
+                            { Set-TargetResource @mockDefaultParameters } | Should Not Throw
 
                             Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It
                             Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
@@ -202,7 +267,7 @@ try
                             # This is used to evaluate that cluster do exists after New-Cluster cmdlet has been run.
                             Mock -CommandName Get-Cluster -MockWith $mockGetCluster
 
-                            { Set-TargetResource @mockDefaultParameters } | Should -Not -Throw
+                            { Set-TargetResource @mockDefaultParameters } | Should Not Throw
 
                             Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It
                             Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
@@ -215,7 +280,8 @@ try
                     It 'Should throw the correct error message' {
                         Mock -CommandName Get-Cluster
 
-                        { Set-TargetResource @mockDefaultParameters } | Should -Throw 'Cluster creation failed. Please verify output of ''Get-Cluster'' command'
+                        $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message $script:localizedData.FailedCreatingCluster
+                        { Set-TargetResource @mockDefaultParameters } | Should Throw $mockCorrectErrorRecord
 
                         Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It
                         Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
@@ -228,7 +294,7 @@ try
                         Mock -CommandName Get-ClusterNode
                         Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter
 
-                        { Set-TargetResource @mockDefaultParameters } | Should -Not -Throw
+                        { Set-TargetResource @mockDefaultParameters } | Should Not Throw
 
                         Assert-MockCalled -CommandName New-Cluster -Exactly -Times 0 -Scope It
                         Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
@@ -246,7 +312,7 @@ try
                     It 'Should call both Remove-ClusterNode and Add-ClusterNode cmdlet' {
                         Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter
 
-                        { Set-TargetResource @mockDefaultParameters } | Should -Not -Throw
+                        { Set-TargetResource @mockDefaultParameters } | Should Not Throw
 
                         Assert-MockCalled -CommandName New-Cluster -Exactly -Times 0 -Scope It
                         Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 1 -Scope It
@@ -261,7 +327,7 @@ try
                     Mock -CommandName New-Cluster -Verifiable
                     Mock -CommandName Remove-ClusterNode -Verifiable
                     Mock -CommandName Add-ClusterNode -Verifiable
-                    Mock -CommandName Get-WmiObject -MockWith $mockGetWmiObject -ParameterFilter $mockGetWmiObject_ParameterFilter -Verifiable
+                    Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
                     Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter -Verifiable
                     Mock -CommandName Get-ClusterParameter -MockWith $mockGetClusterParameter -Verifiable
 
@@ -283,7 +349,7 @@ try
                     It 'Should not call any of the cluster cmdlets' -Skip {
                         Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter -Verifiable
 
-                        { Set-TargetResource @mockDefaultParameters } | Should -Not -Throw
+                        { Set-TargetResource @mockDefaultParameters } | Should Not Throw
 
                         Assert-MockCalled -CommandName New-Cluster -Exactly -Times 0 -Scope It
                         Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
@@ -296,20 +362,29 @@ try
         }
 
         Describe 'xCluster\Test-TargetResource' {
+            BeforeAll {
+                Mock -CommandName Add-Type -MockWith {
+                    return $mockLibImpersonationObject
+                }
+
+                Mock -CommandName New-Object -MockWith $mockNewObjectWindowsIdentity -ParameterFilter $mockNewObjectWindowsIdentity_ParameterFilter -Verifiable
+            }
+
             Context 'When computers domain name cannot be evaluated' {
                 It 'Should throw the correct error message' {
                     $mockDynamicDomainName = $null
                     $mockDynamicServerName = $mockServerName
 
-                    Mock -CommandName Get-WmiObject -MockWith $mockGetWmiObject -ParameterFilter $mockGetWmiObject_ParameterFilter -Verifiable
+                    Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
 
-                    { Test-TargetResource @mockDefaultParameters } | Should -Throw "Can't find machine's domain name"
+                    $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message $script:localizedData.TargetNodeDomainMissing
+                    { Test-TargetResource @mockDefaultParameters } | Should Throw $mockCorrectErrorRecord
                 }
             }
 
             Context 'When the system is not in the desired state' {
                 BeforeEach {
-                    Mock -CommandName Get-WmiObject -MockWith $mockGetWmiObject -ParameterFilter $mockGetWmiObject_ParameterFilter -Verifiable
+                    Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
                 }
 
                 $mockDynamicDomainName = $mockDomainName
@@ -320,7 +395,7 @@ try
                         Mock -CommandName Get-Cluster -Verifiable
 
                         $testTargetResourceResult = Test-TargetResource @mockDefaultParameters
-                        $testTargetResourceResult | Should -Be $false
+                        $testTargetResourceResult | Should Be $false
                     }
 
                     Assert-VerifiableMocks
@@ -333,7 +408,7 @@ try
                         } -Verifiable
 
                         $testTargetResourceResult = Test-TargetResource @mockDefaultParameters
-                        $testTargetResourceResult | Should -Be $false
+                        $testTargetResourceResult | Should Be $false
                     }
 
                     Assert-VerifiableMocks
@@ -346,7 +421,7 @@ try
 
                         $testTargetResourceResult = Test-TargetResource @mockDefaultParameters
 
-                        $testTargetResourceResult | Should -Be $false
+                        $testTargetResourceResult | Should Be $false
                     }
 
                     Assert-VerifiableMocks
@@ -363,7 +438,7 @@ try
                     It 'Should return $false' {
                         $testTargetResourceResult = Test-TargetResource @mockDefaultParameters
 
-                        $testTargetResourceResult | Should -Be $false
+                        $testTargetResourceResult | Should Be $false
                     }
 
                     Assert-VerifiableMocks
@@ -374,7 +449,7 @@ try
             Context 'When the system is in the desired state' {
                 BeforeEach {
                     Mock -CommandName Get-ClusterNode -MockWith $mockGetClusterNode -Verifiable
-                    Mock -CommandName Get-WmiObject -MockWith $mockGetWmiObject -ParameterFilter $mockGetWmiObject_ParameterFilter -Verifiable
+                    Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
                     Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter -Verifiable
                 }
 
@@ -385,10 +460,41 @@ try
                 Context 'When the node already exist' {
                     It 'Should return $true' {
                         $testTargetResourceResult = Test-TargetResource @mockDefaultParameters
-                        $testTargetResourceResult | Should -Be $true
+                        $testTargetResourceResult | Should Be $true
                     }
 
                     Assert-VerifiableMocks
+                }
+            }
+        }
+
+        [MockLibImpersonation]::ReturnValue = $false
+        $mockLibImpersonationObject = [MockLibImpersonation]::New()
+
+        Describe 'xCluster\Set-ImpersonateAs' -Tag 'Helper' {
+            Context 'When impersonating credentials fails' {
+                It 'Should throw the correct error message' {
+                    Mock -CommandName Add-Type -MockWith {
+                        return $mockLibImpersonationObject
+                    }
+
+                    $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message ($script:localizedData.UnableToImpersonateUser -f $mockAdministratorCredential.GetNetworkCredential().UserName)
+                    { Set-ImpersonateAs -Credential $mockAdministratorCredential } | Should Throw $mockCorrectErrorRecord
+                }
+            }
+        }
+
+        Describe 'xCluster\Close-UserToken' -Tag 'Helper' {
+            Context 'When closing user token fails' {
+                It 'Should throw the correct error message' {
+                    Mock -CommandName Add-Type -MockWith {
+                        return $mockLibImpersonationObject
+                    } -Verifiable
+
+                    $mockToken = [System.IntPtr]::New(12345)
+
+                    $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message ($script:localizedData.UnableToCloseToken -f $mockToken.ToString())
+                    { Close-UserToken -Token $mockToken } | Should Throw $mockCorrectErrorRecord
                 }
             }
         }

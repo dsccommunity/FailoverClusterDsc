@@ -107,9 +107,9 @@ Configures a cluster network in a failover cluster.
 
 #### Parameters for xClusterNetwork
 
-* **`[String]` Address** _(Key)_: The adress for the cluster network in the format
+* **`[String]` Address** _(Key)_: The address for the cluster network in the format
   '10.0.0.0'.
-* **`[String]` AddressMask** _(Key)_: The adress mask for the cluster network in
+* **`[String]` AddressMask** _(Key)_: The address mask for the cluster network in
   the format '255.255.255.0'.
 * **`[String]` Name** _(Write)_: The name of the cluster network. If the cluster
   network name is not in desired state it will be renamed to match this name.
@@ -132,7 +132,7 @@ The cluster network role can be set to either the value 0, 1 or 3.
 3 = Allow cluster network communication and client connectivity
 
 See this article for more information about cluster network role values;
-https://technet.microsoft.com/en-us/library/dn550728(v=ws.11).aspx
+[Configuring Windows Failover Cluster Networks](https://blogs.technet.microsoft.com/askcore/2014/02/19/configuring-windows-failover-cluster-networks/)
 
 #### Examples for xClusterNetwork
 
@@ -182,7 +182,10 @@ Configures quorum in a cluster.
 
 #### Examples for xClusterQuorum
 
-None.
+* [Set quorum to node majority](/Examples/Resources/xClusterQuorum/1-SetQuorumToNodeMajority.ps1)
+* [Set quorum to node and disk majority](/Examples/Resources/xClusterQuorum/2-SetQuorumToNodeAndDiskMajority.ps1)
+* [Set quorum to node and file share majority](/Examples/Resources/xClusterQuorum/3-SetQuorumToNodeAndFileShareMajority.ps1)
+* [Set quorum to disk only](/Examples/Resources/xClusterQuorum/4-SetQuorumToDiskOnly.ps1)
 
 ### xWaitForCluster
 

@@ -14,20 +14,20 @@ Configuration Example
     {
         xClusterPreferredOwner 'AddOwnersForClusterGroup1'
         {
-            Ensure = 'Present'
-            ClusterName = 'TESTCLU1'
-            ClusterGroup = 'Cluster Group 1'
-            Nodes = @('Node1', 'Node2')
-            ClusterResources = @('Resource1','Resource2')
+            Ensure           = 'Present'
+            ClusterName      = 'TESTCLU1'
+            ClusterGroup     = 'Cluster Group 1'
+            Nodes            = @('Node1', 'Node2')
+            ClusterResources = @('Resource1', 'Resource2')
         }
 
         xClusterPreferredOwner 'AddOwnersForClusterGroup2'
         {
-            Ensure = 'Present'
-            ClusterName = 'TESTCLU1'
-            ClusterGroup = 'Cluster Group 2'
-            Nodes = @('Node1', 'Node2')
-            ClusterResources = @('Resource3','Resource4')
+            Ensure           = 'Present'
+            ClusterName      = 'TESTCLU1'
+            ClusterGroup     = 'Cluster Group 2'
+            Nodes            = @('Node1', 'Node2')
+            ClusterResources = @('Resource3', 'Resource4')
         }
     }
 }

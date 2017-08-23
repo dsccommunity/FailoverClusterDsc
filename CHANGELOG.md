@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 1.8.0.0
+
 - Changes to xFailOverCluster
   - Added a common resource helper module with helper functions for localization.
     - Added helper functions; Get-LocalizedData, New-InvalidResultException,

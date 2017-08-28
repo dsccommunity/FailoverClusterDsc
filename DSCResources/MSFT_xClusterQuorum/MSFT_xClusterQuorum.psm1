@@ -43,6 +43,10 @@ function Get-TargetResource
             {
                 $clusterQuorumType = 'NodeAndFileShareMajority'
             }
+            elseif ($getClusterQuorumResult.QuorumResource.ResourceType.DisplayName -eq 'File Share Quorum Witness')
+            {
+                $ClusterQuorumType = 'FileShareWitness'
+            }
             else
             {
                 throw "Unknown quorum resource: $($getClusterQuorumResult.QuorumResource)"
@@ -78,7 +82,7 @@ function Get-TargetResource
         }
     }
 
-    if ($clusterQuorumType -eq 'NodeAndFileShareMajority')
+    if ($clusterQuorumType -eq 'NodeAndFileShareMajority' -or $clusterQuorumType -eq 'FileShareWitness')
     {
         $clusterQuorumResource = $getClusterQuorumResult.QuorumResource |
             Get-ClusterParameter -Name SharePath |
@@ -122,7 +126,7 @@ function Set-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
-        [ValidateSet('NodeMajority', 'NodeAndDiskMajority', 'NodeAndFileShareMajority', 'DiskOnly')]
+        [ValidateSet('NodeMajority', 'NodeAndDiskMajority', 'NodeAndFileShareMajority', 'DiskOnly', 'FileShareWitness')]
         [System.String]
         $Type,
 
@@ -154,6 +158,11 @@ function Set-TargetResource
         {
             Set-ClusterQuorum -DiskOnly $Resource
         }
+
+        'FileShareWitness'
+        {
+            Set-ClusterQuorum -FileShareWitness $Resource
+        }
     }
 }
 
@@ -184,7 +193,7 @@ function Test-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
-        [ValidateSet('NodeMajority', 'NodeAndDiskMajority', 'NodeAndFileShareMajority', 'DiskOnly')]
+        [ValidateSet('NodeMajority', 'NodeAndDiskMajority', 'NodeAndFileShareMajority', 'DiskOnly', 'FileShareWitness')]
         [System.String]
         $Type,
 

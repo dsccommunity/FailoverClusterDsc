@@ -175,7 +175,7 @@ Configures quorum in a cluster.
 * **`[String]` IsSingleInstance** _(Key)_: Specifies the resource is a single
   instance, the value must be 'Yes'.
 * **`[String]` Type** _(Write)_: Quorum type to use. { NodeMajority |
-  NodeAndDiskMajority | NodeAndFileShareMajority, DiskOnly }.
+  NodeAndDiskMajority | NodeAndFileShareMajority | DiskOnly | FileShareWitness }.
 * **`[String]` Resource** _(Write)_: The name of the disk or file share resource
   to use as witness. This parameter is optional if the quorum type is set to
   NodeMajority.
@@ -186,6 +186,7 @@ Configures quorum in a cluster.
 * [Set quorum to node and disk majority](/Examples/Resources/xClusterQuorum/2-SetQuorumToNodeAndDiskMajority.ps1)
 * [Set quorum to node and file share majority](/Examples/Resources/xClusterQuorum/3-SetQuorumToNodeAndFileShareMajority.ps1)
 * [Set quorum to disk only](/Examples/Resources/xClusterQuorum/4-SetQuorumToDiskOnly.ps1)
+* [Set quorum to FileShareWitness](/Examples/Resources/xClusterQuorum/5-SetQuorumToFileShareWitness.ps1)
 
 ### xWaitForCluster
 

@@ -1,7 +1,9 @@
 # Change log for xFailOverCluster
 
 ## Unreleased
-
+- Added the FileShareWitness to the xClusterQuorum
+- xClusterQuorum
+  - there was no support for the FileShareWitness option in the Clusterquorum module. https://technet.microsoft.com/en-us/itpro/powershell/windows/failoverclusters/set-clusterquorum#-filesharewitness
 ## 1.8.0.0
 
 - Changes to xFailOverCluster

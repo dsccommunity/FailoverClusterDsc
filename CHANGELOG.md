@@ -1,7 +1,9 @@
 # Change log for xFailOverCluster
 
 ## Unreleased
-
+- Added the filesharewitness to the xClusterQuorum
+- xClusterQuorum
+  - there was no support for the Filesharewitness option in the Clusterquorum module.
 ## 1.8.0.0
 
 - Changes to xFailOverCluster

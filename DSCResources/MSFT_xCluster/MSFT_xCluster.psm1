@@ -25,7 +25,7 @@ function Get-TargetResource
         [System.String]
         $Name,
 
-        [Parameter(Mandatory = $false)]
+        [Parameter()]
         [System.String]
         $StaticIPAddress,
 
@@ -103,7 +103,7 @@ function Set-TargetResource
         [System.String]
         $Name,
 
-        [Parameter(Mandatory = $false)]
+        [Parameter()]
         [System.String]
         $StaticIPAddress,
 
@@ -233,7 +233,7 @@ function Test-TargetResource
         [System.String]
         $Name,
 
-        [Parameter(Mandatory = $false)]
+        [Parameter()]
         [System.String]
         $StaticIPAddress,
 

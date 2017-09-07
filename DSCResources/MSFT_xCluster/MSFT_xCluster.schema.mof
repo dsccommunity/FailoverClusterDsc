@@ -1,11 +1,9 @@
 #pragma namespace("\\\\.\\root\\microsoft\\windows\\DesiredStateConfiguration")
 
-[ClassVersion("1.0.0"), FriendlyName("xCluster")] 
+[ClassVersion("1.0.0"), FriendlyName("xCluster")]
 class MSFT_xCluster : OMI_BaseResource
 {
-    [key, Description("Name of the Cluster")] string Name;
-    [write, Description("StaticIPAddress of the Cluster")] string StaticIPAddress;
-    
-    [required, EmbeddedInstance("MSFT_Credential"), Description("Credential to create the cluster")] 
-    String DomainAdministratorCredential;
+    [Key, Description("Name of the Cluster")] String Name;
+    [Write, Description("StaticIPAddress of the Cluster")] String StaticIPAddress;
+    [Required, EmbeddedInstance("MSFT_Credential"), Description("Credential to create the cluster")] String DomainAdministratorCredential;
 };

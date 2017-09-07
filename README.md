@@ -72,6 +72,8 @@ the target node ($env:COMPUTERNAME) to the cluster.
 * [Create first node of a failover cluster](/Examples/Resources/xCluster/1-CreateFirstNodeOfAFailoverCluster.ps1)
 * [Join additional node to a failover cluster](/Examples/Resources/xCluster/2-JoinAdditionalNodeToFailoverCluster.ps1)
 * [Create failover cluster with two nodes](/Examples/Resources/xCluster/3-CreateFailoverClusterWithTwoNodes.ps1)
+* [Create first node of a failover cluster with DHCP](/Examples/Resources/xCluster/4-CreateFirstNodeOfAFailoverClusterWithDHCP.ps1)
+* [Join additional node to a failover cluster with DHCP](/Examples/Resources/xCluster/5-JoinAdditionalNodeToFailoverClusterWithDHCP.ps1)
 
 ### xClusterDisk
 

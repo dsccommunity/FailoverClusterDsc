@@ -263,7 +263,7 @@ try
                             }
                         }
 
-                        Context 'When assigned IP-address from DHCP' {
+                        Context 'When assigned IP address from DHCP' {
                             It 'Should call New-Cluster cmdlet using StaticAddress parameter' {
                                 $mockTestParameters = $mockDefaultParameters.Clone()
                                 $mockTestParameters.Remove('StaticIPAddress')

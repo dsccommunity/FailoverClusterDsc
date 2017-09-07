@@ -1,6 +1,6 @@
 <#
 .EXAMPLE
-    This example shows how to create the a failover cluster on the first node.
+    This example shows how to create the failover cluster on the first node.
 #>
 
 Configuration Example

@@ -61,8 +61,9 @@ the target node ($env:COMPUTERNAME) to the cluster.
 #### Parameters for xCluster
 
 * **`[String]` Name** _(Key)_: Name of the failover cluster.
-* **`[String]` StaticIPAddress** _(Required)_: Static IP Address of the failover
-  cluster.
+* **`[String]` StaticIPAddress** _(Required)_: The static IP address of the failover
+  cluster. If this is not specified then the IP address will be assigned from a
+  DHCP.
 * **`[String]` DomainAdministratorCredential** _(Required)_: Credential used to
   create the failover cluster in Active Directory.
 

@@ -242,18 +242,41 @@ try
 
                 Context 'When the cluster does not exist' {
                     Context 'When Get-Cluster returns nothing' {
-                        It 'Should call New-Cluster cmdlet' {
+                        BeforeAll {
                             # This is used for the evaluation of that cluster do not exist.
                             Mock -CommandName Get-Cluster -ParameterFilter $mockGetCluster_ParameterFilter
 
                             # This is used to evaluate that cluster do exists after New-Cluster cmdlet has been run.
                             Mock -CommandName Get-Cluster -MockWith $mockGetCluster
+                        }
 
-                            { Set-TargetResource @mockDefaultParameters } | Should -Not -Throw
+                        Context 'When using static IP address' {
+                            It 'Should call New-Cluster cmdlet using StaticAddress parameter' {
+                                { Set-TargetResource @mockDefaultParameters } | Should Not Throw
 
-                            Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It
-                            Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
-                            Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
+                                Assert-MockCalled -CommandName New-Cluster -ParameterFilter {
+                                    $StaticAddress -eq $mockStaticIpAddress
+                                } -Exactly -Times 1 -Scope It
+
+                                Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
+                                Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
+                            }
+                        }
+
+                        Context 'When assigned IP-address from DHCP' {
+                            It 'Should call New-Cluster cmdlet using StaticAddress parameter' {
+                                $mockTestParameters = $mockDefaultParameters.Clone()
+                                $mockTestParameters.Remove('StaticIPAddress')
+
+                                { Set-TargetResource @mockTestParameters } | Should Not Throw
+
+                                Assert-MockCalled -CommandName New-Cluster -ParameterFilter {
+                                    $null -eq $StaticAddress
+                                } -Exactly -Times 1 -Scope It
+
+                                Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
+                                Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
+                            }
                         }
                     }
 

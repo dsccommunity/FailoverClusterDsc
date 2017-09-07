@@ -7,9 +7,9 @@
 - Changes to xClusterNetwork
   - Updated readme to describe process for adding and removing additional networks on clusters
 - Changes to xCluster
-  - Allow cluster to be assigned IP address from a DHCP ([issue #109](https://github.com/PowerShell/xFailOverCluster/issues/109)).
-    When parameter StaticIPAddress is not specified then cluster will be configured
-    to use IP address from a DHCP.
+  - Allow the cluster to be assigned an IP address from a DHCP ([issue #109](https://github.com/PowerShell/xFailOverCluster/issues/109)).
+    When the parameter StaticIPAddress is not specified then the cluster will be
+    configured to use an IP address from a DHCP.
 
 ## 1.8.0.0
 

@@ -78,7 +78,7 @@ function Get-TargetResource
         }
     }
 
-    if ($clusterQuorumType -eq 'NodeAndFileShareMajority' -or $clusterQuorumType -eq 'FileShareWitness')
+    if ($clusterQuorumType -eq 'NodeAndFileShareMajority')
     {
         $clusterQuorumResource = $getClusterQuorumResult.QuorumResource |
             Get-ClusterParameter -Name SharePath |

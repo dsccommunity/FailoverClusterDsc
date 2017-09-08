@@ -51,7 +51,9 @@ try
         $mockDomainName = 'domain.local'
         $mockServerName = $env:COMPUTERNAME
         $mockClusterName = 'CLUSTER001'
+        $mockIgnoreNetwork = @('10.0.2.0/24')
         $mockStaticIpAddress = '192.168.10.10'
+
 
         $mockGetCimInstance = {
             return [PSCustomObject] @{
@@ -120,6 +122,7 @@ try
 
         $mockDefaultParameters = @{
             Name                          = $mockClusterName
+            IgnoreNetwork                 = $mockIgnoreNetwork
             StaticIPAddress               = $mockStaticIpAddress
             DomainAdministratorCredential = $mockAdministratorCredential
         }

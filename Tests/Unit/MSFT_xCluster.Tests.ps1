@@ -304,7 +304,7 @@ try
                                 { Set-TargetResource @withIgnoreNetworkParameter } | Should Not Throw
 
                                 Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It -ParameterFilter {
-                                    $IgnoreNetwork -eq ('10.0.2.0/24') -and
+                                    $IgnoreNetwork -eq '10.0.2.0/24' -and
                                     $IgnoreNetwork -eq '192.168.4.0/24'
                                 }
                                 Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It

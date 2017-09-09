@@ -167,6 +167,9 @@ function Set-TargetResource
             $newClusterParameters = @{
               Name          = $Name
               Node          = $env:COMPUTERNAME
+              NoStorage     = $true
+              Force         = $true
+              ErrorAction   = 'Stop'
             }
 
             if ($StaticIPAddress)
@@ -183,7 +186,7 @@ function Set-TargetResource
                 }
             }
 
-            New-Cluster @newClusterParameters -NoStorage -Force -ErrorAction Stop
+            New-Cluster @newClusterParameters
 
             if ( -not (Get-Cluster))
             {

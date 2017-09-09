@@ -176,7 +176,7 @@ function Set-TargetResource
                   }
             }
 
-            if ($IgnoreNetwork.Count -ne 0)
+            if ($PSBoundParameters.ContainsKey('IgnoreNetwork'))
             {
                 $newClusterParameters += @{
                     IgnoreNetwork = $IgnoreNetwork

@@ -286,7 +286,7 @@ try
 
 
                         Context 'When IgnoreNetwork is passed as a single value' {
-                            it 'Should call New-Cluster cmdlet with IgnoreNetwork parameter' {
+                            It 'Should call New-Cluster cmdlet with IgnoreNetwork parameter' {
                                 $withIgnoreNetworkParameter = $mockDefaultParameters + @{ IgnoreNetwork = '10.0.2.0/24' }
                                 { Set-TargetResource @withIgnoreNetworkParameter } | Should Not Throw
 
@@ -299,7 +299,7 @@ try
                         }
 
                         Context 'When IgnoreNetwork is passed as an array' {
-                            it 'Should call New-Cluster cmdlet with IgnoreNetwork parameter' {
+                            It 'Should call New-Cluster cmdlet with IgnoreNetwork parameter' {
                                 $withIgnoreNetworkParameter = $mockDefaultParameters + @{ IgnoreNetwork = ('10.0.2.0/24', '192.168.4.0/24') }
                                 { Set-TargetResource @withIgnoreNetworkParameter } | Should Not Throw
 

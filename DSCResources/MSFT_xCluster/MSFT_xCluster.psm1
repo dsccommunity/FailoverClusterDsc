@@ -13,6 +13,11 @@ $script:localizedData = Get-LocalizedData -ResourceName 'MSFT_xCluster'
     .PARAMETER StaticIPAddress
         Static IP Address of the failover cluster.
 
+    .PARAMETER IgnoreNetwork
+        One or more networks to ignore when creating the cluster.  Typically
+        used to ignore networks with DHCP enabled since they are always included
+        by default.
+
     .PARAMETER DomainAdministratorCredential
         Credential used to create the failover cluster in Active Directory.
 #>
@@ -28,6 +33,10 @@ function Get-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $StaticIPAddress,
+
+        [Parameter(Mandatory = $false)]
+        [System.Collections.Specialized.StringCollection]
+        $IgnoreNetwork,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -232,6 +241,11 @@ function Set-TargetResource
         Static IP Address of the failover cluster.
         Not used in Test-TargetResource.
 
+    .PARAMETER IgnoreNetwork
+        One or more networks to ignore when creating the cluster.  Typically
+        used to ignore networks with DHCP enabled since they are always included
+        by default.
+
     .PARAMETER DomainAdministratorCredential
         Credential used to create the failover cluster in Active Directory.
 
@@ -259,6 +273,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $StaticIPAddress,
+
+        [Parameter(Mandatory = $false)]
+        [System.Collections.Specialized.StringCollection]
+        $IgnoreNetwork,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]

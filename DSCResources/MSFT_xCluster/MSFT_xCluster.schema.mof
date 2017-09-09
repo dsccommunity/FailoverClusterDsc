@@ -6,4 +6,5 @@ class MSFT_xCluster : OMI_BaseResource
     [Key, Description("Name of the Cluster")] String Name;
     [Write, Description("StaticIPAddress of the Cluster")] String StaticIPAddress;
     [Required, EmbeddedInstance("MSFT_Credential"), Description("Credential to create the cluster")] String DomainAdministratorCredential;
+    [Write, Description("One or more networks to ignore when creating the cluster.  Typically used to ignore networks with DHCP enabled since they are always included by default.")] String IgnoreNetwork[];
 };

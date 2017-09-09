@@ -35,7 +35,7 @@ function Get-TargetResource
         $StaticIPAddress,
 
         [Parameter(Mandatory = $false)]
-        [System.Collections.Specialized.StringCollection]
+        [System.String[]]
         $IgnoreNetwork,
 
         [Parameter(Mandatory = $true)]
@@ -123,7 +123,7 @@ function Set-TargetResource
         $StaticIPAddress,
 
         [Parameter(Mandatory = $false)]
-        [System.Collections.Specialized.StringCollection]
+        [System.String[]]
         $IgnoreNetwork,
 
         [Parameter(Mandatory = $true)]
@@ -275,7 +275,7 @@ function Test-TargetResource
         $StaticIPAddress,
 
         [Parameter(Mandatory = $false)]
-        [System.Collections.Specialized.StringCollection]
+        [System.String[]]
         $IgnoreNetwork,
 
         [Parameter(Mandatory = $true)]

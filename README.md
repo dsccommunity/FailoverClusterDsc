@@ -64,6 +64,7 @@ the target node ($env:COMPUTERNAME) to the cluster.
 * **`[String]` StaticIPAddress** _(Write)_: The static IP address of the failover
   cluster. If this is not specified then the IP address will be assigned from a
   DHCP.
+* **`[String[]]` IgnoreNetwork** _(Optional)_: Network to ignore during creation of the cluster.
 * **`[String]` DomainAdministratorCredential** _(Required)_: Credential used to
   create the failover cluster in Active Directory.
 
@@ -74,6 +75,7 @@ the target node ($env:COMPUTERNAME) to the cluster.
 * [Create failover cluster with two nodes](/Examples/Resources/xCluster/3-CreateFailoverClusterWithTwoNodes.ps1)
 * [Create first node of a failover cluster with DHCP](/Examples/Resources/xCluster/4-CreateFirstNodeOfAFailoverClusterWithDHCP.ps1)
 * [Join additional node to a failover cluster with DHCP](/Examples/Resources/xCluster/5-JoinAdditionalNodeToFailoverClusterWithDHCP.ps1)
+* [Create failover cluster and ignoring a network](/Examples/Resources/xCluster/4-CreateFailoverClusterAndIgnoreANetwork.ps1)
 
 ### xClusterDisk
 

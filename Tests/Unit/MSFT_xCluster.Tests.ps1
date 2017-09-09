@@ -312,17 +312,17 @@ try
                             }
                         }
 
-                        Context 'When IgnoreNetwork is not passed' {
-                            it 'Should call New-Cluster cmdlet without IgnoreNetwork parameter' {
-                                { Set-TargetResource @mockDefaultParameters } | Should Not Throw
+                        # Context 'When IgnoreNetwork is not passed' {
+                        #     it 'Should call New-Cluster cmdlet without IgnoreNetwork parameter' {
+                        #         { Set-TargetResource @mockDefaultParameters } | Should Not Throw
 
-                                Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It -ParameterFilter {
-                                    $IgnoreNetwork -eq $null
-                                }
-                                Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
-                                Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
-                            }
-                        }
+                        #         Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It -ParameterFilter {
+                        #             $IgnoreNetwork -eq $null
+                        #         }
+                        #         Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
+                        #         Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
+                        #     }
+                        # }
                     }
 
                     Context 'When Get-Cluster throws an error' {

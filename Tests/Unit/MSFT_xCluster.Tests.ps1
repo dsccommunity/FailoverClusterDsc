@@ -313,7 +313,7 @@ try
                         }
 
                         Context 'When IgnoreNetwork is not passed' {
-                            it 'Should call New-Cluster cmdlet without IgnoreNetwork parameter' {
+                            It 'Should call New-Cluster cmdlet without IgnoreNetwork parameter' {
                                 { Set-TargetResource @mockDefaultParameters } | Should Not Throw
 
                                 Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It -ParameterFilter {

@@ -189,7 +189,9 @@ Configures quorum in a cluster.
   to use as witness. This parameter is optional if the quorum type is set to
   NodeMajority.
 
->Note: if you want to use FileShareWitness, use NodeAndFileShareMajority.
+>Note: if you want to use FileShareWitness, use the option NodeAndFileShareMajority.
+>Note: if you want to use DiskWitness, use the option NodeAndDiskMajority.
+>Note: if you want to use NoWitness, use the option NodeMajority.
 #### Examples for xClusterQuorum
 
 * [Set quorum to node majority](/Examples/Resources/xClusterQuorum/1-SetQuorumToNodeMajority.ps1)

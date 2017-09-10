@@ -287,7 +287,9 @@ try
 
                         Context 'When IgnoreNetwork is passed as a single value' {
                             It 'Should call New-Cluster cmdlet with IgnoreNetwork parameter' {
-                                $withIgnoreNetworkParameter = $mockDefaultParameters + @{ IgnoreNetwork = '10.0.2.0/24' }
+                                $withIgnoreNetworkParameter = $mockDefaultParameters + @{
+                                    IgnoreNetwork = '10.0.2.0/24'
+                                }
                                 { Set-TargetResource @withIgnoreNetworkParameter } | Should Not Throw
 
                                 Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It -ParameterFilter {

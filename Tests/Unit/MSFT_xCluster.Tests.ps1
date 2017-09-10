@@ -207,6 +207,17 @@ try
                     $getTargetResourceResult = Get-TargetResource @mockGetTargetResourceParameters
                     $getTargetResourceResult.Name             | Should -Be $mockDefaultParameters.Name
                     $getTargetResourceResult.StaticIPAddress  | Should -Be $mockDefaultParameters.StaticIPAddress
+                    $getTargetResourceResult.IgnoreNetwork    | Should -BeNullOrEmpty
+                }
+
+                Context 'When IgnoreNetwork is passed' {
+                    It 'Returns IgnoreNetwork in the hash' {
+                        $withIgnoreNetworkParameter = $mockDefaultParameters + @{
+                            IgnoreNetwork = '10.0.2.0/24'
+                        }
+                        $getTargetResourceResult = Get-TargetResource @withIgnoreNetworkParameter
+                        $getTargetResourceResult.IgnoreNetwork | Should Be '10.0.2.0/24'
+                    }
                 }
 
                 Assert-VerifiableMock

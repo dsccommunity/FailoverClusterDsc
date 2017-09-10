@@ -79,6 +79,7 @@ function Get-TargetResource
     @{
         Name                          = $Name
         StaticIPAddress               = $address.Value
+        IgnoreNetwork                 = $IgnoreNetwork
         DomainAdministratorCredential = $DomainAdministratorCredential
     }
 }

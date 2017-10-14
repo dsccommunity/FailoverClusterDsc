@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Changes to xClusterNetwork
+  - Updated readme to describe process for adding and removing additional networks on clusters
+
 ## 1.8.0.0
 
 - Changes to xFailOverCluster

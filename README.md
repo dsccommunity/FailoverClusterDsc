@@ -98,8 +98,7 @@ Configures shared disks in a cluster.
 
 Configures a cluster network in a failover cluster.
 
->Note: Currently this resource is only able to change the properties Name, Role
->and Metric. It is not possible to add or remove cluster networks (issue #92).
+This resource is only able to change properties on cluster networks.  To add or remove networks from the cluster, add or remove them from the cluster members.  By adding a new subnet on one of the cluster nodes, the network will be added to the cluster, and metadata can be set using the xClusterNetwork module.
 
 #### Requirements for xClusterNetwork
 

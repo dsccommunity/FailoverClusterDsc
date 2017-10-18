@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Changes to xFailoverCluster
+  - Update Pester syntax to v4
 - Changes to xClusterNetwork
   - Updated readme to describe process for adding and removing additional networks on clusters
 

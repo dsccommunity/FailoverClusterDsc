@@ -192,18 +192,18 @@ try
 
                         It 'Should return the correct type' {
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                            $getTargetResourceResult | Should BeOfType [System.Collections.Hashtable]
+                            $getTargetResourceResult | Should -BeOfType [System.Collections.Hashtable]
                         }
 
                         It 'Should return the same values as passed as parameters' {
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                            $getTargetResourceResult.IsSingleInstance | Should Be $mockTestParameters.IsSingleInstance
+                            $getTargetResourceResult.IsSingleInstance | Should -Be $mockTestParameters.IsSingleInstance
                         }
 
                         It 'Should return the correct values' {
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                            $getTargetResourceResult.Type | Should Be $mockQuorumType_NodeMajority
-                            $getTargetResourceResult.Resource  | Should Be $mockQuorumResourceName
+                            $getTargetResourceResult.Type | Should -Be $mockQuorumType_NodeMajority
+                            $getTargetResourceResult.Resource  | Should -Be $mockQuorumResourceName
                         }
                     }
 
@@ -215,13 +215,13 @@ try
 
                         It 'Should return the same values as passed as parameters' {
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                            $getTargetResourceResult.IsSingleInstance | Should Be $mockTestParameters.IsSingleInstance
+                            $getTargetResourceResult.IsSingleInstance | Should -Be $mockTestParameters.IsSingleInstance
                         }
 
                         It 'Should return the correct values' {
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                            $getTargetResourceResult.Type | Should Be $mockQuorumType_NodeMajority
-                            $getTargetResourceResult.Resource  | Should BeNullorEmpty
+                            $getTargetResourceResult.Type | Should -Be $mockQuorumType_NodeMajority
+                            $getTargetResourceResult.Resource  | Should -BeNullorEmpty
                         }
                     }
                 }
@@ -234,13 +234,13 @@ try
 
                         It 'Should return the same values as passed as parameters' {
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                            $getTargetResourceResult.IsSingleInstance | Should Be $mockTestParameters.IsSingleInstance
+                            $getTargetResourceResult.IsSingleInstance | Should -Be $mockTestParameters.IsSingleInstance
                         }
 
                         It 'Should return the correct values' {
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                            $getTargetResourceResult.Type | Should Be $mockQuorumType_NodeAndDiskMajority
-                            $getTargetResourceResult.Resource  | Should Be $mockQuorumResourceName
+                            $getTargetResourceResult.Type | Should -Be $mockQuorumType_NodeAndDiskMajority
+                            $getTargetResourceResult.Resource  | Should -Be $mockQuorumResourceName
                         }
                     }
 
@@ -252,13 +252,13 @@ try
 
                         It 'Should return the same values as passed as parameters' {
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                            $getTargetResourceResult.IsSingleInstance | Should Be $mockTestParameters.IsSingleInstance
+                            $getTargetResourceResult.IsSingleInstance | Should -Be $mockTestParameters.IsSingleInstance
                         }
 
                         It 'Should return the correct values' {
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                            $getTargetResourceResult.Type | Should Be $mockQuorumType_NodeAndDiskMajority
-                            $getTargetResourceResult.Resource  | Should Be $mockQuorumResourceName
+                            $getTargetResourceResult.Type | Should -Be $mockQuorumType_NodeAndDiskMajority
+                            $getTargetResourceResult.Resource  | Should -Be $mockQuorumResourceName
                         }
                     }
                 }
@@ -271,13 +271,13 @@ try
 
                         It 'Should return the same values as passed as parameters' {
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                            $getTargetResourceResult.IsSingleInstance | Should Be $mockTestParameters.IsSingleInstance
+                            $getTargetResourceResult.IsSingleInstance | Should -Be $mockTestParameters.IsSingleInstance
                         }
 
                         It 'Should return the correct values' {
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                            $getTargetResourceResult.Type | Should Be $mockQuorumType_NodeAndFileShareMajority
-                            $getTargetResourceResult.Resource  | Should Be $mockQuorumFileShareWitnessPath
+                            $getTargetResourceResult.Type | Should -Be $mockQuorumType_NodeAndFileShareMajority
+                            $getTargetResourceResult.Resource  | Should -Be $mockQuorumFileShareWitnessPath
                         }
                     }
 
@@ -289,13 +289,13 @@ try
 
                         It 'Should return the same values as passed as parameters' {
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                            $getTargetResourceResult.IsSingleInstance | Should Be $mockTestParameters.IsSingleInstance
+                            $getTargetResourceResult.IsSingleInstance | Should -Be $mockTestParameters.IsSingleInstance
                         }
 
                         It 'Should return the correct values' {
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                            $getTargetResourceResult.Type | Should Be $mockQuorumType_NodeAndFileShareMajority
-                            $getTargetResourceResult.Resource  | Should Be $mockQuorumFileShareWitnessPath
+                            $getTargetResourceResult.Type | Should -Be $mockQuorumType_NodeAndFileShareMajority
+                            $getTargetResourceResult.Resource  | Should -Be $mockQuorumFileShareWitnessPath
                         }
                     }
                 }
@@ -307,13 +307,13 @@ try
 
                     It 'Should return the same values as passed as parameters' {
                         $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                        $getTargetResourceResult.IsSingleInstance | Should Be $mockTestParameters.IsSingleInstance
+                        $getTargetResourceResult.IsSingleInstance | Should -Be $mockTestParameters.IsSingleInstance
                     }
 
                     It 'Should return the correct values' {
                         $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                        $getTargetResourceResult.Type | Should Be $mockQuorumType_DiskOnly
-                        $getTargetResourceResult.Resource  | Should Be $mockQuorumResourceName
+                        $getTargetResourceResult.Type | Should -Be $mockQuorumType_DiskOnly
+                        $getTargetResourceResult.Resource  | Should -Be $mockQuorumResourceName
                     }
                 }
 
@@ -324,7 +324,7 @@ try
                         }
 
                         It 'Should throw the correct error message' {
-                            { Get-TargetResource @mockTestParameters } | Should Throw ('Unknown quorum type: {0}' -f $mockQuorumType_Unknown)
+                            { Get-TargetResource @mockTestParameters } | Should -Throw ('Unknown quorum type: {0}' -f $mockQuorumType_Unknown)
                         }
                     }
 
@@ -335,7 +335,7 @@ try
                         }
 
                         It 'Should throw the correct error message' {
-                            { Get-TargetResource @mockTestParameters } | Should Throw ('Unknown quorum resource: {0}' -f '@{Name=Witness; OwnerGroup=Cluster Group; ResourceType=}')
+                            { Get-TargetResource @mockTestParameters } | Should -Throw ('Unknown quorum resource: {0}' -f '@{Name=Witness; OwnerGroup=Cluster Group; ResourceType=}')
                         }
                     }
                 }
@@ -365,7 +365,7 @@ try
 
                         It 'Should return the value $false' {
                             $testTargetResourceResult = Test-TargetResource @mockTestParameters
-                            $testTargetResourceResult | Should Be $false
+                            $testTargetResourceResult | Should -Be $false
                         }
                     }
 
@@ -379,7 +379,7 @@ try
 
                         It 'Should return the value $false' {
                             $testTargetResourceResult = Test-TargetResource @mockTestParameters
-                            $testTargetResourceResult | Should Be $false
+                            $testTargetResourceResult | Should -Be $false
                         }
                     }
                 }
@@ -398,7 +398,7 @@ try
 
                         It 'Should return the value $false' {
                             $testTargetResourceResult = Test-TargetResource @mockTestParameters
-                            $testTargetResourceResult | Should Be $false
+                            $testTargetResourceResult | Should -Be $false
                         }
                     }
 
@@ -411,7 +411,7 @@ try
 
                         It 'Should return the value $false' {
                             $testTargetResourceResult = Test-TargetResource @mockTestParameters
-                            $testTargetResourceResult | Should Be $false
+                            $testTargetResourceResult | Should -Be $false
                         }
                     }
                 }
@@ -424,7 +424,7 @@ try
 
                         It 'Should return the value $false' {
                             $testTargetResourceResult = Test-TargetResource @mockTestParameters
-                            $testTargetResourceResult | Should Be $false
+                            $testTargetResourceResult | Should -Be $false
                         }
                     }
 
@@ -436,7 +436,7 @@ try
 
                         It 'Should return the value $false' {
                             $testTargetResourceResult = Test-TargetResource @mockTestParameters
-                            $testTargetResourceResult | Should Be $false
+                            $testTargetResourceResult | Should -Be $false
                         }
                     }
                 }
@@ -449,7 +449,7 @@ try
 
                         It 'Should return the value $false' {
                             $testTargetResourceResult = Test-TargetResource @mockTestParameters
-                            $testTargetResourceResult | Should Be $false
+                            $testTargetResourceResult | Should -Be $false
                         }
                     }
 
@@ -461,7 +461,7 @@ try
 
                         It 'Should return the value $false' {
                             $testTargetResourceResult = Test-TargetResource @mockTestParameters
-                            $testTargetResourceResult | Should Be $false
+                            $testTargetResourceResult | Should -Be $false
                         }
                     }
                 }
@@ -473,7 +473,7 @@ try
 
                     It 'Should return the value $false' {
                         $testTargetResourceResult = Test-TargetResource @mockTestParameters
-                        $testTargetResourceResult | Should Be $false
+                        $testTargetResourceResult | Should -Be $false
                     }
                 }
             }
@@ -493,7 +493,7 @@ try
 
                         It 'Should return the value $true' {
                             $testTargetResourceResult = Test-TargetResource @mockTestParameters
-                            $testTargetResourceResult | Should Be $true
+                            $testTargetResourceResult | Should -Be $true
                         }
                     }
 
@@ -507,7 +507,7 @@ try
 
                         It 'Should return the value $true' {
                             $testTargetResourceResult = Test-TargetResource @mockTestParameters
-                            $testTargetResourceResult | Should Be $true
+                            $testTargetResourceResult | Should -Be $true
                         }
                     }
                 }
@@ -530,7 +530,7 @@ try
                 }
 
                 It 'Should set the quorum in the cluster without throwing an error' {
-                    { Set-TargetResource @mockTestParameters } |  Should Not Throw
+                    { Set-TargetResource @mockTestParameters } |  Should -Not -Throw
 
                     Assert-MockCalled -CommandName 'Set-ClusterQuorum' `
                                       -ParameterFilter $mockSetClusterQuorum_NoWitness_ParameterFilter `
@@ -551,7 +551,7 @@ try
                 }
 
                 It 'Should set the quorum in the cluster without throwing an error' {
-                    { Set-TargetResource @mockTestParameters } |  Should Not Throw
+                    { Set-TargetResource @mockTestParameters } |  Should -Not -Throw
 
                     Assert-MockCalled -CommandName 'Set-ClusterQuorum' `
                                       -ParameterFilter $mockSetClusterQuorum_DiskWitness_ParameterFilter `
@@ -572,7 +572,7 @@ try
                 }
 
                 It 'Should set the quorum in the cluster without throwing an error' {
-                    { Set-TargetResource @mockTestParameters } |  Should Not Throw
+                    { Set-TargetResource @mockTestParameters } |  Should -Not -Throw
 
                     Assert-MockCalled -CommandName 'Set-ClusterQuorum' `
                                       -ParameterFilter $mockSetClusterQuorum_FileShareWitness_ParameterFilter `
@@ -593,7 +593,7 @@ try
                 }
 
                 It 'Should set the quorum in the cluster without throwing an error' {
-                    { Set-TargetResource @mockTestParameters } |  Should Not Throw
+                    { Set-TargetResource @mockTestParameters } |  Should -Not -Throw
 
                     Assert-MockCalled -CommandName 'Set-ClusterQuorum' `
                                       -ParameterFilter $mockSetClusterQuorum_DiskOnly_ParameterFilter `

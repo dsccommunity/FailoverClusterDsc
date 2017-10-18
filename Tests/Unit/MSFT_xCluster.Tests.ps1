@@ -165,7 +165,7 @@ try
                     Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
 
                     $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message $script:localizedData.TargetNodeDomainMissing
-                    { Get-TargetResource @mockDefaultParameters } | Should Throw $mockCorrectErrorRecord
+                    { Get-TargetResource @mockDefaultParameters } | Should -Throw $mockCorrectErrorRecord
                 }
             }
 
@@ -178,7 +178,7 @@ try
                     Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
 
                     $mockCorrectErrorRecord = Get-ObjectNotFoundException -Message ($script:localizedData.ClusterNameNotFound -f $mockClusterName)
-                    { Get-TargetResource @mockDefaultParameters } | Should Throw $mockCorrectErrorRecord
+                    { Get-TargetResource @mockDefaultParameters } | Should -Throw $mockCorrectErrorRecord
                 }
             }
 
@@ -195,13 +195,13 @@ try
 
                 It 'Returns a [System.Collection.Hashtable] type' {
                     $getTargetResourceResult = Get-TargetResource @mockDefaultParameters
-                    $getTargetResourceResult | Should BeOfType [System.Collections.Hashtable]
+                    $getTargetResourceResult | Should -BeOfType [System.Collections.Hashtable]
                 }
 
                 It 'Returns current configuration' {
                     $getTargetResourceResult = Get-TargetResource @mockDefaultParameters
-                    $getTargetResourceResult.Name             | Should Be $mockDefaultParameters.Name
-                    $getTargetResourceResult.StaticIPAddress  | Should Be $mockDefaultParameters.StaticIPAddress
+                    $getTargetResourceResult.Name             | Should -Be $mockDefaultParameters.Name
+                    $getTargetResourceResult.StaticIPAddress  | Should -Be $mockDefaultParameters.StaticIPAddress
                 }
 
                 Assert-VerifiableMocks
@@ -225,7 +225,7 @@ try
                     Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
 
                     $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message $script:localizedData.TargetNodeDomainMissing
-                    { Set-TargetResource @mockDefaultParameters } | Should Throw $mockCorrectErrorRecord
+                    { Set-TargetResource @mockDefaultParameters } | Should -Throw $mockCorrectErrorRecord
                 }
             }
 
@@ -249,7 +249,7 @@ try
                             # This is used to evaluate that cluster do exists after New-Cluster cmdlet has been run.
                             Mock -CommandName Get-Cluster -MockWith $mockGetCluster
 
-                            { Set-TargetResource @mockDefaultParameters } | Should Not Throw
+                            { Set-TargetResource @mockDefaultParameters } | Should -Not -Throw
 
                             Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It
                             Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
@@ -267,7 +267,7 @@ try
                             # This is used to evaluate that cluster do exists after New-Cluster cmdlet has been run.
                             Mock -CommandName Get-Cluster -MockWith $mockGetCluster
 
-                            { Set-TargetResource @mockDefaultParameters } | Should Not Throw
+                            { Set-TargetResource @mockDefaultParameters } | Should -Not -Throw
 
                             Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It
                             Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
@@ -281,7 +281,7 @@ try
                         Mock -CommandName Get-Cluster
 
                         $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message $script:localizedData.FailedCreatingCluster
-                        { Set-TargetResource @mockDefaultParameters } | Should Throw $mockCorrectErrorRecord
+                        { Set-TargetResource @mockDefaultParameters } | Should -Throw $mockCorrectErrorRecord
 
                         Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It
                         Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
@@ -294,7 +294,7 @@ try
                         Mock -CommandName Get-ClusterNode
                         Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter
 
-                        { Set-TargetResource @mockDefaultParameters } | Should Not Throw
+                        { Set-TargetResource @mockDefaultParameters } | Should -Not -Throw
 
                         Assert-MockCalled -CommandName New-Cluster -Exactly -Times 0 -Scope It
                         Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
@@ -312,7 +312,7 @@ try
                     It 'Should call both Remove-ClusterNode and Add-ClusterNode cmdlet' {
                         Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter
 
-                        { Set-TargetResource @mockDefaultParameters } | Should Not Throw
+                        { Set-TargetResource @mockDefaultParameters } | Should -Not -Throw
 
                         Assert-MockCalled -CommandName New-Cluster -Exactly -Times 0 -Scope It
                         Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 1 -Scope It
@@ -349,7 +349,7 @@ try
                     It 'Should not call any of the cluster cmdlets' -Skip {
                         Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter -Verifiable
 
-                        { Set-TargetResource @mockDefaultParameters } | Should Not Throw
+                        { Set-TargetResource @mockDefaultParameters } | Should -Not -Throw
 
                         Assert-MockCalled -CommandName New-Cluster -Exactly -Times 0 -Scope It
                         Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
@@ -378,7 +378,7 @@ try
                     Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
 
                     $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message $script:localizedData.TargetNodeDomainMissing
-                    { Test-TargetResource @mockDefaultParameters } | Should Throw $mockCorrectErrorRecord
+                    { Test-TargetResource @mockDefaultParameters } | Should -Throw $mockCorrectErrorRecord
                 }
             }
 
@@ -395,7 +395,7 @@ try
                         Mock -CommandName Get-Cluster -Verifiable
 
                         $testTargetResourceResult = Test-TargetResource @mockDefaultParameters
-                        $testTargetResourceResult | Should Be $false
+                        $testTargetResourceResult | Should -Be $false
                     }
 
                     Assert-VerifiableMocks
@@ -408,7 +408,7 @@ try
                         } -Verifiable
 
                         $testTargetResourceResult = Test-TargetResource @mockDefaultParameters
-                        $testTargetResourceResult | Should Be $false
+                        $testTargetResourceResult | Should -Be $false
                     }
 
                     Assert-VerifiableMocks
@@ -421,7 +421,7 @@ try
 
                         $testTargetResourceResult = Test-TargetResource @mockDefaultParameters
 
-                        $testTargetResourceResult | Should Be $false
+                        $testTargetResourceResult | Should -Be $false
                     }
 
                     Assert-VerifiableMocks
@@ -438,7 +438,7 @@ try
                     It 'Should return $false' {
                         $testTargetResourceResult = Test-TargetResource @mockDefaultParameters
 
-                        $testTargetResourceResult | Should Be $false
+                        $testTargetResourceResult | Should -Be $false
                     }
 
                     Assert-VerifiableMocks
@@ -460,7 +460,7 @@ try
                 Context 'When the node already exist' {
                     It 'Should return $true' {
                         $testTargetResourceResult = Test-TargetResource @mockDefaultParameters
-                        $testTargetResourceResult | Should Be $true
+                        $testTargetResourceResult | Should -Be $true
                     }
 
                     Assert-VerifiableMocks
@@ -479,7 +479,7 @@ try
                     }
 
                     $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message ($script:localizedData.UnableToImpersonateUser -f $mockAdministratorCredential.GetNetworkCredential().UserName)
-                    { Set-ImpersonateAs -Credential $mockAdministratorCredential } | Should Throw $mockCorrectErrorRecord
+                    { Set-ImpersonateAs -Credential $mockAdministratorCredential } | Should -Throw $mockCorrectErrorRecord
                 }
             }
         }
@@ -494,7 +494,7 @@ try
                     $mockToken = [System.IntPtr]::New(12345)
 
                     $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message ($script:localizedData.UnableToCloseToken -f $mockToken.ToString())
-                    { Close-UserToken -Token $mockToken } | Should Throw $mockCorrectErrorRecord
+                    { Close-UserToken -Token $mockToken } | Should -Throw $mockCorrectErrorRecord
                 }
             }
         }

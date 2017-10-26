@@ -43,6 +43,10 @@ function Get-TargetResource
             {
                 $clusterQuorumType = 'NodeAndFileShareMajority'
             }
+            elseif ($getClusterQuorumResult.QuorumResource.ResourceType.DisplayName -eq 'Cloud Witness')
+            {
+                $clusterQuorumType = 'NodeAndCloudMajority'
+            }
             else
             {
                 throw "Unknown quorum resource: $($getClusterQuorumResult.QuorumResource)"
@@ -84,6 +88,12 @@ function Get-TargetResource
             Get-ClusterParameter -Name SharePath |
             Select-Object -ExpandProperty Value
     }
+    elseif ($clusterQuorumType -eq 'NodeAndCloudMajority')
+    {
+        $clusterQuorumResource = $getClusterQuorumResult.QuorumResource |
+            Get-ClusterParameter -Name AccountName |
+            Select-Object -ExpandProperty Value
+    }
     else
     {
         $clusterQuorumResource = [String] $getClusterQuorumResult.QuorumResource.Name
@@ -122,13 +132,17 @@ function Set-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
-        [ValidateSet('NodeMajority', 'NodeAndDiskMajority', 'NodeAndFileShareMajority', 'DiskOnly')]
+        [ValidateSet('NodeMajority', 'NodeAndDiskMajority', 'NodeAndFileShareMajority', 'NodeAndCloudMajority', 'DiskOnly')]
         [System.String]
         $Type,
 
         [Parameter()]
         [System.String]
-        $Resource
+        $Resource,
+
+        [Parameter()]
+        [System.String]
+        $StorageAccountAccessKey
     )
 
     Write-Verbose -Message ($script:localizedData.SetClusterQuorum -f $Type)
@@ -153,6 +167,11 @@ function Set-TargetResource
         'DiskOnly'
         {
             Set-ClusterQuorum -DiskOnly $Resource
+        }
+
+        'NodeAndCloudMajority'
+        {
+            Set-ClusterQuorum -CloudWitness -AccountName $Resource -AccessKey $StorageAccountAccessKey
         }
     }
 }
@@ -184,13 +203,17 @@ function Test-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
-        [ValidateSet('NodeMajority', 'NodeAndDiskMajority', 'NodeAndFileShareMajority', 'DiskOnly')]
+        [ValidateSet('NodeMajority', 'NodeAndDiskMajority', 'NodeAndFileShareMajority', 'NodeAndCloudMajority', 'DiskOnly')]
         [System.String]
         $Type,
 
         [Parameter()]
         [System.String]
-        $Resource
+        $Resource,
+
+        [Parameter()]
+        [System.String]
+        $StorageAccountAccessKey
     )
 
     Write-Verbose -Message $script:localizedData.EvaluatingClusterQuorumInformation

@@ -1,0 +1,46 @@
+[ClassVersion("1.0.0.0"), FriendlyName("xClusterResourceProperties")]
+class MSFT_xClusterResourceProperties : OMI_BaseResource
+{
+	[key, Description("Name of the OwnerGroup of the resource")] 
+	string OwnerGroup;
+	
+	[key, Description("Name of the Cluster")] 
+	string Cluster;
+	
+	[key, Description("Cluster Resource Type"), ValueMap{"IP Address", "Network Name", "SQL Server Availability Group", "File Share Witness", "Cloud Witness"}, Values{"IP Address", "Network Name", "SQL Server Availability Group", "File Share Witness", "Cloud Witness"}]
+	string ResourceType;
+	
+	[key, Description("Cluster Resource Name")] 
+	string Name;
+
+	[Write, Description("Failover Priority"), ValueMap{"No Auto Start", "Low", "Medium", "High"}, Values{"No Auto Start", "Low", "Medium", "High"}]
+	string Priority;
+
+	[Write, Description("Failover Maximum Failures")]
+	Uint64 FailoverThreshold;
+	
+	[Write, Description("Failover Period in Hours")]
+	Uint64 FailoverPeriod;
+
+	[Write, Description("Allow Failback or not"), ValueMap{"Prevent", "Allow"}, Values{"Prevent", "Allow"}]
+	string AutoFailbackType;
+
+	[Write, Description("Response to a resource failure")] 
+    Uint64 RestartAction;
+	
+	[Write, Description("Period for restarts - in milliseconds")] 
+    Uint64 RestartPeriod;
+	
+	[Write, Description("Maximum restarts in specified period")] 
+    Uint64 RestartThreshold;
+	
+	[Write, Description("Delay between restarts - in milliseconds")] 
+    Uint64 RestartDelay;
+	
+	[Write, Description("If all restart attempts fail, begin restarting again - in milliseconds")] 
+    Uint64 RetryPeriodOnFailure;
+
+	[Write, Description("Pending Timeout")] 
+    Uint64 PendingTimeout;
+	
+};

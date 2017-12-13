@@ -1,0 +1,22 @@
+[ClassVersion("1.0.0.0"), FriendlyName("xClusterRoleProperties")]
+class MSFT_xClusterRoleProperties : OMI_BaseResource
+{
+	[key, Description("Name of the Role to configure")] 
+	string Name;
+	
+	[key, Description("Name of the Cluster")] 
+	string Cluster;
+	
+	[Write, Description("Failover Priority"), ValueMap{"No Auto Start", "Low", "Medium", "High"}, Values{"No Auto Start", "Low", "Medium", "High"}]
+	string Priority;
+
+	[Write, Description("Failover Maximum Failures")]
+	UInt32 FailoverThreshold;
+	
+	[Write, Description("Failover Period in Hours")]
+	UInt32 FailoverPeriod;
+
+	[Write, Description("Allow Failback or not"), ValueMap{"Prevent", "Allow"}, Values{"Prevent", "Allow"}]
+	string AutoFailbackType;
+	
+};

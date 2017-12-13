@@ -161,21 +161,56 @@ function Set-TargetResource
 
             Write-Verbose -Message ($script:localizedData.AddNodeToCluster -f $targetNodeName, $Name)
 
-            $list = Get-ClusterNode -Cluster $Name
-            foreach ($node in $list)
-            {
-                if ($node.Name -eq $targetNodeName)
-                {
-                    if ($node.State -eq 'Down')
-                    {
-                        Write-Verbose -Message ($script:localizedData.RemoveOfflineNodeFromCluster -f $targetNodeName, $Name)
+            $list = Get-ClusterNode -Cluster $Name -ErrorAction Ignore
+			if ($list)
+			{
+				foreach ($node in $list)
+				{
+					if ($node.Name -eq $targetNodeName)
+					{
+						if ($node.State -eq 'Down')
+						{
+							Write-Verbose -Message ($script:localizedData.RemoveOfflineNodeFromCluster -f $targetNodeName, $Name)
 
-                        Remove-ClusterNode -Name $targetNodeName -Cluster $Name -Force
-                    }
-                }
-            }
+							Remove-ClusterNode -Name $targetNodeName -Cluster $Name -Force
+						}
+					}
+				}
+				
+				Add-ClusterNode -Name $targetNodeName -Cluster $Name -NoStorage 
+			}
+			else
+			{
+				$search = New-Object DirectoryServices.DirectorySearcher
+				$search.filter = "(&(servicePrincipalName=MSServerCLusterMgmtAPI*)(objectClass=computer)(!(cn=$name))(!(cn=$env:computername)))"
+				$results = $search.Findall()
 
-            Add-ClusterNode -Name $targetNodeName -Cluster $Name -NoStorage
+				foreach ($obj in $results.Properties.name)
+				{
+					$cluster = Get-Cluster -Name $obj -ErrorAction Ignore
+
+					if (-not $cluster)
+					{
+						Continue
+					}
+					
+					if ($cluster.Name -eq $name)
+					{
+						$resource = Get-ClusterGroup -Cluster $obj -Name "Cluster Group"
+						$clusternodes = Get-ClusterNode -Cluster $resource.OwnerNode
+
+						#If it's not already in the cluster
+						if ($targetNodeName -notin $clusternodes.Name)
+						{
+							#We have our node to add this computer to the cluster
+							Add-ClusterNode -Name $targetNodeName -Cluster $resource.OwnerNode -NoStorage
+						}
+
+						#get us out as the node is already part of a cluster
+						Break
+					}
+				}
+			}
 
             Write-Verbose -Message ($script:localizedData.AddNodeToClusterSuccessful -f $targetNodeName, $Name)
         }
@@ -260,24 +295,27 @@ function Test-TargetResource
 
             Write-Verbose -Message ($script:localizedData.CheckClusterNodeIsUp -f $targetNodeName, $Name)
 
-            $allNodes = Get-ClusterNode -Cluster $Name
+            $allNodes = Get-ClusterNode -Cluster $Name -ErrorAction Ignore
 
-            foreach ($node in $allNodes)
-            {
-                if ($node.Name -eq $targetNodeName)
-                {
-                    if ($node.State -eq 'Up')
-                    {
-                        $returnValue = $true
-                    }
-                    else
-                    {
-                        Write-Verbose -Message ($script:localizedData.ClusterNodeIsDown -f $targetNodeName, $Name)
-                    }
+			if ($allNodes)
+			{
+				foreach ($node in $allNodes)
+				{
+					if ($node.Name -eq $targetNodeName)
+					{
+						if ($node.State -eq 'Up')
+						{
+							$returnValue = $true
+						}
+						else
+						{
+							Write-Verbose -Message ($script:localizedData.ClusterNodeIsDown -f $targetNodeName, $Name)
+						}
 
-                    break
-                }
-            }
+						break
+					}
+				}
+			}
 
             if ($returnValue)
             {

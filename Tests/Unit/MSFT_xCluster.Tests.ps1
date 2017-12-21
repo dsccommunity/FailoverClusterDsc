@@ -207,7 +207,7 @@ try
                     $getTargetResourceResult.StaticIPAddress  | Should -Be $mockDefaultParameters.StaticIPAddress
                 }
 
-                Assert-VerifiableMocks
+                Assert-VerifiableMock
             }
         }
 
@@ -382,7 +382,7 @@ try
                         Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
                     }
 
-                    Assert-VerifiableMocks
+                    Assert-VerifiableMock
                 }
             }
         }
@@ -424,7 +424,7 @@ try
                         $testTargetResourceResult | Should -Be $false
                     }
 
-                    Assert-VerifiableMocks
+                    Assert-VerifiableMock
                 }
 
                 Context 'When the Get-Cluster throws an error' {
@@ -437,7 +437,7 @@ try
                         $testTargetResourceResult | Should -Be $false
                     }
 
-                    Assert-VerifiableMocks
+                    Assert-VerifiableMock
                 }
 
                 Context 'When the node does not exist' {
@@ -450,7 +450,7 @@ try
                         $testTargetResourceResult | Should -Be $false
                     }
 
-                    Assert-VerifiableMocks
+                    Assert-VerifiableMock
                 }
 
                 Context 'When the node do exist, but is down' {
@@ -467,7 +467,7 @@ try
                         $testTargetResourceResult | Should -Be $false
                     }
 
-                    Assert-VerifiableMocks
+                    Assert-VerifiableMock
                 }
 
             }
@@ -489,7 +489,7 @@ try
                         $testTargetResourceResult | Should -Be $true
                     }
 
-                    Assert-VerifiableMocks
+                    Assert-VerifiableMock
                 }
             }
         }

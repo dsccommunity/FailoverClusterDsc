@@ -150,6 +150,9 @@ try
 
         Describe 'xCluster\Get-TargetResource' {
             BeforeAll {
+                $mockGetTargetResourceParameters = $mockDefaultParameters.Clone()
+                $mockGetTargetResourceParameters.Remove('StaticIPAddress')
+
                 Mock -CommandName Add-Type -MockWith {
                     return $mockLibImpersonationObject
                 }
@@ -165,7 +168,7 @@ try
                     Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
 
                     $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message $script:localizedData.TargetNodeDomainMissing
-                    { Get-TargetResource @mockDefaultParameters } | Should -Throw $mockCorrectErrorRecord
+                    { Get-TargetResource @mockGetTargetResourceParameters } | Should -Throw $mockCorrectErrorRecord
                 }
             }
 
@@ -178,7 +181,7 @@ try
                     Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
 
                     $mockCorrectErrorRecord = Get-ObjectNotFoundException -Message ($script:localizedData.ClusterNameNotFound -f $mockClusterName)
-                    { Get-TargetResource @mockDefaultParameters } | Should -Throw $mockCorrectErrorRecord
+                    { Get-TargetResource @mockGetTargetResourceParameters } | Should -Throw $mockCorrectErrorRecord
                 }
             }
 
@@ -194,12 +197,12 @@ try
                 $mockDynamicServerName = $mockServerName
 
                 It 'Returns a [System.Collection.Hashtable] type' {
-                    $getTargetResourceResult = Get-TargetResource @mockDefaultParameters
+                    $getTargetResourceResult = Get-TargetResource @mockGetTargetResourceParameters
                     $getTargetResourceResult | Should -BeOfType [System.Collections.Hashtable]
                 }
 
                 It 'Returns current configuration' {
-                    $getTargetResourceResult = Get-TargetResource @mockDefaultParameters
+                    $getTargetResourceResult = Get-TargetResource @mockGetTargetResourceParameters
                     $getTargetResourceResult.Name             | Should -Be $mockDefaultParameters.Name
                     $getTargetResourceResult.StaticIPAddress  | Should -Be $mockDefaultParameters.StaticIPAddress
                 }

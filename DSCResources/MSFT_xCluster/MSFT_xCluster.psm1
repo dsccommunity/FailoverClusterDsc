@@ -10,9 +10,6 @@ $script:localizedData = Get-LocalizedData -ResourceName 'MSFT_xCluster'
     .PARAMETER Name
         Name of the failover cluster.
 
-    .PARAMETER StaticIPAddress
-        Static IP Address of the failover cluster.
-
     .PARAMETER DomainAdministratorCredential
         Credential used to create the failover cluster in Active Directory.
 #>
@@ -24,10 +21,6 @@ function Get-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Name,
-
-        [Parameter()]
-        [System.String]
-        $StaticIPAddress,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -208,6 +201,7 @@ function Set-TargetResource
 
     .PARAMETER StaticIPAddress
         Static IP Address of the failover cluster.
+        Not used in Test-TargetResource.
 
     .PARAMETER DomainAdministratorCredential
         Credential used to create the failover cluster in Active Directory.

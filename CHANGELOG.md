@@ -46,6 +46,7 @@
       impersonation - it cannot be duplicated." ([issue #133](https://github.com/PowerShell/xFailOverCluster/issues/133)).
   - Minor style changes.
   - Fixed Script Analyzer warnings for Write-Verbose.
+  - Added support for running as local system identity by making the DomainAdministratorCredential parameter optional.
 - Changes to xWaitForCluster
   - Refactored the unit test for this resource to use stubs and increase coverage
     ([issue #78](https://github.com/PowerShell/xFailOverCluster/issues/78)).

@@ -63,7 +63,7 @@ the target node ($env:COMPUTERNAME) to the cluster.
 * **`[String]` Name** _(Key)_: Name of the failover cluster.
 * **`[String]` StaticIPAddress** _(Required)_: Static IP Address of the failover
   cluster.
-* **`[String]` DomainAdministratorCredential** _(Required)_: Credential used to
+* **`[String]` DomainAdministratorCredential** _(Write)_: Credential used to
   create the failover cluster in Active Directory.
 
 #### Examples for xCluster
@@ -71,6 +71,7 @@ the target node ($env:COMPUTERNAME) to the cluster.
 * [Create first node of a failover cluster](/Examples/Resources/xCluster/1-CreateFirstNodeOfAFailoverCluster.ps1)
 * [Join additional node to a failover cluster](/Examples/Resources/xCluster/2-JoinAdditionalNodeToFailoverCluster.ps1)
 * [Create failover cluster with two nodes](/Examples/Resources/xCluster/3-CreateFailoverClusterWithTwoNodes.ps1)
+* [Create failover cluster with two nodes - no DA credential](/Examples/Resources/xCluster/4-CreateFailoverClusterNoDomainAdminCred.ps1)
 
 ### xClusterDisk
 

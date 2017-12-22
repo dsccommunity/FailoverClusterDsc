@@ -47,7 +47,8 @@ function Get-TargetResource
             New-ObjectNotFoundException -Message $errorMessage
         }
 
-        $address = Get-ClusterGroup -Cluster $Name -Name 'Cluster IP Address' -ErrorAction SilentlyContinue | Get-ClusterParameter -Name 'Address' -ErrorAction SilentlyContinue
+        # This will return the IP address regardless if using Static IP or DHCP.
+        $address = Get-ClusterResource -Cluster $Name -Name 'Cluster IP Address' | Get-ClusterParameter -Name 'Address'
     }
     finally
     {

@@ -75,16 +75,17 @@ try
             $Name -eq $mockDefaultParameters.Name -and $Domain -eq $mockDomainName
         }
 
-        $mockGetClusterGroup = {
+        $mockGetClusterResource = {
             return @{
-                Name      = 'Cluster Group'
-                OwnerNode = 'Node1'
-                State     = 'Online'
+                Name         = 'Cluster IP Address'
+                OwnerNode    = 'Cluster Group'
+                State        = 'Online'
+                ResourceType = 'IP Address'
             }
         }
 
-        $mockGetClusterGroup_ParameterFilter = {
-            $Cluster -eq $mockClusterName
+        $mockGetClusterResource_ParameterFilter = {
+            $Cluster -eq $mockClusterName -and $Name -eq 'Cluster IP Address'
         }
 
         $mockGetClusterParameter = {
@@ -95,7 +96,7 @@ try
             }
         }
 
-       $mockGetClusterNode = {
+        $mockGetClusterNode = {
             return @(
                 @{
                     Name  = $mockServerName
@@ -107,10 +108,10 @@ try
         $mockNewObjectWindowsIdentity = {
             return [PSCustomObject] @{} |
                 Add-Member -MemberType ScriptMethod -Name Impersonate -Value {
-                    return [PSCustomObject] @{} |
-                        Add-Member -MemberType ScriptMethod -Name Undo -Value {} -PassThru |
-                        Add-Member -MemberType ScriptMethod -Name Dispose -Value {} -PassThru -Force
-                } -PassThru -Force
+                return [PSCustomObject] @{} |
+                    Add-Member -MemberType ScriptMethod -Name Undo -Value {} -PassThru |
+                    Add-Member -MemberType ScriptMethod -Name Dispose -Value {} -PassThru -Force
+            } -PassThru -Force
         }
 
         $mockNewObjectWindowsIdentity_ParameterFilter = {
@@ -189,7 +190,7 @@ try
                 BeforeEach {
                     Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
                     Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter -Verifiable
-                    Mock -CommandName Get-ClusterGroup -MockWith $mockGetClusterGroup -ParameterFilter $mockGetClusterGroup_ParameterFilter -Verifiable
+                    Mock -CommandName Get-ClusterResource -MockWith $mockGetClusterResource -ParameterFilter $mockGetClusterResource_ParameterFilter -Verifiable
                     Mock -CommandName Get-ClusterParameter -MockWith $mockGetClusterParameter -Verifiable
                 }
 

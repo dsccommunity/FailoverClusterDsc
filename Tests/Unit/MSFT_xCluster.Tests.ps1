@@ -75,16 +75,17 @@ try
             $Name -eq $mockDefaultParameters.Name -and $Domain -eq $mockDomainName
         }
 
-        $mockGetClusterGroup = {
+        $mockGetClusterResource = {
             return @{
-                Name      = 'Cluster Group'
-                OwnerNode = 'Node1'
-                State     = 'Online'
+                Name         = 'Cluster IP Address'
+                OwnerNode    = 'Cluster Group'
+                State        = 'Online'
+                ResourceType = 'IP Address'
             }
         }
 
-        $mockGetClusterGroup_ParameterFilter = {
-            $Cluster -eq $mockClusterName
+        $mockGetClusterResource_ParameterFilter = {
+            $Cluster -eq $mockClusterName -and $Name -eq 'Cluster IP Address'
         }
 
         $mockGetClusterParameter = {
@@ -95,7 +96,7 @@ try
             }
         }
 
-       $mockGetClusterNode = {
+        $mockGetClusterNode = {
             return @(
                 @{
                     Name  = $mockServerName
@@ -107,10 +108,10 @@ try
         $mockNewObjectWindowsIdentity = {
             return [PSCustomObject] @{} |
                 Add-Member -MemberType ScriptMethod -Name Impersonate -Value {
-                    return [PSCustomObject] @{} |
-                        Add-Member -MemberType ScriptMethod -Name Undo -Value {} -PassThru |
-                        Add-Member -MemberType ScriptMethod -Name Dispose -Value {} -PassThru -Force
-                } -PassThru -Force
+                return [PSCustomObject] @{} |
+                    Add-Member -MemberType ScriptMethod -Name Undo -Value {} -PassThru |
+                    Add-Member -MemberType ScriptMethod -Name Dispose -Value {} -PassThru -Force
+            } -PassThru -Force
         }
 
         $mockNewObjectWindowsIdentity_ParameterFilter = {
@@ -150,6 +151,9 @@ try
 
         Describe 'xCluster\Get-TargetResource' {
             BeforeAll {
+                $mockGetTargetResourceParameters = $mockDefaultParameters.Clone()
+                $mockGetTargetResourceParameters.Remove('StaticIPAddress')
+
                 Mock -CommandName Add-Type -MockWith {
                     return $mockLibImpersonationObject
                 }
@@ -165,7 +169,7 @@ try
                     Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
 
                     $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message $script:localizedData.TargetNodeDomainMissing
-                    { Get-TargetResource @mockDefaultParameters } | Should -Throw $mockCorrectErrorRecord
+                    { Get-TargetResource @mockGetTargetResourceParameters } | Should -Throw $mockCorrectErrorRecord
                 }
             }
 
@@ -178,7 +182,7 @@ try
                     Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
 
                     $mockCorrectErrorRecord = Get-ObjectNotFoundException -Message ($script:localizedData.ClusterNameNotFound -f $mockClusterName)
-                    { Get-TargetResource @mockDefaultParameters } | Should -Throw $mockCorrectErrorRecord
+                    { Get-TargetResource @mockGetTargetResourceParameters } | Should -Throw $mockCorrectErrorRecord
                 }
             }
 
@@ -186,7 +190,7 @@ try
                 BeforeEach {
                     Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
                     Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter -Verifiable
-                    Mock -CommandName Get-ClusterGroup -MockWith $mockGetClusterGroup -ParameterFilter $mockGetClusterGroup_ParameterFilter -Verifiable
+                    Mock -CommandName Get-ClusterResource -MockWith $mockGetClusterResource -ParameterFilter $mockGetClusterResource_ParameterFilter -Verifiable
                     Mock -CommandName Get-ClusterParameter -MockWith $mockGetClusterParameter -Verifiable
                 }
 
@@ -194,17 +198,17 @@ try
                 $mockDynamicServerName = $mockServerName
 
                 It 'Returns a [System.Collection.Hashtable] type' {
-                    $getTargetResourceResult = Get-TargetResource @mockDefaultParameters
+                    $getTargetResourceResult = Get-TargetResource @mockGetTargetResourceParameters
                     $getTargetResourceResult | Should -BeOfType [System.Collections.Hashtable]
                 }
 
                 It 'Returns current configuration' {
-                    $getTargetResourceResult = Get-TargetResource @mockDefaultParameters
+                    $getTargetResourceResult = Get-TargetResource @mockGetTargetResourceParameters
                     $getTargetResourceResult.Name             | Should -Be $mockDefaultParameters.Name
                     $getTargetResourceResult.StaticIPAddress  | Should -Be $mockDefaultParameters.StaticIPAddress
                 }
 
-                Assert-VerifiableMocks
+                Assert-VerifiableMock
             }
         }
 
@@ -242,18 +246,41 @@ try
 
                 Context 'When the cluster does not exist' {
                     Context 'When Get-Cluster returns nothing' {
-                        It 'Should call New-Cluster cmdlet' {
+                        BeforeAll {
                             # This is used for the evaluation of that cluster do not exist.
                             Mock -CommandName Get-Cluster -ParameterFilter $mockGetCluster_ParameterFilter
 
                             # This is used to evaluate that cluster do exists after New-Cluster cmdlet has been run.
                             Mock -CommandName Get-Cluster -MockWith $mockGetCluster
+                        }
 
-                            { Set-TargetResource @mockDefaultParameters } | Should -Not -Throw
+                        Context 'When using static IP address' {
+                            It 'Should call New-Cluster cmdlet using StaticAddress parameter' {
+                                { Set-TargetResource @mockDefaultParameters } | Should Not Throw
 
-                            Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It
-                            Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
-                            Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
+                                Assert-MockCalled -CommandName New-Cluster -ParameterFilter {
+                                    $StaticAddress -eq $mockStaticIpAddress
+                                } -Exactly -Times 1 -Scope It
+
+                                Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
+                                Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
+                            }
+                        }
+
+                        Context 'When assigned IP address from DHCP' {
+                            It 'Should call New-Cluster cmdlet using StaticAddress parameter' {
+                                $mockTestParameters = $mockDefaultParameters.Clone()
+                                $mockTestParameters.Remove('StaticIPAddress')
+
+                                { Set-TargetResource @mockTestParameters } | Should Not Throw
+
+                                Assert-MockCalled -CommandName New-Cluster -ParameterFilter {
+                                    $null -eq $StaticAddress
+                                } -Exactly -Times 1 -Scope It
+
+                                Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
+                                Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
+                            }
                         }
                     }
 
@@ -356,7 +383,7 @@ try
                         Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
                     }
 
-                    Assert-VerifiableMocks
+                    Assert-VerifiableMock
                 }
             }
         }
@@ -398,7 +425,7 @@ try
                         $testTargetResourceResult | Should -Be $false
                     }
 
-                    Assert-VerifiableMocks
+                    Assert-VerifiableMock
                 }
 
                 Context 'When the Get-Cluster throws an error' {
@@ -411,7 +438,7 @@ try
                         $testTargetResourceResult | Should -Be $false
                     }
 
-                    Assert-VerifiableMocks
+                    Assert-VerifiableMock
                 }
 
                 Context 'When the node does not exist' {
@@ -424,7 +451,7 @@ try
                         $testTargetResourceResult | Should -Be $false
                     }
 
-                    Assert-VerifiableMocks
+                    Assert-VerifiableMock
                 }
 
                 Context 'When the node do exist, but is down' {
@@ -441,7 +468,7 @@ try
                         $testTargetResourceResult | Should -Be $false
                     }
 
-                    Assert-VerifiableMocks
+                    Assert-VerifiableMock
                 }
 
             }
@@ -463,7 +490,7 @@ try
                         $testTargetResourceResult | Should -Be $true
                     }
 
-                    Assert-VerifiableMocks
+                    Assert-VerifiableMock
                 }
             }
         }

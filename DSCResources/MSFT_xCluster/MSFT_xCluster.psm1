@@ -10,9 +10,6 @@ $script:localizedData = Get-LocalizedData -ResourceName 'MSFT_xCluster'
     .PARAMETER Name
         Name of the failover cluster.
 
-    .PARAMETER StaticIPAddress
-        Static IP Address of the failover cluster.
-
     .PARAMETER DomainAdministratorCredential
         Credential used to create the failover cluster in Active Directory.
 #>
@@ -24,10 +21,6 @@ function Get-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Name,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $StaticIPAddress,
 
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.PSCredential]
@@ -54,7 +47,8 @@ function Get-TargetResource
             New-ObjectNotFoundException -Message $errorMessage
         }
 
-        $address = Get-ClusterGroup -Cluster $Name -Name 'Cluster IP Address' | Get-ClusterParameter -Name 'Address'
+        # This will return the IP address regardless if using Static IP or DHCP.
+        $address = Get-ClusterResource -Cluster $Name -Name 'Cluster IP Address' | Get-ClusterParameter -Name 'Address'
     }
     finally
     {
@@ -103,7 +97,7 @@ function Set-TargetResource
         [System.String]
         $Name,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $StaticIPAddress,
 
@@ -145,7 +139,14 @@ function Set-TargetResource
         {
             Write-Verbose -Message ($script:localizedData.ClusterAbsent -f $Name)
 
-            New-Cluster -Name $Name -Node $env:COMPUTERNAME -StaticAddress $StaticIPAddress -NoStorage -Force -ErrorAction Stop
+            if ($StaticIPAddress)
+            {
+                New-Cluster -Name $Name -Node $env:COMPUTERNAME -StaticAddress $StaticIPAddress -NoStorage -Force -ErrorAction Stop
+            }
+            else
+            {
+                New-Cluster -Name $Name -Node $env:COMPUTERNAME -NoStorage -Force -ErrorAction Stop
+            }
 
             if ( -not (Get-Cluster))
             {
@@ -201,6 +202,7 @@ function Set-TargetResource
 
     .PARAMETER StaticIPAddress
         Static IP Address of the failover cluster.
+        Not used in Test-TargetResource.
 
     .PARAMETER DomainAdministratorCredential
         Credential used to create the failover cluster in Active Directory.
@@ -226,7 +228,7 @@ function Test-TargetResource
         [System.String]
         $Name,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $StaticIPAddress,
 

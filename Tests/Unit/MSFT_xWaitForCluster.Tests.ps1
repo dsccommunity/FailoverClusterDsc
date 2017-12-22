@@ -82,7 +82,7 @@ try
                     $getTargetResourceResult.RetryCount        | Should -Be $mockDefaultParameters.RetryCount
                 }
 
-                Assert-VerifiableMocks
+                Assert-VerifiableMock
             }
         }
 
@@ -119,7 +119,7 @@ try
                             { Set-TargetResource @mockDefaultParameters } | Should -Throw $mockCorrectErrorRecord
                         }
 
-                        Assert-VerifiableMocks
+                        Assert-VerifiableMock
                     }
                 }
             }
@@ -137,7 +137,7 @@ try
                         { Set-TargetResource @mockDefaultParameters } | Should -Not -Throw
                     }
 
-                    Assert-VerifiableMocks
+                    Assert-VerifiableMock
                 }
             }
         }
@@ -173,7 +173,7 @@ try
                             $testTargetResourceResult | Should -Be $false
                         }
 
-                        Assert-VerifiableMocks
+                        Assert-VerifiableMock
                     }
 
                     Context 'When Get-Cluster returns nothing' {
@@ -191,7 +191,7 @@ try
                             $testTargetResourceResult | Should -Be $false
                         }
 
-                        Assert-VerifiableMocks
+                        Assert-VerifiableMock
                     }
                 }
             }
@@ -209,7 +209,7 @@ try
                         $testTargetResourceResult | Should -Be $true
                     }
 
-                    Assert-VerifiableMocks
+                    Assert-VerifiableMock
                 }
             }
         }

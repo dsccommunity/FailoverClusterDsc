@@ -1,6 +1,7 @@
 <#
 .EXAMPLE
-    This example shows how to create the failover cluster on the first node.
+    This example shows how to create the failover cluster on the first node
+    using DHCP to assign the IP address to the cluster.
 #>
 
 Configuration Example
@@ -38,7 +39,6 @@ Configuration Example
         xCluster CreateCluster
         {
             Name                          = 'Cluster01'
-            StaticIPAddress               = '192.168.100.20/24'
 
             <#
                 This user must have the permission to create the CNO (Cluster Name Object) in Active Directory,

@@ -29,7 +29,7 @@ function Get-TargetResource
         [System.String]
         $StaticIPAddress,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $false)]
         [System.Management.Automation.PSCredential]
         $DomainAdministratorCredential
     )
@@ -45,7 +45,10 @@ function Get-TargetResource
 
     try
     {
-        ($oldToken, $context, $newToken) = Set-ImpersonateAs -Credential $DomainAdministratorCredential
+        if ( $PSBoundParameters.Keys -contains "$DomainAdministratorCredential" )
+        {
+            ($oldToken, $context, $newToken) = Set-ImpersonateAs -Credential $DomainAdministratorCredential
+        }
 
         $cluster = Get-Cluster -Name $Name -Domain $computerInformation.Domain
         if ($null -eq $cluster)
@@ -107,7 +110,7 @@ function Set-TargetResource
         [System.String]
         $StaticIPAddress,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $false)]
         [System.Management.Automation.PSCredential]
         $DomainAdministratorCredential
     )
@@ -139,8 +142,11 @@ function Set-TargetResource
 
     try
     {
-        ($oldToken, $context, $newToken) = Set-ImpersonateAs -Credential $DomainAdministratorCredential
-
+        if ( $PSBoundParameters.Keys -contains "$DomainAdministratorCredential" )
+        {
+            ($oldToken, $context, $newToken) = Set-ImpersonateAs -Credential $DomainAdministratorCredential
+        }
+        
         if ($bCreate)
         {
             Write-Verbose -Message ($script:localizedData.ClusterAbsent -f $Name)
@@ -230,7 +236,7 @@ function Test-TargetResource
         [System.String]
         $StaticIPAddress,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $false)]
         [System.Management.Automation.PSCredential]
         $DomainAdministratorCredential
     )
@@ -248,8 +254,11 @@ function Test-TargetResource
 
     try
     {
-        ($oldToken, $context, $newToken) = Set-ImpersonateAs -Credential $DomainAdministratorCredential
-
+        if ( $PSBoundParameters.Keys -contains "$DomainAdministratorCredential" )
+        {
+            ($oldToken, $context, $newToken) = Set-ImpersonateAs -Credential $DomainAdministratorCredential
+        }
+        
         $cluster = Get-Cluster -Name $Name -Domain $ComputerInfo.Domain
 
         Write-Verbose -Message ($script:localizedData.ClusterPresent -f $Name)

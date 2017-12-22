@@ -10,6 +10,8 @@
   - Allow the cluster to be assigned an IP address from a DHCP ([issue #109](https://github.com/PowerShell/xFailOverCluster/issues/109)).
     When the parameter StaticIPAddress is not specified then the cluster will be
     configured to use an IP address from a DHCP.
+  - Get-TargetResource now correctly returns the IP address instead of throwing
+    and error ([issue #28](https://github.com/PowerShell/xFailOverCluster/issues/28)).
 
 ## 1.8.0.0
 

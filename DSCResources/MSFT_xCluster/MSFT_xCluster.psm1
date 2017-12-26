@@ -14,9 +14,13 @@ $script:localizedData = Get-LocalizedData -ResourceName 'MSFT_xCluster'
         Static IP Address of the failover cluster.
 
     .PARAMETER IgnoreNetwork
-        One or more networks to ignore when creating the cluster. Typically
-        used to ignore networks with DHCP enabled since they are always included
-        by default.
+        One or more networks to ignore when creating the cluster. Only networks
+        using Static IP can be ignored, networks that are assigned an IP address
+        through DHCP cannot be ignored, and are added for cluster communication.
+        To remove networks assigned an IP address through DHCP use the resource
+        xClusterNetwork to change the role of the network.
+        This parameter is only used during the creation of the cluster and is
+        not monitored after.
 
     .PARAMETER DomainAdministratorCredential
         Credential used to create the failover cluster in Active Directory.
@@ -30,7 +34,7 @@ function Get-TargetResource
         [System.String]
         $Name,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $StaticIPAddress,
 
@@ -95,9 +99,13 @@ function Get-TargetResource
         Static IP Address of the failover cluster.
 
     .PARAMETER IgnoreNetwork
-        One or more networks to ignore when creating the cluster. Typically
-        used to ignore networks with DHCP enabled since they are always included
-        by default.
+        One or more networks to ignore when creating the cluster. Only networks
+        using Static IP can be ignored, networks that are assigned an IP address
+        through DHCP cannot be ignored, and are added for cluster communication.
+        To remove networks assigned an IP address through DHCP use the resource
+        xClusterNetwork to change the role of the network.
+        This parameter is only used during the creation of the cluster and is
+        not monitored after.
 
     .PARAMETER DomainAdministratorCredential
         Credential used to create the failover cluster in Active Directory.
@@ -246,9 +254,16 @@ function Set-TargetResource
         Not used in Test-TargetResource.
 
     .PARAMETER IgnoreNetwork
-        One or more networks to ignore when creating the cluster. Typically
-        used to ignore networks with DHCP enabled since they are always included
-        by default.
+        One or more networks to ignore when creating the cluster. Only networks
+        using Static IP can be ignored, networks that are assigned an IP address
+        through DHCP cannot be ignored, and are added for cluster communication.
+        To remove networks assigned an IP address through DHCP use the resource
+        xClusterNetwork to change the role of the network.
+        This parameter is only used during the creation of the cluster and is
+        not monitored after.
+
+        Not used in Test-TargetResource. Currently it is unknown how to determine
+        which networks are ignored, to test so they ar ein desired state.
 
     .PARAMETER DomainAdministratorCredential
         Credential used to create the failover cluster in Active Directory.

@@ -64,7 +64,12 @@ the target node ($env:COMPUTERNAME) to the cluster.
 * **`[String]` StaticIPAddress** _(Write)_: The static IP address of the failover
   cluster. If this is not specified then the IP address will be assigned from a
   DHCP.
-* **`[String[]]` IgnoreNetwork** _(Optional)_: Network to ignore during creation of the cluster.
+* **`[String[]]` IgnoreNetwork** _(Write)_: One or more networks to ignore when
+  creating the cluster. Only networks using Static IP can be ignored, networks
+  that are assigned an IP address through DHCP cannot be ignored, and are added
+  for cluster communication. To remove networks assigned an IP address through DHCP
+  use the resource xClusterNetwork to change the role of the network. This parameter
+  is only used during the creation of the cluster and is not monitored after.
 * **`[String]` DomainAdministratorCredential** _(Required)_: Credential used to
   create the failover cluster in Active Directory.
 

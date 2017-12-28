@@ -197,7 +197,7 @@ function Set-TargetResource
 
             New-Cluster @newClusterParameters
 
-            if ( -not (Get-Cluster))
+            if (-not (Get-Cluster))
             {
                 $errorMessage = $script:localizedData.FailedCreatingCluster
                 New-InvalidOperationException -Message $errorMessage

@@ -12,6 +12,7 @@
     configured to use an IP address from a DHCP.
   - Get-TargetResource now correctly returns the IP address instead of throwing
     and error ([issue #28](https://github.com/PowerShell/xFailOverCluster/issues/28)).
+  - Added -IgnoreNetwork parameter ([issue #143](https://github.com/PowerShell/xFailOverCluster/issues/143)).
 
 ## 1.8.0.0
 

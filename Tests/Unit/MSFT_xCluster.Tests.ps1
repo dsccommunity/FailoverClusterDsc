@@ -53,6 +53,7 @@ try
         $mockClusterName = 'CLUSTER001'
         $mockStaticIpAddress = '192.168.10.10'
 
+
         $mockGetCimInstance = {
             return [PSCustomObject] @{
                 Domain = $mockDynamicDomainName
@@ -206,6 +207,18 @@ try
                     $getTargetResourceResult = Get-TargetResource @mockGetTargetResourceParameters
                     $getTargetResourceResult.Name             | Should -Be $mockDefaultParameters.Name
                     $getTargetResourceResult.StaticIPAddress  | Should -Be $mockDefaultParameters.StaticIPAddress
+                    $getTargetResourceResult.IgnoreNetwork    | Should -BeNullOrEmpty
+                }
+
+                Context 'When IgnoreNetwork is passed' {
+                    It 'Should returns IgnoreNetwork in the hash' {
+                        $withIgnoreNetworkParameter = $mockDefaultParameters + @{
+                            IgnoreNetwork = '10.0.2.0/24'
+                        }
+
+                        $getTargetResourceResult = Get-TargetResource @withIgnoreNetworkParameter
+                        $getTargetResourceResult.IgnoreNetwork | Should -Be '10.0.2.0/24'
+                    }
                 }
 
                 Assert-VerifiableMock
@@ -278,6 +291,48 @@ try
                                     $null -eq $StaticAddress
                                 } -Exactly -Times 1 -Scope It
 
+                                Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
+                                Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
+                            }
+                        }
+
+
+                        Context 'When IgnoreNetwork is passed as a single value' {
+                            It 'Should call New-Cluster cmdlet with IgnoreNetwork parameter' {
+                                $withIgnoreNetworkParameter = $mockDefaultParameters + @{
+                                    IgnoreNetwork = '10.0.2.0/24'
+                                }
+                                { Set-TargetResource @withIgnoreNetworkParameter } | Should Not Throw
+
+                                Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It -ParameterFilter {
+                                    $IgnoreNetwork -eq '10.0.2.0/24'
+                                }
+                                Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
+                                Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
+                            }
+                        }
+
+                        Context 'When IgnoreNetwork is passed as an array' {
+                            It 'Should call New-Cluster cmdlet with IgnoreNetwork parameter' {
+                                $withIgnoreNetworkParameter = $mockDefaultParameters + @{ IgnoreNetwork = ('10.0.2.0/24', '192.168.4.0/24') }
+                                { Set-TargetResource @withIgnoreNetworkParameter } | Should Not Throw
+
+                                Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It -ParameterFilter {
+                                    $IgnoreNetwork -eq '10.0.2.0/24' -and
+                                    $IgnoreNetwork -eq '192.168.4.0/24'
+                                }
+                                Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
+                                Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
+                            }
+                        }
+
+                        Context 'When IgnoreNetwork is not passed' {
+                            It 'Should call New-Cluster cmdlet without IgnoreNetwork parameter' {
+                                { Set-TargetResource @mockDefaultParameters } | Should Not Throw
+
+                                Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It -ParameterFilter {
+                                    $IgnoreNetwork -eq $null
+                                }
                                 Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
                                 Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
                             }

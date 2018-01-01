@@ -1,116 +1,94 @@
-Import-Module -Name (Join-Path -Path (Split-Path -Path $PSScriptRoot -Parent) `
--ChildPath 'CommonResourceHelper.psm1')
 
-$script:localizedData = Get-LocalizedData -ResourceName 'MSFT_xClusterQuorum'
-
-<#
-    .SYNOPSIS
-        Returns the current state of the failover cluster quorum.
-
-    .PARAMETER IsSingleInstance
-        Specifies the resource is a single instance, the value must be 'Yes'.
-#>
 function Get-TargetResource
 {
     [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
+    [OutputType([Hashtable])]
     param
     (
         [Parameter(Mandatory = $true)]
         [ValidateSet('Yes')]
-        [System.String]
-        $IsSingleInstance
+        [String] $IsSingleInstance,
+
+        [Parameter(Mandatory = $false)]
+        [ValidateSet('NodeMajority', 'NodeAndDiskMajority', 'NodeAndFileShareMajority', 'DiskOnly', 'Cloud Witness')]
+        [String] $Type,
+        
+        [Parameter(Mandatory = $false)]
+        [String] $Resource,
+		
+        [Parameter(Mandatory = $false)]
+        [String] $StorageAccountName,
+		
+        [Parameter(Mandatory = $false)]
+        [String] $StorageAccountAccessKey
     )
 
-    Write-Verbose -Message $script:localizedData.GetClusterQuorumInformation
+    $ClusterQuorum = Get-ClusterQuorum
 
-    $getClusterQuorumResult = Get-ClusterQuorum
-
-    switch ($getClusterQuorumResult.QuorumType)
+    switch ($ClusterQuorum.QuorumType)
     {
         # WS2016 only
-        'Majority'
-        {
-            if ($null -eq $getClusterQuorumResult.QuorumResource)
+        'Majority' {
+            if ($ClusterQuorum.QuorumResource -eq $null)
             {
-                $clusterQuorumType = 'NodeMajority'
+                $ClusterQuorumType = 'NodeMajority'
             }
-            elseif ($getClusterQuorumResult.QuorumResource.ResourceType.DisplayName -eq 'Physical Disk')
+            elseif ($ClusterQuorum.QuorumResource.ResourceType.DisplayName -eq 'Physical Disk')
             {
-                $clusterQuorumType = 'NodeAndDiskMajority'
+                $ClusterQuorumType = 'NodeAndDiskMajority'
             }
-            elseif ($getClusterQuorumResult.QuorumResource.ResourceType.DisplayName -eq 'File Share Witness')
+            elseif ($ClusterQuorum.QuorumResource.ResourceType.DisplayName -eq 'File Share Witness')
             {
-                $clusterQuorumType = 'NodeAndFileShareMajority'
+                $ClusterQuorumType = 'NodeAndFileShareMajority'
+            }
+			elseif ($ClusterQuorum.QuorumResource.ResourceType.DisplayName -eq 'Cloud Witness')
+            {
+                $ClusterQuorumType = 'NodeAndCloudWitnessMajority'
             }
             else
             {
-                throw "Unknown quorum resource: $($getClusterQuorumResult.QuorumResource)"
+                throw "Unknown quorum resource: $($ClusterQuorum.QuorumResource)"
             }
         }
 
         # WS2012R2 only
-        'NodeMajority'
-        {
-            $clusterQuorumType = 'NodeMajority'
+        'NodeMajority' {
+            $ClusterQuorumType = 'NodeMajority'
         }
-
-        'NodeAndDiskMajority'
-        {
-            $clusterQuorumType = 'NodeAndDiskMajority'
+        'NodeAndDiskMajority' {
+            $ClusterQuorumType = 'NodeAndDiskMajority'
         }
-
-        'NodeAndFileShareMajority'
-        {
-            $clusterQuorumType = 'NodeAndFileShareMajority'
+        'NodeAndFileShareMajority' {
+            $ClusterQuorumType = 'NodeAndFileShareMajority'
         }
 
         # All
-        'DiskOnly'
-        {
-            $clusterQuorumType = 'DiskOnly'
+        'DiskOnly' {
+            $ClusterQuorumType = 'DiskOnly'
         }
 
         # Default
-        default
-        {
-            throw "Unknown quorum type: $($getClusterQuorumResult.QuorumType)"
+        default {
+            throw "Unknown quorum type: $($ClusterQuorum.QuorumType)"
         }
     }
 
-    if ($clusterQuorumType -eq 'NodeAndFileShareMajority')
+    if ($ClusterQuorumType -eq 'NodeAndFileShareMajority')
     {
-        $clusterQuorumResource = $getClusterQuorumResult.QuorumResource |
-            Get-ClusterParameter -Name SharePath |
-            Select-Object -ExpandProperty Value
+        $ClusterQuorumResource = $ClusterQuorum.QuorumResource | Get-ClusterParameter -Name SharePath | Select-Object -ExpandProperty Value
     }
     else
     {
-        $clusterQuorumResource = [String] $getClusterQuorumResult.QuorumResource.Name
+        $ClusterQuorumResource = [String] $ClusterQuorum.QuorumResource.Name
     }
 
     @{
         IsSingleInstance = $IsSingleInstance
-        Type             = $clusterQuorumType
-        Resource         = $clusterQuorumResource
+        Type             = $ClusterQuorumType
+        Resource         = $ClusterQuorumResource
     }
 }
 
-<#
-    .SYNOPSIS
-        Configures the failover cluster quorum.
-
-    .PARAMETER IsSingleInstance
-        Specifies the resource is a single instance, the value must be 'Yes'.
-
-    .PARAMETER Type
-        Quorum type to use. Can be set to either NodeMajority, NodeAndDiskMajority,
-        NodeAndFileShareMajority or DiskOnly.
-
-    .PARAMETER Resource
-        The name of the disk or file share resource to use as witness. This parameter
-        is optional if the quorum type is set to NodeMajority.
-#>
 function Set-TargetResource
 {
     [CmdletBinding()]
@@ -118,60 +96,46 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [ValidateSet('Yes')]
-        [System.String]
-        $IsSingleInstance,
+        [String] $IsSingleInstance,
 
-        [Parameter()]
-        [ValidateSet('NodeMajority', 'NodeAndDiskMajority', 'NodeAndFileShareMajority', 'DiskOnly')]
-        [System.String]
-        $Type,
-
-        [Parameter()]
-        [System.String]
-        $Resource
+        [Parameter(Mandatory = $false)]
+        [ValidateSet('NodeMajority', 'NodeAndDiskMajority', 'NodeAndFileShareMajority', 'DiskOnly', 'Cloud Witness')]
+        [String] $Type,
+        
+        [Parameter(Mandatory = $false)]
+        [String] $Resource,
+		
+        [Parameter(Mandatory = $false)]
+        [String] $StorageAccountName,
+		
+        [Parameter(Mandatory = $false)]
+        [String] $StorageAccountAccessKey
     )
-
-    Write-Verbose -Message ($script:localizedData.SetClusterQuorum -f $Type)
 
     switch ($Type)
     {
-        'NodeMajority'
-        {
+        'NodeMajority' {
             Set-ClusterQuorum -NoWitness
         }
 
-        'NodeAndDiskMajority'
-        {
+        'NodeAndDiskMajority' {
             Set-ClusterQuorum -DiskWitness $Resource
         }
 
-        'NodeAndFileShareMajority'
-        {
+        'NodeAndFileShareMajority' {
             Set-ClusterQuorum -FileShareWitness $Resource
         }
 
-        'DiskOnly'
-        {
+        'DiskOnly' {
             Set-ClusterQuorum -DiskOnly $Resource
+        }
+		
+		'Cloud Witness' {
+            Set-ClusterQuorum -CloudWitness -AccountName $StorageAccountName -AccessKey $StorageAccountAccessKey
         }
     }
 }
 
-<#
-    .SYNOPSIS
-        Tests the current state of the failover cluster quorum.
-
-    .PARAMETER IsSingleInstance
-        Specifies the resource is a single instance, the value must be 'Yes'.
-
-    .PARAMETER Type
-        Quorum type to use. Can be set to either NodeMajority, NodeAndDiskMajority,
-        NodeAndFileShareMajority or DiskOnly.
-
-    .PARAMETER Resource
-        The name of the disk or file share resource to use as witness. This parameter
-        is optional if the quorum type is set to NodeMajority.
-#>
 function Test-TargetResource
 {
     [CmdletBinding()]
@@ -180,31 +144,28 @@ function Test-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [ValidateSet('Yes')]
-        [System.String]
-        $IsSingleInstance,
+        [String] $IsSingleInstance,
 
-        [Parameter()]
-        [ValidateSet('NodeMajority', 'NodeAndDiskMajority', 'NodeAndFileShareMajority', 'DiskOnly')]
-        [System.String]
-        $Type,
-
-        [Parameter()]
-        [System.String]
-        $Resource
+        [Parameter(Mandatory = $false)]
+        [ValidateSet('NodeMajority', 'NodeAndDiskMajority', 'NodeAndFileShareMajority', 'DiskOnly', 'Cloud Witness')]
+        [String] $Type,
+        
+        [Parameter(Mandatory = $false)]
+        [String] $Resource,
+		
+        [Parameter(Mandatory = $false)]
+        [String] $StorageAccountName,
+		
+        [Parameter(Mandatory = $false)]
+        [String] $StorageAccountAccessKey
     )
-
-    Write-Verbose -Message $script:localizedData.EvaluatingClusterQuorumInformation
-
-    $getGetTargetResourceResult = Get-TargetResource -IsSingleInstance $IsSingleInstance
-
-    $testTargetResourceReturnValue = $false
-
-    if ($getGetTargetResourceResult.Type -eq $Type -and $getGetTargetResourceResult.Resource -eq $Resource)
-    {
-        $testTargetResourceReturnValue = $true
-    }
-
-    $testTargetResourceReturnValue
+    
+    $CurrentQuorum = Get-TargetResource -IsSingleInstance $IsSingleInstance
+    
+    return (
+        ($CurrentQuorum.Type -eq $Type) -and
+        ($CurrentQuorum.Resource -eq $Resource)
+    )
 }
 
 Export-ModuleMember -Function *-TargetResource

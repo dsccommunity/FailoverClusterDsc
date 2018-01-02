@@ -115,11 +115,15 @@ function Get-TargetResource
 
     .PARAMETER Type
         Quorum type to use. Can be set to either NodeMajority, NodeAndDiskMajority,
-        NodeAndFileShareMajority or DiskOnly.
+        NodeAndFileShareMajority, NodeAndCloudMajority or DiskOnly.
 
     .PARAMETER Resource
         The name of the disk or file share resource to use as witness. This parameter
         is optional if the quorum type is set to NodeMajority.
+
+    .PARAMETER StorageAccountAccessKey
+        One of the keys of the Azure storage account, if you specify NodeAndCloudMajority
+        as the Quorum Type.
 #>
 function Set-TargetResource
 {
@@ -185,11 +189,15 @@ function Set-TargetResource
 
     .PARAMETER Type
         Quorum type to use. Can be set to either NodeMajority, NodeAndDiskMajority,
-        NodeAndFileShareMajority or DiskOnly.
+        NodeAndFileShareMajority, NodeAndCloudMajority or DiskOnly.
 
     .PARAMETER Resource
         The name of the disk or file share resource to use as witness. This parameter
         is optional if the quorum type is set to NodeMajority.
+
+    .PARAMETER StorageAccountAccessKey
+        One of the keys of the Azure storage account, if you specify NodeAndCloudMajority
+        as the Quorum Type.
 #>
 function Test-TargetResource
 {

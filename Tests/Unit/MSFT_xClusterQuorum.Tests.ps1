@@ -3,7 +3,7 @@ $script:DSCResourceName = 'MSFT_xClusterQuorum'
 
 #region Header
 
-# Unit Test Template Version: 1.2.0
+# Unit Test Template Version: 1.3.0
 $script:moduleRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 if ( (-not (Test-Path -Path (Join-Path -Path $script:moduleRoot -ChildPath 'DSCResource.Tests'))) -or `
     (-not (Test-Path -Path (Join-Path -Path $script:moduleRoot -ChildPath 'DSCResource.Tests\TestHelper.psm1'))) )
@@ -41,12 +41,14 @@ try
         $mockQuorumType_NodeAndDiskMajority = 'NodeAndDiskMajority'
         $mockQuorumType_NodeAndFileShareMajority = 'NodeAndFileShareMajority'
         $mockQuorumType_DiskOnly = 'DiskOnly'
+        $mockQuorumType_NodeAndCloudMajority = 'NodeAndCloudMajority'
         $mockQuorumType_Unknown = 'Unknown'
 
         $mockQuorumTypeDisplayName = 'File Share Quorum Witness'
 
         $mockQuorumResourceName = 'Witness'
         $mockQuorumFileShareWitnessPath = '\\FILE01\CLUSTER01'
+        $mockQuorumAccessKey = 'USRuD354YbOHkPI35SUVyMj2W3odWekMIEdj3n2qAbc0yzqwpMwH-+M+GHJ27OuA5FkTxsbBF9qGc6r6UM3ipg=='
 
         $mockGetClusterQuorum = {
             $getClusterQuorumReturnValue = [PSCustomObject] @{
@@ -76,6 +78,11 @@ try
                 $mockQuorumType_NodeAndFileShareMajority
                 {
                     $getClusterQuorumReturnValue.QuorumResource.ResourceType.DisplayName = $mockDynamicQuorumTypeDisplayName
+                }
+
+                $mockQuorumType_NodeAndCloudMajority
+                {
+                    $getClusterQuorumReturnValue.QuorumResource.ResourceType.DisplayName = 'Cloud Witness'
                 }
 
                 $mockQuorumType_Unknown
@@ -119,6 +126,10 @@ try
             $PSBoundParameters.ContainsKey('DiskOnly') -eq $true
         }
 
+        $mockSetClusterQuorum_CloudWitness_ParameterFilter = {
+            $PSBoundParameters.ContainsKey('CloudWitness') -eq $true
+        }
+
         $mockSetClusterQuorum = {
             $wrongParameters = $false
 
@@ -152,6 +163,14 @@ try
                 $mockQuorumType_DiskOnly
                 {
                     if ($DiskOnly -ne $mockDynamicQuorumResourceName)
+                    {
+                        $wrongParameters = $true
+                    }
+                }
+
+                $mockQuorumType_CloudWitness
+                {
+                    if ($CloudWitness -ne $mockDynamicQuorumResourceName)
                     {
                         $wrongParameters = $true
                     }
@@ -299,6 +318,26 @@ try
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters
                             $getTargetResourceResult.Type | Should -Be $mockQuorumType_NodeAndFileShareMajority
                             $getTargetResourceResult.Resource  | Should -Be $mockQuorumFileShareWitnessPath
+                        }
+                    }
+                }
+
+                Context 'When desired state should be NodeAndCloudMajority' {
+                    Context 'When target node is Windows Server 2016 and newer' {
+                        BeforeEach {
+                            $mockDynamicQuorumType = $mockQuorumType_Majority
+                            $mockDynamicExcpectedQuorumType = $mockQuorumType_NodeAndCloudMajority
+                        }
+
+                        It 'Should return the same values as passed as parameters' {
+                            $getTargetResourceResult = Get-TargetResource @mockTestParameters
+                            $getTargetResourceResult.IsSingleInstance | Should -Be $mockTestParameters.IsSingleInstance
+                        }
+
+                        It 'Should return the correct values' {
+                            $getTargetResourceResult = Get-TargetResource @mockTestParameters
+                            $getTargetResourceResult.Type | Should -Be $mockQuorumType_NodeAndCloudMajority
+                            $getTargetResourceResult.Resource  | Should -Be $mockQuorumResourceName
                         }
                     }
                 }
@@ -470,6 +509,26 @@ try
                     }
                 }
 
+                Context 'When quorum type is NodeAndCloudMajority but the resource is not in desired state' {
+                    BeforeEach {
+                        $mockTestParameters['Type'] = $mockQuorumType_NodeAndCloudMajority
+                        $mockTestParameters['Resource'] = $mockQuorumResourceName
+                        $mockTestParameters['StorageAccountAccessKey'] = $mockQuorumAccessKey
+                    }
+
+                    Context 'When target node is Windows Server 2016 and newer' {
+                        BeforeEach {
+                            $mockDynamicQuorumType = $mockQuorumType_NodeAndCloudMajority
+                            $mockDynamicExcpectedQuorumType = $mockQuorumType_NodeAndCloudMajority
+                        }
+
+                        It 'Should return the value $false' {
+                            $testTargetResourceResult = Test-TargetResource @mockTestParameters
+                            $testTargetResourceResult | Should -Be $false
+                        }
+                    }
+                }
+
                 Context 'When desired state should be DiskOnly' {
                     BeforeEach {
                         $mockDynamicQuorumType = $mockQuorumType_DiskOnly
@@ -580,6 +639,27 @@ try
 
                     Assert-MockCalled -CommandName 'Set-ClusterQuorum' `
                                       -ParameterFilter $mockSetClusterQuorum_FileShareWitness_ParameterFilter `
+                                      -Exactly -Times 1 -Scope It
+                }
+            }
+
+            Context 'When quorum type should be NodeAndCloudMajority' {
+                BeforeEach {
+                    Mock -CommandName 'Set-ClusterQuorum' -MockWith $mockSetClusterQuorum `
+                        -ParameterFilter $mockSetClusterQuorum_CloudWitness_ParameterFilter
+                    $mockTestParameters['Type'] = $mockQuorumType_NodeAndCloudMajority
+                    $mockTestParameters['Resource'] = $mockQuorumResourceName
+                    $mockTestParameters['StorageAccountAccessKey'] = $mockQuorumAccessKey
+
+                    $mockDynamicQuorumResourceName = $mockQuorumResourceName
+                    $mockDynamicSetClusterQuorum_ExcpectedQuorumType = $mockQuorumType_NodeAndCloudMajority
+                }
+
+                It 'Should set the quorum in the cluster without throwing an error' {
+                    { Set-TargetResource @mockTestParameters } |  Should -Not -Throw
+
+                    Assert-MockCalled -CommandName 'Set-ClusterQuorum' `
+                                      -ParameterFilter $mockSetClusterQuorum_CloudWitness_ParameterFilter `
                                       -Exactly -Times 1 -Scope It
                 }
             }

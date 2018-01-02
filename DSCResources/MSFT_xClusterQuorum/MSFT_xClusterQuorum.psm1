@@ -118,12 +118,12 @@ function Get-TargetResource
         NodeAndFileShareMajority, NodeAndCloudMajority or DiskOnly.
 
     .PARAMETER Resource
-        The name of the disk or file share resource to use as witness. This parameter
-        is optional if the quorum type is set to NodeMajority.
+        The name of the disk, file share or Azure storage account resource to use
+        as witness. This parameter is optional if the quorum type is set to NodeMajority.
 
     .PARAMETER StorageAccountAccessKey
-        One of the keys of the Azure storage account, if you specify NodeAndCloudMajority
-        as the Quorum Type.
+        The access key of the Azure storage account to use as witness.
+        This parameter is required if the quorum type is set to NodeAndCloudMajority.
 #>
 function Set-TargetResource
 {
@@ -192,12 +192,13 @@ function Set-TargetResource
         NodeAndFileShareMajority, NodeAndCloudMajority or DiskOnly.
 
     .PARAMETER Resource
-        The name of the disk or file share resource to use as witness. This parameter
-        is optional if the quorum type is set to NodeMajority.
+        The name of the disk, file share or Azure storage account resource to use
+        as witness. This parameter is optional if the quorum type is set to NodeMajority.
 
     .PARAMETER StorageAccountAccessKey
-        One of the keys of the Azure storage account, if you specify NodeAndCloudMajority
-        as the Quorum Type.
+        The access key of the Azure storage account to use as witness.
+        This parameter is required if the quorum type is set to NodeAndCloudMajority.
+        Not used in Test-TargetResource.
 #>
 function Test-TargetResource
 {

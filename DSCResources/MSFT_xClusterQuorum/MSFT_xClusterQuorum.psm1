@@ -100,9 +100,10 @@ function Get-TargetResource
     }
 
     @{
-        IsSingleInstance = $IsSingleInstance
-        Type             = $clusterQuorumType
-        Resource         = $clusterQuorumResource
+        IsSingleInstance        = $IsSingleInstance
+        Type                    = $clusterQuorumType
+        Resource                = $clusterQuorumResource
+        StorageAccountAccessKey = ""
     }
 }
 

@@ -14,6 +14,7 @@
   - Get-TargetResource now correctly returns the IP address instead of throwing
     and error ([issue #28](https://github.com/PowerShell/xFailOverCluster/issues/28)).
   - Added -IgnoreNetwork parameter ([issue #143](https://github.com/PowerShell/xFailOverCluster/issues/143)).
+  - Cleaned up tests which was using over complicated evaluation code.
 - Changes to xClusterQuorum
   - When using NodeAndFileShareMajority on Windows Server 2016 any subsequent run
     failed when Test-TargetResource validated the configuration.

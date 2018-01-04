@@ -43,6 +43,8 @@ try
         $mockQuorumType_DiskOnly = 'DiskOnly'
         $mockQuorumType_Unknown = 'Unknown'
 
+        $mockQuorumTypeDisplayName = 'File Share Quorum Witness'
+
         $mockQuorumResourceName = 'Witness'
         $mockQuorumFileShareWitnessPath = '\\FILE01\CLUSTER01'
 
@@ -59,7 +61,7 @@ try
                 }
             }
 
-            switch ($mockDynamicExcpectedQuorumType)
+            switch ($mockDynamicExpectedQuorumType)
             {
                 $mockQuorumType_NodeMajority
                 {
@@ -73,7 +75,7 @@ try
 
                 $mockQuorumType_NodeAndFileShareMajority
                 {
-                    $getClusterQuorumReturnValue.QuorumResource.ResourceType.DisplayName = 'File Share Witness'
+                    $getClusterQuorumReturnValue.QuorumResource.ResourceType.DisplayName = $mockDynamicQuorumTypeDisplayName
                 }
 
                 $mockQuorumType_Unknown
@@ -88,7 +90,7 @@ try
         $mockGetClusterParameter = {
             @(
                 [PSCustomObject] @{
-                    ClusterObject = 'File Share Witness'
+                    ClusterObject = $mockDynamicQuorumTypeDisplayName
                     Name          = 'SharePath'
                     IsReadOnly    = 'False'
                     ParameterType = 'String'
@@ -121,7 +123,7 @@ try
             $wrongParameters = $false
 
             # Evaluate if the Set-ClusterQuorum is called with the correct parameters.
-            switch ($mockDynamicSetClusterQuorum_ExcpectedQuorumType)
+            switch ($mockDynamicSetClusterQuorum_ExpectedQuorumType)
             {
                 $mockQuorumType_NodeMajority
                 {
@@ -210,7 +212,7 @@ try
                     Context 'When target node is Windows Server 2016 and newer' {
                         BeforeEach {
                             $mockDynamicQuorumType = $mockQuorumType_Majority
-                            $mockDynamicExcpectedQuorumType = $mockQuorumType_NodeMajority
+                            $mockDynamicExpectedQuorumType = $mockQuorumType_NodeMajority
                         }
 
                         It 'Should return the same values as passed as parameters' {
@@ -247,7 +249,7 @@ try
                     Context 'When target node is Windows Server 2016 and newer' {
                         BeforeEach {
                             $mockDynamicQuorumType = $mockQuorumType_Majority
-                            $mockDynamicExcpectedQuorumType = $mockQuorumType_NodeAndDiskMajority
+                            $mockDynamicExpectedQuorumType = $mockQuorumType_NodeAndDiskMajority
                         }
 
                         It 'Should return the same values as passed as parameters' {
@@ -284,7 +286,8 @@ try
                     Context 'When target node is Windows Server 2016 and newer' {
                         BeforeEach {
                             $mockDynamicQuorumType = $mockQuorumType_Majority
-                            $mockDynamicExcpectedQuorumType = $mockQuorumType_NodeAndFileShareMajority
+                            $mockDynamicExpectedQuorumType = $mockQuorumType_NodeAndFileShareMajority
+                            $mockDynamicQuorumTypeDisplayName = $mockQuorumTypeDisplayName
                         }
 
                         It 'Should return the same values as passed as parameters' {
@@ -331,7 +334,7 @@ try
                     Context 'When target node is Windows Server 2016 and newer' {
                         BeforeEach {
                             $mockDynamicQuorumType = $mockQuorumType_Majority
-                            $mockDynamicExcpectedQuorumType = $mockQuorumType_Unknown
+                            $mockDynamicExpectedQuorumType = $mockQuorumType_Unknown
                         }
 
                         It 'Should throw the correct error message' {
@@ -374,7 +377,7 @@ try
                             $mockDynamicQuorumType = $mockQuorumType_Majority
                             $mockDynamicQuorumResourceName = $mockQuorumResourceName
 
-                            $mockDynamicExcpectedQuorumType = $mockQuorumType_NodeAndDiskMajority
+                            $mockDynamicExpectedQuorumType = $mockQuorumType_NodeAndDiskMajority
                         }
 
                         It 'Should return the value $false' {
@@ -406,7 +409,7 @@ try
                         BeforeEach {
                             $mockDynamicQuorumType = $mockQuorumType_Majority
 
-                            $mockDynamicExcpectedQuorumType = $mockQuorumType_NodeMajority
+                            $mockDynamicExpectedQuorumType = $mockQuorumType_NodeMajority
                         }
 
                         It 'Should return the value $false' {
@@ -431,7 +434,7 @@ try
                     Context 'When target node is Windows Server 2016 and newer' {
                         BeforeEach {
                             $mockDynamicQuorumType = $mockQuorumType_Majority
-                            $mockDynamicExcpectedQuorumType = $mockQuorumType_NodeAndDiskMajority
+                            $mockDynamicExpectedQuorumType = $mockQuorumType_NodeAndDiskMajority
                         }
 
                         It 'Should return the value $false' {
@@ -456,7 +459,8 @@ try
                     Context 'When target node is Windows Server 2016 and newer' {
                         BeforeEach {
                             $mockDynamicQuorumType = $mockQuorumType_Majority
-                            $mockDynamicExcpectedQuorumType = $mockQuorumType_NodeAndFileShareMajority
+                            $mockDynamicExpectedQuorumType = $mockQuorumType_NodeAndFileShareMajority
+                            $mockDynamicQuorumTypeDisplayName = $mockQuorumTypeDisplayName
                         }
 
                         It 'Should return the value $false' {
@@ -502,7 +506,7 @@ try
                             $mockDynamicQuorumType = $mockQuorumType_Majority
                             $mockTestParameters['Resource'] = $null
 
-                            $mockDynamicExcpectedQuorumType = $mockQuorumType_NodeMajority
+                            $mockDynamicExpectedQuorumType = $mockQuorumType_NodeMajority
                         }
 
                         It 'Should return the value $true' {
@@ -526,7 +530,7 @@ try
 
                     $mockTestParameters['Type'] = $mockQuorumType_NodeMajority
 
-                    $mockDynamicSetClusterQuorum_ExcpectedQuorumType = $mockQuorumType_NodeMajority
+                    $mockDynamicSetClusterQuorum_ExpectedQuorumType = $mockQuorumType_NodeMajority
                 }
 
                 It 'Should set the quorum in the cluster without throwing an error' {
@@ -547,7 +551,7 @@ try
                     $mockTestParameters['Resource'] = $mockQuorumResourceName
 
                     $mockDynamicQuorumResourceName = $mockQuorumResourceName
-                    $mockDynamicSetClusterQuorum_ExcpectedQuorumType = $mockQuorumType_NodeAndDiskMajority
+                    $mockDynamicSetClusterQuorum_ExpectedQuorumType = $mockQuorumType_NodeAndDiskMajority
                 }
 
                 It 'Should set the quorum in the cluster without throwing an error' {
@@ -568,7 +572,7 @@ try
                     $mockTestParameters['Resource'] = $mockQuorumResourceName
 
                     $mockDynamicQuorumResourceName = $mockQuorumResourceName
-                    $mockDynamicSetClusterQuorum_ExcpectedQuorumType = $mockQuorumType_NodeAndFileShareMajority
+                    $mockDynamicSetClusterQuorum_ExpectedQuorumType = $mockQuorumType_NodeAndFileShareMajority
                 }
 
                 It 'Should set the quorum in the cluster without throwing an error' {
@@ -589,7 +593,7 @@ try
                     $mockTestParameters['Resource'] = $mockQuorumResourceName
 
                     $mockDynamicQuorumResourceName = $mockQuorumResourceName
-                    $mockDynamicSetClusterQuorum_ExcpectedQuorumType = $mockQuorumType_DiskOnly
+                    $mockDynamicSetClusterQuorum_ExpectedQuorumType = $mockQuorumType_DiskOnly
                 }
 
                 It 'Should set the quorum in the cluster without throwing an error' {

@@ -173,7 +173,9 @@ cluster.
 
 ### xClusterQuorum
 
-Configures quorum in a cluster.
+Configures quorum in a cluster. For information on how to choose the correct
+quorum type, please see the article
+[Understanding Quorum Configurations in a Failover Cluster](https://technet.microsoft.com/en-us/library/cc731739(v=ws.11).aspx).
 
 #### Requirements for xClusterQuorum
 
@@ -188,10 +190,6 @@ Configures quorum in a cluster.
 * **`[String]` Resource** _(Write)_: The name of the disk or file share resource
   to use as witness. This parameter is optional if the quorum type is set to
   NodeMajority.
-
->Note: if you want to use FileShareWitness, use the option NodeAndFileShareMajority.
->Note: if you want to use DiskWitness, use the option NodeAndDiskMajority.
->Note: if you want to use NoWitness, use the option NodeMajority.
 
 #### Examples for xClusterQuorum
 

@@ -15,7 +15,8 @@
     and error ([issue #28](https://github.com/PowerShell/xFailOverCluster/issues/28)).
   - Added -IgnoreNetwork parameter ([issue #143](https://github.com/PowerShell/xFailOverCluster/issues/143)).
 - Changes to xClusterQuorum
-  - When using NodeAndFileShareMajority on Windows Server 2016 any subsequent run failed when Test-TargetResource validated the configuration.
+  - When using NodeAndFileShareMajority on Windows Server 2016 any subsequent run
+    failed when Test-TargetResource validated the configuration.
 
 ## 1.8.0.0
 

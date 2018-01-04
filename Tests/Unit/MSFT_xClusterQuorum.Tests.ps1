@@ -566,8 +566,6 @@ try
             Context 'When quorum type should be NodeMajority' {
                 BeforeEach {
                     $mockTestParameters['Type'] = $mockQuorumType_NodeMajority
-
-                    $mockDynamicSetClusterQuorum_ExpectedQuorumType = $mockQuorumType_NodeMajority
                 }
 
                 It 'Should set the quorum in the cluster without throwing an error' {
@@ -585,7 +583,6 @@ try
                     $mockTestParameters['Resource'] = $mockQuorumResourceName
 
                     $mockDynamicQuorumResourceName = $mockQuorumResourceName
-                    $mockDynamicSetClusterQuorum_ExpectedQuorumType = $mockQuorumType_NodeAndDiskMajority
                 }
 
                 It 'Should set the quorum in the cluster without throwing an error' {
@@ -603,7 +600,6 @@ try
                     $mockTestParameters['Resource'] = $mockQuorumResourceName
 
                     $mockDynamicQuorumResourceName = $mockQuorumResourceName
-                    $mockDynamicSetClusterQuorum_ExpectedQuorumType = $mockQuorumType_NodeAndFileShareMajority
                 }
 
                 It 'Should set the quorum in the cluster without throwing an error' {
@@ -622,7 +618,6 @@ try
                     $mockTestParameters['StorageAccountAccessKey'] = $mockQuorumAccessKey
 
                     $mockDynamicQuorumResourceName = $mockQuorumAccountName
-                    $mockDynamicSetClusterQuorum_ExpectedQuorumType = $mockQuorumType_NodeAndCloudMajority
                 }
 
                 It 'Should set the quorum in the cluster without throwing an error' {
@@ -640,7 +635,6 @@ try
                     $mockTestParameters['Resource'] = $mockQuorumResourceName
 
                     $mockDynamicQuorumResourceName = $mockQuorumResourceName
-                    $mockDynamicSetClusterQuorum_ExpectedQuorumType = $mockQuorumType_DiskOnly
                 }
 
                 It 'Should set the quorum in the cluster without throwing an error' {

@@ -186,10 +186,13 @@ quorum type, please see the article
 * **`[String]` IsSingleInstance** _(Key)_: Specifies the resource is a single
   instance, the value must be 'Yes'.
 * **`[String]` Type** _(Write)_: Quorum type to use. { NodeMajority |
-  NodeAndDiskMajority | NodeAndFileShareMajority, DiskOnly }.
-* **`[String]` Resource** _(Write)_: The name of the disk or file share resource
-  to use as witness. This parameter is optional if the quorum type is set to
-  NodeMajority.
+  NodeAndDiskMajority | NodeAndFileShareMajority | NodeAndCloudMajority, DiskOnly }.
+* **`[String]` Resource** _(Write)_: The name of the disk, file share or Azure
+  storage account resource to use as witness. This parameter is optional if the
+  quorum type is set to NodeMajority.
+* **`[String]` StorageAccountAccessKey** _(Write)_: The access key of the Azure
+  storage account to use as witness. This parameter is required if the quorum
+  type is set to NodeAndCloudMajority.
 
 #### Examples for xClusterQuorum
 
@@ -197,6 +200,7 @@ quorum type, please see the article
 * [Set quorum to node and disk majority](/Examples/Resources/xClusterQuorum/2-SetQuorumToNodeAndDiskMajority.ps1)
 * [Set quorum to node and file share majority](/Examples/Resources/xClusterQuorum/3-SetQuorumToNodeAndFileShareMajority.ps1)
 * [Set quorum to disk only](/Examples/Resources/xClusterQuorum/4-SetQuorumToDiskOnly.ps1)
+* [Set quorum to node and cloud](/Examples/Resources/xClusterQuorum/5-SetQuorumToNodeAndCloudMajority.1)
 
 ### xWaitForCluster
 

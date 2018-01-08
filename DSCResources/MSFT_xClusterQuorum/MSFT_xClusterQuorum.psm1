@@ -103,7 +103,7 @@ function Get-TargetResource
         IsSingleInstance        = $IsSingleInstance
         Type                    = $clusterQuorumType
         Resource                = $clusterQuorumResource
-        StorageAccountAccessKey = ""
+        StorageAccountAccessKey = ""    # Return an empty value since we cannot retrieve the current Access Key
     }
 }
 
@@ -125,6 +125,7 @@ function Get-TargetResource
     .PARAMETER StorageAccountAccessKey
         The access key of the Azure storage account to use as witness.
         This parameter is required if the quorum type is set to NodeAndCloudMajority.
+        The key is currently not updated if the resource is already set.
 #>
 function Set-TargetResource
 {
@@ -199,6 +200,7 @@ function Set-TargetResource
     .PARAMETER StorageAccountAccessKey
         The access key of the Azure storage account to use as witness.
         This parameter is required if the quorum type is set to NodeAndCloudMajority.
+        The key is currently not updated if the resource is already set.
         Not used in Test-TargetResource.
 #>
 function Test-TargetResource

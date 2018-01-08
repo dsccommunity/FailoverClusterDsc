@@ -192,7 +192,8 @@ quorum type, please see the article
   quorum type is set to NodeMajority.
 * **`[String]` StorageAccountAccessKey** _(Write)_: The access key of the Azure
   storage account to use as witness. This parameter is required if the quorum
-  type is set to NodeAndCloudMajority.
+  type is set to NodeAndCloudMajority. The key is currently not updated if the
+  resource is already set.
 
 #### Examples for xClusterQuorum
 

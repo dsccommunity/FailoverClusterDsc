@@ -288,7 +288,7 @@ try
                     Context 'When target node is Windows Server 2016 and newer' {
                         BeforeEach {
                             $mockDynamicQuorumType = $mockQuorumType_Majority
-                            $mockDynamicExcpectedQuorumType = $mockQuorumType_NodeAndCloudMajority
+                            $mockDynamicExpectedQuorumType = $mockQuorumType_NodeAndCloudMajority
                         }
 
                         It 'Should return the same values as passed as parameters' {
@@ -476,7 +476,7 @@ try
                     Context 'When target node is Windows Server 2016 and newer' {
                         BeforeEach {
                             $mockDynamicQuorumType = $mockQuorumType_Majority
-                            $mockDynamicExcpectedQuorumType = $mockQuorumType_NodeAndFileShareMajority
+                            $mockDynamicExpectedQuorumType = $mockQuorumType_NodeAndFileShareMajority
 
                             $mockTestParameters['Type'] = $mockQuorumType_NodeAndCloudMajority
                             $mockTestParameters['Resource'] = $mockQuorumAccountName
@@ -539,7 +539,7 @@ try
                         Context 'When target node is Windows Server 2016 and newer' {
                             BeforeEach {
                                 $mockDynamicQuorumType = $mockQuorumType_Majority
-                                $mockDynamicExcpectedQuorumType = $mockQuorumType_NodeAndCloudMajority
+                                $mockDynamicExpectedQuorumType = $mockQuorumType_NodeAndCloudMajority
 
                                 $mockTestParameters['Type'] = $mockQuorumType_NodeAndCloudMajority
                                 $mockTestParameters['Resource'] = $mockQuorumAccountName

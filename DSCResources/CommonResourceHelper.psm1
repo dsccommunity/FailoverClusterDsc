@@ -1,5 +1,21 @@
 <#
     .SYNOPSIS
+        Provides a list of properties processed by the MSFT_xClusterProperty DSC resource
+#>
+function Get-ClusterPropertyList
+{
+    param()
+
+    $ClusterProperties = "AddEvictDelay","ClusterLogLevel","ClusterLogSize","CrossSiteDelay","CrossSiteThreshold"
+    $ClusterProperties += "CrossSubnetDelay","CrossSubnetThreshold","DatabaseReadWriteMode","DefaultNetworkRole"
+    $ClusterProperties += "DrainOnShutdown","DynamicQuorum","NetftIPSecEnabled","QuarantineDuration"
+    $ClusterProperties += "QuarantineThreshold","ShutdownTimeoutInMinutes","Description","PreferredSite"
+
+    return $ClusterProperties
+}
+
+<#
+    .SYNOPSIS
         Creates and throws an invalid argument exception.
 
     .PARAMETER Message
@@ -258,6 +274,7 @@ function Get-LocalizedData
 }
 
 Export-ModuleMember -Function @(
+    'Get-ClusterPropertyList'
     'New-InvalidArgumentException',
     'New-InvalidOperationException',
     'New-ObjectNotFoundException',

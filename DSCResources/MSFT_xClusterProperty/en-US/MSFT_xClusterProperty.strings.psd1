@@ -1,4 +1,4 @@
-# Localized resources for xClusterPreferredOwner
+# Localized resources for xClusterProperty
 
 ConvertFrom-StringData @'
 

@@ -55,6 +55,12 @@ $script:localizedData = Get-LocalizedData -ResourceName 'MSFT_xClusterProperty'
     .PARAMETER QuarantineThreshold
         Specifies the quarantine threshold for a node, in minutes.
 
+    .PARAMETER SameSubnetDelay
+        Controls the delay, in milliseconds, between netft heartbeats.
+
+    .PARAMETER SameSubnetThreshold
+        Controls how many heartbeats can be missed on the same subnet before the route is declared as unreachable.
+
     .PARAMETER ShutdownTimeoutInMinutes
         Specifies how many minutes after a system shutdown is initiated that the failover cluster service will wait for resources to go offline.
 #>
@@ -74,7 +80,6 @@ function Get-TargetResource
     $ClusterProperties = Get-ClusterPropertyList
 
     $Cluster = Get-Cluster -Name $Name
-
     $ReturnValue = @{
     Name = $Name
     }
@@ -84,14 +89,8 @@ function Get-TargetResource
         $ReturnValue.Add($ClusterProperty, $Cluster.$ClusterProperty)
     }
 
-    $ReturnValue = foreach ($Item in $ReturnValue.GetEnumerator() | Sort-Object Name)
-    {
-        $Item
-    }
-
     return $ReturnValue
 }
-
 
 function Set-TargetResource
 {

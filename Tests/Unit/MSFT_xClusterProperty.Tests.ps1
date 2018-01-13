@@ -37,13 +37,12 @@ try
                 }
 
                 It 'Returns a hashtable' {
-                    (Get-TargetResource -Name Cluster1).GetType().Name | Should -Be 'Hashtable'
+                    Get-TargetResource -Name Cluster1 | Should -BeOfType [System.Collections.Hashtable]
                     Assert-MockCalled -CommandName Get-Cluster -Exactly -Times 1 -Scope It
                 }
 
                 It 'Returns a hashtable with cluster properties' {
-                    ((Get-TargetResource -Name Cluster1).GetEnumerator() | Where-Object {$_.Name -eq "SameSubnetDelay"}).Value `
-                    | Should -Be '1000'
+                    (Get-TargetResource -Name Cluster1).Get_Item("SameSubnetDelay") | Should -Be '1000'
                     Assert-MockCalled -CommandName Get-Cluster -Exactly -Times 1 -Scope It
                 }
             }

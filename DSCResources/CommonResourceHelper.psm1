@@ -7,9 +7,9 @@ function Get-ClusterPropertyList
     param()
 
     $ClusterProperties = "AddEvictDelay","ClusterLogLevel","ClusterLogSize","CrossSiteDelay","CrossSiteThreshold"
-    $ClusterProperties += "CrossSubnetDelay","CrossSubnetThreshold","DatabaseReadWriteMode","DefaultNetworkRole"
-    $ClusterProperties += "DrainOnShutdown","DynamicQuorum","NetftIPSecEnabled","QuarantineDuration"
-    $ClusterProperties += "QuarantineThreshold","ShutdownTimeoutInMinutes","Description","PreferredSite"
+    $ClusterProperties += "Description","CrossSubnetDelay","CrossSubnetThreshold","DatabaseReadWriteMode"
+    $ClusterProperties += "DefaultNetworkRole","DrainOnShutdown","DynamicQuorum","NetftIPSecEnabled","QuarantineDuration"
+    $ClusterProperties += "PreferredSite","QuarantineThreshold","SameSubnetDelay","SameSubnetThreshold","ShutdownTimeoutInMinutes"
 
     return $ClusterProperties
 }

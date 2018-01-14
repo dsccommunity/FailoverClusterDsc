@@ -114,6 +114,11 @@ try
                     Assert-MockCalled -CommandName Get-Cluster -Exactly -Times 1 -Scope It
                 }
 
+                It 'Sets a single string cluster property to an empty string' {
+                    Set-TargetResource -Name Cluster1 -Description '' | Should -Be $null
+                    Assert-MockCalled -CommandName Get-Cluster -Exactly -Times 1 -Scope It
+                }
+
                 It 'Sets a multiple string cluster properties' {
                     Set-TargetResource -Name Cluster1 -Description 'Exchange DAG' -PreferredSite 'London' `
                     | Should -Be $null
@@ -185,6 +190,11 @@ try
                 It 'Handles checking multiple string and integer properties and returns false if incorrect' {
                     Test-TargetResource -Name Cluster1 -Description 'Exchange DAG' -PreferredSite 'Default-First-Site-Name' `
                     -AddEvictDelay 60 -SameSubnetDelay 1500 | Should -Be $false
+                    Assert-MockCalled -CommandName Get-Cluster -Exactly -Times 1 -Scope It
+                }
+
+                It 'Handles checking properties against empty strings' {
+                    Test-TargetResource -Name Cluster1 -Description '' | Should -Be $true
                     Assert-MockCalled -CommandName Get-Cluster -Exactly -Times 1 -Scope It
                 }
             }

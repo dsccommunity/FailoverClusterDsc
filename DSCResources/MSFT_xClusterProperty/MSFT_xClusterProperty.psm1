@@ -197,9 +197,9 @@ function Set-TargetResource
 
     foreach ($Param in $Params.GetEnumerator())
     {
-        if ($Param.Value -ne '')
+        if ($Param)
         {
-            Write-Verbose "Setting cluster property $($Param.Key) to $($Param.Value)"
+            Write-Verbose "Setting cluster property $($Param.Key) to `"$($Param.Value)`""
             (Get-Cluster -Name $Name).$($Param.Key) = ($Param.Value)
         }
     }
@@ -371,11 +371,11 @@ function Test-TargetResource
 
     foreach ($Param in $Params.GetEnumerator())
     {
-        if ($Param.Value -ne '')
+        if ($Param)
         {
             if($Cluster.$($Param.Key) -ne ($Param.Value))
             {
-                Write-Debug "Cluster property $($Param.Key) is not equal to $(($Param.Value))"
+                Write-Debug "Cluster property $($Param.Key) is not equal to `"$(($Param.Value))`""
                 $result = $false
             }
         }

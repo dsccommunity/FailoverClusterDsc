@@ -16,12 +16,12 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Name
     )
 
-    Write-Verbose "Checking cluster properties"
+    Write-Verbose -Message ($script:localizedData.CheckingClusterProperties)
 
     $ClusterProperties = Get-ClusterPropertyList
 
@@ -189,7 +189,7 @@ function Set-TargetResource
         $ShutdownTimeoutInMinutes
     )
 
-    Write-Verbose "Checking cluster thresholds"
+    Write-Verbose -Message ($script:localizedData.SettingClusterProperties)
 
     $Params = $PSBoundParameters
     $Params.Remove("Name") | Out-Null
@@ -199,7 +199,8 @@ function Set-TargetResource
     {
         if ($Param)
         {
-            Write-Verbose "Setting cluster property $($Param.Key) to `"$($Param.Value)`""
+            $VerboseValue = "`"$($Param.Value)`""
+            Write-Verbose -Message ($script:localizedData.SettingClusterProperty -f $($Param.Key), $VerboseValue)
             (Get-Cluster -Name $Name).$($Param.Key) = ($Param.Value)
         }
     }
@@ -357,7 +358,7 @@ function Test-TargetResource
         $ShutdownTimeoutInMinutes
     )
 
-    Write-Verbose "Checking cluster properties"
+    Write-Verbose -Message ($script:localizedData.CheckingClusterProperties)
 
     $Params = $PSBoundParameters
     $Params.Remove("Name") | Out-Null
@@ -375,7 +376,8 @@ function Test-TargetResource
         {
             if($Cluster.$($Param.Key) -ne ($Param.Value))
             {
-                Write-Debug "Cluster property $($Param.Key) is not equal to `"$(($Param.Value))`""
+                $VerboseValue = "`"$($Param.Value)`""
+                Write-Debug -Message ($script:localizedData.IncorrectClusterProperty -f $($Param.Key), $VerboseValue)
                 $result = $false
             }
         }

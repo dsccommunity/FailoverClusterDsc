@@ -23,4 +23,3 @@ class MSFT_xClusterProperty : OMI_BaseResource
     [Write, Description("Cluster SameSubnetThreshold property")] Uint32 SameSubnetThreshold;
     [Write, Description("Cluster ShutdownTimeoutInMinutes property")] Uint32 ShutdownTimeoutInMinutes;
 };
-

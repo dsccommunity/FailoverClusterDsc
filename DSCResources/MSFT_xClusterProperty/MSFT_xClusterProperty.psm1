@@ -197,12 +197,9 @@ function Set-TargetResource
 
     foreach ($Param in $Params.GetEnumerator())
     {
-        if ($Param)
-        {
-            $VerboseValue = "`"$($Param.Value)`""
-            Write-Verbose -Message ($script:localizedData.SettingClusterProperty -f $($Param.Key), $VerboseValue)
-            (Get-Cluster -Name $Name).$($Param.Key) = ($Param.Value)
-        }
+        $VerboseValue = "`"$($Param.Value)`""
+        Write-Verbose -Message ($script:localizedData.SettingClusterProperty -f $($Param.Key), $VerboseValue)
+        (Get-Cluster -Name $Name).$($Param.Key) = ($Param.Value)
     }
 }
 
@@ -372,14 +369,11 @@ function Test-TargetResource
 
     foreach ($Param in $Params.GetEnumerator())
     {
-        if ($Param)
+        if($Cluster.$($Param.Key) -ne ($Param.Value))
         {
-            if($Cluster.$($Param.Key) -ne ($Param.Value))
-            {
-                $VerboseValue = "`"$($Param.Value)`""
-                Write-Debug -Message ($script:localizedData.IncorrectClusterProperty -f $($Param.Key), $VerboseValue)
-                $result = $false
-            }
+            $VerboseValue = "`"$($Param.Value)`""
+            Write-Debug -Message ($script:localizedData.IncorrectClusterProperty -f $($Param.Key), $VerboseValue)
+            $result = $false
         }
     }
 

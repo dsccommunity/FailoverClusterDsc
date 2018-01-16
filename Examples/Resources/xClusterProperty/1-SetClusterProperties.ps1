@@ -16,7 +16,7 @@ Configuration Example
             AddEvictDelay = 60
             ClusterLogSize = 300
             Description = ''
-            Name = 'LITDAG01'
+            Name = 'Cluster1'
             SameSubnetDelay = 1000
             SameSubnetThreshold = 5
         }

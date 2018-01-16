@@ -25,6 +25,9 @@
   - Cleaned up tests which was using over complicated evaluation code.
   - Added cloud witness (Azure storage) functionality on Windows 2016
     ([issue #37](https://github.com/PowerShell/xFailOverCluster/issues/37)).
+- Added new xClusterProperty ([issue #169](https://github.com/PowerShell/xFailOverCluster/issues/169)).
+  - New DSC resource to modify cluster properties such as SameSubnetDelay
+  - Added tests and examples
 
 ## 1.8.0.0
 

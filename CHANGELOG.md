@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 1.9.0.0
+
 - Changes to xFailoverCluster
   - Update Pester syntax to v4
   - Updated year to 2018 in license file and module manifest ([issue #167](https://github.com/PowerShell/xFailOverCluster/issues/167)).

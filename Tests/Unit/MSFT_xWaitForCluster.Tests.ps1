@@ -72,17 +72,17 @@ try
             Context 'When the system is either in the desired state or not in the desired state' {
                 It 'Returns a [System.Collection.Hashtable] type' {
                     $getTargetResourceResult = Get-TargetResource @mockDefaultParameters
-                    $getTargetResourceResult | Should BeOfType [System.Collections.Hashtable]
+                    $getTargetResourceResult | Should -BeOfType [System.Collections.Hashtable]
                 }
 
                 It 'Returns the same values passed as parameters' {
                     $getTargetResourceResult = Get-TargetResource @mockDefaultParameters
-                    $getTargetResourceResult.Name              | Should Be $mockDefaultParameters.Name
-                    $getTargetResourceResult.RetryIntervalSec  | Should Be $mockDefaultParameters.RetryIntervalSec
-                    $getTargetResourceResult.RetryCount        | Should Be $mockDefaultParameters.RetryCount
+                    $getTargetResourceResult.Name              | Should -Be $mockDefaultParameters.Name
+                    $getTargetResourceResult.RetryIntervalSec  | Should -Be $mockDefaultParameters.RetryIntervalSec
+                    $getTargetResourceResult.RetryCount        | Should -Be $mockDefaultParameters.RetryCount
                 }
 
-                Assert-VerifiableMocks
+                Assert-VerifiableMock
             }
         }
 
@@ -94,7 +94,7 @@ try
                     Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockCimInstance_ParameterFilter -Verifiable
 
                     $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message ($script:localizedData.ClusterAbsentAfterTimeOut -f $mockClusterName, ($mockRetryCount-1), $mockRetryIntervalSec)
-                    { Set-TargetResource @mockDefaultParameters } | Should Throw $mockCorrectErrorRecord
+                    { Set-TargetResource @mockDefaultParameters } | Should -Throw $mockCorrectErrorRecord
                 }
             }
 
@@ -116,10 +116,10 @@ try
 
                         It 'Should throw the correct error message' {
                             $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message ($script:localizedData.ClusterAbsentAfterTimeOut -f $mockClusterName, $mockRetryCount, $mockRetryIntervalSec)
-                            { Set-TargetResource @mockDefaultParameters } | Should Throw $mockCorrectErrorRecord
+                            { Set-TargetResource @mockDefaultParameters } | Should -Throw $mockCorrectErrorRecord
                         }
 
-                        Assert-VerifiableMocks
+                        Assert-VerifiableMock
                     }
                 }
             }
@@ -134,10 +134,10 @@ try
                     $mockDynamicDomainName = $mockDomainName
 
                     It 'Should not throw any error' {
-                        { Set-TargetResource @mockDefaultParameters } | Should Not Throw
+                        { Set-TargetResource @mockDefaultParameters } | Should -Not -Throw
                     }
 
-                    Assert-VerifiableMocks
+                    Assert-VerifiableMock
                 }
             }
         }
@@ -152,7 +152,7 @@ try
 
                 It 'Should return the value $false' {
                     $testTargetResourceResult = Test-TargetResource @mockDefaultParameters
-                    $testTargetResourceResult | Should Be $false
+                    $testTargetResourceResult | Should -Be $false
                 }
             }
 
@@ -170,10 +170,10 @@ try
 
                         It 'Should return the value $false' {
                             $testTargetResourceResult = Test-TargetResource @mockDefaultParameters
-                            $testTargetResourceResult | Should Be $false
+                            $testTargetResourceResult | Should -Be $false
                         }
 
-                        Assert-VerifiableMocks
+                        Assert-VerifiableMock
                     }
 
                     Context 'When Get-Cluster returns nothing' {
@@ -188,10 +188,10 @@ try
 
                         It 'Should return the value $false' {
                             $testTargetResourceResult = Test-TargetResource @mockDefaultParameters
-                            $testTargetResourceResult | Should Be $false
+                            $testTargetResourceResult | Should -Be $false
                         }
 
-                        Assert-VerifiableMocks
+                        Assert-VerifiableMock
                     }
                 }
             }
@@ -206,10 +206,10 @@ try
 
                     It 'Should return the value $true' {
                         $testTargetResourceResult = Test-TargetResource @mockDefaultParameters
-                        $testTargetResourceResult | Should Be $true
+                        $testTargetResourceResult | Should -Be $true
                     }
 
-                    Assert-VerifiableMocks
+                    Assert-VerifiableMock
                 }
             }
         }

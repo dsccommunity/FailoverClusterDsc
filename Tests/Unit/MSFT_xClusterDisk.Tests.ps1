@@ -159,18 +159,18 @@ try
 
                     It 'Should return the correct type' {
                         $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                        $getTargetResourceResult | Should BeOfType [System.Collections.Hashtable]
+                        $getTargetResourceResult | Should -BeOfType [System.Collections.Hashtable]
                     }
 
                     It 'Should return the same values as passed as parameters' {
                         $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                        $getTargetResourceResult.Number | Should Be $mockTestParameters.Number
+                        $getTargetResourceResult.Number | Should -Be $mockTestParameters.Number
                     }
 
                     It 'Should return the disk as absent' {
                         $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                        $getTargetResourceResult.Ensure | Should Be 'Absent'
-                        $getTargetResourceResult.Label  | Should BeNullOrEmpty
+                        $getTargetResourceResult.Ensure | Should -Be 'Absent'
+                        $getTargetResourceResult.Label  | Should -BeNullOrEmpty
                     }
                 }
 
@@ -183,13 +183,13 @@ try
 
                     It 'Should return the same values as passed as parameters' {
                         $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                        $getTargetResourceResult.Number | Should Be $mockTestParameters.Number
+                        $getTargetResourceResult.Number | Should -Be $mockTestParameters.Number
                     }
 
                     It 'Should return the disk as present' {
                         $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                        $getTargetResourceResult.Ensure | Should Be 'Present'
-                        $getTargetResourceResult.Label | Should Be $mockDiskLabel
+                        $getTargetResourceResult.Ensure | Should -Be 'Present'
+                        $getTargetResourceResult.Label | Should -Be $mockDiskLabel
                     }
                 }
 
@@ -202,18 +202,18 @@ try
 
                     It 'Should return the same values as passed as parameters' {
                         $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                        $getTargetResourceResult.Number | Should Be $mockTestParameters.Number
+                        $getTargetResourceResult.Number | Should -Be $mockTestParameters.Number
                     }
 
                     It 'Should return the correct value for property Ensure' {
                         $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                        $getTargetResourceResult.Ensure | Should Be 'Present'
+                        $getTargetResourceResult.Ensure | Should -Be 'Present'
                     }
 
                     It 'Should return the correct value for property Label' {
                         $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                        $getTargetResourceResult.Label | Should Not Be $mockDisk_WrongLabel
-                        $getTargetResourceResult.Label | Should Be $mockDiskLabel
+                        $getTargetResourceResult.Label | Should -Not -Be $mockDisk_WrongLabel
+                        $getTargetResourceResult.Label | Should -Be $mockDiskLabel
                     }
                 }
             }
@@ -228,14 +228,14 @@ try
 
                     It 'Should return the correct type' {
                         $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                        $getTargetResourceResult | Should BeOfType [System.Collections.Hashtable]
+                        $getTargetResourceResult | Should -BeOfType [System.Collections.Hashtable]
                     }
 
                     It 'Should return the same values as passed as parameters' {
                         $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                        $getTargetResourceResult.Number | Should Be $mockTestParameters.Number
-                        $getTargetResourceResult.Ensure | Should Be 'Present'
-                        $getTargetResourceResult.Label  | Should Be $mockDiskLabel
+                        $getTargetResourceResult.Number | Should -Be $mockTestParameters.Number
+                        $getTargetResourceResult.Ensure | Should -Be 'Present'
+                        $getTargetResourceResult.Label  | Should -Be $mockDiskLabel
                     }
                 }
 
@@ -248,9 +248,9 @@ try
 
                     It 'Should return the same values as passed as parameters' {
                         $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                        $getTargetResourceResult.Number | Should Be $mockTestParameters.Number
-                        $getTargetResourceResult.Ensure | Should Be 'Absent'
-                        $getTargetResourceResult.Label  | Should BeNullOrEmpty
+                        $getTargetResourceResult.Number | Should -Be $mockTestParameters.Number
+                        $getTargetResourceResult.Ensure | Should -Be 'Absent'
+                        $getTargetResourceResult.Label  | Should -BeNullOrEmpty
                     }
                 }
             }
@@ -267,21 +267,21 @@ try
                 Context 'When Ensure is set to ''Present'' but the disk is not present' {
                     It 'Should return $false' {
                         $testTargetResourceResult = Test-TargetResource @mockTestParameter_ShouldBePresentButDiskDoesNotExist
-                        $testTargetResourceResult | Should Be $false
+                        $testTargetResourceResult | Should -Be $false
                     }
                 }
 
                 Context 'When Ensure is set to ''Absent'' and the disk is present' {
                     It 'Should return $false' {
                         $testTargetResourceResult = Test-TargetResource @mockTestParameter_ShouldBeAbsentButDiskExist
-                        $testTargetResourceResult | Should Be $false
+                        $testTargetResourceResult | Should -Be $false
                     }
                 }
 
                 Context 'When Ensure is set to ''Present'' and the disk is present but has the wrong label' {
                     It 'Should return $false' {
                         $testTargetResourceResult = Test-TargetResource @mockTestParameter_ShouldBePresentAndDiskExistButWrongLabel
-                        $testTargetResourceResult | Should Be $false
+                        $testTargetResourceResult | Should -Be $false
                     }
                 }
             }
@@ -290,14 +290,14 @@ try
                 Context 'When Ensure is set to ''Present'' and the disk is present' {
                     It 'Should return $true' {
                         $testTargetResourceResult = Test-TargetResource @mockTestParameter_ShouldBePresentAndDiskExist
-                        $testTargetResourceResult | Should Be $true
+                        $testTargetResourceResult | Should -Be $true
                     }
                 }
 
                 Context 'When Ensure is set to ''Absent'' and the disk is not present' {
                     It 'Should return $true' {
                         $testTargetResourceResult = Test-TargetResource @mockTestParameter_ShouldBeAbsentAndDiskDoesNotExist
-                        $testTargetResourceResult | Should Be $true
+                        $testTargetResourceResult | Should -Be $true
                     }
                 }
             }
@@ -332,7 +332,7 @@ try
                     }
 
                     It 'Should add the disk to the cluster' {
-                        { Set-TargetResource @mockTestParameter_ShouldBePresentButDiskDoesNotExist } | Should Not Throw
+                        { Set-TargetResource @mockTestParameter_ShouldBePresentButDiskDoesNotExist } | Should -Not -Throw
 
                         Assert-MockCalled -CommandName Add-ClusterDisk -Exactly -Times 1 -Scope It
                         Assert-MockCalled -CommandName Remove-ClusterResource -Exactly -Times 0 -Scope It
@@ -351,7 +351,7 @@ try
                     }
 
                     It 'Should remove the disk from the cluster' {
-                        { Set-TargetResource @mockTestParameter_ShouldBeAbsentButDiskExist } | Should Not Throw
+                        { Set-TargetResource @mockTestParameter_ShouldBeAbsentButDiskExist } | Should -Not -Throw
 
                         Assert-MockCalled -CommandName Add-ClusterDisk -Exactly -Times 0 -Scope It
                         Assert-MockCalled -CommandName Remove-ClusterResource -Exactly -Times 1 -Scope It
@@ -372,7 +372,7 @@ try
                     }
 
                     It 'Should not call any cluster cmdlets' {
-                        { Set-TargetResource @mockTestParameter_ShouldBePresentAndDiskExist } | Should Not Throw
+                        { Set-TargetResource @mockTestParameter_ShouldBePresentAndDiskExist } | Should -Not -Throw
 
                         Assert-MockCalled -CommandName Add-ClusterDisk -Exactly -Times 0 -Scope It
                         Assert-MockCalled -CommandName Get-CimInstance -Exactly -Times 0 -Scope It
@@ -392,7 +392,7 @@ try
                     }
 
                     It 'Should not call any cluster cmdlets' {
-                        { Set-TargetResource @mockTestParameter_ShouldBeAbsentAndDiskDoesNotExist } | Should Not Throw
+                        { Set-TargetResource @mockTestParameter_ShouldBeAbsentAndDiskDoesNotExist } | Should -Not -Throw
 
                         Assert-MockCalled -CommandName Add-ClusterDisk -Exactly -Times 0 -Scope It
                         Assert-MockCalled -CommandName Remove-ClusterResource -Exactly -Times 0 -Scope It

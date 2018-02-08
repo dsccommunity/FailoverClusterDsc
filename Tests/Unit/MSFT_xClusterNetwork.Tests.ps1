@@ -90,20 +90,20 @@ try
 
                 It 'Should return the correct type' {
                     $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                    $getTargetResourceResult | Should BeOfType [System.Collections.Hashtable]
+                    $getTargetResourceResult | Should -BeOfType [System.Collections.Hashtable]
                 }
 
                 It 'Should return the same values passed as parameters' {
                     $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                    $getTargetResourceResult.Address      | Should Be $mockTestParameters.Address
-                    $getTargetResourceResult.AddressMask  | Should Be $mockTestParameters.AddressMask
+                    $getTargetResourceResult.Address      | Should -Be $mockTestParameters.Address
+                    $getTargetResourceResult.AddressMask  | Should -Be $mockTestParameters.AddressMask
                 }
 
                 It 'Should not return the the correct values for the cluster network' {
                     $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                    $getTargetResourceResult.Name         | Should Not Be $mockAbsentClusterNetworkName
-                    $getTargetResourceResult.Role         | Should Not Be $mockAbsentClusterNetworkRole
-                    $getTargetResourceResult.Metric       | Should Not Be $mockAbsentClusterNetworkMetric
+                    $getTargetResourceResult.Name         | Should -Not -Be $mockAbsentClusterNetworkName
+                    $getTargetResourceResult.Role         | Should -Not -Be $mockAbsentClusterNetworkRole
+                    $getTargetResourceResult.Metric       | Should -Not -Be $mockAbsentClusterNetworkMetric
 
                     Assert-MockCalled -CommandName Get-ClusterNetwork -Exactly -Times 1 -Scope It
                 }
@@ -119,20 +119,20 @@ try
 
                 It 'Should return the correct type' {
                     $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                    $getTargetResourceResult | Should BeOfType [System.Collections.Hashtable]
+                    $getTargetResourceResult | Should -BeOfType [System.Collections.Hashtable]
                 }
 
                 It 'Should return the same values passed as parameters' {
                     $Result = Get-TargetResource @mockTestParameters
-                    $Result.Address      | Should Be $mockTestParameters.Address
-                    $Result.AddressMask  | Should Be $mockTestParameters.AddressMask
+                    $Result.Address      | Should -Be $mockTestParameters.Address
+                    $Result.AddressMask  | Should -Be $mockTestParameters.AddressMask
                 }
 
                 It 'Should return the the correct values for the cluster network' {
                     $Result = Get-TargetResource @mockTestParameters
-                    $Result.Name         | Should Be $mockPresentClusterNetworkName
-                    $Result.Role         | Should Be $mockPresentClusterNetworkRole
-                    $Result.Metric       | Should Be $mockPresentClusterNetworkMetric
+                    $Result.Name         | Should -Be $mockPresentClusterNetworkName
+                    $Result.Role         | Should -Be $mockPresentClusterNetworkRole
+                    $Result.Metric       | Should -Be $mockPresentClusterNetworkMetric
 
                     Assert-MockCalled -CommandName Get-ClusterNetwork -Exactly -Times 1 -Scope It
                 }
@@ -149,7 +149,7 @@ try
 
                     It 'Should return result as $false' {
                         $testTargetResourceResult = Test-TargetResource @mockTestParameters
-                        $testTargetResourceResult | Should Be $false
+                        $testTargetResourceResult | Should -Be $false
                     }
                 }
 
@@ -161,7 +161,7 @@ try
 
                     It 'Should return result as $false' {
                         $testTargetResourceResult = Test-TargetResource @mockTestParameters
-                        $testTargetResourceResult | Should Be $false
+                        $testTargetResourceResult | Should -Be $false
                     }
                 }
 
@@ -173,7 +173,7 @@ try
 
                     It 'Should return result as $false' {
                         $testTargetResourceResult = Test-TargetResource @mockTestParameters
-                        $testTargetResourceResult | Should Be $false
+                        $testTargetResourceResult | Should -Be $false
                     }
                 }
 
@@ -185,7 +185,7 @@ try
 
                     It 'Should return result as $false' {
                         $testTargetResourceResult = Test-TargetResource @mockTestParameters
-                        $testTargetResourceResult | Should Be $false
+                        $testTargetResourceResult | Should -Be $false
                     }
                 }
             }
@@ -197,7 +197,7 @@ try
 
                 It 'Should return result as $true' {
                     $testTargetResourceResult = Test-TargetResource @mockTestParameters
-                    $testTargetResourceResult | Should Be $true
+                    $testTargetResourceResult | Should -Be $true
                 }
             }
         }
@@ -216,8 +216,8 @@ try
                     }
 
                     It 'Should call Update method correct number of times' {
-                        { Set-TargetResource @mockTestParameters } | Should Not Throw
-                        $script:mockNumerOfTimesMockedMethodUpdateWasCalled | Should BeExactly 3
+                        { Set-TargetResource @mockTestParameters } | Should -Not -Throw
+                        $script:mockNumerOfTimesMockedMethodUpdateWasCalled | Should -BeExactly 3
                     }
                 }
 
@@ -228,8 +228,8 @@ try
                     }
 
                     It 'Should call Update method correct number of times' {
-                        { Set-TargetResource @mockTestParameters } | Should Not Throw
-                        $script:mockNumerOfTimesMockedMethodUpdateWasCalled | Should BeExactly 1
+                        { Set-TargetResource @mockTestParameters } | Should -Not -Throw
+                        $script:mockNumerOfTimesMockedMethodUpdateWasCalled | Should -BeExactly 1
                     }
                 }
 
@@ -240,8 +240,8 @@ try
                     }
 
                     It 'Should call Update method correct number of times' {
-                        { Set-TargetResource @mockTestParameters } | Should Not Throw
-                        $script:mockNumerOfTimesMockedMethodUpdateWasCalled | Should BeExactly 1
+                        { Set-TargetResource @mockTestParameters } | Should -Not -Throw
+                        $script:mockNumerOfTimesMockedMethodUpdateWasCalled | Should -BeExactly 1
                     }
                 }
 
@@ -252,8 +252,8 @@ try
                     }
 
                     It 'Should call Update method correct number of times' {
-                        { Set-TargetResource @mockTestParameters } | Should Not Throw
-                        $script:mockNumerOfTimesMockedMethodUpdateWasCalled | Should BeExactly 1
+                        { Set-TargetResource @mockTestParameters } | Should -Not -Throw
+                        $script:mockNumerOfTimesMockedMethodUpdateWasCalled | Should -BeExactly 1
                     }
                 }
             }
@@ -268,8 +268,8 @@ try
                 }
 
                 It 'Should call Update method correct number of times' {
-                    { Set-TargetResource @mockTestParameters } | Should Not Throw
-                    $script:mockNumerOfTimesMockedMethodUpdateWasCalled | Should BeExactly 0
+                    { Set-TargetResource @mockTestParameters } | Should -Not -Throw
+                    $script:mockNumerOfTimesMockedMethodUpdateWasCalled | Should -BeExactly 0
                 }
             }
         }

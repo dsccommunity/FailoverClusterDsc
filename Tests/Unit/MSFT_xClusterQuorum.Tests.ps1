@@ -3,7 +3,7 @@ $script:DSCResourceName = 'MSFT_xClusterQuorum'
 
 #region Header
 
-# Unit Test Template Version: 1.2.0
+# Unit Test Template Version: 1.3.0
 $script:moduleRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 if ( (-not (Test-Path -Path (Join-Path -Path $script:moduleRoot -ChildPath 'DSCResource.Tests'))) -or `
     (-not (Test-Path -Path (Join-Path -Path $script:moduleRoot -ChildPath 'DSCResource.Tests\TestHelper.psm1'))) )
@@ -41,10 +41,15 @@ try
         $mockQuorumType_NodeAndDiskMajority = 'NodeAndDiskMajority'
         $mockQuorumType_NodeAndFileShareMajority = 'NodeAndFileShareMajority'
         $mockQuorumType_DiskOnly = 'DiskOnly'
+        $mockQuorumType_NodeAndCloudMajority = 'NodeAndCloudMajority'
         $mockQuorumType_Unknown = 'Unknown'
+
+        $mockQuorumTypeDisplayName = 'File Share Quorum Witness'
 
         $mockQuorumResourceName = 'Witness'
         $mockQuorumFileShareWitnessPath = '\\FILE01\CLUSTER01'
+        $mockQuorumAccountName = 'AccountName'
+        $mockQuorumAccessKey = 'USRuD354YbOHkPI35SUVyMj2W3odWekMIEdj3n2qAbc0yzqwpMwH-+M+GHJ27OuA5FkTxsbBF9qGc6r6UM3ipg=='
 
         $mockGetClusterQuorum = {
             $getClusterQuorumReturnValue = [PSCustomObject] @{
@@ -59,7 +64,7 @@ try
                 }
             }
 
-            switch ($mockDynamicExcpectedQuorumType)
+            switch ($mockDynamicExpectedQuorumType)
             {
                 $mockQuorumType_NodeMajority
                 {
@@ -73,7 +78,12 @@ try
 
                 $mockQuorumType_NodeAndFileShareMajority
                 {
-                    $getClusterQuorumReturnValue.QuorumResource.ResourceType.DisplayName = 'File Share Witness'
+                    $getClusterQuorumReturnValue.QuorumResource.ResourceType.DisplayName = $mockDynamicQuorumTypeDisplayName
+                }
+
+                $mockQuorumType_NodeAndCloudMajority
+                {
+                    $getClusterQuorumReturnValue.QuorumResource.ResourceType.DisplayName = 'Cloud Witness'
                 }
 
                 $mockQuorumType_Unknown
@@ -85,10 +95,10 @@ try
             $getClusterQuorumReturnValue
         }
 
-        $mockGetClusterParameter = {
+        $mockGetClusterParameter_SharePath = {
             @(
                 [PSCustomObject] @{
-                    ClusterObject = 'File Share Witness'
+                    ClusterObject = $mockDynamicQuorumTypeDisplayName
                     Name          = 'SharePath'
                     IsReadOnly    = 'False'
                     ParameterType = 'String'
@@ -97,8 +107,24 @@ try
             )
         }
 
-        $mockGetClusterParameter_ParameterFilter = {
+        $mockGetClusterParameter_SharePath_ParameterFilter = {
             $Name -eq 'SharePath'
+        }
+
+        $mockGetClusterParameter_AccountName = {
+            @(
+                [PSCustomObject] @{
+                    ClusterObject = 'File Share Witness'
+                    Name          = 'AccountName'
+                    IsReadOnly    = 'False'
+                    ParameterType = 'String'
+                    Value         = $mockQuorumAccountName
+                }
+            )
+        }
+
+        $mockGetClusterParameter_AccountName_ParameterFilter = {
+            $Name -eq 'AccountName'
         }
 
         $mockSetClusterQuorum_NoWitness_ParameterFilter = {
@@ -106,65 +132,21 @@ try
         }
 
         $mockSetClusterQuorum_DiskWitness_ParameterFilter = {
-            $PSBoundParameters.ContainsKey('DiskWitness') -eq $true
+            $DiskWitness -eq $mockQuorumResourceName
         }
 
         $mockSetClusterQuorum_FileShareWitness_ParameterFilter = {
-            $PSBoundParameters.ContainsKey('FileShareWitness') -eq $true
+            $FileShareWitness -eq $mockQuorumResourceName
         }
 
         $mockSetClusterQuorum_DiskOnly_ParameterFilter = {
-            $PSBoundParameters.ContainsKey('DiskOnly') -eq $true
+            $DiskOnly -eq $mockQuorumResourceName
         }
 
-        $mockSetClusterQuorum = {
-            $wrongParameters = $false
-
-            # Evaluate if the Set-ClusterQuorum is called with the correct parameters.
-            switch ($mockDynamicSetClusterQuorum_ExcpectedQuorumType)
-            {
-                $mockQuorumType_NodeMajority
-                {
-                    if (-not $NoWitness)
-                    {
-                        $wrongParameters = $true
-                    }
-                }
-
-                $mockQuorumType_NodeAndDiskMajority
-                {
-                    if ($DiskWitness -ne $mockDynamicQuorumResourceName)
-                    {
-                        $wrongParameters = $true
-                    }
-                }
-
-                $mockQuorumType_NodeAndFileShareMajority
-                {
-                    if ($FileShareWitness -ne $mockDynamicQuorumResourceName)
-                    {
-                        $wrongParameters = $true
-                    }
-                }
-
-                $mockQuorumType_DiskOnly
-                {
-                    if ($DiskOnly -ne $mockDynamicQuorumResourceName)
-                    {
-                        $wrongParameters = $true
-                    }
-                }
-
-                default
-                {
-                    $wrongParameters = $true
-                }
-            }
-
-            if ($wrongParameters)
-            {
-                throw 'Mock Set-ClusterQuorum was called with the wrong parameters.'
-            }
+        $mockSetClusterQuorum_CloudWitness_ParameterFilter = {
+            $CloudWitness -eq $true `
+            -and $AccountName -eq $mockQuorumAccountName `
+            -and $AccessKey -eq $mockQuorumAccessKey
         }
 
         $mockDefaultParameters = @{
@@ -174,7 +156,8 @@ try
         Describe 'xClusterQuorum\Get-TargetResource' {
             BeforeEach {
                 Mock -CommandName 'Get-ClusterQuorum' -MockWith $mockGetClusterQuorum
-                Mock -CommandName 'Get-ClusterParameter' -MockWith $mockGetClusterParameter -ParameterFilter $mockGetClusterParameter_ParameterFilter
+                Mock -CommandName 'Get-ClusterParameter' -MockWith $mockGetClusterParameter_SharePath -ParameterFilter $mockGetClusterParameter_SharePath_ParameterFilter
+                Mock -CommandName 'Get-ClusterParameter' -MockWith $mockGetClusterParameter_AccountName -ParameterFilter $mockGetClusterParameter_AccountName_ParameterFilter
 
                 $mockTestParameters = $mockDefaultParameters.Clone()
             }
@@ -192,36 +175,36 @@ try
 
                         It 'Should return the correct type' {
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                            $getTargetResourceResult | Should BeOfType [System.Collections.Hashtable]
+                            $getTargetResourceResult | Should -BeOfType [System.Collections.Hashtable]
                         }
 
                         It 'Should return the same values as passed as parameters' {
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                            $getTargetResourceResult.IsSingleInstance | Should Be $mockTestParameters.IsSingleInstance
+                            $getTargetResourceResult.IsSingleInstance | Should -Be $mockTestParameters.IsSingleInstance
                         }
 
                         It 'Should return the correct values' {
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                            $getTargetResourceResult.Type | Should Be $mockQuorumType_NodeMajority
-                            $getTargetResourceResult.Resource  | Should Be $mockQuorumResourceName
+                            $getTargetResourceResult.Type | Should -Be $mockQuorumType_NodeMajority
+                            $getTargetResourceResult.Resource  | Should -Be $mockQuorumResourceName
                         }
                     }
 
                     Context 'When target node is Windows Server 2016 and newer' {
                         BeforeEach {
                             $mockDynamicQuorumType = $mockQuorumType_Majority
-                            $mockDynamicExcpectedQuorumType = $mockQuorumType_NodeMajority
+                            $mockDynamicExpectedQuorumType = $mockQuorumType_NodeMajority
                         }
 
                         It 'Should return the same values as passed as parameters' {
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                            $getTargetResourceResult.IsSingleInstance | Should Be $mockTestParameters.IsSingleInstance
+                            $getTargetResourceResult.IsSingleInstance | Should -Be $mockTestParameters.IsSingleInstance
                         }
 
                         It 'Should return the correct values' {
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                            $getTargetResourceResult.Type | Should Be $mockQuorumType_NodeMajority
-                            $getTargetResourceResult.Resource  | Should BeNullorEmpty
+                            $getTargetResourceResult.Type | Should -Be $mockQuorumType_NodeMajority
+                            $getTargetResourceResult.Resource  | Should -BeNullorEmpty
                         }
                     }
                 }
@@ -234,31 +217,31 @@ try
 
                         It 'Should return the same values as passed as parameters' {
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                            $getTargetResourceResult.IsSingleInstance | Should Be $mockTestParameters.IsSingleInstance
+                            $getTargetResourceResult.IsSingleInstance | Should -Be $mockTestParameters.IsSingleInstance
                         }
 
                         It 'Should return the correct values' {
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                            $getTargetResourceResult.Type | Should Be $mockQuorumType_NodeAndDiskMajority
-                            $getTargetResourceResult.Resource  | Should Be $mockQuorumResourceName
+                            $getTargetResourceResult.Type | Should -Be $mockQuorumType_NodeAndDiskMajority
+                            $getTargetResourceResult.Resource  | Should -Be $mockQuorumResourceName
                         }
                     }
 
                     Context 'When target node is Windows Server 2016 and newer' {
                         BeforeEach {
                             $mockDynamicQuorumType = $mockQuorumType_Majority
-                            $mockDynamicExcpectedQuorumType = $mockQuorumType_NodeAndDiskMajority
+                            $mockDynamicExpectedQuorumType = $mockQuorumType_NodeAndDiskMajority
                         }
 
                         It 'Should return the same values as passed as parameters' {
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                            $getTargetResourceResult.IsSingleInstance | Should Be $mockTestParameters.IsSingleInstance
+                            $getTargetResourceResult.IsSingleInstance | Should -Be $mockTestParameters.IsSingleInstance
                         }
 
                         It 'Should return the correct values' {
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                            $getTargetResourceResult.Type | Should Be $mockQuorumType_NodeAndDiskMajority
-                            $getTargetResourceResult.Resource  | Should Be $mockQuorumResourceName
+                            $getTargetResourceResult.Type | Should -Be $mockQuorumType_NodeAndDiskMajority
+                            $getTargetResourceResult.Resource  | Should -Be $mockQuorumResourceName
                         }
                     }
                 }
@@ -271,31 +254,52 @@ try
 
                         It 'Should return the same values as passed as parameters' {
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                            $getTargetResourceResult.IsSingleInstance | Should Be $mockTestParameters.IsSingleInstance
+                            $getTargetResourceResult.IsSingleInstance | Should -Be $mockTestParameters.IsSingleInstance
                         }
 
                         It 'Should return the correct values' {
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                            $getTargetResourceResult.Type | Should Be $mockQuorumType_NodeAndFileShareMajority
-                            $getTargetResourceResult.Resource  | Should Be $mockQuorumFileShareWitnessPath
+                            $getTargetResourceResult.Type | Should -Be $mockQuorumType_NodeAndFileShareMajority
+                            $getTargetResourceResult.Resource  | Should -Be $mockQuorumFileShareWitnessPath
                         }
                     }
 
                     Context 'When target node is Windows Server 2016 and newer' {
                         BeforeEach {
                             $mockDynamicQuorumType = $mockQuorumType_Majority
-                            $mockDynamicExcpectedQuorumType = $mockQuorumType_NodeAndFileShareMajority
+                            $mockDynamicExpectedQuorumType = $mockQuorumType_NodeAndFileShareMajority
+                            $mockDynamicQuorumTypeDisplayName = $mockQuorumTypeDisplayName
                         }
 
                         It 'Should return the same values as passed as parameters' {
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                            $getTargetResourceResult.IsSingleInstance | Should Be $mockTestParameters.IsSingleInstance
+                            $getTargetResourceResult.IsSingleInstance | Should -Be $mockTestParameters.IsSingleInstance
                         }
 
                         It 'Should return the correct values' {
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                            $getTargetResourceResult.Type | Should Be $mockQuorumType_NodeAndFileShareMajority
-                            $getTargetResourceResult.Resource  | Should Be $mockQuorumFileShareWitnessPath
+                            $getTargetResourceResult.Type | Should -Be $mockQuorumType_NodeAndFileShareMajority
+                            $getTargetResourceResult.Resource  | Should -Be $mockQuorumFileShareWitnessPath
+                        }
+                    }
+                }
+
+                Context 'When desired state should be NodeAndCloudMajority' {
+                    Context 'When target node is Windows Server 2016 and newer' {
+                        BeforeEach {
+                            $mockDynamicQuorumType = $mockQuorumType_Majority
+                            $mockDynamicExpectedQuorumType = $mockQuorumType_NodeAndCloudMajority
+                        }
+
+                        It 'Should return the same values as passed as parameters' {
+                            $getTargetResourceResult = Get-TargetResource @mockTestParameters
+                            $getTargetResourceResult.IsSingleInstance | Should -Be $mockTestParameters.IsSingleInstance
+                        }
+
+                        It 'Should return the correct values' {
+                            $getTargetResourceResult = Get-TargetResource @mockTestParameters
+                            $getTargetResourceResult.Type | Should -Be $mockQuorumType_NodeAndCloudMajority
+                            $getTargetResourceResult.Resource  | Should -Be $mockQuorumAccountName
                         }
                     }
                 }
@@ -307,13 +311,13 @@ try
 
                     It 'Should return the same values as passed as parameters' {
                         $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                        $getTargetResourceResult.IsSingleInstance | Should Be $mockTestParameters.IsSingleInstance
+                        $getTargetResourceResult.IsSingleInstance | Should -Be $mockTestParameters.IsSingleInstance
                     }
 
                     It 'Should return the correct values' {
                         $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                        $getTargetResourceResult.Type | Should Be $mockQuorumType_DiskOnly
-                        $getTargetResourceResult.Resource  | Should Be $mockQuorumResourceName
+                        $getTargetResourceResult.Type | Should -Be $mockQuorumType_DiskOnly
+                        $getTargetResourceResult.Resource  | Should -Be $mockQuorumResourceName
                     }
                 }
 
@@ -324,18 +328,18 @@ try
                         }
 
                         It 'Should throw the correct error message' {
-                            { Get-TargetResource @mockTestParameters } | Should Throw ('Unknown quorum type: {0}' -f $mockQuorumType_Unknown)
+                            { Get-TargetResource @mockTestParameters } | Should -Throw ('Unknown quorum type: {0}' -f $mockQuorumType_Unknown)
                         }
                     }
 
                     Context 'When target node is Windows Server 2016 and newer' {
                         BeforeEach {
                             $mockDynamicQuorumType = $mockQuorumType_Majority
-                            $mockDynamicExcpectedQuorumType = $mockQuorumType_Unknown
+                            $mockDynamicExpectedQuorumType = $mockQuorumType_Unknown
                         }
 
                         It 'Should throw the correct error message' {
-                            { Get-TargetResource @mockTestParameters } | Should Throw ('Unknown quorum resource: {0}' -f '@{Name=Witness; OwnerGroup=Cluster Group; ResourceType=}')
+                            { Get-TargetResource @mockTestParameters } | Should -Throw ('Unknown quorum resource: {0}' -f '@{Name=Witness; OwnerGroup=Cluster Group; ResourceType=}')
                         }
                     }
                 }
@@ -345,7 +349,8 @@ try
         Describe 'xClusterQuorum\Test-TargetResource' {
             BeforeEach {
                 Mock -CommandName 'Get-ClusterQuorum' -MockWith $mockGetClusterQuorum
-                Mock -CommandName 'Get-ClusterParameter' -MockWith $mockGetClusterParameter -ParameterFilter $mockGetClusterParameter_ParameterFilter
+                Mock -CommandName 'Get-ClusterParameter' -MockWith $mockGetClusterParameter_SharePath -ParameterFilter $mockGetClusterParameter_SharePath_ParameterFilter
+                Mock -CommandName 'Get-ClusterParameter' -MockWith $mockGetClusterParameter_AccountName -ParameterFilter $mockGetClusterParameter_AccountName_ParameterFilter
 
                 $mockTestParameters = $mockDefaultParameters.Clone()
             }
@@ -365,7 +370,7 @@ try
 
                         It 'Should return the value $false' {
                             $testTargetResourceResult = Test-TargetResource @mockTestParameters
-                            $testTargetResourceResult | Should Be $false
+                            $testTargetResourceResult | Should -Be $false
                         }
                     }
 
@@ -374,12 +379,12 @@ try
                             $mockDynamicQuorumType = $mockQuorumType_Majority
                             $mockDynamicQuorumResourceName = $mockQuorumResourceName
 
-                            $mockDynamicExcpectedQuorumType = $mockQuorumType_NodeAndDiskMajority
+                            $mockDynamicExpectedQuorumType = $mockQuorumType_NodeAndDiskMajority
                         }
 
                         It 'Should return the value $false' {
                             $testTargetResourceResult = Test-TargetResource @mockTestParameters
-                            $testTargetResourceResult | Should Be $false
+                            $testTargetResourceResult | Should -Be $false
                         }
                     }
                 }
@@ -398,7 +403,7 @@ try
 
                         It 'Should return the value $false' {
                             $testTargetResourceResult = Test-TargetResource @mockTestParameters
-                            $testTargetResourceResult | Should Be $false
+                            $testTargetResourceResult | Should -Be $false
                         }
                     }
 
@@ -406,12 +411,12 @@ try
                         BeforeEach {
                             $mockDynamicQuorumType = $mockQuorumType_Majority
 
-                            $mockDynamicExcpectedQuorumType = $mockQuorumType_NodeMajority
+                            $mockDynamicExpectedQuorumType = $mockQuorumType_NodeMajority
                         }
 
                         It 'Should return the value $false' {
                             $testTargetResourceResult = Test-TargetResource @mockTestParameters
-                            $testTargetResourceResult | Should Be $false
+                            $testTargetResourceResult | Should -Be $false
                         }
                     }
                 }
@@ -424,19 +429,19 @@ try
 
                         It 'Should return the value $false' {
                             $testTargetResourceResult = Test-TargetResource @mockTestParameters
-                            $testTargetResourceResult | Should Be $false
+                            $testTargetResourceResult | Should -Be $false
                         }
                     }
 
                     Context 'When target node is Windows Server 2016 and newer' {
                         BeforeEach {
                             $mockDynamicQuorumType = $mockQuorumType_Majority
-                            $mockDynamicExcpectedQuorumType = $mockQuorumType_NodeAndDiskMajority
+                            $mockDynamicExpectedQuorumType = $mockQuorumType_NodeAndDiskMajority
                         }
 
                         It 'Should return the value $false' {
                             $testTargetResourceResult = Test-TargetResource @mockTestParameters
-                            $testTargetResourceResult | Should Be $false
+                            $testTargetResourceResult | Should -Be $false
                         }
                     }
                 }
@@ -449,19 +454,38 @@ try
 
                         It 'Should return the value $false' {
                             $testTargetResourceResult = Test-TargetResource @mockTestParameters
-                            $testTargetResourceResult | Should Be $false
+                            $testTargetResourceResult | Should -Be $false
                         }
                     }
 
                     Context 'When target node is Windows Server 2016 and newer' {
                         BeforeEach {
                             $mockDynamicQuorumType = $mockQuorumType_Majority
-                            $mockDynamicExcpectedQuorumType = $mockQuorumType_NodeAndFileShareMajority
+                            $mockDynamicExpectedQuorumType = $mockQuorumType_NodeAndFileShareMajority
+                            $mockDynamicQuorumTypeDisplayName = $mockQuorumTypeDisplayName
                         }
 
                         It 'Should return the value $false' {
                             $testTargetResourceResult = Test-TargetResource @mockTestParameters
-                            $testTargetResourceResult | Should Be $false
+                            $testTargetResourceResult | Should -Be $false
+                        }
+                    }
+                }
+
+                Context 'When desired state should be NodeAndCloudMajority' {
+                    Context 'When target node is Windows Server 2016 and newer' {
+                        BeforeEach {
+                            $mockDynamicQuorumType = $mockQuorumType_NodeMajority
+                            $mockDynamicExpectedQuorumType = $mockQuorumType_NodeAndCloudMajority
+
+                            $mockTestParameters['Type'] = $mockQuorumType_NodeAndCloudMajority
+                            $mockTestParameters['Resource'] = $mockQuorumAccountName
+                            $mockTestParameters['StorageAccountAccessKey'] = $mockQuorumAccessKey
+                        }
+
+                        It 'Should return the value $false' {
+                            $testTargetResourceResult = Test-TargetResource @mockTestParameters
+                            $testTargetResourceResult | Should -Be $false
                         }
                     }
                 }
@@ -473,7 +497,7 @@ try
 
                     It 'Should return the value $false' {
                         $testTargetResourceResult = Test-TargetResource @mockTestParameters
-                        $testTargetResourceResult | Should Be $false
+                        $testTargetResourceResult | Should -Be $false
                     }
                 }
             }
@@ -493,7 +517,7 @@ try
 
                         It 'Should return the value $true' {
                             $testTargetResourceResult = Test-TargetResource @mockTestParameters
-                            $testTargetResourceResult | Should Be $true
+                            $testTargetResourceResult | Should -Be $true
                         }
                     }
 
@@ -502,12 +526,30 @@ try
                             $mockDynamicQuorumType = $mockQuorumType_Majority
                             $mockTestParameters['Resource'] = $null
 
-                            $mockDynamicExcpectedQuorumType = $mockQuorumType_NodeMajority
+                            $mockDynamicExpectedQuorumType = $mockQuorumType_NodeMajority
                         }
 
                         It 'Should return the value $true' {
                             $testTargetResourceResult = Test-TargetResource @mockTestParameters
-                            $testTargetResourceResult | Should Be $true
+                            $testTargetResourceResult | Should -Be $true
+                        }
+                    }
+
+                    Context 'When desired state should be NodeAndCloudMajority' {
+                        Context 'When target node is Windows Server 2016 and newer' {
+                            BeforeEach {
+                                $mockDynamicQuorumType = $mockQuorumType_Majority
+                                $mockDynamicExpectedQuorumType = $mockQuorumType_NodeAndCloudMajority
+
+                                $mockTestParameters['Type'] = $mockQuorumType_NodeAndCloudMajority
+                                $mockTestParameters['Resource'] = $mockQuorumAccountName
+                                $mockTestParameters['StorageAccountAccessKey'] = $mockQuorumAccessKey
+                            }
+
+                            It 'Should return the value $false' {
+                                $testTargetResourceResult = Test-TargetResource @mockTestParameters
+                                $testTargetResourceResult | Should -Be $true
+                            }
                         }
                     }
                 }
@@ -516,21 +558,18 @@ try
 
         Describe 'xClusterQuorum\Set-TargetResource' {
             BeforeEach {
+                Mock -CommandName 'Set-ClusterQuorum'
+
                 $mockTestParameters = $mockDefaultParameters.Clone()
             }
 
             Context 'When quorum type should be NodeMajority' {
                 BeforeEach {
-                    Mock -CommandName 'Set-ClusterQuorum' -MockWith $mockSetClusterQuorum `
-                        -ParameterFilter $mockSetClusterQuorum_NoWitness_ParameterFilter
-
                     $mockTestParameters['Type'] = $mockQuorumType_NodeMajority
-
-                    $mockDynamicSetClusterQuorum_ExcpectedQuorumType = $mockQuorumType_NodeMajority
                 }
 
                 It 'Should set the quorum in the cluster without throwing an error' {
-                    { Set-TargetResource @mockTestParameters } |  Should Not Throw
+                    { Set-TargetResource @mockTestParameters } |  Should -Not -Throw
 
                     Assert-MockCalled -CommandName 'Set-ClusterQuorum' `
                                       -ParameterFilter $mockSetClusterQuorum_NoWitness_ParameterFilter `
@@ -540,18 +579,14 @@ try
 
             Context 'When quorum type should be NodeMajority' {
                 BeforeEach {
-                    Mock -CommandName 'Set-ClusterQuorum' -MockWith $mockSetClusterQuorum `
-                        -ParameterFilter $mockSetClusterQuorum_DiskWitness_ParameterFilter
-
                     $mockTestParameters['Type'] = $mockQuorumType_NodeAndDiskMajority
                     $mockTestParameters['Resource'] = $mockQuorumResourceName
 
                     $mockDynamicQuorumResourceName = $mockQuorumResourceName
-                    $mockDynamicSetClusterQuorum_ExcpectedQuorumType = $mockQuorumType_NodeAndDiskMajority
                 }
 
                 It 'Should set the quorum in the cluster without throwing an error' {
-                    { Set-TargetResource @mockTestParameters } |  Should Not Throw
+                    { Set-TargetResource @mockTestParameters } |  Should -Not -Throw
 
                     Assert-MockCalled -CommandName 'Set-ClusterQuorum' `
                                       -ParameterFilter $mockSetClusterQuorum_DiskWitness_ParameterFilter `
@@ -561,18 +596,14 @@ try
 
             Context 'When quorum type should be NodeMajority' {
                 BeforeEach {
-                    Mock -CommandName 'Set-ClusterQuorum' -MockWith $mockSetClusterQuorum `
-                        -ParameterFilter $mockSetClusterQuorum_FileShareWitness_ParameterFilter
-
                     $mockTestParameters['Type'] = $mockQuorumType_NodeAndFileShareMajority
                     $mockTestParameters['Resource'] = $mockQuorumResourceName
 
                     $mockDynamicQuorumResourceName = $mockQuorumResourceName
-                    $mockDynamicSetClusterQuorum_ExcpectedQuorumType = $mockQuorumType_NodeAndFileShareMajority
                 }
 
                 It 'Should set the quorum in the cluster without throwing an error' {
-                    { Set-TargetResource @mockTestParameters } |  Should Not Throw
+                    { Set-TargetResource @mockTestParameters } |  Should -Not -Throw
 
                     Assert-MockCalled -CommandName 'Set-ClusterQuorum' `
                                       -ParameterFilter $mockSetClusterQuorum_FileShareWitness_ParameterFilter `
@@ -580,20 +611,34 @@ try
                 }
             }
 
+            Context 'When quorum type should be NodeAndCloudMajority' {
+                BeforeEach {
+                    $mockTestParameters['Type'] = $mockQuorumType_NodeAndCloudMajority
+                    $mockTestParameters['Resource'] = $mockQuorumAccountName
+                    $mockTestParameters['StorageAccountAccessKey'] = $mockQuorumAccessKey
+
+                    $mockDynamicQuorumResourceName = $mockQuorumAccountName
+                }
+
+                It 'Should set the quorum in the cluster without throwing an error' {
+                    { Set-TargetResource @mockTestParameters } |  Should -Not -Throw
+
+                    Assert-MockCalled -CommandName 'Set-ClusterQuorum' `
+                                      -ParameterFilter $mockSetClusterQuorum_CloudWitness_ParameterFilter `
+                                      -Exactly -Times 1 -Scope It
+                }
+            }
+
             Context 'When quorum type should be NodeMajority' {
                 BeforeEach {
-                    Mock -CommandName 'Set-ClusterQuorum' -MockWith $mockSetClusterQuorum `
-                        -ParameterFilter $mockSetClusterQuorum_DiskOnly_ParameterFilter
-
                     $mockTestParameters['Type'] = $mockQuorumType_DiskOnly
                     $mockTestParameters['Resource'] = $mockQuorumResourceName
 
                     $mockDynamicQuorumResourceName = $mockQuorumResourceName
-                    $mockDynamicSetClusterQuorum_ExcpectedQuorumType = $mockQuorumType_DiskOnly
                 }
 
                 It 'Should set the quorum in the cluster without throwing an error' {
-                    { Set-TargetResource @mockTestParameters } |  Should Not Throw
+                    { Set-TargetResource @mockTestParameters } |  Should -Not -Throw
 
                     Assert-MockCalled -CommandName 'Set-ClusterQuorum' `
                                       -ParameterFilter $mockSetClusterQuorum_DiskOnly_ParameterFilter `

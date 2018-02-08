@@ -1,6 +1,6 @@
 <#
 .EXAMPLE
-    This example shows how to create the failover cluster on the first node.
+    This example shows how to create the a failover cluster on the first node and ignoring a network.
 #>
 
 Configuration Example
@@ -39,6 +39,7 @@ Configuration Example
         {
             Name                          = 'Cluster01'
             StaticIPAddress               = '192.168.100.20/24'
+            IgnoreNetwork                 = @('10.0.2.0/24')
 
             <#
                 This user must have the permission to create the CNO (Cluster Name Object) in Active Directory,

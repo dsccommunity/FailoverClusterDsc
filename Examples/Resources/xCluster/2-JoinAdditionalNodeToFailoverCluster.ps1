@@ -1,6 +1,6 @@
 <#
 .EXAMPLE
-    This example shows how to add an additional node to the a failover cluster.
+    This example shows how to add an additional node to the failover cluster.
 #>
 
 Configuration Example

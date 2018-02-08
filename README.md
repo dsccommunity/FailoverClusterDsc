@@ -61,8 +61,15 @@ the target node ($env:COMPUTERNAME) to the cluster.
 #### Parameters for xCluster
 
 * **`[String]` Name** _(Key)_: Name of the failover cluster.
-* **`[String]` StaticIPAddress** _(Required)_: Static IP Address of the failover
-  cluster.
+* **`[String]` StaticIPAddress** _(Write)_: The static IP address of the failover
+  cluster. If this is not specified then the IP address will be assigned from a
+  DHCP.
+* **`[String[]]` IgnoreNetwork** _(Write)_: One or more networks to ignore when
+  creating the cluster. Only networks using Static IP can be ignored, networks
+  that are assigned an IP address through DHCP cannot be ignored, and are added
+  for cluster communication. To remove networks assigned an IP address through DHCP
+  use the resource xClusterNetwork to change the role of the network. This parameter
+  is only used during the creation of the cluster and is not monitored after.
 * **`[String]` DomainAdministratorCredential** _(Required)_: Credential used to
   create the failover cluster in Active Directory.
 
@@ -71,6 +78,9 @@ the target node ($env:COMPUTERNAME) to the cluster.
 * [Create first node of a failover cluster](/Examples/Resources/xCluster/1-CreateFirstNodeOfAFailoverCluster.ps1)
 * [Join additional node to a failover cluster](/Examples/Resources/xCluster/2-JoinAdditionalNodeToFailoverCluster.ps1)
 * [Create failover cluster with two nodes](/Examples/Resources/xCluster/3-CreateFailoverClusterWithTwoNodes.ps1)
+* [Create first node of a failover cluster with DHCP](/Examples/Resources/xCluster/4-CreateFirstNodeOfAFailoverClusterWithDHCP.ps1)
+* [Join additional node to a failover cluster with DHCP](/Examples/Resources/xCluster/5-JoinAdditionalNodeToFailoverClusterWithDHCP.ps1)
+* [Create failover cluster and ignoring a network](/Examples/Resources/xCluster/4-CreateFailoverClusterAndIgnoreANetwork.ps1)
 
 ### xClusterDisk
 
@@ -98,8 +108,7 @@ Configures shared disks in a cluster.
 
 Configures a cluster network in a failover cluster.
 
->Note: Currently this resource is only able to change the properties Name, Role
->and Metric. It is not possible to add or remove cluster networks (issue #92).
+This resource is only able to change properties on cluster networks.  To add or remove networks from the cluster, add or remove them from the cluster members.  By adding a new subnet on one of the cluster nodes, the network will be added to the cluster, and metadata can be set using the xClusterNetwork module.
 
 #### Requirements for xClusterNetwork
 
@@ -164,7 +173,9 @@ cluster.
 
 ### xClusterQuorum
 
-Configures quorum in a cluster.
+Configures quorum in a cluster. For information on how to choose the correct
+quorum type, please see the article
+[Understanding Quorum Configurations in a Failover Cluster](https://technet.microsoft.com/en-us/library/cc731739(v=ws.11).aspx).
 
 #### Requirements for xClusterQuorum
 
@@ -175,10 +186,14 @@ Configures quorum in a cluster.
 * **`[String]` IsSingleInstance** _(Key)_: Specifies the resource is a single
   instance, the value must be 'Yes'.
 * **`[String]` Type** _(Write)_: Quorum type to use. { NodeMajority |
-  NodeAndDiskMajority | NodeAndFileShareMajority, DiskOnly }.
-* **`[String]` Resource** _(Write)_: The name of the disk or file share resource
-  to use as witness. This parameter is optional if the quorum type is set to
-  NodeMajority.
+  NodeAndDiskMajority | NodeAndFileShareMajority | NodeAndCloudMajority, DiskOnly }.
+* **`[String]` Resource** _(Write)_: The name of the disk, file share or Azure
+  storage account resource to use as witness. This parameter is optional if the
+  quorum type is set to NodeMajority.
+* **`[String]` StorageAccountAccessKey** _(Write)_: The access key of the Azure
+  storage account to use as witness. This parameter is required if the quorum
+  type is set to NodeAndCloudMajority. The key is currently not updated if the
+  resource is already set.
 
 #### Examples for xClusterQuorum
 
@@ -186,6 +201,7 @@ Configures quorum in a cluster.
 * [Set quorum to node and disk majority](/Examples/Resources/xClusterQuorum/2-SetQuorumToNodeAndDiskMajority.ps1)
 * [Set quorum to node and file share majority](/Examples/Resources/xClusterQuorum/3-SetQuorumToNodeAndFileShareMajority.ps1)
 * [Set quorum to disk only](/Examples/Resources/xClusterQuorum/4-SetQuorumToDiskOnly.ps1)
+* [Set quorum to node and cloud](/Examples/Resources/xClusterQuorum/5-SetQuorumToNodeAndCloudMajority.1)
 
 ### xWaitForCluster
 

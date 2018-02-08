@@ -1,6 +1,7 @@
 <#
 .EXAMPLE
-    This example shows how to create the failover cluster on the first node.
+    This example shows how to add an additional node to the failover cluster
+    when the cluster was assigned an IP address from a DHCP.
 #>
 
 Configuration Example
@@ -35,18 +36,19 @@ Configuration Example
             DependsOn = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringPowerShellFeature'
         }
 
-        xCluster CreateCluster
+        xWaitForCluster WaitForCluster
+        {
+            Name             = 'Cluster01'
+            RetryIntervalSec = 10
+            RetryCount       = 60
+            DependsOn        = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringCmdInterfaceFeature'
+        }
+
+        xCluster JoinSecondNodeToCluster
         {
             Name                          = 'Cluster01'
-            StaticIPAddress               = '192.168.100.20/24'
-
-            <#
-                This user must have the permission to create the CNO (Cluster Name Object) in Active Directory,
-                unless it is prestaged.
-            #>
             DomainAdministratorCredential = $ActiveDirectoryAdministratorCredential
-
-            DependsOn                     = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringCmdInterfaceFeature'
+            DependsOn                     = '[xWaitForCluster]WaitForCluster'
         }
     }
 }

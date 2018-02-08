@@ -146,50 +146,50 @@ try
                 Context 'When Ensure is set to ''Present'' but the preferred owner is not a possible owner of the cluster nodes and the cluster resources' {
                     It 'Should return the correct type' {
                         $getTargetResourceResult = Get-TargetResource @mockTestParameters_Present_WrongPreferredOwnerNodes
-                        $getTargetResourceResult | Should BeOfType [System.Collections.Hashtable]
+                        $getTargetResourceResult | Should -BeOfType [System.Collections.Hashtable]
                     }
 
                     It 'Should return the same values as passed as parameters' {
                         $getTargetResourceResult = Get-TargetResource @mockTestParameters_Present_WrongPreferredOwnerNodes
-                        $getTargetResourceResult.ClusterGroup | Should Be $mockTestParameters_Present_WrongPreferredOwnerNodes.ClusterGroup
-                        $getTargetResourceResult.ClusterName  | Should Be $mockTestParameters_Present_WrongPreferredOwnerNodes.ClusterName
-                        $getTargetResourceResult.Ensure       | Should Be $mockTestParameters_Present_WrongPreferredOwnerNodes.Ensure
+                        $getTargetResourceResult.ClusterGroup | Should -Be $mockTestParameters_Present_WrongPreferredOwnerNodes.ClusterGroup
+                        $getTargetResourceResult.ClusterName  | Should -Be $mockTestParameters_Present_WrongPreferredOwnerNodes.ClusterName
+                        $getTargetResourceResult.Ensure       | Should -Be $mockTestParameters_Present_WrongPreferredOwnerNodes.Ensure
                     }
 
                     It 'Should return the wrong preferred owner nodes and the right cluster resources' {
                         $getTargetResourceResult = Get-TargetResource @mockTestParameters_Present_WrongPreferredOwnerNodes
-                        $getTargetResourceResult.Nodes            | Should Not Be $mockTestParameters_Present_WrongPreferredOwnerNodes.Nodes
-                        $getTargetResourceResult.ClusterResources | Should Be $mockTestParameters_Present_WrongPreferredOwnerNodes.ClusterResources
+                        $getTargetResourceResult.Nodes            | Should -Not -Be $mockTestParameters_Present_WrongPreferredOwnerNodes.Nodes
+                        $getTargetResourceResult.ClusterResources | Should -Be $mockTestParameters_Present_WrongPreferredOwnerNodes.ClusterResources
                     }
                 }
 
                 Context 'When Ensure is set to ''Present'' but the preferred owner is a possible owner of the cluster nodes but the cluster resources is missing' {
                     It 'Should return the same values as passed as parameters' {
                         $getTargetResourceResult = Get-TargetResource @mockTestParameters_Present_WrongClusterResources
-                        $getTargetResourceResult.ClusterGroup | Should Be $mockTestParameters_Present_WrongClusterResources.ClusterGroup
-                        $getTargetResourceResult.ClusterName  | Should Be $mockTestParameters_Present_WrongClusterResources.ClusterName
-                        $getTargetResourceResult.Ensure       | Should Be $mockTestParameters_Present_WrongClusterResources.Ensure
+                        $getTargetResourceResult.ClusterGroup | Should -Be $mockTestParameters_Present_WrongClusterResources.ClusterGroup
+                        $getTargetResourceResult.ClusterName  | Should -Be $mockTestParameters_Present_WrongClusterResources.ClusterName
+                        $getTargetResourceResult.Ensure       | Should -Be $mockTestParameters_Present_WrongClusterResources.Ensure
                     }
 
                     It 'Should return the correct preferred owner nodes and the wrong cluster resources' {
                         $getTargetResourceResult = Get-TargetResource @mockTestParameters_Present_WrongClusterResources
-                        $getTargetResourceResult.Nodes            | Should Be $mockAllPreferredOwnerNodes
-                        $getTargetResourceResult.ClusterResources | Should Be $mockTestParameters_Present_WrongClusterResources.ClusterResources
+                        $getTargetResourceResult.Nodes            | Should -Be $mockAllPreferredOwnerNodes
+                        $getTargetResourceResult.ClusterResources | Should -Be $mockTestParameters_Present_WrongClusterResources.ClusterResources
                     }
                 }
 
                 Context 'When Ensure is set to ''Absent'' and the preferred owner is still a possible owner of the cluster nodes and the cluster resources' {
                     It 'Should return the same values as passed as parameters' {
                         $getTargetResourceResult = Get-TargetResource @mockTestParameters_Absent_ButPreferredOwnersExist
-                        $getTargetResourceResult.ClusterGroup | Should Be $mockTestParameters_Absent_ButPreferredOwnersExist.ClusterGroup
-                        $getTargetResourceResult.ClusterName  | Should Be $mockTestParameters_Absent_ButPreferredOwnersExist.ClusterName
-                        $getTargetResourceResult.Ensure       | Should Be $mockTestParameters_Absent_ButPreferredOwnersExist.Ensure
+                        $getTargetResourceResult.ClusterGroup | Should -Be $mockTestParameters_Absent_ButPreferredOwnersExist.ClusterGroup
+                        $getTargetResourceResult.ClusterName  | Should -Be $mockTestParameters_Absent_ButPreferredOwnersExist.ClusterName
+                        $getTargetResourceResult.Ensure       | Should -Be $mockTestParameters_Absent_ButPreferredOwnersExist.Ensure
                     }
 
                     It 'Should return the correct preferred owner nodes and the wrong cluster resources' {
                         $getTargetResourceResult = Get-TargetResource @mockTestParameters_Absent_ButPreferredOwnersExist
-                        $getTargetResourceResult.Nodes            | Should Be $mockAllPreferredOwnerNodes
-                        $getTargetResourceResult.ClusterResources | Should Be $mockTestParameters_Absent_ButPreferredOwnersExist.ClusterResources
+                        $getTargetResourceResult.Nodes            | Should -Be $mockAllPreferredOwnerNodes
+                        $getTargetResourceResult.ClusterResources | Should -Be $mockTestParameters_Absent_ButPreferredOwnersExist.ClusterResources
                     }
                 }
             }
@@ -198,30 +198,30 @@ try
                 Context 'When Ensure is set to ''Present'' and the preferred owner is a possible owner of the cluster nodes and the cluster resources' {
                     It 'Should return the same values as passed as parameters' {
                         $getTargetResourceResult = Get-TargetResource @mockTestParameters_Present_DesiredPreferredOwners
-                        $getTargetResourceResult.ClusterGroup | Should Be $mockTestParameters_Present_DesiredPreferredOwners.ClusterGroup
-                        $getTargetResourceResult.ClusterName  | Should Be $mockTestParameters_Present_DesiredPreferredOwners.ClusterName
-                        $getTargetResourceResult.Ensure       | Should Be $mockTestParameters_Present_DesiredPreferredOwners.Ensure
+                        $getTargetResourceResult.ClusterGroup | Should -Be $mockTestParameters_Present_DesiredPreferredOwners.ClusterGroup
+                        $getTargetResourceResult.ClusterName  | Should -Be $mockTestParameters_Present_DesiredPreferredOwners.ClusterName
+                        $getTargetResourceResult.Ensure       | Should -Be $mockTestParameters_Present_DesiredPreferredOwners.Ensure
                     }
 
                     It 'Should return the right preferred owner nodes and the right cluster resources' {
                         $getTargetResourceResult = Get-TargetResource @mockTestParameters_Present_DesiredPreferredOwners
-                        $getTargetResourceResult.Nodes            | Should Be $mockAllPreferredOwnerNodes
-                        $getTargetResourceResult.ClusterResources | Should Be $mockTestParameters_Present_DesiredPreferredOwners.ClusterResources
+                        $getTargetResourceResult.Nodes            | Should -Be $mockAllPreferredOwnerNodes
+                        $getTargetResourceResult.ClusterResources | Should -Be $mockTestParameters_Present_DesiredPreferredOwners.ClusterResources
                     }
                 }
 
                 Context 'When Ensure is set to ''Absent'' and the preferred owner is not a possible owner of the cluster nodes and the cluster resources' {
                     It 'Should return the same values as passed as parameters' {
                         $getTargetResourceResult = Get-TargetResource @mockTestParameters_Absent_AndPreferredOwnersDoesNotExist
-                        $getTargetResourceResult.ClusterGroup | Should Be $mockTestParameters_Absent_AndPreferredOwnersDoesNotExist.ClusterGroup
-                        $getTargetResourceResult.ClusterName  | Should Be $mockTestParameters_Absent_AndPreferredOwnersDoesNotExist.ClusterName
-                        $getTargetResourceResult.Ensure       | Should Be $mockTestParameters_Absent_AndPreferredOwnersDoesNotExist.Ensure
+                        $getTargetResourceResult.ClusterGroup | Should -Be $mockTestParameters_Absent_AndPreferredOwnersDoesNotExist.ClusterGroup
+                        $getTargetResourceResult.ClusterName  | Should -Be $mockTestParameters_Absent_AndPreferredOwnersDoesNotExist.ClusterName
+                        $getTargetResourceResult.Ensure       | Should -Be $mockTestParameters_Absent_AndPreferredOwnersDoesNotExist.Ensure
                     }
 
                     It 'Should return the correct preferred owner nodes and the wrong cluster resources' {
                         $getTargetResourceResult = Get-TargetResource @mockTestParameters_Absent_AndPreferredOwnersDoesNotExist
-                        $getTargetResourceResult.Nodes            | Should Not Be $mockTestParameters_Absent_AndPreferredOwnersDoesNotExist.Nodes
-                        $getTargetResourceResult.ClusterResources | Should Be $mockTestParameters_Absent_AndPreferredOwnersDoesNotExist.ClusterResources
+                        $getTargetResourceResult.Nodes            | Should -Not -Be $mockTestParameters_Absent_AndPreferredOwnersDoesNotExist.Nodes
+                        $getTargetResourceResult.ClusterResources | Should -Be $mockTestParameters_Absent_AndPreferredOwnersDoesNotExist.ClusterResources
                     }
                 }
             }
@@ -239,7 +239,7 @@ try
                 Context 'When Ensure is set to ''Present'' but the preferred owner is not a possible owner of the cluster nodes and the cluster resources' {
                     It 'Should return the result as $false ' {
                         $testTargetResourceResult = Test-TargetResource @mockTestParameters_Present_WrongPreferredOwnerNodes
-                        $testTargetResourceResult | Should Be $false
+                        $testTargetResourceResult | Should -Be $false
                     }
                 }
 
@@ -247,21 +247,21 @@ try
                 Context 'When Ensure is set to ''Present'' but the preferred owner is a possible owner of the cluster nodes but the cluster resources is missing' {
                     It 'Should return the result as $false ' -Skip {
                         $testTargetResourceResult = Test-TargetResource @mockTestParameters_Present_WrongClusterResources
-                        $testTargetResourceResult | Should Be $false
+                        $testTargetResourceResult | Should -Be $false
                     }
                 }
 
                 Context 'When Ensure is set to ''Absent'' and the preferred owner is still a possible owner of the cluster nodes and the cluster resources' {
                     It 'Should return the result as $false ' {
                         $testTargetResourceResult = Test-TargetResource @mockTestParameters_Absent_ButPreferredOwnersExist
-                        $testTargetResourceResult | Should Be $false
+                        $testTargetResourceResult | Should -Be $false
                     }
                 }
 
                 Context 'When Ensure is set to ''Present'' and the preferred owners is a possible owners of the cluster nodes and the cluster resources, but there are one additional preferred owner on the nodes that should not be present' {
                     It 'Should return the result as $false ' {
                         $testTargetResourceResult = Test-TargetResource @mockTestParameters_Present_DesiredPreferredOwners
-                        $testTargetResourceResult | Should Be $false
+                        $testTargetResourceResult | Should -Be $false
                     }
                 }
             }
@@ -270,14 +270,14 @@ try
                 Context 'When Ensure is set to ''Present'' and the preferred owner is a possible owner of the cluster nodes and the cluster resources' {
                     It 'Should return the result as $true ' {
                         $testTargetResourceResult = Test-TargetResource @mockTestParameters_Present_AllPreferredOwners
-                        $testTargetResourceResult | Should Be $true
+                        $testTargetResourceResult | Should -Be $true
                     }
                 }
 
                 Context 'When Ensure is set to ''Absent'' and the preferred owner is not a possible owner of the cluster nodes and the cluster resources' {
                     It 'Should return the result as $true ' {
                         $testTargetResourceResult = Test-TargetResource @mockTestParameters_Absent_AndPreferredOwnersDoesNotExist
-                        $testTargetResourceResult | Should Be $true
+                        $testTargetResourceResult | Should -Be $true
                     }
                 }
             }
@@ -296,7 +296,7 @@ try
             Context 'When the system is not in the desired state' {
                 Context 'When Ensure is set to ''Present'' but the preferred owner is not a possible owner of the cluster nodes and the cluster resources' {
                     It 'Should set the preferred owners' {
-                        { Set-TargetResource @mockTestParameters_Present_WrongPreferredOwnerNodes } | Should Not Throw
+                        { Set-TargetResource @mockTestParameters_Present_WrongPreferredOwnerNodes } | Should -Not -Throw
 
                         # Called three times, one times for each node (2 nodes), and one time for each cluster resource (1 resource).
                         Assert-MockCalled -CommandName 'Set-ClusterOwnerNode' -Exactly -Times 3 -Scope It
@@ -308,7 +308,7 @@ try
 
                 Context 'When Ensure is set to ''Present'' but the preferred owner is a possible owner of the cluster nodes but the cluster resources is missing' {
                     It 'Should set the preferred owners' {
-                        { Set-TargetResource @mockTestParameters_Present_WrongClusterResources } | Should Not Throw
+                        { Set-TargetResource @mockTestParameters_Present_WrongClusterResources } | Should -Not -Throw
 
                         # Called two times, one times for each node (2 nodes), and not called for cluster resource because cluster resource is missing.
                         Assert-MockCalled -CommandName 'Set-ClusterOwnerNode' -Exactly -Times 2 -Scope It
@@ -320,7 +320,7 @@ try
 
                 Context 'When Ensure is set to ''Absent'' and the preferred owner is still a possible owner of the cluster nodes and the cluster resources' {
                     It 'Should remove the preferred owners, leaving one preferred owner' {
-                        { Set-TargetResource @mockTestParameters_Absent_ButPreferredOwnersExist } | Should Not Throw
+                        { Set-TargetResource @mockTestParameters_Absent_ButPreferredOwnersExist } | Should -Not -Throw
 
                         # Called two times, one times for each node (2 nodes), and one time for each cluster resource (1 resource).
                         Assert-MockCalled -CommandName 'Set-ClusterOwnerNode' -Exactly -Times 3 -Scope It
@@ -335,7 +335,7 @@ try
                 # This tests wrongly calls Set-ClusterOwnerNode and Move-ClusterGroup. See issue #97.
                 Context 'When Ensure is set to ''Present'' and the preferred owner is a possible owner of the cluster nodes and the cluster resources' {
                     It 'Should do nothing' {
-                        { Set-TargetResource @mockTestParameters_Present_AllPreferredOwners } | Should Not Throw
+                        { Set-TargetResource @mockTestParameters_Present_AllPreferredOwners } | Should -Not -Throw
 
                         # Called two times, one times for each node (2 nodes), and one time for each cluster resource (1 resource).
                         Assert-MockCalled -CommandName 'Set-ClusterOwnerNode' -Exactly -Times 3 -Scope It
@@ -348,7 +348,7 @@ try
                 # This tests wrongly calls Set-ClusterOwnerNode and Move-ClusterGroup. See issue #97.
                 Context 'When Ensure is set to ''Absent'' and the preferred owner is not a possible owner of the cluster nodes and the cluster resources' {
                     It 'Should do nothing' {
-                        { Set-TargetResource @mockTestParameters_Absent_AndPreferredOwnersDoesNotExist } | Should Not Throw
+                        { Set-TargetResource @mockTestParameters_Absent_AndPreferredOwnersDoesNotExist } | Should -Not -Throw
 
                         # Called two times, one times for each node (2 nodes), and one time for each cluster resource (1 resource).
                         Assert-MockCalled -CommandName 'Set-ClusterOwnerNode' -Exactly -Times 3 -Scope It

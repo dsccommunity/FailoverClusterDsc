@@ -41,6 +41,8 @@ function Get-TargetResource
     }
     catch
     {
+        Write-Warning -Message ($script:localizedData.UnexpectedNetworkRole -f $NetworkResource.Role)
+
         # Fallback, us the raw value
         $role = $NetworkResource.Role
     }

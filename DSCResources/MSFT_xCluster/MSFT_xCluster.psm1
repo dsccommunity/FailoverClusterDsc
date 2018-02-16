@@ -10,6 +10,13 @@ $script:localizedData = Get-LocalizedData -ResourceName 'MSFT_xCluster'
     .PARAMETER Name
         Name of the failover cluster.
 
+    .PARAMETER Nodes
+        Specifies a comma-separated list of cluster node names, to add
+        to the local physical computer when creating a cluster. If this
+        parameter is not specified, then a one node cluster is created
+        on the local physical computer.
+        Not used in Get-TargetResource.
+
     .PARAMETER StaticIPAddress
         Static IP Address of the failover cluster.
 
@@ -33,6 +40,10 @@ function Get-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Name,
+
+        [Parameter()]
+        [System.String[]]
+        $Nodes,
 
         [Parameter()]
         [System.String]
@@ -95,6 +106,12 @@ function Get-TargetResource
     .PARAMETER Name
         Name of the failover cluster.
 
+    .PARAMETER Nodes
+        Specifies a comma-separated list of cluster node names to add
+        to the local physical computer when creating a cluster. If this
+        parameter is not specified, then a one node cluster is created
+        on the local physical computer.
+
     .PARAMETER StaticIPAddress
         Static IP Address of the failover cluster.
 
@@ -130,6 +147,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $StaticIPAddress,
+
+        [Parameter()]
+        [System.String[]]
+        $Nodes,
 
         [Parameter()]
         [System.String[]]
@@ -173,9 +194,17 @@ function Set-TargetResource
         {
             Write-Verbose -Message ($script:localizedData.ClusterAbsent -f $Name)
 
+            $AllNodes = @()
+            $AllNodes += $env:COMPUTERNAME
+
+            if($Nodes -ne $null)
+            {
+                $AllNodes += $Nodes
+            }
+
             $newClusterParameters = @{
               Name          = $Name
-              Node          = $env:COMPUTERNAME
+              Node          = $AllNodes
               NoStorage     = $true
               Force         = $true
               ErrorAction   = 'Stop'
@@ -207,16 +236,22 @@ function Set-TargetResource
         }
         else
         {
-            $targetNodeName = $env:COMPUTERNAME
+            $AllNodes = @()
+            $AllNodes += $env:COMPUTERNAME
+
+            if($Nodes -ne $null)
+            {
+                $AllNodes += $Nodes
+            }
 
             Write-Verbose -Message ($script:localizedData.AddNodeToCluster -f $targetNodeName, $Name)
 
             $list = Get-ClusterNode -Cluster $Name
             foreach ($node in $list)
             {
-                if ($node.Name -eq $targetNodeName)
+                foreach ($targetNodeName in $AllNodes)
                 {
-                    if ($node.State -eq 'Down')
+                    if ($node.Name -eq $targetNodeName -and $node.State -eq 'Down')
                     {
                         Write-Verbose -Message ($script:localizedData.RemoveOfflineNodeFromCluster -f $targetNodeName, $Name)
 
@@ -225,9 +260,13 @@ function Set-TargetResource
                 }
             }
 
-            Add-ClusterNode -Name $targetNodeName -Cluster $Name -NoStorage
+            foreach ($targetNodeName in $AllNodes)
+            {
+                Add-ClusterNode -Name $targetNodeName -Cluster $Name -NoStorage
 
-            Write-Verbose -Message ($script:localizedData.AddNodeToClusterSuccessful -f $targetNodeName, $Name)
+                Write-Verbose -Message ($script:localizedData.AddNodeToClusterSuccessful -f $targetNodeName, $Name)
+            }
+
         }
     }
     finally
@@ -248,6 +287,12 @@ function Set-TargetResource
 
     .PARAMETER Name
         Name of the failover cluster.
+
+    .PARAMETER Nodes
+        Specifies a comma-separated list of cluster node names, to add
+        to the local physical computer when creating a cluster. If this
+        parameter is not specified, then a one node cluster is created
+        on the local physical computer.
 
     .PARAMETER StaticIPAddress
         Static IP Address of the failover cluster.
@@ -290,6 +335,10 @@ function Test-TargetResource
         $Name,
 
         [Parameter()]
+        [System.String[]]
+        $Nodes,
+
+        [Parameter()]
         [System.String]
         $StaticIPAddress,
 
@@ -323,26 +372,34 @@ function Test-TargetResource
 
         if ($cluster)
         {
-            $targetNodeName = $env:COMPUTERNAME
+            $returnValue = $true
 
             Write-Verbose -Message ($script:localizedData.CheckClusterNodeIsUp -f $targetNodeName, $Name)
 
-            $allNodes = Get-ClusterNode -Cluster $Name
+            $list = Get-ClusterNode -Cluster $Name
 
-            foreach ($node in $allNodes)
+            $AllNodes = @()
+            $AllNodes += $env:COMPUTERNAME
+
+            if($Nodes -ne $null)
             {
-                if ($node.Name -eq $targetNodeName)
-                {
-                    if ($node.State -eq 'Up')
-                    {
-                        $returnValue = $true
-                    }
-                    else
-                    {
-                        Write-Verbose -Message ($script:localizedData.ClusterNodeIsDown -f $targetNodeName, $Name)
-                    }
+                $AllNodes += $Nodes
+            }
 
-                    break
+            foreach ($node in $list)
+            {
+                foreach($targetNodeName in $AllNodes)
+                {
+                    if ($node.Name -eq $targetNodeName)
+                    {
+                        if ($node.State -eq 'Down')
+                        {
+                            Write-Verbose -Message ($script:localizedData.ClusterNodeIsDown -f $targetNodeName, $Name)
+                            $returnValue = $false
+                        }
+
+                        break
+                    }
                 }
             }
 

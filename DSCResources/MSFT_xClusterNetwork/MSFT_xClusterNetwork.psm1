@@ -34,11 +34,22 @@ function Get-TargetResource
         $_.Address -eq $Address -and $_.AddressMask -eq $AddressMask
     }
 
+    try
+    {
+        # Try to convert the role to it's enum value
+        $role = [String] [Int32] $NetworkResource.Role
+    }
+    catch
+    {
+        # Fallback, us the raw value
+        $role = $NetworkResource.Role
+    }
+
     @{
         Address     = $Address
         AddressMask = $AddressMask
         Name        = $NetworkResource.Name
-        Role        = $NetworkResource.Role
+        Role        = $role
         Metric      = $NetworkResource.Metric
     }
 }

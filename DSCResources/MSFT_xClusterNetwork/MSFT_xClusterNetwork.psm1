@@ -34,17 +34,18 @@ function Get-TargetResource
         $_.Address -eq $Address -and $_.AddressMask -eq $AddressMask
     }
 
-    try
+    <#
+        On Windows Server 2008 R2 and on Windows Server 2012 R2, the property
+        Role is of type System.UInt32. On Windows Server 2016, the property Role
+        is of type Microsoft.FailoverClusters.PowerShell.ClusterNetworkRole.
+    #>
+    if ($NetworkResource.Role -is [System.UInt32])
     {
-        # Try to convert the role to it's enum value
-        $role = [String] [Int32] $NetworkResource.Role
-    }
-    catch
-    {
-        Write-Warning -Message ($script:localizedData.UnexpectedNetworkRole -f $NetworkResource.Role)
-
-        # Fallback, us the raw value
         $role = $NetworkResource.Role
+    }
+    else
+    {
+        $role = $NetworkResource.Role.value__
     }
 
     @{

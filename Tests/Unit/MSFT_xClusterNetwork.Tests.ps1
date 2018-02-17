@@ -161,6 +161,17 @@ try
 
                     Assert-MockCalled -CommandName Get-ClusterNetwork -Exactly -Times 1 -Scope It
                 }
+
+                It 'Should return the the correct values for the cluster network role on WS2016' {
+                    Mock -CommandName 'Get-ClusterNetwork' -MockWith $mockGetClusterNetwork2
+
+                    $Result = Get-TargetResource @mockTestParameters
+                    $Result.Name         | Should -Be $mockPresentClusterNetworkName
+                    $Result.Role         | Should -Be $mockPresentClusterNetworkRole
+                    $Result.Metric       | Should -Be $mockPresentClusterNetworkMetric
+
+                    Assert-MockCalled -CommandName Get-ClusterNetwork -Exactly -Times 1 -Scope It
+                }
             }
         }
         Describe 'xClusterNetwork\Test-TargetResource' {

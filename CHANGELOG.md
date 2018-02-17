@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Changes to xClusterNetwork
+  - Fix the test for the network role never in desired state ([issue #175](https://github.com/PowerShell/xFailOverCluster/issues/175)).
+
 ## 1.9.0.0
 
 - Changes to xFailoverCluster

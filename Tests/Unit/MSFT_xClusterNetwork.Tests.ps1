@@ -39,13 +39,14 @@ try
         $mockPresentClusterNetworkName = 'Client1'
         $mockPresentClusterNetworkAddress = '10.0.0.0'
         $mockPresentClusterNetworkAddressMask = '255.255.255.0'
-        $mockPresentClusterNetworkRole = '1'
+        $mockPresentClusterNetworkRole = [System.UInt32] 1
+        $mockPresentClusterNetworkRole2 = [PSCustomObject] @{ value__ = 1 }
         $mockPresentClusterNetworkMetric = '70240'
 
         $mockAbsentClusterNetworkName = 'Client2'
         $mockAbsentClusterNetworkAddress = '10.0.0.0'
         $mockAbsentClusterNetworkAddressMask = '255.255.255.0'
-        $mockAbsentClusterNetworkRole = '3'
+        $mockAbsentClusterNetworkRole = [System.UInt32] 3
         $mockAbsentClusterNetworkMetric = '10'
 
         $mockGetClusterNetwork = {
@@ -55,6 +56,19 @@ try
                 Address     = $mockPresentClusterNetworkAddress
                 AddressMask = $mockPresentClusterNetworkAddressMask
                 Role        = $mockPresentClusterNetworkRole
+                Metric      = $mockPresentClusterNetworkMetric
+            } | Add-Member -MemberType ScriptMethod -Name Update -Value {
+                $script:mockNumerOfTimesMockedMethodUpdateWasCalled += 1
+            } -PassThru
+        }
+
+        $mockGetClusterNetwork2 = {
+            [PSCustomObject] @{
+                Cluster     = 'CLUSTER01'
+                Name        = $mockPresentClusterNetworkName
+                Address     = $mockPresentClusterNetworkAddress
+                AddressMask = $mockPresentClusterNetworkAddressMask
+                Role        = $mockPresentClusterNetworkRole2
                 Metric      = $mockPresentClusterNetworkMetric
             } | Add-Member -MemberType ScriptMethod -Name Update -Value {
                 $script:mockNumerOfTimesMockedMethodUpdateWasCalled += 1
@@ -107,6 +121,17 @@ try
 
                     Assert-MockCalled -CommandName Get-ClusterNetwork -Exactly -Times 1 -Scope It
                 }
+
+                It 'Should not return the the correct values for the cluster network role on WS2016' {
+                    Mock -CommandName 'Get-ClusterNetwork' -MockWith $mockGetClusterNetwork2
+
+                    $getTargetResourceResult = Get-TargetResource @mockTestParameters
+                    $getTargetResourceResult.Name         | Should -Not -Be $mockAbsentClusterNetworkName
+                    $getTargetResourceResult.Role         | Should -Not -Be $mockAbsentClusterNetworkRole
+                    $getTargetResourceResult.Metric       | Should -Not -Be $mockAbsentClusterNetworkMetric
+
+                    Assert-MockCalled -CommandName Get-ClusterNetwork -Exactly -Times 1 -Scope It
+                }
             }
 
             Context 'When the system is in the desired state' {
@@ -129,6 +154,17 @@ try
                 }
 
                 It 'Should return the the correct values for the cluster network' {
+                    $Result = Get-TargetResource @mockTestParameters
+                    $Result.Name         | Should -Be $mockPresentClusterNetworkName
+                    $Result.Role         | Should -Be $mockPresentClusterNetworkRole
+                    $Result.Metric       | Should -Be $mockPresentClusterNetworkMetric
+
+                    Assert-MockCalled -CommandName Get-ClusterNetwork -Exactly -Times 1 -Scope It
+                }
+
+                It 'Should return the the correct values for the cluster network role on WS2016' {
+                    Mock -CommandName 'Get-ClusterNetwork' -MockWith $mockGetClusterNetwork2
+
                     $Result = Get-TargetResource @mockTestParameters
                     $Result.Name         | Should -Be $mockPresentClusterNetworkName
                     $Result.Role         | Should -Be $mockPresentClusterNetworkRole

@@ -39,13 +39,13 @@ try
         $mockPresentClusterNetworkName = 'Client1'
         $mockPresentClusterNetworkAddress = '10.0.0.0'
         $mockPresentClusterNetworkAddressMask = '255.255.255.0'
-        $mockPresentClusterNetworkRole = '1'
+        $mockPresentClusterNetworkRole = [System.UInt32] 1
         $mockPresentClusterNetworkMetric = '70240'
 
         $mockAbsentClusterNetworkName = 'Client2'
         $mockAbsentClusterNetworkAddress = '10.0.0.0'
         $mockAbsentClusterNetworkAddressMask = '255.255.255.0'
-        $mockAbsentClusterNetworkRole = '3'
+        $mockAbsentClusterNetworkRole = [System.UInt32] 3
         $mockAbsentClusterNetworkMetric = '10'
 
         $mockGetClusterNetwork = {

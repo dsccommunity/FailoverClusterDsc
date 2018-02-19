@@ -312,6 +312,22 @@ try
                             }
                         }
 
+                        Context 'When Nodes is passed' {
+                            It 'Should call New-Cluster cmdlet with Node as an array' {
+                                $withNodesParameter = $mockDefaultParameters + @{
+                                    Nodes = ('foo','bar')
+                                }
+                                { Set-TargetResource @withNodesParameter } | Should Not Throw
+
+                                Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It -ParameterFilter {
+                                    $Nodes -eq 'foo' -and
+                                    $Nodes -eq 'bar'
+                                }
+                                Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
+                                Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
+                            }
+                        }
+
                         Context 'When IgnoreNetwork is passed as an array' {
                             It 'Should call New-Cluster cmdlet with IgnoreNetwork parameter' {
                                 $withIgnoreNetworkParameter = $mockDefaultParameters + @{ IgnoreNetwork = ('10.0.2.0/24', '192.168.4.0/24') }

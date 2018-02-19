@@ -10,13 +10,6 @@ $script:localizedData = Get-LocalizedData -ResourceName 'MSFT_xCluster'
     .PARAMETER Name
         Name of the failover cluster.
 
-    .PARAMETER Nodes
-        Specifies a comma-separated list of cluster node names, to add
-        to the local physical computer when creating a cluster. If this
-        parameter is not specified, then a one node cluster is created
-        on the local physical computer.
-        Not used in Get-TargetResource.
-
     .PARAMETER StaticIPAddress
         Static IP Address of the failover cluster.
 
@@ -40,10 +33,6 @@ function Get-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Name,
-
-        [Parameter()]
-        [System.String[]]
-        $Nodes,
 
         [Parameter()]
         [System.String]
@@ -194,13 +183,7 @@ function Set-TargetResource
         {
             Write-Verbose -Message ($script:localizedData.ClusterAbsent -f $Name)
 
-            $AllNodes = @()
-            $AllNodes += $env:COMPUTERNAME
 
-            if($Nodes -ne $null)
-            {
-                $AllNodes += $Nodes
-            }
 
             $newClusterParameters = @{
               Name          = $Name
@@ -236,18 +219,12 @@ function Set-TargetResource
         }
         else
         {
-            $AllNodes = @()
-            $AllNodes += $env:COMPUTERNAME
-
-            if($Nodes -ne $null)
-            {
-                $AllNodes += $Nodes
-            }
+            $AllNodes = Get-All-Nodes($Nodes)
 
             Write-Verbose -Message ($script:localizedData.AddNodeToCluster -f $targetNodeName, $Name)
 
-            $list = Get-ClusterNode -Cluster $Name
-            foreach ($node in $list)
+            $existingNodes = Get-ClusterNode -Cluster $Name
+            foreach ($node in $existingNodes)
             {
                 foreach ($targetNodeName in $AllNodes)
                 {
@@ -376,17 +353,11 @@ function Test-TargetResource
 
             Write-Verbose -Message ($script:localizedData.CheckClusterNodeIsUp -f $targetNodeName, $Name)
 
-            $list = Get-ClusterNode -Cluster $Name
+            $existingNodes = Get-ClusterNode -Cluster $Name
 
-            $AllNodes = @()
-            $AllNodes += $env:COMPUTERNAME
+            $AllNodes = Get-All-Nodes($Nodes)
 
-            if($Nodes -ne $null)
-            {
-                $AllNodes += $Nodes
-            }
-
-            foreach ($node in $list)
+            foreach ($node in $existingNodes)
             {
                 foreach($targetNodeName in $AllNodes)
                 {
@@ -534,4 +505,34 @@ function Close-UserToken
         $errorMessage = $script:localizedData.UnableToCloseToken -f $Token.ToString()
         New-InvalidOperationException -Message $errorMessage
     }
+}
+
+<#
+    .SYNOPSIS
+        Combines Node names with current local computer and removes duplicates.
+
+    .PARAMETER Nodes
+        Array with node names
+#>
+function Get-All-Nodes {
+    [OutputType([String[]])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [String[]]
+        $Nodes
+    )
+
+    $AllNodes = @()
+    $AllNodes += $env:COMPUTERNAME
+
+    if($Nodes -ne $null)
+    {
+        $AllNodes += $Nodes
+    }
+
+    # Remove duplicates
+    $AllNodes = $AllNodes | Sort-Object -unique
+
+    return $AllNodes
 }

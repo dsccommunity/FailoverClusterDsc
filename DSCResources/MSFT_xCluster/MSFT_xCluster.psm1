@@ -514,7 +514,8 @@ function Close-UserToken
     .PARAMETER Nodes
         Array with node names
 #>
-function Get-All-Nodes {
+function Get-All-Nodes
+{
     [OutputType([String[]])]
     param
     (
@@ -526,7 +527,7 @@ function Get-All-Nodes {
     $AllNodes = @()
     $AllNodes += $env:COMPUTERNAME
 
-    if($Nodes -ne $null)
+    if($null -ne $Nodes)
     {
         $AllNodes += $Nodes
     }

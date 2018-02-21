@@ -519,7 +519,7 @@ function Get-All-Nodes
     [OutputType([String[]])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [String[]]
         $Nodes
     )

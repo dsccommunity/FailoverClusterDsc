@@ -228,11 +228,16 @@ function Set-TargetResource
             {
                 foreach ($targetNodeName in $AllNodes)
                 {
-                    if ($node.Name -eq $targetNodeName -and $node.State -eq 'Down')
+                    if ($node.Name -eq $targetNodeName)
                     {
-                        Write-Verbose -Message ($script:localizedData.RemoveOfflineNodeFromCluster -f $targetNodeName, $Name)
+                        if($node.State -eq 'Down')
+                        {
+                            Write-Verbose -Message ($script:localizedData.RemoveOfflineNodeFromCluster -f $targetNodeName, $Name)
 
-                        Remove-ClusterNode -Name $targetNodeName -Cluster $Name -Force
+                            Remove-ClusterNode -Name $targetNodeName -Cluster $Name -Force
+                        }
+
+                        break
                     }
                 }
             }
@@ -357,12 +362,14 @@ function Test-TargetResource
 
             $AllNodes = Get-All-Nodes($Nodes)
 
-            foreach ($node in $existingNodes)
+            foreach($targetNodeName in $AllNodes)
             {
-                foreach($targetNodeName in $AllNodes)
+                $found = $false
+                foreach ($node in $existingNodes)
                 {
                     if ($node.Name -eq $targetNodeName)
                     {
+                        $found = $true
                         if ($node.State -eq 'Down')
                         {
                             Write-Verbose -Message ($script:localizedData.ClusterNodeIsDown -f $targetNodeName, $Name)
@@ -371,6 +378,12 @@ function Test-TargetResource
 
                         break
                     }
+                }
+
+                if($false -eq $found)
+                {
+                    $returnValue = $false
+                    break
                 }
             }
 

@@ -175,7 +175,7 @@ cluster.
 
 ### xClusterProperty
 
-Configures properties of a failover cluster.
+Configures cluster properties on a failover cluster.
 
 #### Requirements for xClusterProperty
 
@@ -184,51 +184,51 @@ Configures properties of a failover cluster.
 #### Parameters for xClusterProperty
 
 * **`[String]` Name** _(Key)_: Name of the cluster.
-* **`[Uint32]` AddEvictDelay** _(Write)_: Specifies how many seconds after a
+* **`[UInt32]` AddEvictDelay** _(Write)_: Specifies how many seconds after a
   node is evicted that the failover cluster service will wait before adding a
   new node.
-* **`[Uint32]` ClusterLogLevel** _(Write)_: Controls the level of cluster
+* **`[UInt32]` ClusterLogLevel** _(Write)_: Controls the level of cluster
   logging.
-* **`[Uint32]` ClusterLogSize** _(Write)_: Controls the maximum size of the
+* **`[UInt32]` ClusterLogSize** _(Write)_: Controls the maximum size of the
   cluster log files on each of the nodes.
-* **`[Uint32]` CrossSiteDelay** _(Write)_: Controls the time interval, in
+* **`[UInt32]` CrossSiteDelay** _(Write)_: Controls the time interval, in
   milliseconds, that the cluster network driver waits between sending Cluster
   Service heartbeats across sites.
-* **`[Uint32]` CrossSiteThreshold** _(Write)_: Controls how many Cluster
+* **`[UInt32]` CrossSiteThreshold** _(Write)_: Controls how many Cluster
   Service heartbeats can be missed across sites before it determines that
   Cluster Service has stopped responding.
-* **`[Uint32]` CrossSubnetDelay** _(Write)_: Controls the time interval, in
+* **`[UInt32]` CrossSubnetDelay** _(Write)_: Controls the time interval, in
   milliseconds, that the cluster network driver waits between sending Cluster
   Service heartbeats across subnets.
-* **`[Uint32]` CrossSubnetThreshold** _(Write)_: Controls how many Cluster
+* **`[UInt32]` CrossSubnetThreshold** _(Write)_: Controls how many Cluster
   Service heartbeats can be missed across subnets before it determines that
   Cluster Service has stopped responding.
-* **`[Uint32]` DatabaseReadWriteMode** _(Write)_: Specifies the read/write mode
+* **`[UInt32]` DatabaseReadWriteMode** _(Write)_: Specifies the read/write mode
   for the cluster database.
-* **`[Uint32]` DefaultNetworkRole** _(Write)_: Specifies the role that the
+* **`[UInt32]` DefaultNetworkRole** _(Write)_: Specifies the role that the
   cluster automatically assigns to any newly discovered or created network.
 * **`[String]` Description** _(Write)_: Stores administrative comments about
   the cluster. The following table summarizes the attributes of the Description
   property.
-* **`[Uint32]` DrainOnShutdown** _(Write)_: Specifies whether to enable Node
+* **`[UInt32]` DrainOnShutdown** _(Write)_: Specifies whether to enable Node
   Drain for a cluster.
-* **`[Uint32]` DynamicQuorum** _(Write)_: Enables the cluster to change the
+* **`[UInt32]` DynamicQuorum** _(Write)_: Enables the cluster to change the
   required number of nodes that need to participate in quorum when nodes shut
   down or crash.
-* **`[Uint32]` NetftIPSecEnabled** _(Write)_: Specifies whether Internet
+* **`[UInt32]` NetftIPSecEnabled** _(Write)_: Specifies whether Internet
   Protocol Security (IPSec) encryption is enabled for inter-node cluster
   communication.
 * **`[String]` PreferredSite** _(Write)_: Specifies the preferred site for a
   site-aware cluster.
-* **`[Uint32]` QuarantineDuration** _(Write)_: Specifies the quarantine
+* **`[UInt32]` QuarantineDuration** _(Write)_: Specifies the quarantine
   duration for a node, in seconds.
-* **`[Uint32]` QuarantineThreshold** _(Write)_: Specifies the quarantine
+* **`[UInt32]` QuarantineThreshold** _(Write)_: Specifies the quarantine
   threshold for a node, in minutes.
-* **`[Uint32]` SameSubnetDelay** _(Write)_: Controls the delay, in milliseconds,
+* **`[UInt32]` SameSubnetDelay** _(Write)_: Controls the delay, in milliseconds,
   between netft heartbeats.
-* **`[Uint32]` SameSubnetThreshold** _(Write)_: Controls how many heartbeats can
+* **`[UInt32]` SameSubnetThreshold** _(Write)_: Controls how many heartbeats can
   be missed on the same subnet before the route is declared as unreachable.
-* **`[Uint32]` ShutdownTimeoutInMinutes** _(Write)_: Specifies how many minutes
+* **`[UInt32]` ShutdownTimeoutInMinutes** _(Write)_: Specifies how many minutes
   after a system shutdown is initiated that the failover cluster service will
   wait for resources to go offline.
 

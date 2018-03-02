@@ -8,7 +8,7 @@ $script:localizedData = Get-LocalizedData -ResourceName 'MSFT_xClusterProperty'
         Configures cluster properties.
 
     .PARAMETER Name
-        Specifies the cluster name
+        Name of the cluster.
 #>
 function Get-TargetResource
 {
@@ -21,23 +21,34 @@ function Get-TargetResource
         $Name
     )
 
-    Write-Verbose -Message ($script:localizedData.CheckingClusterProperties)
+    Write-Verbose -Message ($script:localizedData.GettingClusterProperties -f $Name)
 
-    $ClusterProperties = Get-ClusterPropertyList
-
-    $Cluster = Get-Cluster -Name $Name
-    $ReturnValue = @{
-    Name = $Name
+    $cluster = Get-Cluster -Name $Name
+    $returnValue = @{
+    Name                        = $Name
+    AddEvictDelay               = $cluster.AddEvictDelay
+    ClusterLogLevel             = $cluster.ClusterLogLevel
+    ClusterLogSize              = $cluster.ClusterLogSize
+    CrossSiteDelay              = $cluster.CrossSiteDelay
+    CrossSiteThreshold          = $cluster.CrossSiteThreshold
+    Description                 = $cluster.Description
+    CrossSubnetDelay            = $cluster.CrossSubnetDelay
+    CrossSubnetThreshold        = $cluster.CrossSubnetThreshold
+    DatabaseReadWriteMode       = $cluster.DatabaseReadWriteMode
+    DefaultNetworkRole          = $cluster.DefaultNetworkRole
+    DrainOnShutdown             = $cluster.DrainOnShutdown
+    DynamicQuorum               = $cluster.DynamicQuorum
+    NetftIPSecEnabled           = $cluster.NetftIPSecEnabled
+    QuarantineDuration          = $cluster.QuarantineDuration
+    PreferredSite               = $cluster.PreferredSite
+    QuarantineThreshold         = $cluster.QuarantineThreshold
+    SameSubnetDelay             = $cluster.SameSubnetDelay
+    SameSubnetThreshold         = $cluster.SameSubnetThreshold
+    ShutdownTimeoutInMinutes    = $cluster.ShutdownTimeoutInMinutes
     }
 
-    foreach ($ClusterProperty in $ClusterProperties)
-    {
-        $ReturnValue.Add($ClusterProperty, $Cluster.$ClusterProperty)
-    }
-
-    return $ReturnValue
+    return $returnValue
 }
-
 <#
     .SYNOPSIS
         Configures cluster properties.
@@ -79,7 +90,7 @@ function Get-TargetResource
         Enables the cluster to change the required number of nodes that need to participate in quorum when nodes shut down or crash.
 
     .PARAMETER Name
-        Specifies the cluster name
+        Name of the cluster.
 
     .PARAMETER NetftIPSecEnabled
         Specifies whether Internet Protocol Security (IPSec) encryption is enabled for inter-node cluster communication.
@@ -102,107 +113,105 @@ function Get-TargetResource
     .PARAMETER ShutdownTimeoutInMinutes
         Specifies how many minutes after a system shutdown is initiated that the failover cluster service will wait for resources to go offline.
 #>
-
 function Set-TargetResource
 {
     [CmdletBinding()]
     param
     (
-        [Parameter()]
-        [Uint32]
-        $AddEvictDelay,
-
-        [Parameter()]
-        [Uint32]
-        $ClusterLogLevel,
-
-        [Parameter()]
-        [Uint32]
-        $ClusterLogSize,
-
-        [Parameter()]
-        [Uint32]
-        $CrossSiteDelay,
-
-        [Parameter()]
-        [Uint32]
-        $CrossSiteThreshold,
-
-        [Parameter()]
-        [Uint32]
-        $CrossSubnetDelay,
-
-        [Parameter()]
-        [Uint32]
-        $CrossSubnetThreshold,
-
-        [Parameter()]
-        [Uint32]
-        $DatabaseReadWriteMode,
-
-        [Parameter()]
-        [Uint32]
-        $DefaultNetworkRole,
-
-        [Parameter()]
-        [String]
-        $Description,
-
-        [Parameter()]
-        [Uint32]
-        $DrainOnShutdown,
-
-        [Parameter()]
-        [Uint32]
-        $DynamicQuorum,
-
         [Parameter(Mandatory = $true)]
         [System.String]
         $Name,
 
         [Parameter()]
-        [Uint32]
+        [System.UInt32]
+        $AddEvictDelay,
+
+        [Parameter()]
+        [System.UInt32]
+        $ClusterLogLevel,
+
+        [Parameter()]
+        [System.UInt32]
+        $ClusterLogSize,
+
+        [Parameter()]
+        [System.UInt32]
+        $CrossSiteDelay,
+
+        [Parameter()]
+        [System.UInt32]
+        $CrossSiteThreshold,
+
+        [Parameter()]
+        [System.UInt32]
+        $CrossSubnetDelay,
+
+        [Parameter()]
+        [System.UInt32]
+        $CrossSubnetThreshold,
+
+        [Parameter()]
+        [System.UInt32]
+        $DatabaseReadWriteMode,
+
+        [Parameter()]
+        [System.UInt32]
+        $DefaultNetworkRole,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.UInt32]
+        $DrainOnShutdown,
+
+        [Parameter()]
+        [System.UInt32]
+        $DynamicQuorum,
+
+        [Parameter()]
+        [System.UInt32]
         $NetftIPSecEnabled,
 
         [Parameter()]
-        [String]
+        [System.String]
         $PreferredSite,
 
         [Parameter()]
-        [Uint32]
+        [System.UInt32]
         $QuarantineDuration,
 
         [Parameter()]
-        [Uint32]
+        [System.UInt32]
         $QuarantineThreshold,
 
         [Parameter()]
-        [Uint32]
+        [System.UInt32]
         $SameSubnetDelay,
 
         [Parameter()]
-        [Uint32]
+        [System.UInt32]
         $SameSubnetThreshold,
 
         [Parameter()]
-        [Uint32]
+        [System.UInt32]
         $ShutdownTimeoutInMinutes
     )
 
     Write-Verbose -Message ($script:localizedData.SettingClusterProperties)
 
-    $Params = $PSBoundParameters
-    $Params.Remove("Name") | Out-Null
-    $Params.Remove("Verbose") | Out-Null
+    $boundParameters = $PSBoundParameters
+    $boundParameters.Remove('Name') | Out-Null
+    $boundParameters.Remove('Verbose') | Out-Null
 
-    foreach ($Param in $Params.GetEnumerator())
+    $cluster = Get-Cluster -Name $Name
+    foreach ($boundParameter in $boundParameters.GetEnumerator())
     {
-        $VerboseValue = "`"$($Param.Value)`""
-        Write-Verbose -Message ($script:localizedData.SettingClusterProperty -f $($Param.Key), $VerboseValue)
-        (Get-Cluster -Name $Name).$($Param.Key) = ($Param.Value)
+        Write-Verbose -Message ($script:localizedData.SettingClusterProperty -f $($boundParameter.Key), $boundParameter.Value)
+        $cluster.$($boundParameter.Key) = $boundParameter.Value
     }
 }
-
 <#
     .SYNOPSIS
         Configures cluster properties.
@@ -244,7 +253,7 @@ function Set-TargetResource
         Enables the cluster to change the required number of nodes that need to participate in quorum when nodes shut down or crash.
 
     .PARAMETER Name
-        Specifies the cluster name
+        Name of the cluster.
 
     .PARAMETER NetftIPSecEnabled
         Specifies whether Internet Protocol Security (IPSec) encryption is enabled for inter-node cluster communication.
@@ -267,118 +276,116 @@ function Set-TargetResource
     .PARAMETER ShutdownTimeoutInMinutes
         Specifies how many minutes after a system shutdown is initiated that the failover cluster service will wait for resources to go offline.
 #>
-
 function Test-TargetResource
 {
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param
     (
-        [Parameter()]
-        [Uint32]
-        $AddEvictDelay,
-
-        [Parameter()]
-        [Uint32]
-        $ClusterLogLevel,
-
-        [Parameter()]
-        [Uint32]
-        $ClusterLogSize,
-
-        [Parameter()]
-        [Uint32]
-        $CrossSiteDelay,
-
-        [Parameter()]
-        [Uint32]
-        $CrossSiteThreshold,
-
-        [Parameter()]
-        [Uint32]
-        $CrossSubnetDelay,
-
-        [Parameter()]
-        [Uint32]
-        $CrossSubnetThreshold,
-
-        [Parameter()]
-        [Uint32]
-        $DatabaseReadWriteMode,
-
-        [Parameter()]
-        [Uint32]
-        $DefaultNetworkRole,
-
-        [Parameter()]
-        [String]
-        $Description,
-
-        [Parameter()]
-        [Uint32]
-        $DrainOnShutdown,
-
-        [Parameter()]
-        [Uint32]
-        $DynamicQuorum,
-
         [Parameter(Mandatory = $true)]
         [System.String]
         $Name,
 
         [Parameter()]
-        [Uint32]
+        [System.UInt32]
+        $AddEvictDelay,
+
+        [Parameter()]
+        [System.UInt32]
+        $ClusterLogLevel,
+
+        [Parameter()]
+        [System.UInt32]
+        $ClusterLogSize,
+
+        [Parameter()]
+        [System.UInt32]
+        $CrossSiteDelay,
+
+        [Parameter()]
+        [System.UInt32]
+        $CrossSiteThreshold,
+
+        [Parameter()]
+        [System.UInt32]
+        $CrossSubnetDelay,
+
+        [Parameter()]
+        [System.UInt32]
+        $CrossSubnetThreshold,
+
+        [Parameter()]
+        [System.UInt32]
+        $DatabaseReadWriteMode,
+
+        [Parameter()]
+        [System.UInt32]
+        $DefaultNetworkRole,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.UInt32]
+        $DrainOnShutdown,
+
+        [Parameter()]
+        [System.UInt32]
+        $DynamicQuorum,
+
+        [Parameter()]
+        [System.UInt32]
         $NetftIPSecEnabled,
 
         [Parameter()]
-        [String]
+        [System.String]
         $PreferredSite,
 
         [Parameter()]
-        [Uint32]
+        [System.UInt32]
         $QuarantineDuration,
 
         [Parameter()]
-        [Uint32]
+        [System.UInt32]
         $QuarantineThreshold,
 
         [Parameter()]
-        [Uint32]
+        [System.UInt32]
         $SameSubnetDelay,
 
         [Parameter()]
-        [Uint32]
+        [System.UInt32]
         $SameSubnetThreshold,
 
         [Parameter()]
-        [Uint32]
+        [System.UInt32]
         $ShutdownTimeoutInMinutes
     )
 
-    Write-Verbose -Message ($script:localizedData.CheckingClusterProperties)
+    Write-Verbose -Message ($script:localizedData.GettingClusterProperties -f $Name)
 
-    $Params = $PSBoundParameters
-    $Params.Remove("Name") | Out-Null
-    $Params.Remove("Result") | Out-Null
-    $Params.Remove("Verbose") | Out-Null
-    $Params.Remove("Debug") | Out-Null
+    $boundParameters = $PSBoundParameters
+    $boundParameters.Remove('Name') | Out-Null
+    $boundParameters.Remove('Result') | Out-Null
+    $boundParameters.Remove('Verbose') | Out-Null
+    $boundParameters.Remove('Debug') | Out-Null
 
-    $Cluster = Get-Cluster -Name $Name
+    $cluster = Get-Cluster -Name $Name
 
-    $result = $true
+    $output = $true
 
-    foreach ($Param in $Params.GetEnumerator())
+    foreach ($boundParameter in $boundParameters.GetEnumerator())
     {
-        if($Cluster.$($Param.Key) -ne ($Param.Value))
+        if($cluster.$($boundParameter.Key) -ne $boundParameter.Value)
         {
-            $VerboseValue = "`"$($Param.Value)`""
-            Write-Debug -Message ($script:localizedData.IncorrectClusterProperty -f $($Param.Key), $VerboseValue)
-            $result = $false
+            Write-Debug -Message ($script:localizedData.IncorrectClusterProperty -f $($boundParameter.Key), $cluster.$($boundParameter.Key), $boundParameter.Value)
+            Write-Verbose -Message ($script:localizedData.IncorrectClusterProperty -f $($boundParameter.Key), $cluster.$($boundParameter.Key), $boundParameter.Value)
+            $output = $false
         }
     }
 
-    $result
+    return $output
 }
-
 
 Export-ModuleMember -Function *-TargetResource

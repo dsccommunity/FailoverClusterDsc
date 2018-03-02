@@ -24,7 +24,7 @@ $TestEnvironment = Initialize-TestEnvironment `
 try
 {
     InModuleScope $script:DSCResourceName {
-        $script:DSCResourceName = 'MSFT_xClusterThresholds'
+        $script:DSCResourceName = 'MSFT_xClusterProperty'
         Describe $script:DSCResourceName {
             Context "$($script:DSCResourceName)\Get-TargetResource" {
                 Mock -CommandName Get-Cluster -ParameterFilter {$Name -eq "Cluster1"} -MockWith {
@@ -75,14 +75,9 @@ try
                     Assert-MockCalled -CommandName Get-Cluster -Exactly -Times 1 -Scope It
                 }
 
-                It 'Does not produce an exception when one property is not specified' {
+                It 'Does not produce an exception when some properties are not specified' {
                     Test-TargetResource -Name Cluster1 -SameSubnetDelay 2000 -CrossSubnetDelay 1000 -CrossSubnetThreshold 5 `
                     | Should -Be $false
-                    Assert-MockCalled -CommandName Get-Cluster -Exactly -Times 1 -Scope It
-                }
-
-                It 'Does not produce an exception when two properties are not specified' {
-                    Test-TargetResource -Name Cluster1 -SameSubnetDelay 2000 -CrossSubnetThreshold 5 | Should -Be $false
                     Assert-MockCalled -CommandName Get-Cluster -Exactly -Times 1 -Scope It
                 }
             }
@@ -106,7 +101,7 @@ try
 
                 It 'Sets multiple integer cluster properties' {
                     Set-TargetResource -Name Cluster1 -SameSubnetDelay 2000 -SameSubnetThreshold 5 | Should -Be $null
-                    Assert-MockCalled -CommandName Get-Cluster -Exactly -Times 2 -Scope It
+                    Assert-MockCalled -CommandName Get-Cluster -Exactly -Times 1 -Scope It
                 }
 
                 It 'Sets a single string cluster property' {
@@ -122,7 +117,7 @@ try
                 It 'Sets a multiple string cluster properties' {
                     Set-TargetResource -Name Cluster1 -Description 'Exchange DAG' -PreferredSite 'London' `
                     | Should -Be $null
-                    Assert-MockCalled -CommandName Get-Cluster -Exactly -Times 2 -Scope It
+                    Assert-MockCalled -CommandName Get-Cluster -Exactly -Times 1 -Scope It
                 }
             }
 

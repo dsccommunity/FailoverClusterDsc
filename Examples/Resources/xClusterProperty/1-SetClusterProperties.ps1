@@ -13,10 +13,10 @@ Configuration Example
     {
         xClusterProperty SetProperties
         {
+            Name = 'Cluster1'
             AddEvictDelay = 60
             ClusterLogSize = 300
             Description = ''
-            Name = 'Cluster1'
             SameSubnetDelay = 1000
             SameSubnetThreshold = 5
         }

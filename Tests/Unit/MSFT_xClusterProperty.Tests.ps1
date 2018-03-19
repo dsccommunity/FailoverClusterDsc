@@ -27,7 +27,7 @@ try
         $script:DSCResourceName = 'MSFT_xClusterProperty'
         Describe $script:DSCResourceName {
             Context "$($script:DSCResourceName)\Get-TargetResource" {
-                Mock -CommandName Get-Cluster -ParameterFilter {$Name -eq "Cluster1"} -MockWith {
+                Mock -CommandName Get-Cluster -ParameterFilter {$Name -eq 'Cluster1'} -MockWith {
                     [PSCustomObject] @{
                         SameSubnetDelay = 1000
                         SameSubnetThreshold = 5
@@ -42,48 +42,13 @@ try
                 }
 
                 It 'Returns a hashtable with cluster properties' {
-                    (Get-TargetResource -Name Cluster1).Get_Item("SameSubnetDelay") | Should -Be '1000'
-                    Assert-MockCalled -CommandName Get-Cluster -Exactly -Times 1 -Scope It
-                }
-            }
-
-            Context "$($script:DSCResourceName)\Test-TargetResource" {
-                Mock -CommandName Get-Cluster -ParameterFilter {$Name -eq "Cluster1"} -MockWith {
-                    [PSCustomObject] @{
-                        SameSubnetDelay = 1000
-                        SameSubnetThreshold = 5
-                        CrossSubnetDelay = 1000
-                        CrossSubnetThreshold = 5
-                    }
-                }
-
-                It 'Returns true when cluster properties match parameters' {
-                    Test-TargetResource -Name Cluster1 -SameSubnetDelay 1000 -SameSubnetThreshold 5 -CrossSubnetDelay 1000 `
-                    -CrossSubnetThreshold 5 | Should -Be $true
-                    Assert-MockCalled -CommandName Get-Cluster -Exactly -Times 1 -Scope It
-                }
-
-                It 'Returns false when one cluster property does not match parameters' {
-                    Test-TargetResource -Name Cluster1 -SameSubnetDelay 2000 -SameSubnetThreshold 5 -CrossSubnetDelay 1000 `
-                    -CrossSubnetThreshold 5 | Should -Be $false
-                    Assert-MockCalled -CommandName Get-Cluster -Exactly -Times 1 -Scope It
-                }
-
-                It 'Returns false when two cluster properties do not match parameters' {
-                    Test-TargetResource -Name Cluster1 -SameSubnetDelay 2000 -SameSubnetThreshold 20 -CrossSubnetDelay 1000 `
-                    -CrossSubnetThreshold 5 | Should -Be $false
-                    Assert-MockCalled -CommandName Get-Cluster -Exactly -Times 1 -Scope It
-                }
-
-                It 'Does not produce an exception when some properties are not specified' {
-                    Test-TargetResource -Name Cluster1 -SameSubnetDelay 2000 -CrossSubnetDelay 1000 -CrossSubnetThreshold 5 `
-                    | Should -Be $false
+                    (Get-TargetResource -Name Cluster1).Get_Item('SameSubnetDelay') | Should -Be '1000'
                     Assert-MockCalled -CommandName Get-Cluster -Exactly -Times 1 -Scope It
                 }
             }
 
             Context "$($script:DSCResourceName)\Set-TargetResource" {
-                Mock -CommandName Get-Cluster -ParameterFilter {$Name -eq "Cluster1"} -MockWith {
+                Mock -CommandName Get-Cluster -ParameterFilter {$Name -eq 'Cluster1'} -MockWith {
                     [PSCustomObject] @{
                         Description = ''
                         PreferredSite = ''
@@ -122,7 +87,7 @@ try
             }
 
             Context "$($script:DSCResourceName)\Test-TargetResource" {
-                Mock -CommandName Get-Cluster -ParameterFilter {$Name -eq "Cluster1"} -MockWith {
+                Mock -CommandName Get-Cluster -ParameterFilter {$Name -eq 'Cluster1'} -MockWith {
                     [PSCustomObject] @{
                         AddEvictDelay = 60
                         CrossSubnetDelay = 1000

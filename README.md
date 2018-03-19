@@ -43,6 +43,8 @@ A full list of changes in each version can be found in the [change log](CHANGELO
   cluster.
 * [**xClusterPreferredOwner**](#xclusterpreferredowner) Configures preferred
   owner of a cluster group in a cluster.
+* [**xClusterProperty**](#xclusterproperty) Configures cluster properties on a
+  failover cluster.
 * [**xClusterQuorum**](#xclusterquorum) Configures quorum in a cluster.
 * [**xWaitForCluster**](#xwaitforcluster) Ensures that a node waits for a remote
   cluster is created.
@@ -170,6 +172,69 @@ cluster.
 
 * [Add preferred owners to a cluster group and cluster resources](/Examples/Resources/xClusterDisk/1-AddPreferredOwner.ps1)
 * [Remove preferred owners from a cluster group and cluster resources](/Examples/Resources/xClusterDisk/2-RemovePreferredOwner.ps1)
+
+### xClusterProperty
+
+Configures cluster properties on a failover cluster.
+
+#### Requirements for xClusterProperty
+
+* Target machine must be running Windows Server 2008 R2 or later.
+
+#### Parameters for xClusterProperty
+
+* **`[String]` Name** _(Key)_: Name of the cluster.
+* **`[UInt32]` AddEvictDelay** _(Write)_: Specifies how many seconds after a
+  node is evicted that the failover cluster service will wait before adding a
+  new node.
+* **`[UInt32]` ClusterLogLevel** _(Write)_: Controls the level of cluster
+  logging.
+* **`[UInt32]` ClusterLogSize** _(Write)_: Controls the maximum size of the
+  cluster log files on each of the nodes.
+* **`[UInt32]` CrossSiteDelay** _(Write)_: Controls the time interval, in
+  milliseconds, that the cluster network driver waits between sending Cluster
+  Service heartbeats across sites.
+* **`[UInt32]` CrossSiteThreshold** _(Write)_: Controls how many Cluster
+  Service heartbeats can be missed across sites before it determines that
+  Cluster Service has stopped responding.
+* **`[UInt32]` CrossSubnetDelay** _(Write)_: Controls the time interval, in
+  milliseconds, that the cluster network driver waits between sending Cluster
+  Service heartbeats across subnets.
+* **`[UInt32]` CrossSubnetThreshold** _(Write)_: Controls how many Cluster
+  Service heartbeats can be missed across subnets before it determines that
+  Cluster Service has stopped responding.
+* **`[UInt32]` DatabaseReadWriteMode** _(Write)_: Specifies the read/write mode
+  for the cluster database.
+* **`[UInt32]` DefaultNetworkRole** _(Write)_: Specifies the role that the
+  cluster automatically assigns to any newly discovered or created network.
+* **`[String]` Description** _(Write)_: Stores administrative comments about
+  the cluster. The following table summarizes the attributes of the Description
+  property.
+* **`[UInt32]` DrainOnShutdown** _(Write)_: Specifies whether to enable Node
+  Drain for a cluster.
+* **`[UInt32]` DynamicQuorum** _(Write)_: Enables the cluster to change the
+  required number of nodes that need to participate in quorum when nodes shut
+  down or crash.
+* **`[UInt32]` NetftIPSecEnabled** _(Write)_: Specifies whether Internet
+  Protocol Security (IPSec) encryption is enabled for inter-node cluster
+  communication.
+* **`[String]` PreferredSite** _(Write)_: Specifies the preferred site for a
+  site-aware cluster.
+* **`[UInt32]` QuarantineDuration** _(Write)_: Specifies the quarantine
+  duration for a node, in seconds.
+* **`[UInt32]` QuarantineThreshold** _(Write)_: Specifies the quarantine
+  threshold for a node, in minutes.
+* **`[UInt32]` SameSubnetDelay** _(Write)_: Controls the delay, in milliseconds,
+  between netft heartbeats.
+* **`[UInt32]` SameSubnetThreshold** _(Write)_: Controls how many heartbeats can
+  be missed on the same subnet before the route is declared as unreachable.
+* **`[UInt32]` ShutdownTimeoutInMinutes** _(Write)_: Specifies how many minutes
+  after a system shutdown is initiated that the failover cluster service will
+  wait for resources to go offline.
+
+#### Examples for xClusterProperty
+
+* [Set failover cluster properties](/Examples/Resources/xClusterProperty/1-SetClusterProperties.ps1)
 
 ### xClusterQuorum
 

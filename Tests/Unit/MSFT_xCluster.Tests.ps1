@@ -319,7 +319,11 @@ try
                                 }
                                 { Set-TargetResource @withNodesParameter } | Should Not Throw
 
-                                Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It
+                                Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It -ParameterFilter {
+                                    $Node.Contains($env:COMPUTERNAME) -eq $true `
+                                    -and $Node.Contains('foo') -eq $true `
+                                    -and $Node.Contains('bar') -eq $true
+                                }
                                 Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
                                 Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
                             }

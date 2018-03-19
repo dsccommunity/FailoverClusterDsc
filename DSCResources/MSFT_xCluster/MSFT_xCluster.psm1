@@ -179,15 +179,15 @@ function Set-TargetResource
     {
         ($oldToken, $context, $newToken) = Set-ImpersonateAs -Credential $DomainAdministratorCredential
 
+        $allNodes = Get-AllNodes -Nodes $Nodes
+
         if ($bCreate)
         {
             Write-Verbose -Message ($script:localizedData.ClusterAbsent -f $Name)
 
-
-
             $newClusterParameters = @{
               Name          = $Name
-              Node          = $AllNodes
+              Node          = $allNodes
               NoStorage     = $true
               Force         = $true
               ErrorAction   = 'Stop'
@@ -219,18 +219,16 @@ function Set-TargetResource
         }
         else
         {
-            $AllNodes = Get-All-Nodes($Nodes)
-
             Write-Verbose -Message ($script:localizedData.AddNodeToCluster -f $targetNodeName, $Name)
 
             $existingNodes = Get-ClusterNode -Cluster $Name
             foreach ($node in $existingNodes)
             {
-                foreach ($targetNodeName in $AllNodes)
+                foreach ($targetNodeName in $allNodes)
                 {
                     if ($node.Name -eq $targetNodeName)
                     {
-                        if($node.State -eq 'Down')
+                        if ($node.State -eq 'Down')
                         {
                             Write-Verbose -Message ($script:localizedData.RemoveOfflineNodeFromCluster -f $targetNodeName, $Name)
 
@@ -242,7 +240,7 @@ function Set-TargetResource
                 }
             }
 
-            foreach ($targetNodeName in $AllNodes)
+            foreach ($targetNodeName in $allNodes)
             {
                 Add-ClusterNode -Name $targetNodeName -Cluster $Name -NoStorage
 
@@ -360,9 +358,9 @@ function Test-TargetResource
 
             $existingNodes = Get-ClusterNode -Cluster $Name
 
-            $AllNodes = Get-All-Nodes($Nodes)
+            $allNodes = Get-AllNodes -Nodes $Nodes
 
-            foreach($targetNodeName in $AllNodes)
+            foreach ($targetNodeName in $allNodes)
             {
                 $found = $false
                 foreach ($node in $existingNodes)
@@ -380,7 +378,7 @@ function Test-TargetResource
                     }
                 }
 
-                if($false -eq $found)
+                if ($false -eq $found)
                 {
                     $returnValue = $false
                     break
@@ -527,7 +525,7 @@ function Close-UserToken
     .PARAMETER Nodes
         Array with node names
 #>
-function Get-All-Nodes
+function Get-AllNodes
 {
     [OutputType([String[]])]
     param
@@ -537,16 +535,16 @@ function Get-All-Nodes
         $Nodes
     )
 
-    $AllNodes = @()
-    $AllNodes += $env:COMPUTERNAME
+    $allNodes = @()
+    $allNodes += $env:COMPUTERNAME
 
-    if($null -ne $Nodes)
+    if ($null -ne $Nodes)
     {
-        $AllNodes += $Nodes
+        $allNodes += $Nodes
     }
 
     # Remove duplicates
-    $AllNodes = $AllNodes | Sort-Object -unique
+    $allNodes = $allNodes | Sort-Object -unique
 
-    return $AllNodes
+    return $allNodes
 }

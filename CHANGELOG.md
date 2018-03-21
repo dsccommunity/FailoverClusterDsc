@@ -2,9 +2,16 @@
 
 ## Unreleased
 
+## 1.10.0.0
+
+- Changes to xFailOverCluster
+  - Added xClusterProperty ([issue #169](https://github.com/PowerShell/xFailOverCluster/issues/169)).
+- Changes to xClusterNetwork
+  - Fix the test for the network role never in desired state ([issue #175](https://github.com/PowerShell/xFailOverCluster/issues/175)).
+
 ## 1.9.0.0
 
-- Changes to xFailoverCluster
+- Changes to xFailOverCluster
   - Update Pester syntax to v4
   - Updated year to 2018 in license file and module manifest ([issue #167](https://github.com/PowerShell/xFailOverCluster/issues/167)).
 - Changes to xClusterNetwork

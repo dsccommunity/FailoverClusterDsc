@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 1.10.0.0
+
 - Changes to xFailOverCluster
   - Added xClusterProperty ([issue #169](https://github.com/PowerShell/xFailOverCluster/issues/169)).
 - Changes to xClusterNetwork

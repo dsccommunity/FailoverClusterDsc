@@ -8,6 +8,8 @@
   - Added xClusterProperty ([issue #169](https://github.com/PowerShell/xFailOverCluster/issues/169)).
 - Changes to xClusterNetwork
   - Fix the test for the network role never in desired state ([issue #175](https://github.com/PowerShell/xFailOverCluster/issues/175)).
+- Changes to xCluster
+  - Added a node parameter to be able to create a cluster with multiple nodes ([issue #148 (https://github.com/PowerShell/xFailOverCluster/issues/148), issue #157 (https://github.com/PowerShell/xFailOverCluster/issues/157))
 
 ## 1.9.0.0
 

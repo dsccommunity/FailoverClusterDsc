@@ -4,7 +4,7 @@
 class MSFT_xCluster : OMI_BaseResource
 {
     [Key, Description("Name of the Cluster")] String Name;
-    [Write, Description("Additional Nodes of the Cluster")] String Nodes[];
+    [Write, Description("Additional Nodes of the Cluster. Default value is current node")] String Nodes[];
     [Write, Description("StaticIPAddress of the Cluster")] String StaticIPAddress;
     [Required, EmbeddedInstance("MSFT_Credential"), Description("Credential to create the cluster")] String DomainAdministratorCredential;
     [Write, Description("One or more networks to ignore when creating the cluster. Only networks using Static IP can be ignored, networks that are assigned an IP address through DHCP cannot be ignored, and are added for cluster communication. To remove networks assigned an IP address through DHCP use the resource xClusterNetwork to change the role of the network. This parameter is only used during the creation of the cluster and is not monitored after.")] String IgnoreNetwork[];

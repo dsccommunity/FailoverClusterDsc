@@ -66,6 +66,10 @@ the target node ($env:COMPUTERNAME) to the cluster.
 * **`[String]` StaticIPAddress** _(Write)_: The static IP address of the failover
   cluster. If this is not specified then the IP address will be assigned from a
   DHCP.
+* **`[String[]]` Node** _(Write)_: Specifies a comma-separated list of cluster
+  node names to add to the local physical computer when creating a cluster. If
+  this parameter is not specified, then a one node cluster is created on the
+  local physical computer.
 * **`[String[]]` IgnoreNetwork** _(Write)_: One or more networks to ignore when
   creating the cluster. Only networks using Static IP can be ignored, networks
   that are assigned an IP address through DHCP cannot be ignored, and are added

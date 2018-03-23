@@ -95,7 +95,7 @@ function Get-TargetResource
     .PARAMETER Name
         Name of the failover cluster.
 
-    .PARAMETER Nodes
+    .PARAMETER Node
         Specifies a comma-separated list of cluster node names to add
         to the local physical computer when creating a cluster. If this
         parameter is not specified, then a one node cluster is created
@@ -139,7 +139,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $Nodes,
+        $Node = @($env:COMPUTERNAME),
 
         [Parameter()]
         [System.String[]]
@@ -179,7 +179,8 @@ function Set-TargetResource
     {
         ($oldToken, $context, $newToken) = Set-ImpersonateAs -Credential $DomainAdministratorCredential
 
-        $allNodes = Get-AllNodes -Nodes $Nodes
+        # Remove duplicates
+        $nodes = $Node | Sort-Object -unique
 
         if ($bCreate)
         {
@@ -187,7 +188,7 @@ function Set-TargetResource
 
             $newClusterParameters = @{
               Name          = $Name
-              Node          = $allNodes
+              Node          = $nodes
               NoStorage     = $true
               Force         = $true
               ErrorAction   = 'Stop'
@@ -224,7 +225,11 @@ function Set-TargetResource
             $existingNodes = Get-ClusterNode -Cluster $Name
             foreach ($node in $existingNodes)
             {
-                foreach ($targetNodeName in $allNodes)
+                if ($nodes -notcontains $node)
+                {
+                    Remove-ClusterNode -Name $targetNodeName -Cluster $Name -Force
+                }
+                foreach ($targetNodeName in $nodes)
                 {
                     if ($node.Name -eq $targetNodeName)
                     {
@@ -240,7 +245,7 @@ function Set-TargetResource
                 }
             }
 
-            foreach ($targetNodeName in $allNodes)
+            foreach ($targetNodeName in $nodes)
             {
                 Add-ClusterNode -Name $targetNodeName -Cluster $Name -NoStorage
 
@@ -268,7 +273,7 @@ function Set-TargetResource
     .PARAMETER Name
         Name of the failover cluster.
 
-    .PARAMETER Nodes
+    .PARAMETER Node
         Specifies a comma-separated list of cluster node names, to add
         to the local physical computer when creating a cluster. If this
         parameter is not specified, then a one node cluster is created
@@ -316,7 +321,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $Nodes,
+        $Node = @($env:COMPUTERNAME),
 
         [Parameter()]
         [System.String]
@@ -358,9 +363,15 @@ function Test-TargetResource
 
             $existingNodes = Get-ClusterNode -Cluster $Name
 
-            $allNodes = Get-AllNodes -Nodes $Nodes
+            # Remove duplicates
+            $nodes = $Node | Sort-Object -unique
 
-            foreach ($targetNodeName in $allNodes)
+            if ($existingNodes.Count -ne $nodes.Count)
+            {
+                return $false
+            }
+
+            foreach ($targetNodeName in $nodes)
             {
                 $found = $false
                 foreach ($node in $existingNodes)
@@ -516,35 +527,4 @@ function Close-UserToken
         $errorMessage = $script:localizedData.UnableToCloseToken -f $Token.ToString()
         New-InvalidOperationException -Message $errorMessage
     }
-}
-
-<#
-    .SYNOPSIS
-        Combines Node names with current local computer and removes duplicates.
-
-    .PARAMETER Nodes
-        Array with node names
-#>
-function Get-AllNodes
-{
-    [OutputType([String[]])]
-    param
-    (
-        [Parameter()]
-        [String[]]
-        $Nodes
-    )
-
-    $allNodes = @()
-    $allNodes += $env:COMPUTERNAME
-
-    if ($null -ne $Nodes)
-    {
-        $allNodes += $Nodes
-    }
-
-    # Remove duplicates
-    $allNodes = $allNodes | Sort-Object -unique
-
-    return $allNodes
 }

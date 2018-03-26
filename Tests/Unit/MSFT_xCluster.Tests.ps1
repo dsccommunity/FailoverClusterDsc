@@ -312,17 +312,28 @@ try
                             }
                         }
 
-                        Context 'When Nodes is passed' {
+                        Context 'When Node is passed' {
                             It 'Should call New-Cluster cmdlet with Node as an array' {
                                 $withNodesParameter = $mockDefaultParameters + @{
-                                    Nodes = ('foo','bar')
+                                    Node = ('foo','bar')
                                 }
                                 { Set-TargetResource @withNodesParameter } | Should Not Throw
 
                                 Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It -ParameterFilter {
-                                    $Node.Contains($env:COMPUTERNAME) -eq $true `
-                                    -and $Node.Contains('foo') -eq $true `
+                                    $Node.Contains('foo') -eq $true `
                                     -and $Node.Contains('bar') -eq $true
+                                }
+                                Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
+                                Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
+                            }
+                        }
+
+                        Context 'When Node is not passed' {
+                            It 'Should call New-Cluster cmdlet with Node as an array' {
+                                { Set-TargetResource @mockDefaultParameters } | Should Not Throw
+
+                                Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It -ParameterFilter {
+                                    $Node.Contains($env:COMPUTERNAME) -eq $true
                                 }
                                 Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
                                 Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It

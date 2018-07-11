@@ -418,7 +418,7 @@ try
                     }
 
                     BeforeEach {
-                        Mock -CommandName Get-ClusterNode -MockWith $mockGetClusterNode -ParameterFilter $mockGetClusterNode_ParameterFilter
+                        Mock -CommandName Get-ClusterNode -MockWith $mockGetClusterNode
                         Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter
                     }
 

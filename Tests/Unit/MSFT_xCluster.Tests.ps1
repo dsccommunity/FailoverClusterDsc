@@ -422,11 +422,7 @@ try
                     It 'Should call both Remove-ClusterNode and Add-ClusterNode cmdlet' {
                         Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter
 
-                        $withDefaultNodeParameter = $mockDefaultParameters + @{
-                            Node = ($mockServerName)
-                        }
-
-                        { Set-TargetResource @withDefaultNodeParameter } | Should -Not -Throw
+                        { Set-TargetResource @mockDefaultParameters } | Should -Not -Throw
 
                         Assert-MockCalled -CommandName New-Cluster -Exactly -Times 0 -Scope It
                         Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 1 -Scope It
@@ -573,12 +569,8 @@ try
 
                 Context 'When the node already exist' {
 
-                    $withDefaultNodeParameter = $mockDefaultParameters + @{
-                        Node = ($mockServerName)
-                    }
-
                     It 'Should return $true' {
-                        $testTargetResourceResult = Test-TargetResource @withDefaultNodeParameter
+                        $testTargetResourceResult = Test-TargetResource @mockDefaultParameters
                         $testTargetResourceResult | Should -Be $true
                     }
 

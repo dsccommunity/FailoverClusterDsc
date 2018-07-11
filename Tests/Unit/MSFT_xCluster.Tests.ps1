@@ -417,15 +417,12 @@ try
                         $Name -eq $mockDefaultParameters.Name
                     }
 
-                    BeforeEach {
-                        Mock -CommandName Get-ClusterNode -MockWith $mockGetClusterNode
-                        Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter
-                    }
-
                     $mockDynamicClusterNodeState = 'Down'
 
                     It 'Should call both Remove-ClusterNode and Add-ClusterNode cmdlet' {
+                        Mock -CommandName Get-ClusterNode -MockWith $mockGetClusterNode -ParameterFilter $mockGetClusterNode_ParameterFilter
                         Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter
+                        Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter
 
                         { Set-TargetResource @mockDefaultParameters } | Should -Not -Throw
 

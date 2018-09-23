@@ -6,6 +6,9 @@
   - Update appveyor.yml to use the default template.
   - Added default template files .codecov.yml, .gitattributes, and .gitignore,
     and .vscode folder.
+- Changes to xCluster
+  - Fixed cluster creation on Windows Server 2012 by checking if the New-Cluster command
+    supports -Force before using it ([issue #188](https://github.com/PowerShell/xFailOverCluster/issues/188)).
 
 ## 1.10.0.0
 

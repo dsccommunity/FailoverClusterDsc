@@ -249,6 +249,7 @@ try
             Context 'When the system is not in the desired state' {
                 BeforeEach {
                     Mock -CommandName New-Cluster -Verifiable
+                    Mock -CommandName New-Cluster_NoForce -Verifiable
                     Mock -CommandName Remove-ClusterNode -Verifiable
                     Mock -CommandName Add-ClusterNode -Verifiable
                     Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
@@ -354,6 +355,26 @@ try
                             Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It
                             Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
                             Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
+                        }
+
+                        It 'Should call New-Cluster cmdlet without -Force if it is not supported' {
+                            Set-Alias -Name New-Cluster New-Cluster_NoForce
+
+                            # This is used for the evaluation of that cluster do not exist.
+                            Mock -CommandName Get-Cluster -MockWith {
+                                throw 'Mock Get-Cluster throw error'
+                            } -ParameterFilter $mockGetCluster_ParameterFilter
+
+                            # This is used to evaluate that cluster do exists after New-Cluster cmdlet has been run.
+                            Mock -CommandName Get-Cluster -MockWith $mockGetCluster
+
+                            { Set-TargetResource @mockDefaultParameters } | Should -Not -Throw
+
+                            Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It
+                            Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
+                            Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
+
+                            Remove-Item Alias:New-Cluster
                         }
                     }
                 }

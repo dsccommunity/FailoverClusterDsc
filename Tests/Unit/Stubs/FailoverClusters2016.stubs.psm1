@@ -1300,41 +1300,6 @@ function New-Cluster {
    throw '{0}: StubNotImplemented' -f $MyInvocation.MyCommand
 }
 
-# Windows Server 2012 New-Cluster does not have a -Force parameter
-function New-Cluster_NoForce {
-[CmdletBinding(HelpUri='http://go.microsoft.com/fwlink/?LinkId=216230')]
-    param(
-        [Parameter(Mandatory=$true, Position=0)]
-        [ValidateNotNullOrEmpty()]
-        [string]
-        ${Name},
-
-        [ValidateNotNullOrEmpty()]
-        [System.Collections.Specialized.StringCollection]
-        ${Node},
-
-        [ValidateNotNullOrEmpty()]
-        [System.Collections.Specialized.StringCollection]
-        ${StaticAddress},
-
-        [ValidateNotNullOrEmpty()]
-        [System.Collections.Specialized.StringCollection]
-        ${IgnoreNetwork},
-
-        [switch]
-        ${NoStorage},
-
-        [switch]
-        ${S2D},
-
-        [Alias('aap')]
-        [Object]
-        ${AdministrativeAccessPoint}
-   )
-
-   throw '{0}: StubNotImplemented' -f $MyInvocation.MyCommand
-}
-
 function New-ClusterNameAccount {
     [CmdletBinding(DefaultParameterSetName='InputObject')]
     param(

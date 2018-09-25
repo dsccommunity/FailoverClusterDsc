@@ -29,575 +29,564 @@ $TestEnvironment = Initialize-TestEnvironment `
 
 function Invoke-TestSetup
 {
-    Import-Module -Name (Join-Path -Path (Join-Path -Path (Join-Path -Path (Join-Path -Path $script:moduleRoot -ChildPath 'Tests') -ChildPath 'Unit') -ChildPath 'Stubs') -ChildPath 'FailoverClusters.stubs.psm1') -Global -Force
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]
+        $ModuleVersion
+    )
+
+    Import-Module -Name (Join-Path -Path (Join-Path -Path (Join-Path -Path (Join-Path -Path $script:moduleRoot -ChildPath 'Tests') -ChildPath 'Unit') -ChildPath 'Stubs') -ChildPath "FailoverClusters$ModuleVersion.stubs.psm1") -Global -Force
     Import-Module -Name (Join-Path -Path (Join-Path -Path (Join-Path -Path $script:moduleRoot -ChildPath 'Tests') -ChildPath 'TestHelpers') -ChildPath 'CommonTestHelper.psm1') -Global -Force
+    $global:moduleVersion = $ModuleVersion
 }
 
 function Invoke-TestCleanup
 {
     Restore-TestEnvironment -TestEnvironment $TestEnvironment
+    Remove-Variable -Name moduleVersion -Scope Global
 }
 
 # Begin Testing
 try
 {
-    Invoke-TestSetup
+    foreach ($moduleVersion in @("2012", "2016")) {
+        Invoke-TestSetup -ModuleVersion $moduleVersion
 
-    InModuleScope $script:DSCResourceName {
-        $mockAdministratorUserName = 'COMPANY\ClusterAdmin'
-        $mockAdministratorPassword = ConvertTo-SecureString -String 'dummyPassW0rd' -AsPlainText -Force
-        $mockAdministratorCredential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList @($mockAdministratorUserName, $mockAdministratorPassword)
+        InModuleScope $script:DSCResourceName {
+            $mockAdministratorUserName = 'COMPANY\ClusterAdmin'
+            $mockAdministratorPassword = ConvertTo-SecureString -String 'dummyPassW0rd' -AsPlainText -Force
+            $mockAdministratorCredential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList @($mockAdministratorUserName, $mockAdministratorPassword)
 
-        $mockDomainName = 'domain.local'
-        $mockServerName = $env:COMPUTERNAME
-        $mockClusterName = 'CLUSTER001'
-        $mockStaticIpAddress = '192.168.10.10'
+            $mockDomainName = 'domain.local'
+            $mockServerName = $env:COMPUTERNAME
+            $mockClusterName = 'CLUSTER001'
+            $mockStaticIpAddress = '192.168.10.10'
 
 
-        $mockGetCimInstance = {
-            return [PSCustomObject] @{
-                Domain = $mockDynamicDomainName
-                Name   = $mockDynamicServerName
-            }
-        }
-
-        $mockGetCimInstance_ParameterFilter = {
-            $ClassName -eq 'Win32_ComputerSystem'
-        }
-
-        $mockGetCluster = {
-            return [PSCustomObject] @{
-                Domain = $mockDomainName
-                Name   = $mockClusterName
-            }
-        }
-
-        $mockGetCluster_ParameterFilter = {
-            $Name -eq $mockDefaultParameters.Name -and $Domain -eq $mockDomainName
-        }
-
-        $mockGetClusterResource = {
-            return @{
-                Name         = 'Cluster IP Address'
-                OwnerNode    = 'Cluster Group'
-                State        = 'Online'
-                ResourceType = 'IP Address'
-            }
-        }
-
-        $mockGetClusterResource_ParameterFilter = {
-            $Cluster -eq $mockClusterName -and $Name -eq 'Cluster IP Address'
-        }
-
-        $mockGetClusterParameter = {
-            return @{
-                Object = 'Cluster IP Address'
-                Name   = 'Address'
-                Value  = $mockStaticIpAddress
-            }
-        }
-
-        $mockGetClusterNode = {
-            return @(
-                @{
-                    Name  = $mockServerName
-                    State = $mockDynamicClusterNodeState
+            $mockGetCimInstance = {
+                return [PSCustomObject] @{
+                    Domain = $mockDynamicDomainName
+                    Name   = $mockDynamicServerName
                 }
-            )
-        }
+            }
 
-        $mockNewObjectWindowsIdentity = {
-            return [PSCustomObject] @{} |
-                Add-Member -MemberType ScriptMethod -Name Impersonate -Value {
+            $mockGetCimInstance_ParameterFilter = {
+                $ClassName -eq 'Win32_ComputerSystem'
+            }
+
+            $mockGetCluster = {
+                return [PSCustomObject] @{
+                    Domain = $mockDomainName
+                    Name   = $mockClusterName
+                }
+            }
+
+            $mockGetCluster_ParameterFilter = {
+                $Name -eq $mockDefaultParameters.Name -and $Domain -eq $mockDomainName
+            }
+
+            $mockGetClusterResource = {
+                return @{
+                    Name         = 'Cluster IP Address'
+                    OwnerNode    = 'Cluster Group'
+                    State        = 'Online'
+                    ResourceType = 'IP Address'
+                }
+            }
+
+            $mockGetClusterResource_ParameterFilter = {
+                $Cluster -eq $mockClusterName -and $Name -eq 'Cluster IP Address'
+            }
+
+            $mockGetClusterParameter = {
+                return @{
+                    Object = 'Cluster IP Address'
+                    Name   = 'Address'
+                    Value  = $mockStaticIpAddress
+                }
+            }
+
+            $mockGetClusterNode = {
+                return @(
+                    @{
+                        Name  = $mockServerName
+                        State = $mockDynamicClusterNodeState
+                    }
+                )
+            }
+
+            $mockNewObjectWindowsIdentity = {
                 return [PSCustomObject] @{} |
-                    Add-Member -MemberType ScriptMethod -Name Undo -Value {} -PassThru |
-                    Add-Member -MemberType ScriptMethod -Name Dispose -Value {} -PassThru -Force
-            } -PassThru -Force
-        }
-
-        $mockNewObjectWindowsIdentity_ParameterFilter = {
-            $TypeName -eq 'Security.Principal.WindowsIdentity'
-        }
-
-        $mockDefaultParameters = @{
-            Name                          = $mockClusterName
-            StaticIPAddress               = $mockStaticIpAddress
-            DomainAdministratorCredential = $mockAdministratorCredential
-        }
-
-        class MockLibImpersonation
-        {
-            static [bool] $ReturnValue = $false
-
-            static [bool]LogonUser(
-                [string] $userName,
-                [string] $domain,
-                [string] $password,
-                [int] $logonType,
-                [int] $logonProvider,
-                [ref] $token
-            )
-            {
-                return [MockLibImpersonation]::ReturnValue
+                    Add-Member -MemberType ScriptMethod -Name Impersonate -Value {
+                    return [PSCustomObject] @{} |
+                        Add-Member -MemberType ScriptMethod -Name Undo -Value {} -PassThru |
+                        Add-Member -MemberType ScriptMethod -Name Dispose -Value {} -PassThru -Force
+                } -PassThru -Force
             }
 
-            static [bool]CloseHandle([System.IntPtr]$Token)
-            {
-                return [MockLibImpersonation]::ReturnValue
+            $mockNewObjectWindowsIdentity_ParameterFilter = {
+                $TypeName -eq 'Security.Principal.WindowsIdentity'
             }
-        }
 
-        [MockLibImpersonation]::ReturnValue = $true
-        $mockLibImpersonationObject = [MockLibImpersonation]::New()
+            $mockDefaultParameters = @{
+                Name                          = $mockClusterName
+                StaticIPAddress               = $mockStaticIpAddress
+                DomainAdministratorCredential = $mockAdministratorCredential
+            }
 
-        Describe 'xCluster\Get-TargetResource' {
-            BeforeAll {
-                $mockGetTargetResourceParameters = $mockDefaultParameters.Clone()
-                $mockGetTargetResourceParameters.Remove('StaticIPAddress')
+            class MockLibImpersonation
+            {
+                static [bool] $ReturnValue = $false
 
-                Mock -CommandName Add-Type -MockWith {
-                    return $mockLibImpersonationObject
+                static [bool]LogonUser(
+                    [string] $userName,
+                    [string] $domain,
+                    [string] $password,
+                    [int] $logonType,
+                    [int] $logonProvider,
+                    [ref] $token
+                )
+                {
+                    return [MockLibImpersonation]::ReturnValue
                 }
 
-                Mock -CommandName New-Object -MockWith $mockNewObjectWindowsIdentity -ParameterFilter $mockNewObjectWindowsIdentity_ParameterFilter -Verifiable
-            }
-
-            Context 'When the computers domain name cannot be evaluated' {
-                It 'Should throw the correct error message' {
-                    $mockDynamicDomainName = $null
-                    $mockDynamicServerName = $mockServerName
-
-                    Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
-
-                    $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message $script:localizedData.TargetNodeDomainMissing
-                    { Get-TargetResource @mockGetTargetResourceParameters } | Should -Throw $mockCorrectErrorRecord
+                static [bool]CloseHandle([System.IntPtr]$Token)
+                {
+                    return [MockLibImpersonation]::ReturnValue
                 }
             }
 
-            Context 'When the cluster cannot be found' {
-                It 'Should throw the correct error message' {
+            [MockLibImpersonation]::ReturnValue = $true
+            $mockLibImpersonationObject = [MockLibImpersonation]::New()
+
+            Describe "xCluster_$moduleVersion\Get-TargetResource" {
+                BeforeAll {
+                    $mockGetTargetResourceParameters = $mockDefaultParameters.Clone()
+                    $mockGetTargetResourceParameters.Remove('StaticIPAddress')
+
+                    Mock -CommandName Add-Type -MockWith {
+                        return $mockLibImpersonationObject
+                    }
+
+                    Mock -CommandName New-Object -MockWith $mockNewObjectWindowsIdentity -ParameterFilter $mockNewObjectWindowsIdentity_ParameterFilter -Verifiable
+                }
+
+                Context 'When the computers domain name cannot be evaluated' {
+                    It 'Should throw the correct error message' {
+                        $mockDynamicDomainName = $null
+                        $mockDynamicServerName = $mockServerName
+
+                        Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
+
+                        $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message $script:localizedData.TargetNodeDomainMissing
+                        { Get-TargetResource @mockGetTargetResourceParameters } | Should -Throw $mockCorrectErrorRecord
+                    }
+                }
+
+                Context 'When the cluster cannot be found' {
+                    It 'Should throw the correct error message' {
+                        $mockDynamicDomainName = $mockDomainName
+                        $mockDynamicServerName = $mockServerName
+
+                        Mock -CommandName Get-Cluster -Verifiable
+                        Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
+
+                        $mockCorrectErrorRecord = Get-ObjectNotFoundException -Message ($script:localizedData.ClusterNameNotFound -f $mockClusterName)
+                        { Get-TargetResource @mockGetTargetResourceParameters } | Should -Throw $mockCorrectErrorRecord
+                    }
+                }
+
+                Context 'When the system is not in the desired state' {
+                    BeforeEach {
+                        Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
+                        Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter -Verifiable
+                        Mock -CommandName Get-ClusterResource -MockWith $mockGetClusterResource -ParameterFilter $mockGetClusterResource_ParameterFilter -Verifiable
+                        Mock -CommandName Get-ClusterParameter -MockWith $mockGetClusterParameter -Verifiable
+                    }
+
                     $mockDynamicDomainName = $mockDomainName
                     $mockDynamicServerName = $mockServerName
 
-                    Mock -CommandName Get-Cluster -Verifiable
-                    Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
-
-                    $mockCorrectErrorRecord = Get-ObjectNotFoundException -Message ($script:localizedData.ClusterNameNotFound -f $mockClusterName)
-                    { Get-TargetResource @mockGetTargetResourceParameters } | Should -Throw $mockCorrectErrorRecord
-                }
-            }
-
-            Context 'When the system is not in the desired state' {
-                BeforeEach {
-                    Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
-                    Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter -Verifiable
-                    Mock -CommandName Get-ClusterResource -MockWith $mockGetClusterResource -ParameterFilter $mockGetClusterResource_ParameterFilter -Verifiable
-                    Mock -CommandName Get-ClusterParameter -MockWith $mockGetClusterParameter -Verifiable
-                }
-
-                $mockDynamicDomainName = $mockDomainName
-                $mockDynamicServerName = $mockServerName
-
-                It 'Returns a [System.Collection.Hashtable] type' {
-                    $getTargetResourceResult = Get-TargetResource @mockGetTargetResourceParameters
-                    $getTargetResourceResult | Should -BeOfType [System.Collections.Hashtable]
-                }
-
-                It 'Returns current configuration' {
-                    $getTargetResourceResult = Get-TargetResource @mockGetTargetResourceParameters
-                    $getTargetResourceResult.Name             | Should -Be $mockDefaultParameters.Name
-                    $getTargetResourceResult.StaticIPAddress  | Should -Be $mockDefaultParameters.StaticIPAddress
-                    $getTargetResourceResult.IgnoreNetwork    | Should -BeNullOrEmpty
-                }
-
-                Context 'When IgnoreNetwork is passed' {
-                    It 'Should returns IgnoreNetwork in the hash' {
-                        $withIgnoreNetworkParameter = $mockDefaultParameters + @{
-                            IgnoreNetwork = '10.0.2.0/24'
-                        }
-
-                        $getTargetResourceResult = Get-TargetResource @withIgnoreNetworkParameter
-                        $getTargetResourceResult.IgnoreNetwork | Should -Be '10.0.2.0/24'
+                    It 'Returns a [System.Collection.Hashtable] type' {
+                        $getTargetResourceResult = Get-TargetResource @mockGetTargetResourceParameters
+                        $getTargetResourceResult | Should -BeOfType [System.Collections.Hashtable]
                     }
-                }
 
-                Assert-VerifiableMock
-            }
-        }
+                    It 'Returns current configuration' {
+                        $getTargetResourceResult = Get-TargetResource @mockGetTargetResourceParameters
+                        $getTargetResourceResult.Name             | Should -Be $mockDefaultParameters.Name
+                        $getTargetResourceResult.StaticIPAddress  | Should -Be $mockDefaultParameters.StaticIPAddress
+                        $getTargetResourceResult.IgnoreNetwork    | Should -BeNullOrEmpty
+                    }
 
-        Describe 'xCluster\Set-TargetResource' {
-            BeforeAll {
-                Mock -CommandName Add-Type -MockWith {
-                    return $mockLibImpersonationObject
-                }
-
-                Mock -CommandName New-Object -MockWith $mockNewObjectWindowsIdentity -ParameterFilter $mockNewObjectWindowsIdentity_ParameterFilter -Verifiable
-            }
-
-            Context 'When computers domain name cannot be evaluated' {
-                It 'Should throw the correct error message' {
-                    $mockDynamicDomainName = $null
-                    $mockDynamicServerName = $mockServerName
-
-                    Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
-
-                    $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message $script:localizedData.TargetNodeDomainMissing
-                    { Set-TargetResource @mockDefaultParameters } | Should -Throw $mockCorrectErrorRecord
-                }
-            }
-
-            Context 'When the system is not in the desired state' {
-                BeforeEach {
-                    Mock -CommandName New-Cluster -Verifiable
-                    Mock -CommandName New-Cluster_NoForce -Verifiable
-                    Mock -CommandName Remove-ClusterNode -Verifiable
-                    Mock -CommandName Add-ClusterNode -Verifiable
-                    Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
-                }
-
-                $mockDynamicDomainName = $mockDomainName
-                $mockDynamicServerName = $mockServerName
-
-                Context 'When the cluster does not exist' {
-                    Context 'When Get-Cluster returns nothing' {
-                        BeforeAll {
-                            # This is used for the evaluation of that cluster do not exist.
-                            Mock -CommandName Get-Cluster -ParameterFilter $mockGetCluster_ParameterFilter
-
-                            # This is used to evaluate that cluster do exists after New-Cluster cmdlet has been run.
-                            Mock -CommandName Get-Cluster -MockWith $mockGetCluster
-                        }
-
-                        Context 'When using static IP address' {
-                            It 'Should call New-Cluster cmdlet using StaticAddress parameter' {
-                                { Set-TargetResource @mockDefaultParameters } | Should Not Throw
-
-                                Assert-MockCalled -CommandName New-Cluster -ParameterFilter {
-                                    $StaticAddress -eq $mockStaticIpAddress
-                                } -Exactly -Times 1 -Scope It
-
-                                Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
-                                Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
+                    Context 'When IgnoreNetwork is passed' {
+                        It 'Should returns IgnoreNetwork in the hash' {
+                            $withIgnoreNetworkParameter = $mockDefaultParameters + @{
+                                IgnoreNetwork = '10.0.2.0/24'
                             }
-                        }
 
-                        Context 'When assigned IP address from DHCP' {
-                            It 'Should call New-Cluster cmdlet using StaticAddress parameter' {
-                                $mockTestParameters = $mockDefaultParameters.Clone()
-                                $mockTestParameters.Remove('StaticIPAddress')
-
-                                { Set-TargetResource @mockTestParameters } | Should Not Throw
-
-                                Assert-MockCalled -CommandName New-Cluster -ParameterFilter {
-                                    $null -eq $StaticAddress
-                                } -Exactly -Times 1 -Scope It
-
-                                Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
-                                Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
-                            }
-                        }
-
-
-                        Context 'When IgnoreNetwork is passed as a single value' {
-                            It 'Should call New-Cluster cmdlet with IgnoreNetwork parameter' {
-                                $withIgnoreNetworkParameter = $mockDefaultParameters + @{
-                                    IgnoreNetwork = '10.0.2.0/24'
-                                }
-                                { Set-TargetResource @withIgnoreNetworkParameter } | Should Not Throw
-
-                                Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It -ParameterFilter {
-                                    $IgnoreNetwork -eq '10.0.2.0/24'
-                                }
-                                Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
-                                Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
-                            }
-                        }
-
-                        Context 'When IgnoreNetwork is passed as an array' {
-                            It 'Should call New-Cluster cmdlet with IgnoreNetwork parameter' {
-                                $withIgnoreNetworkParameter = $mockDefaultParameters + @{ IgnoreNetwork = ('10.0.2.0/24', '192.168.4.0/24') }
-                                { Set-TargetResource @withIgnoreNetworkParameter } | Should Not Throw
-
-                                Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It -ParameterFilter {
-                                    $IgnoreNetwork -eq '10.0.2.0/24' -and
-                                    $IgnoreNetwork -eq '192.168.4.0/24'
-                                }
-                                Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
-                                Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
-                            }
-                        }
-
-                        Context 'When IgnoreNetwork is not passed' {
-                            It 'Should call New-Cluster cmdlet without IgnoreNetwork parameter' {
-                                { Set-TargetResource @mockDefaultParameters } | Should Not Throw
-
-                                Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It -ParameterFilter {
-                                    $IgnoreNetwork -eq $null
-                                }
-                                Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
-                                Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
-                            }
+                            $getTargetResourceResult = Get-TargetResource @withIgnoreNetworkParameter
+                            $getTargetResourceResult.IgnoreNetwork | Should -Be '10.0.2.0/24'
                         }
                     }
 
-                    Context 'When Get-Cluster throws an error' {
-                        It 'Should call New-Cluster cmdlet' {
-                            # This is used for the evaluation of that cluster do not exist.
-                            Mock -CommandName Get-Cluster -MockWith {
-                                throw 'Mock Get-Cluster throw error'
-                            } -ParameterFilter $mockGetCluster_ParameterFilter
+                    Assert-VerifiableMock
+                }
+            }
 
-                            # This is used to evaluate that cluster do exists after New-Cluster cmdlet has been run.
-                            Mock -CommandName Get-Cluster -MockWith $mockGetCluster
-
-                            { Set-TargetResource @mockDefaultParameters } | Should -Not -Throw
-
-                            Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It
-                            Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
-                            Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
-                        }
-
-                        It 'Should call New-Cluster cmdlet without -Force if it is not supported' {
-                            Set-Alias -Name New-Cluster New-Cluster_NoForce
-
-                            # This is used for the evaluation of that cluster do not exist.
-                            Mock -CommandName Get-Cluster -MockWith {
-                                throw 'Mock Get-Cluster throw error'
-                            } -ParameterFilter $mockGetCluster_ParameterFilter
-
-                            # This is used to evaluate that cluster do exists after New-Cluster cmdlet has been run.
-                            Mock -CommandName Get-Cluster -MockWith $mockGetCluster
-
-                            { Set-TargetResource @mockDefaultParameters } | Should -Not -Throw
-
-                            Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It
-                            Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
-                            Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
-
-                            Remove-Item Alias:New-Cluster
-                        }
+            Describe "xCluster_$moduleVersion\Set-TargetResource" {
+                BeforeAll {
+                    Mock -CommandName Add-Type -MockWith {
+                        return $mockLibImpersonationObject
                     }
+
+                    Mock -CommandName New-Object -MockWith $mockNewObjectWindowsIdentity -ParameterFilter $mockNewObjectWindowsIdentity_ParameterFilter -Verifiable
                 }
 
-                Context 'When the cluster does not exist, and New-Cluster is run, but no cluster can be found after' {
+                Context 'When computers domain name cannot be evaluated' {
                     It 'Should throw the correct error message' {
-                        Mock -CommandName Get-Cluster
+                        $mockDynamicDomainName = $null
+                        $mockDynamicServerName = $mockServerName
 
-                        $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message $script:localizedData.FailedCreatingCluster
+                        Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
+
+                        $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message $script:localizedData.TargetNodeDomainMissing
                         { Set-TargetResource @mockDefaultParameters } | Should -Throw $mockCorrectErrorRecord
-
-                        Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It
-                        Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
-                        Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
                     }
                 }
 
-                Context 'When the cluster exist but the node is not part of the cluster' {
-                    It 'Should call Add-ClusterNode cmdlet' {
-                        Mock -CommandName Get-ClusterNode
-                        Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter
-
-                        { Set-TargetResource @mockDefaultParameters } | Should -Not -Throw
-
-                        Assert-MockCalled -CommandName New-Cluster -Exactly -Times 0 -Scope It
-                        Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
-                        Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 1 -Scope It
-                    }
-                }
-
-                Context 'When the cluster exist and the node is down' {
+                Context 'When the system is not in the desired state' {
                     BeforeEach {
-                        Mock -CommandName Get-ClusterNode -MockWith $mockGetClusterNode
+                        Mock -CommandName New-Cluster -Verifiable
+                        Mock -CommandName Remove-ClusterNode -Verifiable
+                        Mock -CommandName Add-ClusterNode -Verifiable
+                        Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
                     }
 
-                    $mockDynamicClusterNodeState = 'Down'
-
-                    It 'Should call both Remove-ClusterNode and Add-ClusterNode cmdlet' {
-                        Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter
-
-                        { Set-TargetResource @mockDefaultParameters } | Should -Not -Throw
-
-                        Assert-MockCalled -CommandName New-Cluster -Exactly -Times 0 -Scope It
-                        Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 1 -Scope It
-                        Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 1 -Scope It
-                    }
-                }
-            }
-
-            Context 'When the system is in the desired state' {
-                BeforeEach {
-                    Mock -CommandName Get-ClusterNode -Verifiable
-                    Mock -CommandName New-Cluster -Verifiable
-                    Mock -CommandName Remove-ClusterNode -Verifiable
-                    Mock -CommandName Add-ClusterNode -Verifiable
-                    Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
-                    Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter -Verifiable
-                    Mock -CommandName Get-ClusterParameter -MockWith $mockGetClusterParameter -Verifiable
-
-                    Mock -CommandName Get-ClusterResource -MockWith {
-                        @{
-                            Name         = 'Resource1'
-                            State        = 'Online'
-                            OwnerGroup   = 'ClusterGroup1'
-                            ResourceType = 'type1'
-                        }
-                    } -Verifiable
-                }
-
-                $mockDynamicDomainName = $mockDomainName
-                $mockDynamicServerName = $mockServerName
-
-                Context 'When the node already exist' {
-                    # This test is skipped because due to a logic error it's not possible to test this (issue #79)
-                    It 'Should not call any of the cluster cmdlets' -Skip {
-                        Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter -Verifiable
-
-                        { Set-TargetResource @mockDefaultParameters } | Should -Not -Throw
-
-                        Assert-MockCalled -CommandName New-Cluster -Exactly -Times 0 -Scope It
-                        Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
-                        Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
-                    }
-
-                    Assert-VerifiableMock
-                }
-            }
-        }
-
-        Describe 'xCluster\Test-TargetResource' {
-            BeforeAll {
-                Mock -CommandName Add-Type -MockWith {
-                    return $mockLibImpersonationObject
-                }
-
-                Mock -CommandName New-Object -MockWith $mockNewObjectWindowsIdentity -ParameterFilter $mockNewObjectWindowsIdentity_ParameterFilter -Verifiable
-            }
-
-            Context 'When computers domain name cannot be evaluated' {
-                It 'Should throw the correct error message' {
-                    $mockDynamicDomainName = $null
+                    $mockDynamicDomainName = $mockDomainName
                     $mockDynamicServerName = $mockServerName
 
-                    Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
+                    Context 'When the cluster does not exist' {
+                        Context 'When Get-Cluster returns nothing' {
+                            BeforeAll {
+                                # This is used for the evaluation of that cluster do not exist.
+                                Mock -CommandName Get-Cluster -ParameterFilter $mockGetCluster_ParameterFilter
 
-                    $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message $script:localizedData.TargetNodeDomainMissing
-                    { Test-TargetResource @mockDefaultParameters } | Should -Throw $mockCorrectErrorRecord
+                                # This is used to evaluate that cluster do exists after New-Cluster cmdlet has been run.
+                                Mock -CommandName Get-Cluster -MockWith $mockGetCluster
+                            }
+
+                            Context 'When using static IP address' {
+                                It 'Should call New-Cluster cmdlet using StaticAddress parameter' {
+                                    { Set-TargetResource @mockDefaultParameters } | Should Not Throw
+
+                                    Assert-MockCalled -CommandName New-Cluster -ParameterFilter {
+                                        $StaticAddress -eq $mockStaticIpAddress
+                                    } -Exactly -Times 1 -Scope It
+
+                                    Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
+                                    Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
+                                }
+                            }
+
+                            Context 'When assigned IP address from DHCP' {
+                                It 'Should call New-Cluster cmdlet using StaticAddress parameter' {
+                                    $mockTestParameters = $mockDefaultParameters.Clone()
+                                    $mockTestParameters.Remove('StaticIPAddress')
+
+                                    { Set-TargetResource @mockTestParameters } | Should Not Throw
+
+                                    Assert-MockCalled -CommandName New-Cluster -ParameterFilter {
+                                        $null -eq $StaticAddress
+                                    } -Exactly -Times 1 -Scope It
+
+                                    Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
+                                    Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
+                                }
+                            }
+
+
+                            Context 'When IgnoreNetwork is passed as a single value' {
+                                It 'Should call New-Cluster cmdlet with IgnoreNetwork parameter' {
+                                    $withIgnoreNetworkParameter = $mockDefaultParameters + @{
+                                        IgnoreNetwork = '10.0.2.0/24'
+                                    }
+                                    { Set-TargetResource @withIgnoreNetworkParameter } | Should Not Throw
+
+                                    Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It -ParameterFilter {
+                                        $IgnoreNetwork -eq '10.0.2.0/24'
+                                    }
+                                    Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
+                                    Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
+                                }
+                            }
+
+                            Context 'When IgnoreNetwork is passed as an array' {
+                                It 'Should call New-Cluster cmdlet with IgnoreNetwork parameter' {
+                                    $withIgnoreNetworkParameter = $mockDefaultParameters + @{ IgnoreNetwork = ('10.0.2.0/24', '192.168.4.0/24') }
+                                    { Set-TargetResource @withIgnoreNetworkParameter } | Should Not Throw
+
+                                    Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It -ParameterFilter {
+                                        $IgnoreNetwork -eq '10.0.2.0/24' -and
+                                        $IgnoreNetwork -eq '192.168.4.0/24'
+                                    }
+                                    Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
+                                    Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
+                                }
+                            }
+
+                            Context 'When IgnoreNetwork is not passed' {
+                                It 'Should call New-Cluster cmdlet without IgnoreNetwork parameter' {
+                                    { Set-TargetResource @mockDefaultParameters } | Should Not Throw
+
+                                    Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It -ParameterFilter {
+                                        $IgnoreNetwork -eq $null
+                                    }
+                                    Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
+                                    Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
+                                }
+                            }
+                        }
+
+                        Context 'When Get-Cluster throws an error' {
+                            It 'Should call New-Cluster cmdlet' {
+                                # This is used for the evaluation of that cluster do not exist.
+                                Mock -CommandName Get-Cluster -MockWith {
+                                    throw 'Mock Get-Cluster throw error'
+                                } -ParameterFilter $mockGetCluster_ParameterFilter
+
+                                # This is used to evaluate that cluster do exists after New-Cluster cmdlet has been run.
+                                Mock -CommandName Get-Cluster -MockWith $mockGetCluster
+
+                                { Set-TargetResource @mockDefaultParameters } | Should -Not -Throw
+
+                                Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It
+                                Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
+                                Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
+                            }
+                        }
+                    }
+
+                    Context 'When the cluster does not exist, and New-Cluster is run, but no cluster can be found after' {
+                        It 'Should throw the correct error message' {
+                            Mock -CommandName Get-Cluster
+
+                            $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message $script:localizedData.FailedCreatingCluster
+                            { Set-TargetResource @mockDefaultParameters } | Should -Throw $mockCorrectErrorRecord
+
+                            Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It
+                            Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
+                            Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
+                        }
+                    }
+
+                    Context 'When the cluster exist but the node is not part of the cluster' {
+                        It 'Should call Add-ClusterNode cmdlet' {
+                            Mock -CommandName Get-ClusterNode
+                            Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter
+
+                            { Set-TargetResource @mockDefaultParameters } | Should -Not -Throw
+
+                            Assert-MockCalled -CommandName New-Cluster -Exactly -Times 0 -Scope It
+                            Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
+                            Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 1 -Scope It
+                        }
+                    }
+
+                    Context 'When the cluster exist and the node is down' {
+                        BeforeEach {
+                            Mock -CommandName Get-ClusterNode -MockWith $mockGetClusterNode
+                        }
+
+                        $mockDynamicClusterNodeState = 'Down'
+
+                        It 'Should call both Remove-ClusterNode and Add-ClusterNode cmdlet' {
+                            Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter
+
+                            { Set-TargetResource @mockDefaultParameters } | Should -Not -Throw
+
+                            Assert-MockCalled -CommandName New-Cluster -Exactly -Times 0 -Scope It
+                            Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 1 -Scope It
+                            Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 1 -Scope It
+                        }
+                    }
+                }
+
+                Context 'When the system is in the desired state' {
+                    BeforeEach {
+                        Mock -CommandName Get-ClusterNode -Verifiable
+                        Mock -CommandName New-Cluster -Verifiable
+                        Mock -CommandName Remove-ClusterNode -Verifiable
+                        Mock -CommandName Add-ClusterNode -Verifiable
+                        Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
+                        Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter -Verifiable
+                        Mock -CommandName Get-ClusterParameter -MockWith $mockGetClusterParameter -Verifiable
+
+                        Mock -CommandName Get-ClusterResource -MockWith {
+                            @{
+                                Name         = 'Resource1'
+                                State        = 'Online'
+                                OwnerGroup   = 'ClusterGroup1'
+                                ResourceType = 'type1'
+                            }
+                        } -Verifiable
+                    }
+
+                    $mockDynamicDomainName = $mockDomainName
+                    $mockDynamicServerName = $mockServerName
+
+                    Context 'When the node already exist' {
+                        # This test is skipped because due to a logic error it's not possible to test this (issue #79)
+                        It 'Should not call any of the cluster cmdlets' -Skip {
+                            Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter -Verifiable
+
+                            { Set-TargetResource @mockDefaultParameters } | Should -Not -Throw
+
+                            Assert-MockCalled -CommandName New-Cluster -Exactly -Times 0 -Scope It
+                            Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
+                            Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
+                        }
+
+                        Assert-VerifiableMock
+                    }
                 }
             }
 
-            Context 'When the system is not in the desired state' {
-                BeforeEach {
-                    Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
-                }
-
-                $mockDynamicDomainName = $mockDomainName
-                $mockDynamicServerName = $mockServerName
-
-                Context 'When the cluster does not exist' {
-                    It 'Should return $false' {
-                        Mock -CommandName Get-Cluster -Verifiable
-
-                        $testTargetResourceResult = Test-TargetResource @mockDefaultParameters
-                        $testTargetResourceResult | Should -Be $false
+            Describe "xCluster_$moduleVersion\Test-TargetResource" {
+                BeforeAll {
+                    Mock -CommandName Add-Type -MockWith {
+                        return $mockLibImpersonationObject
                     }
 
-                    Assert-VerifiableMock
+                    Mock -CommandName New-Object -MockWith $mockNewObjectWindowsIdentity -ParameterFilter $mockNewObjectWindowsIdentity_ParameterFilter -Verifiable
                 }
 
-                Context 'When the Get-Cluster throws an error' {
-                    It 'Should return $false' {
-                        Mock -CommandName Get-Cluster -MockWith {
-                            throw 'Mock Get-Cluster throw error'
+                Context 'When computers domain name cannot be evaluated' {
+                    It 'Should throw the correct error message' {
+                        $mockDynamicDomainName = $null
+                        $mockDynamicServerName = $mockServerName
+
+                        Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
+
+                        $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message $script:localizedData.TargetNodeDomainMissing
+                        { Test-TargetResource @mockDefaultParameters } | Should -Throw $mockCorrectErrorRecord
+                    }
+                }
+
+                Context 'When the system is not in the desired state' {
+                    BeforeEach {
+                        Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
+                    }
+
+                    $mockDynamicDomainName = $mockDomainName
+                    $mockDynamicServerName = $mockServerName
+
+                    Context 'When the cluster does not exist' {
+                        It 'Should return $false' {
+                            Mock -CommandName Get-Cluster -Verifiable
+
+                            $testTargetResourceResult = Test-TargetResource @mockDefaultParameters
+                            $testTargetResourceResult | Should -Be $false
+                        }
+
+                        Assert-VerifiableMock
+                    }
+
+                    Context 'When the Get-Cluster throws an error' {
+                        It 'Should return $false' {
+                            Mock -CommandName Get-Cluster -MockWith {
+                                throw 'Mock Get-Cluster throw error'
+                            } -Verifiable
+
+                            $testTargetResourceResult = Test-TargetResource @mockDefaultParameters
+                            $testTargetResourceResult | Should -Be $false
+                        }
+
+                        Assert-VerifiableMock
+                    }
+
+                    Context 'When the node does not exist' {
+                        It 'Should return $false' {
+                            Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter -Verifiable
+                            Mock -CommandName Get-ClusterNode -Verifiable
+
+                            $testTargetResourceResult = Test-TargetResource @mockDefaultParameters
+
+                            $testTargetResourceResult | Should -Be $false
+                        }
+
+                        Assert-VerifiableMock
+                    }
+
+                    Context 'When the node do exist, but is down' {
+                        BeforeEach {
+                            Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter -Verifiable
+                            Mock -CommandName Get-ClusterNode -MockWith $mockGetClusterNode
+                        }
+
+                        $mockDynamicClusterNodeState = 'Down'
+
+                        It 'Should return $false' {
+                            $testTargetResourceResult = Test-TargetResource @mockDefaultParameters
+
+                            $testTargetResourceResult | Should -Be $false
+                        }
+
+                        Assert-VerifiableMock
+                    }
+
+                }
+
+                Context 'When the system is in the desired state' {
+                    BeforeEach {
+                        Mock -CommandName Get-ClusterNode -MockWith $mockGetClusterNode -Verifiable
+                        Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
+                        Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter -Verifiable
+                    }
+
+                    $mockDynamicDomainName = $mockDomainName
+                    $mockDynamicServerName = $mockServerName
+                    $mockDynamicClusterNodeState = 'Up'
+
+                    Context 'When the node already exist' {
+                        It 'Should return $true' {
+                            $testTargetResourceResult = Test-TargetResource @mockDefaultParameters
+                            $testTargetResourceResult | Should -Be $true
+                        }
+
+                        Assert-VerifiableMock
+                    }
+                }
+            }
+
+            [MockLibImpersonation]::ReturnValue = $false
+            $mockLibImpersonationObject = [MockLibImpersonation]::New()
+
+            Describe "xCluster_$moduleVersion\Set-ImpersonateAs' -Tag 'Helper" {
+                Context 'When impersonating credentials fails' {
+                    It 'Should throw the correct error message' {
+                        Mock -CommandName Add-Type -MockWith {
+                            return $mockLibImpersonationObject
+                        }
+
+                        $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message ($script:localizedData.UnableToImpersonateUser -f $mockAdministratorCredential.GetNetworkCredential().UserName)
+                        { Set-ImpersonateAs -Credential $mockAdministratorCredential } | Should -Throw $mockCorrectErrorRecord
+                    }
+                }
+            }
+
+            Describe "xCluster_$moduleVersion\Close-UserToken' -Tag 'Helper" {
+                Context 'When closing user token fails' {
+                    It 'Should throw the correct error message' {
+                        Mock -CommandName Add-Type -MockWith {
+                            return $mockLibImpersonationObject
                         } -Verifiable
 
-                        $testTargetResourceResult = Test-TargetResource @mockDefaultParameters
-                        $testTargetResourceResult | Should -Be $false
+                        $mockToken = [System.IntPtr]::New(12345)
+
+                        $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message ($script:localizedData.UnableToCloseToken -f $mockToken.ToString())
+                        { Close-UserToken -Token $mockToken } | Should -Throw $mockCorrectErrorRecord
                     }
-
-                    Assert-VerifiableMock
-                }
-
-                Context 'When the node does not exist' {
-                    It 'Should return $false' {
-                        Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter -Verifiable
-                        Mock -CommandName Get-ClusterNode -Verifiable
-
-                        $testTargetResourceResult = Test-TargetResource @mockDefaultParameters
-
-                        $testTargetResourceResult | Should -Be $false
-                    }
-
-                    Assert-VerifiableMock
-                }
-
-                Context 'When the node do exist, but is down' {
-                    BeforeEach {
-                        Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter -Verifiable
-                        Mock -CommandName Get-ClusterNode -MockWith $mockGetClusterNode
-                    }
-
-                    $mockDynamicClusterNodeState = 'Down'
-
-                    It 'Should return $false' {
-                        $testTargetResourceResult = Test-TargetResource @mockDefaultParameters
-
-                        $testTargetResourceResult | Should -Be $false
-                    }
-
-                    Assert-VerifiableMock
-                }
-
-            }
-
-            Context 'When the system is in the desired state' {
-                BeforeEach {
-                    Mock -CommandName Get-ClusterNode -MockWith $mockGetClusterNode -Verifiable
-                    Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
-                    Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter -Verifiable
-                }
-
-                $mockDynamicDomainName = $mockDomainName
-                $mockDynamicServerName = $mockServerName
-                $mockDynamicClusterNodeState = 'Up'
-
-                Context 'When the node already exist' {
-                    It 'Should return $true' {
-                        $testTargetResourceResult = Test-TargetResource @mockDefaultParameters
-                        $testTargetResourceResult | Should -Be $true
-                    }
-
-                    Assert-VerifiableMock
-                }
-            }
-        }
-
-        [MockLibImpersonation]::ReturnValue = $false
-        $mockLibImpersonationObject = [MockLibImpersonation]::New()
-
-        Describe 'xCluster\Set-ImpersonateAs' -Tag 'Helper' {
-            Context 'When impersonating credentials fails' {
-                It 'Should throw the correct error message' {
-                    Mock -CommandName Add-Type -MockWith {
-                        return $mockLibImpersonationObject
-                    }
-
-                    $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message ($script:localizedData.UnableToImpersonateUser -f $mockAdministratorCredential.GetNetworkCredential().UserName)
-                    { Set-ImpersonateAs -Credential $mockAdministratorCredential } | Should -Throw $mockCorrectErrorRecord
-                }
-            }
-        }
-
-        Describe 'xCluster\Close-UserToken' -Tag 'Helper' {
-            Context 'When closing user token fails' {
-                It 'Should throw the correct error message' {
-                    Mock -CommandName Add-Type -MockWith {
-                        return $mockLibImpersonationObject
-                    } -Verifiable
-
-                    $mockToken = [System.IntPtr]::New(12345)
-
-                    $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message ($script:localizedData.UnableToCloseToken -f $mockToken.ToString())
-                    { Close-UserToken -Token $mockToken } | Should -Throw $mockCorrectErrorRecord
                 }
             }
         }

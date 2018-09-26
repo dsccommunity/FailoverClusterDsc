@@ -180,7 +180,7 @@ function Set-TargetResource
               ErrorAction   = 'Stop'
             }
 
-            if ((Get-Command New-Cluster).Parameters["Force"])
+            if ((Get-Command New-Cluster).Parameters['Force'])
             {
                 $newClusterParameters.Force = $true
             }

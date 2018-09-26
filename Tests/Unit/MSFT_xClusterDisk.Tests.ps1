@@ -22,7 +22,8 @@ $TestEnvironment = Initialize-TestEnvironment `
 
 function Invoke-TestSetup
 {
-    param(
+    param
+    (
         [Parameter(Mandatory = $true)]
         [string]
         $ModuleVersion
@@ -41,7 +42,8 @@ function Invoke-TestCleanup
 # Begin Testing
 try
 {
-    foreach ($moduleVersion in @("2012", "2016")) {
+    foreach ($moduleVersion in @('2012', '2016'))
+    {
         Invoke-TestSetup -ModuleVersion $moduleVersion
 
         InModuleScope $script:DSCResourceName {

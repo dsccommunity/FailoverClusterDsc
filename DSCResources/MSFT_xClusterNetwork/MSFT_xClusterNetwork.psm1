@@ -127,7 +127,9 @@ function Set-TargetResource
             $_.Address -eq $Address -and $_.AddressMask -eq $AddressMask
         }
         $clusterNetworkResource.Name = $Name
-        $clusterNetworkResource.Update()
+        if ($clusterNetworkResource.psobject.Methods['Update']) {
+            $clusterNetworkResource.Update()
+        }
     }
 
     if ($PSBoundParameters.ContainsKey('Role') -and $getTargetResourceResult.Role -ne $Role)
@@ -138,7 +140,9 @@ function Set-TargetResource
             $_.Address -eq $Address -and $_.AddressMask -eq $AddressMask
         }
         $clusterNetworkResource.Role = $Role
-        $clusterNetworkResource.Update()
+        if ($clusterNetworkResource.psobject.Methods['Update']) {
+            $clusterNetworkResource.Update()
+        }
     }
 
     if ($PSBoundParameters.ContainsKey('Metric') -and $getTargetResourceResult.Metric -ne $Metric)
@@ -149,7 +153,9 @@ function Set-TargetResource
             $_.Address -eq $Address -and $_.AddressMask -eq $AddressMask
         }
         $clusterNetworkResource.Metric = $Metric
-        $clusterNetworkResource.Update()
+        if ($clusterNetworkResource.psobject.Methods['Update']) {
+            $clusterNetworkResource.Update()
+        }
     }
 }
 

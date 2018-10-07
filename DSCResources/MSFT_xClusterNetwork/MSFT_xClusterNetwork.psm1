@@ -151,8 +151,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message ($script:localizedData.ChangeNetworkMetric -f $Address, $AddressMask, $Metric)
 
-        $clusterNetworkResource = Get-ClusterNetwork | Where-Object -FilterScript
-        {
+        $clusterNetworkResource = Get-ClusterNetwork | Where-Object -FilterScript {
             $_.Address -eq $Address -and $_.AddressMask -eq $AddressMask
         }
         $clusterNetworkResource.Metric = $Metric

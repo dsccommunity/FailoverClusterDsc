@@ -127,7 +127,8 @@ function Set-TargetResource
             $_.Address -eq $Address -and $_.AddressMask -eq $AddressMask
         }
         $clusterNetworkResource.Name = $Name
-        if ($clusterNetworkResource.psobject.Methods['Update']) {
+        if ($clusterNetworkResource.psobject.Methods['Update'])
+        {
             $clusterNetworkResource.Update()
         }
     }
@@ -140,7 +141,8 @@ function Set-TargetResource
             $_.Address -eq $Address -and $_.AddressMask -eq $AddressMask
         }
         $clusterNetworkResource.Role = $Role
-        if ($clusterNetworkResource.psobject.Methods['Update']) {
+        if ($clusterNetworkResource.psobject.Methods['Update'])
+        {
             $clusterNetworkResource.Update()
         }
     }
@@ -149,11 +151,13 @@ function Set-TargetResource
     {
         Write-Verbose -Message ($script:localizedData.ChangeNetworkMetric -f $Address, $AddressMask, $Metric)
 
-        $clusterNetworkResource = Get-ClusterNetwork | Where-Object -FilterScript {
+        $clusterNetworkResource = Get-ClusterNetwork | Where-Object -FilterScript
+        {
             $_.Address -eq $Address -and $_.AddressMask -eq $AddressMask
         }
         $clusterNetworkResource.Metric = $Metric
-        if ($clusterNetworkResource.psobject.Methods['Update']) {
+        if ($clusterNetworkResource.psobject.Methods['Update'])
+        {
             $clusterNetworkResource.Update()
         }
     }

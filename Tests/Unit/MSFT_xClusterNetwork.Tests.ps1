@@ -60,7 +60,8 @@ try
             $mockAbsentClusterNetworkRole = [System.UInt32] 3
             $mockAbsentClusterNetworkMetric = '10'
 
-            if ($moduleVersion -eq '2012') {
+            if ($moduleVersion -eq '2012')
+            {
                 $mockGetClusterNetwork = {
                     [PSCustomObject] @{
                         Cluster     = 'CLUSTER01'
@@ -82,7 +83,9 @@ try
                         Metric      = $mockPresentClusterNetworkMetric
                     }
                 }
-            } else {
+            }
+            else
+            {
                 $mockGetClusterNetwork = {
                     [PSCustomObject] @{
                         Cluster     = 'CLUSTER01'
@@ -287,14 +290,17 @@ try
                         }
 
                         It 'Should call Update method correct number of times' {
-                            if ($moduleVersion -eq '2012') {
-                                $expectedNumberOfTimesMockedMethodUpdateWasCalled = 0
-                            } else {
-                                $expectedNumberOfTimesMockedMethodUpdateWasCalled = 3
+                            if ($moduleVersion -eq '2012')
+                            {
+                                $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled = 0
+                            }
+                            else
+                            {
+                                $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled = 3
                             }
 
                             { Set-TargetResource @mockTestParameters } | Should -Not -Throw
-                            $script:mockNumberOfTimesMockedMethodUpdateWasCalled | Should -BeExactly $expectedNumberOfTimesMockedMethodUpdateWasCalled
+                            $script:mockNumberOfTimesMockedMethodUpdateWasCalled | Should -BeExactly $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled
                         }
                     }
 
@@ -306,13 +312,13 @@ try
 
                         It 'Should call Update method correct number of times' {
                             if ($moduleVersion -eq '2012') {
-                                $expectedNumberOfTimesMockedMethodUpdateWasCalled = 0
+                                $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled = 0
                             } else {
-                                $expectedNumberOfTimesMockedMethodUpdateWasCalled = 1
+                                $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled = 1
                             }
 
                             { Set-TargetResource @mockTestParameters } | Should -Not -Throw
-                            $script:mockNumberOfTimesMockedMethodUpdateWasCalled | Should -BeExactly $expectedNumberOfTimesMockedMethodUpdateWasCalled
+                            $script:mockNumberOfTimesMockedMethodUpdateWasCalled | Should -BeExactly $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled
                         }
                     }
 
@@ -324,13 +330,13 @@ try
 
                         It 'Should call Update method correct number of times' {
                             if ($moduleVersion -eq '2012') {
-                                $expectedNumberOfTimesMockedMethodUpdateWasCalled = 0
+                                $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled = 0
                             } else {
-                                $expectedNumberOfTimesMockedMethodUpdateWasCalled = 1
+                                $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled = 1
                             }
 
                             { Set-TargetResource @mockTestParameters } | Should -Not -Throw
-                            $script:mockNumberOfTimesMockedMethodUpdateWasCalled | Should -BeExactly $expectedNumberOfTimesMockedMethodUpdateWasCalled
+                            $script:mockNumberOfTimesMockedMethodUpdateWasCalled | Should -BeExactly $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled
                         }
                     }
 
@@ -342,13 +348,13 @@ try
 
                         It 'Should call Update method correct number of times' {
                             if ($moduleVersion -eq '2012') {
-                                $expectedNumberOfTimesMockedMethodUpdateWasCalled = 0
+                                $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled = 0
                             } else {
-                                $expectedNumberOfTimesMockedMethodUpdateWasCalled = 1
+                                $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled = 1
                             }
 
                             { Set-TargetResource @mockTestParameters } | Should -Not -Throw
-                            $script:mockNumberOfTimesMockedMethodUpdateWasCalled | Should -BeExactly $expectedNumberOfTimesMockedMethodUpdateWasCalled
+                            $script:mockNumberOfTimesMockedMethodUpdateWasCalled | Should -BeExactly $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled
                         }
                     }
                 }

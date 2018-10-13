@@ -60,30 +60,57 @@ try
             $mockAbsentClusterNetworkRole = [System.UInt32] 3
             $mockAbsentClusterNetworkMetric = '10'
 
-            $mockGetClusterNetwork = {
-                [PSCustomObject] @{
-                    Cluster     = 'CLUSTER01'
-                    Name        = $mockPresentClusterNetworkName
-                    Address     = $mockPresentClusterNetworkAddress
-                    AddressMask = $mockPresentClusterNetworkAddressMask
-                    Role        = $mockPresentClusterNetworkRole
-                    Metric      = $mockPresentClusterNetworkMetric
-                } | Add-Member -MemberType ScriptMethod -Name Update -Value {
-                    $script:mockNumerOfTimesMockedMethodUpdateWasCalled += 1
-                } -PassThru
-            }
+            if ($moduleVersion -eq '2012')
+            {
+                $mockGetClusterNetwork = {
+                    [PSCustomObject] @{
+                        Cluster     = 'CLUSTER01'
+                        Name        = $mockPresentClusterNetworkName
+                        Address     = $mockPresentClusterNetworkAddress
+                        AddressMask = $mockPresentClusterNetworkAddressMask
+                        Role        = $mockPresentClusterNetworkRole
+                        Metric      = $mockPresentClusterNetworkMetric
+                    }
+                }
 
-            $mockGetClusterNetwork2 = {
-                [PSCustomObject] @{
-                    Cluster     = 'CLUSTER01'
-                    Name        = $mockPresentClusterNetworkName
-                    Address     = $mockPresentClusterNetworkAddress
-                    AddressMask = $mockPresentClusterNetworkAddressMask
-                    Role        = $mockPresentClusterNetworkRole2
-                    Metric      = $mockPresentClusterNetworkMetric
-                } | Add-Member -MemberType ScriptMethod -Name Update -Value {
-                    $script:mockNumerOfTimesMockedMethodUpdateWasCalled += 1
-                } -PassThru
+                $mockGetClusterNetwork2 = {
+                    [PSCustomObject] @{
+                        Cluster     = 'CLUSTER01'
+                        Name        = $mockPresentClusterNetworkName
+                        Address     = $mockPresentClusterNetworkAddress
+                        AddressMask = $mockPresentClusterNetworkAddressMask
+                        Role        = $mockPresentClusterNetworkRole2
+                        Metric      = $mockPresentClusterNetworkMetric
+                    }
+                }
+            }
+            else
+            {
+                $mockGetClusterNetwork = {
+                    [PSCustomObject] @{
+                        Cluster     = 'CLUSTER01'
+                        Name        = $mockPresentClusterNetworkName
+                        Address     = $mockPresentClusterNetworkAddress
+                        AddressMask = $mockPresentClusterNetworkAddressMask
+                        Role        = $mockPresentClusterNetworkRole
+                        Metric      = $mockPresentClusterNetworkMetric
+                    } | Add-Member -MemberType ScriptMethod -Name Update -Value {
+                        $script:mockNumberOfTimesMockedMethodUpdateWasCalled += 1
+                    } -PassThru
+                }
+
+                $mockGetClusterNetwork2 = {
+                    [PSCustomObject] @{
+                        Cluster     = 'CLUSTER01'
+                        Name        = $mockPresentClusterNetworkName
+                        Address     = $mockPresentClusterNetworkAddress
+                        AddressMask = $mockPresentClusterNetworkAddressMask
+                        Role        = $mockPresentClusterNetworkRole2
+                        Metric      = $mockPresentClusterNetworkMetric
+                    } | Add-Member -MemberType ScriptMethod -Name Update -Value {
+                        $script:mockNumberOfTimesMockedMethodUpdateWasCalled += 1
+                    } -PassThru
+                }
             }
 
             $mockTestParameters_PresentNetwork = @{
@@ -254,7 +281,7 @@ try
 
                 Context 'When the system is not in the desired state' {
                     BeforeEach {
-                        $script:mockNumerOfTimesMockedMethodUpdateWasCalled = 0
+                        $script:mockNumberOfTimesMockedMethodUpdateWasCalled = 0
                     }
 
                     Context 'When all supported properties is not in desired state' {
@@ -263,8 +290,17 @@ try
                         }
 
                         It 'Should call Update method correct number of times' {
+                            if ($moduleVersion -eq '2012')
+                            {
+                                $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled = 0
+                            }
+                            else
+                            {
+                                $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled = 3
+                            }
+
                             { Set-TargetResource @mockTestParameters } | Should -Not -Throw
-                            $script:mockNumerOfTimesMockedMethodUpdateWasCalled | Should -BeExactly 3
+                            $script:mockNumberOfTimesMockedMethodUpdateWasCalled | Should -BeExactly $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled
                         }
                     }
 
@@ -275,8 +311,14 @@ try
                         }
 
                         It 'Should call Update method correct number of times' {
+                            if ($moduleVersion -eq '2012') {
+                                $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled = 0
+                            } else {
+                                $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled = 1
+                            }
+
                             { Set-TargetResource @mockTestParameters } | Should -Not -Throw
-                            $script:mockNumerOfTimesMockedMethodUpdateWasCalled | Should -BeExactly 1
+                            $script:mockNumberOfTimesMockedMethodUpdateWasCalled | Should -BeExactly $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled
                         }
                     }
 
@@ -287,8 +329,14 @@ try
                         }
 
                         It 'Should call Update method correct number of times' {
+                            if ($moduleVersion -eq '2012') {
+                                $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled = 0
+                            } else {
+                                $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled = 1
+                            }
+
                             { Set-TargetResource @mockTestParameters } | Should -Not -Throw
-                            $script:mockNumerOfTimesMockedMethodUpdateWasCalled | Should -BeExactly 1
+                            $script:mockNumberOfTimesMockedMethodUpdateWasCalled | Should -BeExactly $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled
                         }
                     }
 
@@ -299,8 +347,14 @@ try
                         }
 
                         It 'Should call Update method correct number of times' {
+                            if ($moduleVersion -eq '2012') {
+                                $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled = 0
+                            } else {
+                                $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled = 1
+                            }
+
                             { Set-TargetResource @mockTestParameters } | Should -Not -Throw
-                            $script:mockNumerOfTimesMockedMethodUpdateWasCalled | Should -BeExactly 1
+                            $script:mockNumberOfTimesMockedMethodUpdateWasCalled | Should -BeExactly $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled
                         }
                     }
                 }
@@ -311,12 +365,12 @@ try
                     }
 
                     BeforeEach {
-                        $script:mockNumerOfTimesMockedMethodUpdateWasCalled = 0
+                        $script:mockNumberOfTimesMockedMethodUpdateWasCalled = 0
                     }
 
                     It 'Should call Update method correct number of times' {
                         { Set-TargetResource @mockTestParameters } | Should -Not -Throw
-                        $script:mockNumerOfTimesMockedMethodUpdateWasCalled | Should -BeExactly 0
+                        $script:mockNumberOfTimesMockedMethodUpdateWasCalled | Should -BeExactly 0
                     }
                 }
             }

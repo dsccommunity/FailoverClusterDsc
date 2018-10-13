@@ -14,9 +14,12 @@
 - Changes to xCluster
   - Fixed cluster creation on Windows Server 2012 by checking if the New-Cluster command
     supports -Force before using it ([issue #188](https://github.com/PowerShell/xFailOverCluster/issues/188)).
-- Changed to xClusterQuorum
+- Changes to xClusterQuorum
   - Changed some internal parameter names from the Windows Server 2016 version aliases
     which are compatible with Windows Server 2012.
+- Changes to xClusterNetwork
+  - Fixed Set-TargetResource for Windows Server 2012 by removing call to Update method
+    as it doesn't exist on this version and updates automatically.
 
 ## 1.10.0.0
 

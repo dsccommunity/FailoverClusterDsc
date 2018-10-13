@@ -127,7 +127,8 @@ function Set-TargetResource
             $_.Address -eq $Address -and $_.AddressMask -eq $AddressMask
         }
         $clusterNetworkResource.Name = $Name
-        if ($clusterNetworkResource.psobject.Methods['Update'])
+        $hasUpdateMethod = $clusterNetworkResource | Get-Member -Name 'Update' -MemberType 'Methods'
+        if ($hasUpdateMethod)
         {
             $clusterNetworkResource.Update()
         }
@@ -141,7 +142,8 @@ function Set-TargetResource
             $_.Address -eq $Address -and $_.AddressMask -eq $AddressMask
         }
         $clusterNetworkResource.Role = $Role
-        if ($clusterNetworkResource.psobject.Methods['Update'])
+        $hasUpdateMethod = $clusterNetworkResource | Get-Member -Name 'Update' -MemberType 'Methods'
+        if ($hasUpdateMethod)
         {
             $clusterNetworkResource.Update()
         }

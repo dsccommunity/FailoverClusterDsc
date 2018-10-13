@@ -157,8 +157,8 @@ function Set-TargetResource
             $_.Address -eq $Address -and $_.AddressMask -eq $AddressMask
         }
         $clusterNetworkResource.Metric = $Metric
-        if ($clusterNetworkResource.psobject.Methods['Update'])
-        {
+        $hasUpdateMethod = $clusterNetworkResource | Get-Member -Name 'Update' -MemberType 'Methods'
+        if ($hasUpdateMethod) {
             $clusterNetworkResource.Update()
         }
     }

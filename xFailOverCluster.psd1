@@ -1,6 +1,6 @@
 @{
 
-moduleVersion = '1.10.0.0'
+moduleVersion = '1.11.0.0'
 
 GUID = '026e7fd8-06dd-41bc-b373-59366ab18679'
 
@@ -34,9 +34,23 @@ PrivateData = @{
 
         # ReleaseNotes of this module
         ReleaseNotes = '- Changes to xFailOverCluster
-  - Added xClusterProperty ([issue 169](https://github.com/PowerShell/xFailOverCluster/issues/169)).
+  - Update appveyor.yml to use the default template.
+  - Added default template files .codecov.yml, .gitattributes, and .gitignore,
+    and .vscode folder.
+  - Added FailoverClusters2012.stubs.psm1 from Windows Server 2012 and
+    renamed existing test stub file to FailoverClusters2016.stubs.psm1.
+  - Modified Pester Describe blocks to include which version of the
+    FailoverClusters module is being tested.
+  - Modified Pester tests to run against 2012 and 2016 stubs in sequence.
+- Changes to xCluster
+  - Fixed cluster creation on Windows Server 2012 by checking if the New-Cluster command
+    supports -Force before using it ([issue 188](https://github.com/PowerShell/xFailOverCluster/issues/188)).
+- Changes to xClusterQuorum
+  - Changed some internal parameter names from the Windows Server 2016 version aliases
+    which are compatible with Windows Server 2012.
 - Changes to xClusterNetwork
-  - Fix the test for the network role never in desired state ([issue 175](https://github.com/PowerShell/xFailOverCluster/issues/175)).
+  - Fixed Set-TargetResource for Windows Server 2012 by removing call to Update method
+    as it doesn"t exist on this version and updates automatically.
 
 '
 
@@ -44,6 +58,7 @@ PrivateData = @{
 
 } # End of PrivateData hashtable
 }
+
 
 
 

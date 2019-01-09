@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 1.12.0.0
+
+- Explicitly removed extra hidden files from release package
+
 ## 1.11.0.0
 
 - Changes to xFailOverCluster

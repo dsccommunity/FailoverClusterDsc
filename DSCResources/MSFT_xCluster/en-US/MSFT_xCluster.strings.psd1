@@ -12,6 +12,7 @@ ConvertFrom-StringData @'
     ClusterNodeIsDown = Node {0} is in the cluster {1} but the status is not 'Up'. Node will be treated as NOT being a member of the cluster {1}.
     ClusterNodePresent = Cluster node {0} is a member of cluster {1}.
     ClusterNodeAbsent = Cluster node {0} is NOT a member of cluster {1}.
+    ClusterNodePaused = Cluster node {0} is a member of the cluster {1}.  It is currently in a PAUSED state.
     ClusterAbsentWithError = Cluster {0} is NOT present with error: {1}
     TargetNodeDomainMissing = Can't find the target node's domain name.
     ClusterNameNotFound = Can't find the cluster {0}.

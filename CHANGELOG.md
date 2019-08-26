@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Updated the xCluster *test* method to return true if a node is joined to the cluster but is in a **Paused** state.
+
 ## 1.12.0.0
 
 - Explicitly removed extra hidden files from release package

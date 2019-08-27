@@ -556,6 +556,15 @@ try
                             $testTargetResourceResult | Should -Be $true
                         }
 
+                    $mockDynamicClusterNodeState = 'Paused'
+
+                    Context 'When node exists and is in a Paused state' {
+                        It 'Should return $true' {
+                            $testTargetResourceResult = Test-TargetResource @mockDefaultParameters
+                            $testTargetResourceResult | Should -Be $true
+                        }
+                    }
+
                         Assert-VerifiableMock
                     }
                 }

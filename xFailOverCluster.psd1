@@ -1,6 +1,6 @@
 @{
 
-moduleVersion = '1.12.0.0'
+moduleVersion = '1.13.0.0'
 
 GUID = '026e7fd8-06dd-41bc-b373-59366ab18679'
 
@@ -33,7 +33,7 @@ PrivateData = @{
         # IconUri = ''
 
         # ReleaseNotes of this module
-        ReleaseNotes = '- Explicitly removed extra hidden files from release package
+        ReleaseNotes = '- Updated the xCluster *test* method to return true if a node is joined to the cluster but is in a **Paused** state.
 
 '
 
@@ -41,6 +41,7 @@ PrivateData = @{
 
 } # End of PrivateData hashtable
 }
+
 
 
 

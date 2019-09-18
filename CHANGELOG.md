@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 1.13.0.0
+
 - Updated the xCluster *test* method to return true if a node is joined to the cluster but is in a **Paused** state.
 
 ## 1.12.0.0

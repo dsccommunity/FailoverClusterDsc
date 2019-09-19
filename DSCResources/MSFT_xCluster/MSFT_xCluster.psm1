@@ -341,6 +341,11 @@ function Test-TargetResource
                     {
                         $returnValue = $true
                     }
+                    elseif ($node.State -eq 'Paused')
+                    {
+                        Write-Verbose -Message ($script:localizedData.ClusterNodePaused -f $targetNodeName, $Name)
+                        $returnValue = $true
+                    }
                     else
                     {
                         Write-Verbose -Message ($script:localizedData.ClusterNodeIsDown -f $targetNodeName, $Name)

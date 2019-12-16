@@ -28,26 +28,26 @@ function Get-TargetResource
 
     $cluster = Get-Cluster -Name $Name
     $returnValue = @{
-    Name                        = $Name
-    AddEvictDelay               = $cluster.AddEvictDelay
-    ClusterLogLevel             = $cluster.ClusterLogLevel
-    ClusterLogSize              = $cluster.ClusterLogSize
-    CrossSiteDelay              = $cluster.CrossSiteDelay
-    CrossSiteThreshold          = $cluster.CrossSiteThreshold
-    Description                 = $cluster.Description
-    CrossSubnetDelay            = $cluster.CrossSubnetDelay
-    CrossSubnetThreshold        = $cluster.CrossSubnetThreshold
-    DatabaseReadWriteMode       = $cluster.DatabaseReadWriteMode
-    DefaultNetworkRole          = $cluster.DefaultNetworkRole
-    DrainOnShutdown             = $cluster.DrainOnShutdown
-    DynamicQuorum               = $cluster.DynamicQuorum
-    NetftIPSecEnabled           = $cluster.NetftIPSecEnabled
-    QuarantineDuration          = $cluster.QuarantineDuration
-    PreferredSite               = $cluster.PreferredSite
-    QuarantineThreshold         = $cluster.QuarantineThreshold
-    SameSubnetDelay             = $cluster.SameSubnetDelay
-    SameSubnetThreshold         = $cluster.SameSubnetThreshold
-    ShutdownTimeoutInMinutes    = $cluster.ShutdownTimeoutInMinutes
+        Name                     = $Name
+        AddEvictDelay            = $cluster.AddEvictDelay
+        ClusterLogLevel          = $cluster.ClusterLogLevel
+        ClusterLogSize           = $cluster.ClusterLogSize
+        CrossSiteDelay           = $cluster.CrossSiteDelay
+        CrossSiteThreshold       = $cluster.CrossSiteThreshold
+        Description              = $cluster.Description
+        CrossSubnetDelay         = $cluster.CrossSubnetDelay
+        CrossSubnetThreshold     = $cluster.CrossSubnetThreshold
+        DatabaseReadWriteMode    = $cluster.DatabaseReadWriteMode
+        DefaultNetworkRole       = $cluster.DefaultNetworkRole
+        DrainOnShutdown          = $cluster.DrainOnShutdown
+        DynamicQuorum            = $cluster.DynamicQuorum
+        NetftIPSecEnabled        = $cluster.NetftIPSecEnabled
+        QuarantineDuration       = $cluster.QuarantineDuration
+        PreferredSite            = $cluster.PreferredSite
+        QuarantineThreshold      = $cluster.QuarantineThreshold
+        SameSubnetDelay          = $cluster.SameSubnetDelay
+        SameSubnetThreshold      = $cluster.SameSubnetThreshold
+        ShutdownTimeoutInMinutes = $cluster.ShutdownTimeoutInMinutes
     }
 
     return $returnValue
@@ -380,7 +380,7 @@ function Test-TargetResource
 
     foreach ($boundParameter in $boundParameters.GetEnumerator())
     {
-        if($cluster.$($boundParameter.Key) -ne $boundParameter.Value)
+        if ($cluster.$($boundParameter.Key) -ne $boundParameter.Value)
         {
             Write-Debug -Message ($script:localizedData.IncorrectClusterProperty -f $($boundParameter.Key), $cluster.$($boundParameter.Key), $boundParameter.Value)
             Write-Verbose -Message ($script:localizedData.IncorrectClusterProperty -f $($boundParameter.Key), $cluster.$($boundParameter.Key), $boundParameter.Value)

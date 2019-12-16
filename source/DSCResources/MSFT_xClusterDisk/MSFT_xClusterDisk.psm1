@@ -172,7 +172,7 @@ function Test-TargetResource
 
     $getTargetResourceResult = Get-TargetResource -Number $Number
 
-    if($Ensure -eq 'Present')
+    if ($Ensure -eq 'Present')
     {
         return (
             ($Ensure -eq $getTargetResourceResult.Ensure) -and

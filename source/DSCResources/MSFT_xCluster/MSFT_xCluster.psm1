@@ -177,10 +177,10 @@ function Set-TargetResource
             Write-Verbose -Message ($script:localizedData.ClusterAbsent -f $Name)
 
             $newClusterParameters = @{
-              Name          = $Name
-              Node          = $env:COMPUTERNAME
-              NoStorage     = $true
-              ErrorAction   = 'Stop'
+                Name        = $Name
+                Node        = $env:COMPUTERNAME
+                NoStorage   = $true
+                ErrorAction = 'Stop'
             }
 
             if ((Get-Command New-Cluster).Parameters['Force'])

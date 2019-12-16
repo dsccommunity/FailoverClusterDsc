@@ -161,7 +161,8 @@ function Set-TargetResource
         }
         $clusterNetworkResource.Metric = $Metric
         $hasUpdateMethod = $clusterNetworkResource | Get-Member -Name 'Update' -MemberType 'Methods'
-        if ($hasUpdateMethod) {
+        if ($hasUpdateMethod)
+        {
             $clusterNetworkResource.Update()
         }
     }

@@ -40,9 +40,9 @@ stages:
   - stage: test_module
     dependsOn: Build_artefact
       - job: test_windows_ps
-        timeoutInMinutes: 0
         pool:
           vmImage: 'win1803'
+        timeoutInMinutes: 0
         steps:
           - task: DownloadBuildArtifacts@0
             inputs:

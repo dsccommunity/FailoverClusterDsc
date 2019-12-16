@@ -1,5 +1,3 @@
-﻿DSCResource.Tests
-.vs
+﻿.vs
 .vscode
-node_modules
-.markdownlint.json
+output/*

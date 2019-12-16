@@ -226,27 +226,22 @@ function Get-LocalizedData
         $ScriptRoot
     )
 
-    if ( -not $ScriptRoot )
+    if (-not $ScriptRoot)
     {
-        $resourceDirectory = Join-Path -Path $PSScriptRoot -ChildPath $ResourceName
-        $localizedStringFileLocation = Join-Path -Path $resourceDirectory -ChildPath $PSUICulture
+        $dscResourcesFolder = Join-Path -Path (Split-Path -Path (Split-Path -Path $PSScriptRoot -Parent) -Parent) -ChildPath 'DSCResources'
+        $resourceDirectory = Join-Path -Path $dscResourcesFolder -ChildPath $ResourceName
     }
     else
     {
-        $localizedStringFileLocation = Join-Path -Path $ScriptRoot -ChildPath $PSUICulture
+        $resourceDirectory = $ScriptRoot
     }
+
+    $localizedStringFileLocation = Join-Path -Path $resourceDirectory -ChildPath $PSUICulture
 
     if (-not (Test-Path -Path $localizedStringFileLocation))
     {
         # Fallback to en-US
-        if ( -not $ScriptRoot )
-        {
-            $localizedStringFileLocation = Join-Path -Path $resourceDirectory -ChildPath 'en-US'
-        }
-        else
-        {
-            $localizedStringFileLocation = Join-Path -Path $ScriptRoot -ChildPath 'en-US'
-        }
+        $localizedStringFileLocation = Join-Path -Path $resourceDirectory -ChildPath 'en-US'
     }
 
     Import-LocalizedData `

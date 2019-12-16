@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - xFailOverCluster
   - Moved the helper module `CommonResourceHelper` to the `Modules` folder.
+- CommonResourceHelper
+  - Update `Get-LocalizedData` to handle new location of helper module.
 
 ### Deprecated
 

@@ -41,7 +41,7 @@ InModuleScope $script:subModuleName {
 
                 { Get-LocalizedData -ResourceName 'DummyResource' } | Should -Not -Throw
 
-                Assert-MockCalled -CommandName Join-Path -Exactly -Times 2 -Scope It
+                Assert-MockCalled -CommandName Join-Path -Exactly -Times 3 -Scope It
                 Assert-MockCalled -CommandName Test-Path -Exactly -Times 1 -Scope It
                 Assert-MockCalled -CommandName Import-LocalizedData -Exactly -Times 1 -Scope It
             }
@@ -56,7 +56,7 @@ InModuleScope $script:subModuleName {
 
                 { Get-LocalizedData -ResourceName 'DummyResource' } | Should -Not -Throw
 
-                Assert-MockCalled -CommandName Join-Path -Exactly -Times 3 -Scope It
+                Assert-MockCalled -CommandName Join-Path -Exactly -Times 4 -Scope It
                 Assert-MockCalled -CommandName Test-Path -Exactly -Times 1 -Scope It
                 Assert-MockCalled -CommandName Import-LocalizedData -Exactly -Times 1 -Scope It
             }

@@ -39,6 +39,7 @@ stages:
 
   - stage: test_module
     dependsOn: Build_artefact
+    jobs:
       - job: test_windows_ps
         pool:
           vmImage: 'win1803'

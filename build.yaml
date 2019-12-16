@@ -31,6 +31,9 @@ BuildWorkflow:
     - Pester_if_Code_Coverage_Under_Threshold
     - DscResource_Tests_Stop_On_Fail
 
+  hqrmtest:
+    - DscResource_Tests_Stop_On_Fail
+
   publish:
     - Publish_release_to_GitHub
     - publish_module_to_gallery

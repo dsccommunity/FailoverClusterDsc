@@ -5,7 +5,6 @@
 CopyDirectories:
     - DSCResources
     - en-US
-    - Modules
 VersionedOutputDirectory: true
 
 ####################################################
@@ -54,6 +53,8 @@ Pester:
 
 DscTest:
   OutputFormat: NUnitXML
+  ExcludeTag:
+    - 'Common Tests - New Error-Level Script Analyzer Rules'
 
 Resolve-Dependency:
   Gallery: 'PSGallery'

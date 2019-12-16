@@ -25,8 +25,8 @@ function Invoke-TestSetup
         -ResourceType 'Mof' `
         -TestType 'Unit'
 
-    Import-Module -Name (Join-Path -Path (Join-Path -Path (Join-Path -Path (Join-Path -Path $script:moduleRoot -ChildPath 'Tests') -ChildPath 'Unit') -ChildPath 'Stubs') -ChildPath "FailoverClusters$ModuleVersion.stubs.psm1") -Global -Force
-    Import-Module -Name (Join-Path -Path (Join-Path -Path (Join-Path -Path $script:moduleRoot -ChildPath 'Tests') -ChildPath 'TestHelpers') -ChildPath 'CommonTestHelper.psm1') -Global -Force
+    Import-Module -Name (Join-Path -Path $PSScriptRoot -ChildPath "Stubs\FailoverClusters$ModuleVersion.stubs.psm1") -Global -Force
+    Import-Module -Name (Join-Path -Path (Split-Path $PSScriptRoot -Parent) -ChildPath 'TestHelpers\CommonTestHelper.psm1') -Global -Force
 
     $global:moduleVersion = $ModuleVersion
 }
@@ -34,7 +34,7 @@ function Invoke-TestSetup
 function Invoke-TestCleanup
 {
     Restore-TestEnvironment -TestEnvironment $script:testEnvironment
-    Remove-Variable -Name moduleVersion -Scope Global
+    Remove-Variable -Name moduleVersion -Scope Global -ErrorAction SilentlyContinue
 }
 
 # Begin Testing

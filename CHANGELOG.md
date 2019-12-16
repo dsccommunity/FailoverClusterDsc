@@ -7,11 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- None
+- xFailOverCluster
+  - Added automatic release with a new CI pipeline.
 
 ### Changed
 
-- None
+- xFailOverCluster
+  - Moved the helper module `CommonResourceHelper` to the `Modules` folder.
 
 ### Deprecated
 

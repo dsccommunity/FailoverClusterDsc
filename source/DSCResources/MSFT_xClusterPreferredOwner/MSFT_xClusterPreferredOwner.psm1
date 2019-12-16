@@ -1,5 +1,8 @@
-Import-Module -Name (Join-Path -Path (Split-Path -Path $PSScriptRoot -Parent) `
-        -ChildPath 'CommonResourceHelper.psm1')
+$script:resourceModulePath = Split-Path -Path (Split-Path -Path $PSScriptRoot -Parent) -Parent
+$script:modulesFolderPath = Join-Path -Path $script:resourceModulePath -ChildPath 'Modules'
+
+$script:resourceHelperModulePath = Join-Path -Path $script:modulesFolderPath -ChildPath 'CommonResourceHelper'
+Import-Module -Name $script:resourceHelperModulePath
 
 $script:localizedData = Get-LocalizedData -ResourceName 'MSFT_xClusterPreferredOwner'
 

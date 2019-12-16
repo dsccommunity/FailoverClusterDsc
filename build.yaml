@@ -5,6 +5,7 @@
 CopyDirectories:
     - DSCResources
     - en-US
+    - Modules
 VersionedOutputDirectory: true
 
 ####################################################

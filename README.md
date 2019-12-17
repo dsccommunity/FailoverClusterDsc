@@ -12,20 +12,14 @@ additional questions or comments.
 
 ### master
 
-[![Build status](https://ci.appveyor.com/api/projects/status/6a59vfritv4kbc7d/branch/master?svg=true)](https://ci.appveyor.com/project/PowerShell/xfailovercluster/branch/master)
-[![codecov](https://codecov.io/gh/PowerShell/xFailOverCluster/branch/master/graph/badge.svg)](https://codecov.io/gh/PowerShell/xFailOverCluster/branch/master)
-
-This is the branch containing the latest release - no contributions should be
-made directly to this branch.
-
-### dev
-
-[![Build status](https://ci.appveyor.com/api/projects/status/6a59vfritv4kbc7d/branch/dev?svg=true)](https://ci.appveyor.com/project/PowerShell/xfailovercluster/branch/dev)
-[![codecov](https://codecov.io/gh/PowerShell/xFailOverCluster/branch/dev/graph/badge.svg)](https://codecov.io/gh/PowerShell/xFailOverCluster/branch/dev)
+[![Build Status](https://dev.azure.com/dsccommunity/xFailOverCluster/_apis/build/status/dsccommunity.xFailOverCluster?branchName=master)](https://dev.azure.com/dsccommunity/xFailOverCluster/_build/latest?definitionId=5&branchName=master)
+[![codecov](https://codecov.io/gh/dsccommunity/xFailOverCluster/branch/master/graph/badge.svg)](https://codecov.io/gh/PowerShell/xFailOverCluster/branch/master)
 
 This is the development branch to which contributions should be proposed by
-contributors as pull requests. This development branch will periodically be
-merged to the master branch, and be released to [PowerShell Gallery](https://www.powershellgallery.com/).
+contributors as pull requests. For each merge a preview release will be
+deployed to [PowerShell Gallery](https://www.powershellgallery.com/).
+Periodically a release version tag will be pushed which will deploy a
+full release to [PowerShell Gallery](https://www.powershellgallery.com/).
 
 ## Contributing
 

@@ -7,7 +7,6 @@ trigger:
     - "v*"
     exclude:
     - "*-*"
-#variables:
 
 stages:
   - stage: Build_artefact
@@ -21,7 +20,6 @@ stages:
             inputs:
               runtime: 'core'
               configFilePath: 'GitVersion.yml'
-
           - task: PowerShell@2
             name: Build
             inputs:
@@ -30,7 +28,6 @@ stages:
               pwsh: true
             env:
               ModuleVersion: $(GitVersion.Informationalversion)
-
           - task: PublishBuildArtifacts@1
             inputs:
               PathtoPublish: 'output/'

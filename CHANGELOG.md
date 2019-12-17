@@ -1,16 +1,37 @@
-# Change log for xFailOverCluster
+# Change log for SqlServerDsc
 
-## Unreleased
+The format is based on and uses the types of changes according to [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 1.13.0.0
+## [Unreleased]
+
+### Added
+
+- xFailOverCluster
+  - Added automatic release with a new CI pipeline.
+
+### Changed
+
+- xFailOverCluster
+  - Moved the helper module `CommonResourceHelper` to the `Modules` folder.
+- CommonResourceHelper
+  - Update `Get-LocalizedData` to handle new location of helper module.
+
+## [1.13.0.0] - 2019-09-19
+
+### Changed
 
 - Updated the xCluster *test* method to return true if a node is joined to the cluster but is in a **Paused** state.
 
-## 1.12.0.0
+## [1.12.0.0] - 2019-01-10
+
+### Changed
 
 - Explicitly removed extra hidden files from release package
 
-## 1.11.0.0
+## [1.11.0.0] - 2018-10-25
+
+### Changed
 
 - Changes to xFailOverCluster
   - Update appveyor.yml to use the default template.
@@ -31,14 +52,18 @@
   - Fixed Set-TargetResource for Windows Server 2012 by removing call to Update method
     as it doesn't exist on this version and updates automatically.
 
-## 1.10.0.0
+## [1.10.0.0] - 2018-03-22
+
+### Changed
 
 - Changes to xFailOverCluster
   - Added xClusterProperty ([issue #169](https://github.com/PowerShell/xFailOverCluster/issues/169)).
 - Changes to xClusterNetwork
   - Fix the test for the network role never in desired state ([issue #175](https://github.com/PowerShell/xFailOverCluster/issues/175)).
 
-## 1.9.0.0
+## [1.9.0.0] - 2018-02-08
+
+### Changed
 
 - Changes to xFailOverCluster
   - Update Pester syntax to v4
@@ -59,7 +84,9 @@
   - Added cloud witness (Azure storage) functionality on Windows 2016
     ([issue #37](https://github.com/PowerShell/xFailOverCluster/issues/37)).
 
-## 1.8.0.0
+## [1.8.0.0] - 2017-08-23
+
+### Changed
 
 - Changes to xFailOverCluster
   - Added a common resource helper module with helper functions for localization.
@@ -131,7 +158,9 @@
   - Fixed typo in the returned hash table from Get-TargetResource.
   - Minor style changes.
 
-## 1.7.0.0
+## [1.7.0.0] - 2017-07-12
+
+### Changed
 
 - Changes to xClusterPreferredOwner
   - Script Analyzer warnings have been fixed ([issue #50](https://github.com/PowerShell/xFailOverCluster/issues/50)). This also failed the
@@ -230,27 +259,37 @@
     - 1-ChangeClusterNetwork.ps1
   - Added links to examples from README.md.
 
-### 1.6.0.0
+### [1.6.0.0] - 2016-12-14
+
+### Changed
 
 - xCluster: Fixed bug in which failure to create a new cluster would hang
 
-### 1.5.0.0
+### [1.5.0.0] - 2016-08-10
+
+### Changed
 
 - Added xClusterQuorum resource with options *NodeMajority*,
   *NodeAndDiskMajority*, *NodeAndFileShareMajority*, *DiskOnly*
 - Currently does not implement cloud witness for Windows 2016.
 - Added xClusterDisk resource
 
-### 1.2.0.0
+### [1.2.0.0] - 2016-03-31
+
+### Changed
 
 - xCluster: Added -NoStorage switch to Add-ClusterNode. This prevents disks from
   being automatically added when joining a node to a cluster
 
-### 1.1.0.0
+### [1.1.0.0] - 2014-05-13
+
+### Changed
 
 - Removed requirement for CredSSP
 
-### 1.0.0.0
+### [1.0.0.0] - 2014-04-08
+
+### Changed
 
 - Initial release with the following resources:
   - xCluster and xWaitForCluster

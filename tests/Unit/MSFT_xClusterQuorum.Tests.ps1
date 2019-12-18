@@ -10,7 +10,14 @@ function Invoke-TestSetup
         $ModuleVersion
     )
 
-    Import-Module -Name DscResource.Test -Force
+    try
+    {
+        Import-Module -Name DscResource.Test -Force
+    }
+    catch [System.IO.FileNotFoundException]
+    {
+        throw 'DscResource.Test module dependency not found. Please run ".\build.ps1 -Tasks build" first.'
+    }
 
     $script:testEnvironment = Initialize-TestEnvironment `
         -DSCModuleName $script:dscModuleName `
@@ -28,13 +35,12 @@ function Invoke-TestCleanup
     Remove-Variable -Name moduleVersion -Scope Global -ErrorAction SilentlyContinue
 }
 
-# Begin Testing
-try
+foreach ($moduleVersion in @('2012', '2016'))
 {
-    foreach ($moduleVersion in @('2012', '2016'))
-    {
-        Invoke-TestSetup -ModuleVersion $moduleVersion
+    Invoke-TestSetup -ModuleVersion $moduleVersion
 
+    try
+    {
         InModuleScope $script:DSCResourceName {
             $mockQuorumType_Majority = 'Majority'
             $mockQuorumType_NodeMajority = 'NodeMajority'
@@ -154,8 +160,8 @@ try
 
             $mockSetClusterQuorum_CloudWitness_ParameterFilter = {
                 $CloudWitness -eq $true `
-                -and $AccountName -eq $mockQuorumAccountName `
-                -and $AccessKey -eq $mockQuorumAccessKey
+                    -and $AccountName -eq $mockQuorumAccountName `
+                    -and $AccessKey -eq $mockQuorumAccessKey
             }
 
             $mockDefaultParameters = @{
@@ -195,7 +201,7 @@ try
                             It 'Should return the correct values' {
                                 $getTargetResourceResult = Get-TargetResource @mockTestParameters
                                 $getTargetResourceResult.Type | Should -Be $mockQuorumType_NodeMajority
-                                $getTargetResourceResult.Resource  | Should -Be $mockQuorumResourceName
+                                $getTargetResourceResult.Resource | Should -Be $mockQuorumResourceName
                             }
                         }
 
@@ -213,7 +219,7 @@ try
                             It 'Should return the correct values' {
                                 $getTargetResourceResult = Get-TargetResource @mockTestParameters
                                 $getTargetResourceResult.Type | Should -Be $mockQuorumType_NodeMajority
-                                $getTargetResourceResult.Resource  | Should -BeNullorEmpty
+                                $getTargetResourceResult.Resource | Should -BeNullorEmpty
                             }
                         }
                     }
@@ -232,7 +238,7 @@ try
                             It 'Should return the correct values' {
                                 $getTargetResourceResult = Get-TargetResource @mockTestParameters
                                 $getTargetResourceResult.Type | Should -Be $mockQuorumType_NodeAndDiskMajority
-                                $getTargetResourceResult.Resource  | Should -Be $mockQuorumResourceName
+                                $getTargetResourceResult.Resource | Should -Be $mockQuorumResourceName
                             }
                         }
 
@@ -250,7 +256,7 @@ try
                             It 'Should return the correct values' {
                                 $getTargetResourceResult = Get-TargetResource @mockTestParameters
                                 $getTargetResourceResult.Type | Should -Be $mockQuorumType_NodeAndDiskMajority
-                                $getTargetResourceResult.Resource  | Should -Be $mockQuorumResourceName
+                                $getTargetResourceResult.Resource | Should -Be $mockQuorumResourceName
                             }
                         }
                     }
@@ -269,7 +275,7 @@ try
                             It 'Should return the correct values' {
                                 $getTargetResourceResult = Get-TargetResource @mockTestParameters
                                 $getTargetResourceResult.Type | Should -Be $mockQuorumType_NodeAndFileShareMajority
-                                $getTargetResourceResult.Resource  | Should -Be $mockQuorumFileShareWitnessPath
+                                $getTargetResourceResult.Resource | Should -Be $mockQuorumFileShareWitnessPath
                             }
                         }
 
@@ -288,7 +294,7 @@ try
                             It 'Should return the correct values' {
                                 $getTargetResourceResult = Get-TargetResource @mockTestParameters
                                 $getTargetResourceResult.Type | Should -Be $mockQuorumType_NodeAndFileShareMajority
-                                $getTargetResourceResult.Resource  | Should -Be $mockQuorumFileShareWitnessPath
+                                $getTargetResourceResult.Resource | Should -Be $mockQuorumFileShareWitnessPath
                             }
                         }
                     }
@@ -308,7 +314,7 @@ try
                             It 'Should return the correct values' {
                                 $getTargetResourceResult = Get-TargetResource @mockTestParameters
                                 $getTargetResourceResult.Type | Should -Be $mockQuorumType_NodeAndCloudMajority
-                                $getTargetResourceResult.Resource  | Should -Be $mockQuorumAccountName
+                                $getTargetResourceResult.Resource | Should -Be $mockQuorumAccountName
                             }
                         }
                     }
@@ -326,7 +332,7 @@ try
                         It 'Should return the correct values' {
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters
                             $getTargetResourceResult.Type | Should -Be $mockQuorumType_DiskOnly
-                            $getTargetResourceResult.Resource  | Should -Be $mockQuorumResourceName
+                            $getTargetResourceResult.Resource | Should -Be $mockQuorumResourceName
                         }
                     }
 
@@ -581,8 +587,8 @@ try
                         { Set-TargetResource @mockTestParameters } | Should -Not -Throw
 
                         Assert-MockCalled -CommandName 'Set-ClusterQuorum' `
-                                        -ParameterFilter (Get-Variable mockSetClusterQuorum_NoWitness_ParameterFilter_$moduleVersion).Value `
-                                        -Exactly -Times 1 -Scope It
+                            -ParameterFilter (Get-Variable mockSetClusterQuorum_NoWitness_ParameterFilter_$moduleVersion).Value `
+                            -Exactly -Times 1 -Scope It
                     }
                 }
 
@@ -595,11 +601,11 @@ try
                     }
 
                     It 'Should set the quorum in the cluster without throwing an error' {
-                        { Set-TargetResource @mockTestParameters } |  Should -Not -Throw
+                        { Set-TargetResource @mockTestParameters } | Should -Not -Throw
 
                         Assert-MockCalled -CommandName 'Set-ClusterQuorum' `
-                                        -ParameterFilter (Get-Variable mockSetClusterQuorum_DiskWitness_ParameterFilter_$moduleVersion).Value `
-                                        -Exactly -Times 1 -Scope It
+                            -ParameterFilter (Get-Variable mockSetClusterQuorum_DiskWitness_ParameterFilter_$moduleVersion).Value `
+                            -Exactly -Times 1 -Scope It
                     }
                 }
 
@@ -612,16 +618,17 @@ try
                     }
 
                     It 'Should set the quorum in the cluster without throwing an error' {
-                        { Set-TargetResource @mockTestParameters } |  Should -Not -Throw
+                        { Set-TargetResource @mockTestParameters } | Should -Not -Throw
 
                         Assert-MockCalled -CommandName 'Set-ClusterQuorum' `
-                                        -ParameterFilter (Get-Variable mockSetClusterQuorum_FileShareWitness_ParameterFilter_$moduleVersion).Value `
-                                        -Exactly -Times 1 -Scope It
+                            -ParameterFilter (Get-Variable mockSetClusterQuorum_FileShareWitness_ParameterFilter_$moduleVersion).Value `
+                            -Exactly -Times 1 -Scope It
                     }
                 }
 
                 # Server 2012 does not support Cloud majority
-                if ($moduleVersion -ne '2012') {
+                if ($moduleVersion -ne '2012')
+                {
                     Context 'When quorum type should be NodeAndCloudMajority' {
                         BeforeEach {
                             $mockTestParameters['Type'] = $mockQuorumType_NodeAndCloudMajority
@@ -632,11 +639,11 @@ try
                         }
 
                         It 'Should set the quorum in the cluster without throwing an error' {
-                            { Set-TargetResource @mockTestParameters } |  Should -Not -Throw
+                            { Set-TargetResource @mockTestParameters } | Should -Not -Throw
 
                             Assert-MockCalled -CommandName 'Set-ClusterQuorum' `
-                                            -ParameterFilter $mockSetClusterQuorum_CloudWitness_ParameterFilter `
-                                            -Exactly -Times 1 -Scope It
+                                -ParameterFilter $mockSetClusterQuorum_CloudWitness_ParameterFilter `
+                                -Exactly -Times 1 -Scope It
                         }
                     }
                 }
@@ -650,18 +657,18 @@ try
                     }
 
                     It 'Should set the quorum in the cluster without throwing an error' {
-                        { Set-TargetResource @mockTestParameters } |  Should -Not -Throw
+                        { Set-TargetResource @mockTestParameters } | Should -Not -Throw
 
                         Assert-MockCalled -CommandName 'Set-ClusterQuorum' `
-                                        -ParameterFilter $mockSetClusterQuorum_DiskOnly_ParameterFilter `
-                                        -Exactly -Times 1 -Scope It
+                            -ParameterFilter $mockSetClusterQuorum_DiskOnly_ParameterFilter `
+                            -Exactly -Times 1 -Scope It
                     }
                 }
             }
         }
     }
-}
-finally
-{
-    Invoke-TestCleanup
+    finally
+    {
+        Invoke-TestCleanup
+    }
 }

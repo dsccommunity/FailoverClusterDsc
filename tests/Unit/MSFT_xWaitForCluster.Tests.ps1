@@ -10,7 +10,14 @@ function Invoke-TestSetup
         $ModuleVersion
     )
 
-    Import-Module -Name DscResource.Test -Force
+    try
+    {
+        Import-Module -Name DscResource.Test -Force
+    }
+    catch [System.IO.FileNotFoundException]
+    {
+        throw 'DscResource.Test module dependency not found. Please run ".\build.ps1 -Tasks build" first.'
+    }
 
     $script:testEnvironment = Initialize-TestEnvironment `
         -DSCModuleName $script:dscModuleName `
@@ -28,13 +35,12 @@ function Invoke-TestCleanup
     Remove-Variable -Name moduleVersion -Scope Global -ErrorAction SilentlyContinue
 }
 
-# Begin Testing
-try
+foreach ($moduleVersion in @('2012', '2016'))
 {
-    foreach ($moduleVersion in @('2012', '2016'))
-    {
-        Invoke-TestSetup -ModuleVersion $moduleVersion
+    Invoke-TestSetup -ModuleVersion $moduleVersion
 
+    try
+    {
         InModuleScope $script:DSCResourceName {
             $mockDomainName = 'domain.local'
             $mockClusterName = 'CLUSTER001'
@@ -77,9 +83,9 @@ try
 
                     It 'Returns the same values passed as parameters' {
                         $getTargetResourceResult = Get-TargetResource @mockDefaultParameters
-                        $getTargetResourceResult.Name              | Should -Be $mockDefaultParameters.Name
-                        $getTargetResourceResult.RetryIntervalSec  | Should -Be $mockDefaultParameters.RetryIntervalSec
-                        $getTargetResourceResult.RetryCount        | Should -Be $mockDefaultParameters.RetryCount
+                        $getTargetResourceResult.Name | Should -Be $mockDefaultParameters.Name
+                        $getTargetResourceResult.RetryIntervalSec | Should -Be $mockDefaultParameters.RetryIntervalSec
+                        $getTargetResourceResult.RetryCount | Should -Be $mockDefaultParameters.RetryCount
                     }
 
                     Assert-VerifiableMock
@@ -93,7 +99,7 @@ try
                     It 'Should throw the correct error message' {
                         Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockCimInstance_ParameterFilter -Verifiable
 
-                        $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message ($script:localizedData.ClusterAbsentAfterTimeOut -f $mockClusterName, ($mockRetryCount-1), $mockRetryIntervalSec)
+                        $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message ($script:localizedData.ClusterAbsentAfterTimeOut -f $mockClusterName, ($mockRetryCount - 1), $mockRetryIntervalSec)
                         { Set-TargetResource @mockDefaultParameters } | Should -Throw $mockCorrectErrorRecord
                     }
                 }
@@ -215,8 +221,8 @@ try
             }
         }
     }
-}
-finally
-{
-    Invoke-TestCleanup
+    finally
+    {
+        Invoke-TestCleanup
+    }
 }

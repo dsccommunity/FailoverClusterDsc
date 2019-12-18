@@ -17,7 +17,14 @@ function Invoke-TestSetup
         $ModuleVersion
     )
 
-    Import-Module -Name DscResource.Test -Force
+    try
+    {
+        Import-Module -Name DscResource.Test -Force
+    }
+    catch [System.IO.FileNotFoundException]
+    {
+        throw 'DscResource.Test module dependency not found. Please run ".\build.ps1 -Tasks build" first.'
+    }
 
     $script:testEnvironment = Initialize-TestEnvironment `
         -DSCModuleName $script:dscModuleName `
@@ -37,12 +44,12 @@ function Invoke-TestCleanup
     Remove-Variable -Name moduleVersion -Scope Global -ErrorAction SilentlyContinue
 }
 
-# Begin Testing
-try
+foreach ($moduleVersion in @('2012', '2016'))
 {
-    foreach ($moduleVersion in @('2012', '2016'))
+    Invoke-TestSetup -ModuleVersion $moduleVersion
+
+    try
     {
-        Invoke-TestSetup -ModuleVersion $moduleVersion
 
         InModuleScope $script:DSCResourceName {
             $mockAdministratorUserName = 'COMPANY\ClusterAdmin'
@@ -108,11 +115,11 @@ try
             }
 
             $mockNewObjectWindowsIdentity = {
-                return [PSCustomObject] @{} |
-                    Add-Member -MemberType ScriptMethod -Name Impersonate -Value {
-                    return [PSCustomObject] @{} |
-                        Add-Member -MemberType ScriptMethod -Name Undo -Value {} -PassThru |
-                        Add-Member -MemberType ScriptMethod -Name Dispose -Value {} -PassThru -Force
+                return [PSCustomObject] @{ } |
+                Add-Member -MemberType ScriptMethod -Name Impersonate -Value {
+                    return [PSCustomObject] @{ } |
+                    Add-Member -MemberType ScriptMethod -Name Undo -Value { } -PassThru |
+                    Add-Member -MemberType ScriptMethod -Name Dispose -Value { } -PassThru -Force
                 } -PassThru -Force
             }
 
@@ -206,9 +213,9 @@ try
 
                     It 'Returns current configuration' {
                         $getTargetResourceResult = Get-TargetResource @mockGetTargetResourceParameters
-                        $getTargetResourceResult.Name             | Should -Be $mockDefaultParameters.Name
-                        $getTargetResourceResult.StaticIPAddress  | Should -Be $mockDefaultParameters.StaticIPAddress
-                        $getTargetResourceResult.IgnoreNetwork    | Should -BeNullOrEmpty
+                        $getTargetResourceResult.Name | Should -Be $mockDefaultParameters.Name
+                        $getTargetResourceResult.StaticIPAddress | Should -Be $mockDefaultParameters.StaticIPAddress
+                        $getTargetResourceResult.IgnoreNetwork | Should -BeNullOrEmpty
                     }
 
                     Context 'When IgnoreNetwork is passed' {
@@ -546,14 +553,14 @@ try
                             $testTargetResourceResult | Should -Be $true
                         }
 
-                    $mockDynamicClusterNodeState = 'Paused'
+                        $mockDynamicClusterNodeState = 'Paused'
 
-                    Context 'When node exists and is in a Paused state' {
-                        It 'Should return $true' {
-                            $testTargetResourceResult = Test-TargetResource @mockDefaultParameters
-                            $testTargetResourceResult | Should -Be $true
+                        Context 'When node exists and is in a Paused state' {
+                            It 'Should return $true' {
+                                $testTargetResourceResult = Test-TargetResource @mockDefaultParameters
+                                $testTargetResourceResult | Should -Be $true
+                            }
                         }
-                    }
 
                         Assert-VerifiableMock
                     }
@@ -592,8 +599,8 @@ try
             }
         }
     }
-}
-finally
-{
-    Invoke-TestCleanup
+    finally
+    {
+        Invoke-TestCleanup
+    }
 }

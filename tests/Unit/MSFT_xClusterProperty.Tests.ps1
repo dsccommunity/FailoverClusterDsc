@@ -1,7 +1,14 @@
 $script:DSCModuleName = 'xFailOverCluster'
 $script:DSCResourceName = 'MSFT_xClusterProperty'
 
-Import-Module -Name DscResource.Test -Force
+try
+{
+    Import-Module -Name DscResource.Test -Force
+}
+catch [System.IO.FileNotFoundException]
+{
+    throw 'DscResource.Test module dependency not found. Please run ".\build.ps1 -Tasks build" first.'
+}
 
 $script:testEnvironment = Initialize-TestEnvironment `
     -DSCModuleName $script:dscModuleName `
@@ -13,6 +20,7 @@ try
 {
     InModuleScope $script:DSCResourceName {
         $script:DSCResourceName = 'MSFT_xClusterProperty'
+
         Describe $script:DSCResourceName {
             Context "$($script:DSCResourceName)\Get-TargetResource" {
                 Mock -CommandName Get-Cluster -ParameterFilter {$Name -eq 'Cluster1'} -MockWith {

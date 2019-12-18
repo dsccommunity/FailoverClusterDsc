@@ -10,7 +10,14 @@ function Invoke-TestSetup
         $ModuleVersion
     )
 
-    Import-Module -Name DscResource.Test -Force
+    try
+    {
+        Import-Module -Name DscResource.Test -Force
+    }
+    catch [System.IO.FileNotFoundException]
+    {
+        throw 'DscResource.Test module dependency not found. Please run ".\build.ps1 -Tasks build" first.'
+    }
 
     $script:testEnvironment = Initialize-TestEnvironment `
         -DSCModuleName $script:dscModuleName `
@@ -28,14 +35,13 @@ function Invoke-TestCleanup
     Remove-Variable -Name moduleVersion -Scope Global -ErrorAction SilentlyContinue
 }
 
-# Begin Testing
-try
+foreach ($moduleVersion in @('2012', '2016'))
 {
-    foreach ($moduleVersion in @('2012', '2016'))
-    {
-        Invoke-TestSetup -ModuleVersion $moduleVersion
+    Invoke-TestSetup -ModuleVersion $moduleVersion
 
-        InModuleScope $script:DSCResourceName {
+    try
+    {
+        InModuleScope $script:dscResourceName {
             $mockDiskNumber = '1'
             $mockDiskId = '{0182f270-e2b8-4579-8c0a-176e0e05c30c}'
             $mockDiskLabel = 'First Data'
@@ -103,12 +109,12 @@ try
                     [PSCustomObject] @{
                         Name         = $mockDiskLabel
                         ResourceType = 'Physical Disk'
-                    } | Add-Member -MemberType ScriptMethod -Name Update -Value {} -PassThru
+                    } | Add-Member -MemberType ScriptMethod -Name Update -Value { } -PassThru
 
                     [PSCustomObject] @{
                         Name         = $mockNewDisk_Label
                         ResourceType = 'Physical Disk'
-                    } | Add-Member -MemberType ScriptMethod -Name Update -Value {} -PassThru
+                    } | Add-Member -MemberType ScriptMethod -Name Update -Value { } -PassThru
                 )
             }
 
@@ -170,7 +176,7 @@ try
                         It 'Should return the disk as absent' {
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters
                             $getTargetResourceResult.Ensure | Should -Be 'Absent'
-                            $getTargetResourceResult.Label  | Should -BeNullOrEmpty
+                            $getTargetResourceResult.Label | Should -BeNullOrEmpty
                         }
                     }
 
@@ -235,7 +241,7 @@ try
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters
                             $getTargetResourceResult.Number | Should -Be $mockTestParameters.Number
                             $getTargetResourceResult.Ensure | Should -Be 'Present'
-                            $getTargetResourceResult.Label  | Should -Be $mockDiskLabel
+                            $getTargetResourceResult.Label | Should -Be $mockDiskLabel
                         }
                     }
 
@@ -250,7 +256,7 @@ try
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters
                             $getTargetResourceResult.Number | Should -Be $mockTestParameters.Number
                             $getTargetResourceResult.Ensure | Should -Be 'Absent'
-                            $getTargetResourceResult.Label  | Should -BeNullOrEmpty
+                            $getTargetResourceResult.Label | Should -BeNullOrEmpty
                         }
                     }
                 }
@@ -402,8 +408,8 @@ try
             }
         }
     }
-}
-finally
-{
-    Invoke-TestCleanup
+    finally
+    {
+        Invoke-TestCleanup
+    }
 }

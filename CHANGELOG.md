@@ -7,6 +7,11 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 
 ## [Unreleased]
 
+## Changed
+
+- xFailOverCluster
+  - Changed unit tests to handle missing DscResource.Test better.
+
 ## [1.14.0] - 2019-12-17
 
 ### Added

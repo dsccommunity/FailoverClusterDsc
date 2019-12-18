@@ -10,7 +10,14 @@ function Invoke-TestSetup
         $ModuleVersion
     )
 
-    Import-Module -Name DscResource.Test -Force
+    try
+    {
+        Import-Module -Name DscResource.Test -Force
+    }
+    catch [System.IO.FileNotFoundException]
+    {
+        throw 'DscResource.Test module dependency not found. Please run ".\build.ps1 -Tasks build" first.'
+    }
 
     $script:testEnvironment = Initialize-TestEnvironment `
         -DSCModuleName $script:dscModuleName `
@@ -28,13 +35,12 @@ function Invoke-TestCleanup
     Remove-Variable -Name moduleVersion -Scope Global -ErrorAction SilentlyContinue
 }
 
-# Begin Testing
-try
+foreach ($moduleVersion in @('2012', '2016'))
 {
-    foreach ($moduleVersion in @('2012', '2016'))
-    {
-        Invoke-TestSetup -ModuleVersion $moduleVersion
+    Invoke-TestSetup -ModuleVersion $moduleVersion
 
+    try
+    {
         InModuleScope $script:DSCResourceName {
             $mockPreferredOwnerNode1 = 'Node1'
             $mockPreferredOwnerNode2 = 'Node2'
@@ -112,9 +118,9 @@ try
                 @{
                     ClusterObject = 'ClusterName1'
                     OwnerNodes    = @(
-                        @{name = $mockPreferredOwnerNode1}
-                        @{name = $mockPreferredOwnerNode2}
-                        @{name = $mockPreferredOwnerNode3}
+                        @{name = $mockPreferredOwnerNode1 }
+                        @{name = $mockPreferredOwnerNode2 }
+                        @{name = $mockPreferredOwnerNode3 }
                     )
                 }
             }
@@ -152,13 +158,13 @@ try
                         It 'Should return the same values as passed as parameters' {
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters_Present_WrongPreferredOwnerNodes
                             $getTargetResourceResult.ClusterGroup | Should -Be $mockTestParameters_Present_WrongPreferredOwnerNodes.ClusterGroup
-                            $getTargetResourceResult.ClusterName  | Should -Be $mockTestParameters_Present_WrongPreferredOwnerNodes.ClusterName
-                            $getTargetResourceResult.Ensure       | Should -Be $mockTestParameters_Present_WrongPreferredOwnerNodes.Ensure
+                            $getTargetResourceResult.ClusterName | Should -Be $mockTestParameters_Present_WrongPreferredOwnerNodes.ClusterName
+                            $getTargetResourceResult.Ensure | Should -Be $mockTestParameters_Present_WrongPreferredOwnerNodes.Ensure
                         }
 
                         It 'Should return the wrong preferred owner nodes and the right cluster resources' {
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters_Present_WrongPreferredOwnerNodes
-                            $getTargetResourceResult.Nodes            | Should -Not -Be $mockTestParameters_Present_WrongPreferredOwnerNodes.Nodes
+                            $getTargetResourceResult.Nodes | Should -Not -Be $mockTestParameters_Present_WrongPreferredOwnerNodes.Nodes
                             $getTargetResourceResult.ClusterResources | Should -Be $mockTestParameters_Present_WrongPreferredOwnerNodes.ClusterResources
                         }
                     }
@@ -167,13 +173,13 @@ try
                         It 'Should return the same values as passed as parameters' {
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters_Present_WrongClusterResources
                             $getTargetResourceResult.ClusterGroup | Should -Be $mockTestParameters_Present_WrongClusterResources.ClusterGroup
-                            $getTargetResourceResult.ClusterName  | Should -Be $mockTestParameters_Present_WrongClusterResources.ClusterName
-                            $getTargetResourceResult.Ensure       | Should -Be $mockTestParameters_Present_WrongClusterResources.Ensure
+                            $getTargetResourceResult.ClusterName | Should -Be $mockTestParameters_Present_WrongClusterResources.ClusterName
+                            $getTargetResourceResult.Ensure | Should -Be $mockTestParameters_Present_WrongClusterResources.Ensure
                         }
 
                         It 'Should return the correct preferred owner nodes and the wrong cluster resources' {
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters_Present_WrongClusterResources
-                            $getTargetResourceResult.Nodes            | Should -Be $mockAllPreferredOwnerNodes
+                            $getTargetResourceResult.Nodes | Should -Be $mockAllPreferredOwnerNodes
                             $getTargetResourceResult.ClusterResources | Should -Be $mockTestParameters_Present_WrongClusterResources.ClusterResources
                         }
                     }
@@ -182,13 +188,13 @@ try
                         It 'Should return the same values as passed as parameters' {
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters_Absent_ButPreferredOwnersExist
                             $getTargetResourceResult.ClusterGroup | Should -Be $mockTestParameters_Absent_ButPreferredOwnersExist.ClusterGroup
-                            $getTargetResourceResult.ClusterName  | Should -Be $mockTestParameters_Absent_ButPreferredOwnersExist.ClusterName
-                            $getTargetResourceResult.Ensure       | Should -Be $mockTestParameters_Absent_ButPreferredOwnersExist.Ensure
+                            $getTargetResourceResult.ClusterName | Should -Be $mockTestParameters_Absent_ButPreferredOwnersExist.ClusterName
+                            $getTargetResourceResult.Ensure | Should -Be $mockTestParameters_Absent_ButPreferredOwnersExist.Ensure
                         }
 
                         It 'Should return the correct preferred owner nodes and the wrong cluster resources' {
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters_Absent_ButPreferredOwnersExist
-                            $getTargetResourceResult.Nodes            | Should -Be $mockAllPreferredOwnerNodes
+                            $getTargetResourceResult.Nodes | Should -Be $mockAllPreferredOwnerNodes
                             $getTargetResourceResult.ClusterResources | Should -Be $mockTestParameters_Absent_ButPreferredOwnersExist.ClusterResources
                         }
                     }
@@ -199,13 +205,13 @@ try
                         It 'Should return the same values as passed as parameters' {
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters_Present_DesiredPreferredOwners
                             $getTargetResourceResult.ClusterGroup | Should -Be $mockTestParameters_Present_DesiredPreferredOwners.ClusterGroup
-                            $getTargetResourceResult.ClusterName  | Should -Be $mockTestParameters_Present_DesiredPreferredOwners.ClusterName
-                            $getTargetResourceResult.Ensure       | Should -Be $mockTestParameters_Present_DesiredPreferredOwners.Ensure
+                            $getTargetResourceResult.ClusterName | Should -Be $mockTestParameters_Present_DesiredPreferredOwners.ClusterName
+                            $getTargetResourceResult.Ensure | Should -Be $mockTestParameters_Present_DesiredPreferredOwners.Ensure
                         }
 
                         It 'Should return the right preferred owner nodes and the right cluster resources' {
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters_Present_DesiredPreferredOwners
-                            $getTargetResourceResult.Nodes            | Should -Be $mockAllPreferredOwnerNodes
+                            $getTargetResourceResult.Nodes | Should -Be $mockAllPreferredOwnerNodes
                             $getTargetResourceResult.ClusterResources | Should -Be $mockTestParameters_Present_DesiredPreferredOwners.ClusterResources
                         }
                     }
@@ -214,13 +220,13 @@ try
                         It 'Should return the same values as passed as parameters' {
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters_Absent_AndPreferredOwnersDoesNotExist
                             $getTargetResourceResult.ClusterGroup | Should -Be $mockTestParameters_Absent_AndPreferredOwnersDoesNotExist.ClusterGroup
-                            $getTargetResourceResult.ClusterName  | Should -Be $mockTestParameters_Absent_AndPreferredOwnersDoesNotExist.ClusterName
-                            $getTargetResourceResult.Ensure       | Should -Be $mockTestParameters_Absent_AndPreferredOwnersDoesNotExist.Ensure
+                            $getTargetResourceResult.ClusterName | Should -Be $mockTestParameters_Absent_AndPreferredOwnersDoesNotExist.ClusterName
+                            $getTargetResourceResult.Ensure | Should -Be $mockTestParameters_Absent_AndPreferredOwnersDoesNotExist.Ensure
                         }
 
                         It 'Should return the correct preferred owner nodes and the wrong cluster resources' {
                             $getTargetResourceResult = Get-TargetResource @mockTestParameters_Absent_AndPreferredOwnersDoesNotExist
-                            $getTargetResourceResult.Nodes            | Should -Not -Be $mockTestParameters_Absent_AndPreferredOwnersDoesNotExist.Nodes
+                            $getTargetResourceResult.Nodes | Should -Not -Be $mockTestParameters_Absent_AndPreferredOwnersDoesNotExist.Nodes
                             $getTargetResourceResult.ClusterResources | Should -Be $mockTestParameters_Absent_AndPreferredOwnersDoesNotExist.ClusterResources
                         }
                     }
@@ -361,8 +367,8 @@ try
             }
         }
     }
-}
-finally
-{
-    Invoke-TestCleanup
+    finally
+    {
+        Invoke-TestCleanup
+    }
 }

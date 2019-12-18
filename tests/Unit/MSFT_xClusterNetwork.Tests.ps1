@@ -10,7 +10,14 @@ function Invoke-TestSetup
         $ModuleVersion
     )
 
-    Import-Module -Name DscResource.Test -Force
+    try
+    {
+        Import-Module -Name DscResource.Test -Force
+    }
+    catch [System.IO.FileNotFoundException]
+    {
+        throw 'DscResource.Test module dependency not found. Please run ".\build.ps1 -Tasks build" first.'
+    }
 
     $script:testEnvironment = Initialize-TestEnvironment `
         -DSCModuleName $script:dscModuleName `
@@ -28,13 +35,12 @@ function Invoke-TestCleanup
     Remove-Variable -Name moduleVersion -Scope Global -ErrorAction SilentlyContinue
 }
 
-# Begin Testing
-try
+foreach ($moduleVersion in @('2012', '2016'))
 {
-    foreach ($moduleVersion in @('2012', '2016'))
-    {
-        Invoke-TestSetup -ModuleVersion $moduleVersion
+    Invoke-TestSetup -ModuleVersion $moduleVersion
 
+    try
+    {
         InModuleScope $script:DSCResourceName {
             $mockPresentClusterNetworkName = 'Client1'
             $mockPresentClusterNetworkAddress = '10.0.0.0'
@@ -136,15 +142,15 @@ try
 
                     It 'Should return the same values passed as parameters' {
                         $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                        $getTargetResourceResult.Address      | Should -Be $mockTestParameters.Address
-                        $getTargetResourceResult.AddressMask  | Should -Be $mockTestParameters.AddressMask
+                        $getTargetResourceResult.Address | Should -Be $mockTestParameters.Address
+                        $getTargetResourceResult.AddressMask | Should -Be $mockTestParameters.AddressMask
                     }
 
                     It 'Should not return the the correct values for the cluster network' {
                         $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                        $getTargetResourceResult.Name         | Should -Not -Be $mockAbsentClusterNetworkName
-                        $getTargetResourceResult.Role         | Should -Not -Be $mockAbsentClusterNetworkRole
-                        $getTargetResourceResult.Metric       | Should -Not -Be $mockAbsentClusterNetworkMetric
+                        $getTargetResourceResult.Name | Should -Not -Be $mockAbsentClusterNetworkName
+                        $getTargetResourceResult.Role | Should -Not -Be $mockAbsentClusterNetworkRole
+                        $getTargetResourceResult.Metric | Should -Not -Be $mockAbsentClusterNetworkMetric
 
                         Assert-MockCalled -CommandName Get-ClusterNetwork -Exactly -Times 1 -Scope It
                     }
@@ -153,9 +159,9 @@ try
                         Mock -CommandName 'Get-ClusterNetwork' -MockWith $mockGetClusterNetwork2
 
                         $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                        $getTargetResourceResult.Name         | Should -Not -Be $mockAbsentClusterNetworkName
-                        $getTargetResourceResult.Role         | Should -Not -Be $mockAbsentClusterNetworkRole
-                        $getTargetResourceResult.Metric       | Should -Not -Be $mockAbsentClusterNetworkMetric
+                        $getTargetResourceResult.Name | Should -Not -Be $mockAbsentClusterNetworkName
+                        $getTargetResourceResult.Role | Should -Not -Be $mockAbsentClusterNetworkRole
+                        $getTargetResourceResult.Metric | Should -Not -Be $mockAbsentClusterNetworkMetric
 
                         Assert-MockCalled -CommandName Get-ClusterNetwork -Exactly -Times 1 -Scope It
                     }
@@ -176,15 +182,15 @@ try
 
                     It 'Should return the same values passed as parameters' {
                         $Result = Get-TargetResource @mockTestParameters
-                        $Result.Address      | Should -Be $mockTestParameters.Address
-                        $Result.AddressMask  | Should -Be $mockTestParameters.AddressMask
+                        $Result.Address | Should -Be $mockTestParameters.Address
+                        $Result.AddressMask | Should -Be $mockTestParameters.AddressMask
                     }
 
                     It 'Should return the the correct values for the cluster network' {
                         $Result = Get-TargetResource @mockTestParameters
-                        $Result.Name         | Should -Be $mockPresentClusterNetworkName
-                        $Result.Role         | Should -Be $mockPresentClusterNetworkRole
-                        $Result.Metric       | Should -Be $mockPresentClusterNetworkMetric
+                        $Result.Name | Should -Be $mockPresentClusterNetworkName
+                        $Result.Role | Should -Be $mockPresentClusterNetworkRole
+                        $Result.Metric | Should -Be $mockPresentClusterNetworkMetric
 
                         Assert-MockCalled -CommandName Get-ClusterNetwork -Exactly -Times 1 -Scope It
                     }
@@ -193,9 +199,9 @@ try
                         Mock -CommandName 'Get-ClusterNetwork' -MockWith $mockGetClusterNetwork2
 
                         $Result = Get-TargetResource @mockTestParameters
-                        $Result.Name         | Should -Be $mockPresentClusterNetworkName
-                        $Result.Role         | Should -Be $mockPresentClusterNetworkRole
-                        $Result.Metric       | Should -Be $mockPresentClusterNetworkMetric
+                        $Result.Name | Should -Be $mockPresentClusterNetworkName
+                        $Result.Role | Should -Be $mockPresentClusterNetworkRole
+                        $Result.Metric | Should -Be $mockPresentClusterNetworkMetric
 
                         Assert-MockCalled -CommandName Get-ClusterNetwork -Exactly -Times 1 -Scope It
                     }
@@ -300,9 +306,12 @@ try
                         }
 
                         It 'Should call Update method correct number of times' {
-                            if ($moduleVersion -eq '2012') {
+                            if ($moduleVersion -eq '2012')
+                            {
                                 $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled = 0
-                            } else {
+                            }
+                            else
+                            {
                                 $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled = 1
                             }
 
@@ -318,9 +327,12 @@ try
                         }
 
                         It 'Should call Update method correct number of times' {
-                            if ($moduleVersion -eq '2012') {
+                            if ($moduleVersion -eq '2012')
+                            {
                                 $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled = 0
-                            } else {
+                            }
+                            else
+                            {
                                 $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled = 1
                             }
 
@@ -336,9 +348,12 @@ try
                         }
 
                         It 'Should call Update method correct number of times' {
-                            if ($moduleVersion -eq '2012') {
+                            if ($moduleVersion -eq '2012')
+                            {
                                 $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled = 0
-                            } else {
+                            }
+                            else
+                            {
                                 $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled = 1
                             }
 
@@ -365,8 +380,8 @@ try
             }
         }
     }
-}
-finally
-{
-    Invoke-TestCleanup
+    finally
+    {
+        Invoke-TestCleanup
+    }
 }

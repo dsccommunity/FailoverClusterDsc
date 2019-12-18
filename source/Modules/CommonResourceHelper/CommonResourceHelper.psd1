@@ -1,8 +1,12 @@
 @{
     # Version number of this module.
     ModuleVersion = '1.0'
+
     # ID used to uniquely identify this module
-    GUID = 'b8e5084a-07a8-4135-8a26-00614e56ba71'
+    GUID = '85836200-fc4d-442c-b028-513ffe0f6eea'
+
+    # Script module or binary module file associated with this manifest.
+    RootModule = 'CommonResourceHelper.psm1'
 
     # Author of this module
     Author = 'DSC Community'
@@ -17,7 +21,13 @@
     Description = 'Functions used by the DSC resources in xFailOverCluster.'
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-    FunctionsToExport = @()
+    FunctionsToExport = @(
+        'New-InvalidArgumentException',
+        'New-InvalidOperationException',
+        'New-ObjectNotFoundException',
+        'New-InvalidResultException',
+        'Get-LocalizedData'
+    )
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
     CmdletsToExport = @()

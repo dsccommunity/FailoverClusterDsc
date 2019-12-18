@@ -7,6 +7,9 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 
 ## [Unreleased]
 
+## [1.14.1] - 2019-12-18
+## [Unreleased]
+
 ### Changed
 
 - xFailOverCluster

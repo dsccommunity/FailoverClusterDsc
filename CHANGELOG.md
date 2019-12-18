@@ -7,6 +7,19 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 
 ## [Unreleased]
 
+### Changed
+
+- xFailOverCluster
+  - Changed the pipeline to publish test results for both success and failure.
+
+### Fixed
+
+- CommonResourceHelper
+  - Fix unit tests to load the helper modules using module manifest.
+  - Fix to correctly export the functions in the helper module
+    ([issue #214](https://github.com/dsccommunity/xFailOverCluster/issues/214)).
+  - Fix typo in module manifest.
+
 ## [1.14.0] - 2019-12-17
 
 ### Added

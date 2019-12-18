@@ -7,6 +7,11 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 
 ## [Unreleased]
 
+### Changed
+
+- xFailOverCluster
+  - Changed the pipeline to publish test results for both success and failure.
+
 ### Fixed
 
 - CommonResourceHelper

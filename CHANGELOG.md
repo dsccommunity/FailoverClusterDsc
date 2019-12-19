@@ -23,6 +23,8 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
   - Fix broken links to examples in README.md.
 - xClusterQuorum
   - Fix broken link to examples in README.md ([issue #208](https://github.com/dsccommunity/xFailOverCluster/issues/208).
+- CommonResourceHelper
+  - Fix `en-US` localization folder to pass PSSA rule.
 
 ## [1.14.1] - 2019-12-18
 

@@ -12,6 +12,12 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 - xFailOverCluster
   - Changed unit tests to handle missing DscResource.Test better.
 
+# Fixed
+
+- xFailOverCluster
+  - Fix URLs in the module manifest.
+  - Fix the encoding that will be used by ModuleBuilder.
+
 ## [1.14.1] - 2019-12-18
 
 ### Changed

@@ -17,6 +17,7 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 - xFailOverCluster
   - Fix URLs in the module manifest.
   - Fix the encoding that will be used by ModuleBuilder.
+  - Fix paths to examples in the README.md.
 
 ## [1.14.1] - 2019-12-18
 

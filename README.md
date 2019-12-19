@@ -71,12 +71,12 @@ the target node ($env:COMPUTERNAME) to the cluster.
 
 #### Examples for xCluster
 
-* [Create first node of a failover cluster](/Examples/Resources/xCluster/1-CreateFirstNodeOfAFailoverCluster.ps1)
-* [Join additional node to a failover cluster](/Examples/Resources/xCluster/2-JoinAdditionalNodeToFailoverCluster.ps1)
-* [Create failover cluster with two nodes](/Examples/Resources/xCluster/3-CreateFailoverClusterWithTwoNodes.ps1)
-* [Create first node of a failover cluster with DHCP](/Examples/Resources/xCluster/4-CreateFirstNodeOfAFailoverClusterWithDHCP.ps1)
-* [Join additional node to a failover cluster with DHCP](/Examples/Resources/xCluster/5-JoinAdditionalNodeToFailoverClusterWithDHCP.ps1)
-* [Create failover cluster and ignoring a network](/Examples/Resources/xCluster/4-CreateFailoverClusterAndIgnoreANetwork.ps1)
+* [Create first node of a failover cluster](/source/Examples/Resources/xCluster/1-CreateFirstNodeOfAFailoverCluster.ps1)
+* [Join additional node to a failover cluster](/source/Examples/Resources/xCluster/2-JoinAdditionalNodeToFailoverCluster.ps1)
+* [Create failover cluster with two nodes](/source/Examples/Resources/xCluster/3-CreateFailoverClusterWithTwoNodes.ps1)
+* [Create first node of a failover cluster with DHCP](/source/Examples/Resources/xCluster/4-CreateFirstNodeOfAFailoverClusterWithDHCP.ps1)
+* [Join additional node to a failover cluster with DHCP](/source/Examples/Resources/xCluster/5-JoinAdditionalNodeToFailoverClusterWithDHCP.ps1)
+* [Create failover cluster and ignoring a network](/source/Examples/Resources/xCluster/4-CreateFailoverClusterAndIgnoreANetwork.ps1)
 
 ### xClusterDisk
 
@@ -97,8 +97,8 @@ Configures shared disks in a cluster.
 
 #### Examples for xClusterDisk
 
-* [Add a cluster disk to the failover cluster](/Examples/Resources/xClusterDisk/1-AddClusterDisk.ps1)
-* [Remove a cluster disk from the failover cluster](/Examples/Resources/xClusterDisk/2-RemoveClusterDisk.ps1)
+* [Add a cluster disk to the failover cluster](/source/Examples/Resources/xClusterDisk/1-AddClusterDisk.ps1)
+* [Remove a cluster disk from the failover cluster](/source/Examples/Resources/xClusterDisk/2-RemoveClusterDisk.ps1)
 
 ### xClusterNetwork
 
@@ -141,7 +141,7 @@ See this article for more information about cluster network role values;
 
 #### Examples for xClusterNetwork
 
-* [Change properties of two cluster network resources in the failover cluster](/Examples/Resources/xClusterNetwork/1-ChangeClusterNetwork.ps1)
+* [Change properties of two cluster network resources in the failover cluster](/source/Examples/Resources/xClusterNetwork/1-ChangeClusterNetwork.ps1)
 
 ### xClusterPreferredOwner
 
@@ -164,8 +164,8 @@ cluster.
 
 #### Examples for xClusterPreferredOwner
 
-* [Add preferred owners to a cluster group and cluster resources](/Examples/Resources/xClusterDisk/1-AddPreferredOwner.ps1)
-* [Remove preferred owners from a cluster group and cluster resources](/Examples/Resources/xClusterDisk/2-RemovePreferredOwner.ps1)
+* [Add preferred owners to a cluster group and cluster resources](/source/Examples/Resources/xClusterDisk/1-AddPreferredOwner.ps1)
+* [Remove preferred owners from a cluster group and cluster resources](/source/Examples/Resources/xClusterDisk/2-RemovePreferredOwner.ps1)
 
 ### xClusterProperty
 
@@ -228,7 +228,7 @@ Configures cluster properties on a failover cluster.
 
 #### Examples for xClusterProperty
 
-* [Set failover cluster properties](/Examples/Resources/xClusterProperty/1-SetClusterProperties.ps1)
+* [Set failover cluster properties](/source/Examples/Resources/xClusterProperty/1-SetClusterProperties.ps1)
 
 ### xClusterQuorum
 
@@ -256,11 +256,11 @@ quorum type, please see the article
 
 #### Examples for xClusterQuorum
 
-* [Set quorum to node majority](/Examples/Resources/xClusterQuorum/1-SetQuorumToNodeMajority.ps1)
-* [Set quorum to node and disk majority](/Examples/Resources/xClusterQuorum/2-SetQuorumToNodeAndDiskMajority.ps1)
-* [Set quorum to node and file share majority](/Examples/Resources/xClusterQuorum/3-SetQuorumToNodeAndFileShareMajority.ps1)
-* [Set quorum to disk only](/Examples/Resources/xClusterQuorum/4-SetQuorumToDiskOnly.ps1)
-* [Set quorum to node and cloud](/Examples/Resources/xClusterQuorum/5-SetQuorumToNodeAndCloudMajority.1)
+* [Set quorum to node majority](/source/Examples/Resources/xClusterQuorum/1-SetQuorumToNodeMajority.ps1)
+* [Set quorum to node and disk majority](/source/Examples/Resources/xClusterQuorum/2-SetQuorumToNodeAndDiskMajority.ps1)
+* [Set quorum to node and file share majority](/source/Examples/Resources/xClusterQuorum/3-SetQuorumToNodeAndFileShareMajority.ps1)
+* [Set quorum to disk only](/source/Examples/Resources/xClusterQuorum/4-SetQuorumToDiskOnly.ps1)
+* [Set quorum to node and cloud](/source/Examples/Resources/xClusterQuorum/5-SetQuorumToNodeAndCloudMajority.1)
 
 ### xWaitForCluster
 
@@ -280,4 +280,4 @@ Ensures that a node waits for a remote cluster is created.
 
 #### Examples for xWaitForCluster
 
-* [Wait for failover cluster to be present](/Examples/Resources/xWaitForCluster/1-WaitForFailoverClusterToBePresent.ps1)
+* [Wait for failover cluster to be present](/source/Examples/Resources/xWaitForCluster/1-WaitForFailoverClusterToBePresent.ps1)

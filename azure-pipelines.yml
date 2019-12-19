@@ -42,6 +42,10 @@ stages:
           vmImage: 'win1803'
         timeoutInMinutes: 0
         steps:
+          - powershell: |
+              $repositoryName = $env:BUILD_REPOSITORY_NAME -split '/' | Select-Object -Last 1
+              echo "##vso[task.setvariable variable=ModuleName;isOutput=true]$repositoryName"
+            name: DscBuildVariable
           - task: DownloadBuildArtifacts@0
             inputs:
               buildType: 'current'
@@ -67,9 +71,12 @@ stages:
               testResultsFiles: 'output/testResults/NUnit*.xml'
           # Publish code coverage results
           - task: PublishCodeCoverageResults@1
+            dependsOn: DscBuildVariable
+            condition: succeededOrFailed()
             inputs:
               codeCoverageTool: 'JaCoCo'
               summaryFileLocation: 'output/testResults/CodeCov*.xml'
+              pathToSources: '$(Build.SourcesDirectory)/output/$(DscBuildVariable.ModuleName)'
 
   - stage: Deploy
     dependsOn: test_module

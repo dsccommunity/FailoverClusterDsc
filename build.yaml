@@ -7,6 +7,7 @@ CopyDirectories:
     - en-US
     - Modules
 VersionedOutputDirectory: true
+Encoding: UTF8
 
 ####################################################
 #       Pipeline Configuration                     #

@@ -164,8 +164,8 @@ cluster.
 
 #### Examples for xClusterPreferredOwner
 
-* [Add preferred owners to a cluster group and cluster resources](/source/Examples/Resources/xClusterDisk/1-AddPreferredOwner.ps1)
-* [Remove preferred owners from a cluster group and cluster resources](/source/Examples/Resources/xClusterDisk/2-RemovePreferredOwner.ps1)
+* [Add preferred owners to a cluster group and cluster resources](/source/Examples/Resources/xClusterPreferredOwner/1-AddPreferredOwner.ps1)
+* [Remove preferred owners from a cluster group and cluster resources](/source/Examples/Resources/xClusterPreferredOwner/2-RemovePreferredOwner.ps1)
 
 ### xClusterProperty
 
@@ -260,7 +260,7 @@ quorum type, please see the article
 * [Set quorum to node and disk majority](/source/Examples/Resources/xClusterQuorum/2-SetQuorumToNodeAndDiskMajority.ps1)
 * [Set quorum to node and file share majority](/source/Examples/Resources/xClusterQuorum/3-SetQuorumToNodeAndFileShareMajority.ps1)
 * [Set quorum to disk only](/source/Examples/Resources/xClusterQuorum/4-SetQuorumToDiskOnly.ps1)
-* [Set quorum to node and cloud](/source/Examples/Resources/xClusterQuorum/5-SetQuorumToNodeAndCloudMajority.1)
+* [Set quorum to node and cloud](/source/Examples/Resources/xClusterQuorum/5-SetQuorumToNodeAndCloudMajority.ps1)
 
 ### xWaitForCluster
 

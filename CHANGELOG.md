@@ -7,17 +7,21 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 
 ## [Unreleased]
 
-## Changed
+### Changed
 
 - xFailOverCluster
   - Changed unit tests to handle missing DscResource.Test better.
 
-# Fixed
+### Fixed
 
 - xFailOverCluster
   - Fix URLs in the module manifest.
   - Fix the encoding that will be used by ModuleBuilder.
   - Fix paths to examples in the README.md.
+- xClusterPreferredOwner
+  - Fix broken links to examples in README.md.
+- xClusterQuorum
+  - Fix broken link to examples in README.md ([issue #208](https://github.com/dsccommunity/xFailOverCluster/issues/208).
 
 ## [1.14.1] - 2019-12-18
 

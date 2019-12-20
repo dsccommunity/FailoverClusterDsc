@@ -70,7 +70,6 @@ stages:
             inputs:
               testResultsFormat: 'NUnit'
               testResultsFiles: 'output/testResults/NUnit*.xml'
-          # Publish code coverage results
           - task: PublishCodeCoverageResults@1
             condition: succeededOrFailed()
             inputs:

@@ -12,7 +12,7 @@ This project has adopted this [Code of Conduct](CODE_OF_CONDUCT.md).
 ### master
 
 [![Build Status](https://dev.azure.com/dsccommunity/xFailOverCluster/_apis/build/status/dsccommunity.xFailOverCluster?branchName=master)](https://dev.azure.com/dsccommunity/xFailOverCluster/_build/latest?definitionId=5&branchName=master)
-[![codecov](https://codecov.io/gh/dsccommunity/xFailOverCluster/branch/master/graph/badge.svg)](https://codecov.io/gh/PowerShell/xFailOverCluster/branch/master)
+![Azure DevOps coverage (branch)](https://img.shields.io/azure-devops/coverage/dsccommunity/xFailOverCluster/5/master)
 
 This is the development branch to which contributions should be proposed by
 contributors as pull requests. For each merge a preview release will be

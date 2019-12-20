@@ -16,15 +16,24 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 ### Fixed
 
 - xFailOverCluster
-  - Fix URLs in the module manifest.
-  - Fix the encoding that will be used by ModuleBuilder.
-  - Fix paths to examples in the README.md.
+  - URLs in the module manifest pointed in the wrong direction.
+  - Changed the encoding that will be used by ModuleBuilder (`ÙTF-8`).
+  - URLs to examples in README.md didn't take account for new folder
+    structure.
+  - Release pipeline stopped working in some circumstances, workaround is
+    to pin ModuleBuilder to version `1.0.0` for now.
+    *There are a issue with ModuleBuilder using preview strings using dash,*
+    *e.g. `fix0008-9`. The string is compliant with SemVer 2.0 but there*
+    *is a bug in `Publish-Module` that prevents the module to be released.*
+  - Added code coverage reporting to Azure DevOps.
+  - Replace the code coverage status badge to README.md.
+  - Pull request template got minor updates.
 - xClusterPreferredOwner
-  - Fix broken links to examples in README.md.
+  - Fixed broken links to examples in README.md.
 - xClusterQuorum
-  - Fix broken link to examples in README.md ([issue #208](https://github.com/dsccommunity/xFailOverCluster/issues/208).
+  - Fixed broken link to examples in README.md ([issue #208](https://github.com/dsccommunity/xFailOverCluster/issues/208).
 - CommonResourceHelper
-  - Fix `en-US` localization folder to pass PSSA rule.
+  - Added `en-US` localization folder to pass PSSA rule.
 
 ## [1.14.1] - 2019-12-18
 

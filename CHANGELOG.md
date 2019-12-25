@@ -10,6 +10,7 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 ### Changed
 
 - xFailOverCluster
+  - Updated the CI pipeline files to the latest template.
   - Changed unit tests to handle missing DscResource.Test better.
   - Changed the Code of Conduct to the one adopted by DSC Community.
   - Added `.markdownlint.json` to get the correct settings for the

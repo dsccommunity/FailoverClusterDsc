@@ -6,8 +6,8 @@ CopyDirectories:
     - DSCResources
     - en-US
     - Modules
-VersionedOutputDirectory: true
 Encoding: UTF8
+VersionedOutputDirectory: true
 
 ####################################################
 #       Pipeline Configuration                     #
@@ -27,12 +27,12 @@ BuildWorkflow:
     - build
     - package_module_nupkg
 
+  hqrmtest:
+    - DscResource_Tests_Stop_On_Fail
+
   test:
     - Pester_Tests_Stop_On_Fail
     - Pester_if_Code_Coverage_Under_Threshold
-
-  hqrmtest:
-    - DscResource_Tests_Stop_On_Fail
 
   publish:
     - Publish_release_to_GitHub
@@ -50,12 +50,13 @@ Pester:
     - tests/Unit
   ExcludeTag:
   Tag:
-  CodeCoverageThreshold: 50
+  CodeCoverageThreshold: 85
 
 DscTest:
-  OutputFormat: NUnitXML
   ExcludeTag:
     - 'Common Tests - New Error-Level Script Analyzer Rules'
+  ExcludeSourceFile:
+    - output
 
 Resolve-Dependency:
   Gallery: 'PSGallery'

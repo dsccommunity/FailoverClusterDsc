@@ -7,6 +7,11 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 
 ## [Unreleased]
 
+### Added
+
+- xFailOverCluster
+  - Added QA tests from the DSC module template
+
 ### Changed
 
 - xFailOverCluster

@@ -47,6 +47,7 @@ Pester:
   OutputFormat: NUnitXML
   ExcludeFromCodeCoverage:
   Script:
+    - tests/QA
     - tests/Unit
   ExcludeTag:
   Tag:

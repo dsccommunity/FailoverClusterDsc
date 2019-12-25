@@ -9,7 +9,7 @@ trigger:
     - "*-*"
 
 stages:
-  - stage: Build_artefact
+  - stage: Build
     jobs:
       - job: BuildModuleJob
         pool:
@@ -34,10 +34,33 @@ stages:
               ArtifactName: 'output'
               publishLocation: 'Container'
 
-  - stage: test_module
-    dependsOn: Build_artefact
+  - stage: Test
+    dependsOn: Build
     jobs:
-      - job: test_windows_ps
+      - job: Test_HQRM
+        pool:
+          vmImage: 'win1803'
+        timeoutInMinutes: 0
+        steps:
+          - task: DownloadBuildArtifacts@0
+            inputs:
+              buildType: 'current'
+              downloadType: 'single'
+              artifactName: 'output'
+              downloadPath: '$(Build.SourcesDirectory)'
+          - task: PowerShell@2
+            name: Test
+            inputs:
+              filePath: './build.ps1'
+              arguments: '-Tasks hqrmtest'
+              pwsh: false
+          - task: PublishTestResults@2
+            condition: succeededOrFailed()
+            inputs:
+              testResultsFormat: 'NUnit'
+              testResultsFiles: 'output/testResults/NUnit*.xml'
+
+      - job: Test_Unit
         pool:
           vmImage: 'win1803'
         timeoutInMinutes: 0
@@ -54,16 +77,10 @@ stages:
               artifactName: 'output'
               downloadPath: '$(Build.SourcesDirectory)'
           - task: PowerShell@2
-            name: ConfigureWinRM
-            inputs:
-              targetType: 'inline'
-              script: 'winrm quickconfig -quiet'
-              pwsh: false
-          - task: PowerShell@2
             name: Test
             inputs:
               filePath: './build.ps1'
-              arguments: '-tasks test'
+              arguments: "-Tasks test -PesterScript 'tests/Unit'"
               pwsh: false
           - task: PublishTestResults@2
             condition: succeededOrFailed()
@@ -77,8 +94,37 @@ stages:
               summaryFileLocation: 'output/testResults/CodeCov*.xml'
               pathToSources: '$(Build.SourcesDirectory)/output/$(DscBuildVariable.RepositoryName)'
 
+      - job: Test_Integration
+        pool:
+          vmImage: 'win1803'
+        timeoutInMinutes: 0
+        steps:
+          - task: DownloadBuildArtifacts@0
+            inputs:
+              buildType: 'current'
+              downloadType: 'single'
+              artifactName: 'output'
+              downloadPath: '$(Build.SourcesDirectory)'
+          - task: PowerShell@2
+            name: ConfigureWinRM
+            inputs:
+              targetType: 'inline'
+              script: 'winrm quickconfig -quiet'
+              pwsh: false
+          - task: PowerShell@2
+            name: Test
+            inputs:
+              filePath: './build.ps1'
+              arguments: "-Tasks test -PesterScript 'tests/Integration' -CodeCoverageThreshold 0"
+              pwsh: false
+          - task: PublishTestResults@2
+            condition: succeededOrFailed()
+            inputs:
+              testResultsFormat: 'NUnit'
+              testResultsFiles: 'output/testResults/NUnit*.xml'
+
   - stage: Deploy
-    dependsOn: test_module
+    dependsOn: Test
     # Only execute deploy stage if we're on master and previous stage succeeded
     condition: |
       and(

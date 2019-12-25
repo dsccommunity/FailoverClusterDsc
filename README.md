@@ -1,5 +1,11 @@
 # xFailOverCluster
 
+[![Build Status](https://dev.azure.com/dsccommunity/xFailOverCluster/_apis/build/status/dsccommunity.xFailOverCluster?branchName=master)](https://dev.azure.com/dsccommunity/xFailOverCluster/_build/latest?definitionId=5&branchName=master)
+![Azure DevOps coverage (branch)](https://img.shields.io/azure-devops/coverage/dsccommunity/xFailOverCluster/5/master)
+[![Azure DevOps tests](https://img.shields.io/azure-devops/tests/dsccommunity/xFailOverCluster/5/master)](https://dsccommunity.visualstudio.com/xFailOverCluster/_test/analytics?definitionId=5&contextType=build)
+[![PowerShell Gallery (with prereleases)](https://img.shields.io/powershellgallery/vpre/xFailOverCluster?label=xFailOverCluster%20Preview)](https://www.powershellgallery.com/packages/xFailOverCluster/)
+[![PowerShell Gallery](https://img.shields.io/powershellgallery/v/xFailOverCluster?label=xFailOverCluster)](https://www.powershellgallery.com/packages/xFailOverCluster/)
+
 This module contains DSC resources for deployment and configuration of
 Windows Server Failover Cluster
 
@@ -7,15 +13,9 @@ Windows Server Failover Cluster
 
 This project has adopted this [Code of Conduct](CODE_OF_CONDUCT.md).
 
-## Branches
+## Releases
 
-### master
-
-[![Build Status](https://dev.azure.com/dsccommunity/xFailOverCluster/_apis/build/status/dsccommunity.xFailOverCluster?branchName=master)](https://dev.azure.com/dsccommunity/xFailOverCluster/_build/latest?definitionId=5&branchName=master)
-![Azure DevOps coverage (branch)](https://img.shields.io/azure-devops/coverage/dsccommunity/xFailOverCluster/5/master)
-
-This is the development branch to which contributions should be proposed by
-contributors as pull requests. For each merge a preview release will be
+For each merge to the branch `master` a preview release will be
 deployed to [PowerShell Gallery](https://www.powershellgallery.com/).
 Periodically a release version tag will be pushed which will deploy a
 full release to [PowerShell Gallery](https://www.powershellgallery.com/).

@@ -14,7 +14,7 @@
 #### Pull Request (PR) description
 <!--
     Replace this comment block with a description of your PR.
-    Also, make sure you have update the CHANGELOG.md, see the
+    Also, make sure you have updated the CHANGELOG.md, see the
     task list below. An entry in the CHANGELOG.md is mandatory
     for all PRs.
 -->
@@ -23,7 +23,7 @@
 <!--
     If this PR does not fix an open issue, replace this comment block with None.
     If this PR resolves one or more open issues, replace this comment block with
-    a list the issues using a GitHub closing keyword, e.g.:
+    a list of the issues using a GitHub closing keyword, e.g.:
 
 - Fixes #123
 - Fixes #124
@@ -48,6 +48,6 @@
 - [ ] Comment-based help added/updated.
 - [ ] Localization strings added/updated in all localization files as appropriate.
 - [ ] Examples appropriately added/updated.
-- [ ] Unit tests added/updated. See [DSC Resource Testing Guidelines](https://github.com/PowerShell/DscResources/blob/master/TestsGuidelines.md).
-- [ ] Integration tests added/updated (where possible). See [DSC Resource Testing Guidelines](https://github.com/PowerShell/DscResources/blob/master/TestsGuidelines.md).
-- [ ] New/changed code adheres to [DSC Community Style Guidelines](https://dsccommunity.org/guidelines).
+- [ ] Unit tests added/updated. See [DSC Community Testing Guidelines](https://dsccommunity.org/guidelines/testing-guideline).
+- [ ] Integration tests added/updated (where possible). See [DSC Community Testing Guidelines](https://dsccommunity.org/guidelines/testing-guideline).
+- [ ] New/changed code adheres to [DSC Community Style Guidelines](https://dsccommunity.org/styleguidelines).

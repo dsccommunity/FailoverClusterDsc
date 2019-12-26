@@ -1,62 +1,61 @@
-<#PSScriptInfo
-
-.VERSION 0.1.0
-
-.GUID fc162bd7-b649-4398-bff0-180bc473920f
-
-.AUTHOR Gael Colas
-
-.COMPANYNAME SynEdgy Ltd
-
-.COPYRIGHT SynEdgy All rights Reserved
-
-.TAGS bootstrap pipeline CI CI/CD
-
-.LICENSEURI
-
-.PROJECTURI https://github.com/gaelcolas/sampler
-
-.RELEASENOTES
- # This is where the ChangeLog should be
-
-#>
 [CmdletBinding()]
-param(
+param
+(
 
-    [String]$DependencyFile = 'RequiredModules.psd1',
+    [Parameter()]
+    [String]
+    $DependencyFile = 'RequiredModules.psd1',
 
+    [Parameter()]
+    [String]
     # Path for PSDepend to be bootstrapped and save other dependencies.
     # Can also be CurrentUser or AllUsers if you wish to install the modules in such scope
     # Default to $PWD.Path/output/modules
     $PSDependTarget = (Join-Path $PSScriptRoot './output/RequiredModules'),
 
+    [Parameter()]
+    [uri]
     # URI to use for Proxy when attempting to Bootstrap PackageProvider & PowerShellGet
-    [uri]$Proxy,
+    $Proxy,
 
+    [Parameter()]
     # Credential to contact the Proxy when provided
     [PSCredential]$ProxyCredential,
 
-    # Scope to bootstrap the PackageProvider and PSGet if not available
+    [Parameter()]
     [ValidateSet('CurrentUser', 'AllUsers')]
+    [String]
+    # Scope to bootstrap the PackageProvider and PSGet if not available
     $Scope = 'CurrentUser',
 
-    # Gallery to use when bootstrapping PackageProvider, PSGet and when calling PSDepend (can be overridden in Dependency files)
-    [String]$Gallery = 'PSGallery',
-
-    # Credentials to use with the Gallery specified above
     [Parameter()]
-    [PSCredential]$GalleryCredential,
+    [String]
+    # Gallery to use when bootstrapping PackageProvider, PSGet and when calling PSDepend (can be overridden in Dependency files)
+    $Gallery = 'PSGallery',
+
+    [Parameter()]
+    [PSCredential]
+    # Credentials to use with the Gallery specified above
+    $GalleryCredential,
 
 
+    [Parameter()]
+    [switch]
     # Allow you to use a locally installed version of PowerShellGet older than 1.6.0 (not recommended, default to $False)
-    [switch]$AllowOldPowerShellGetModule,
+    $AllowOldPowerShellGetModule,
 
+    [Parameter()]
+    [String]
     # Allow you to specify a minimum version fo PSDepend, if you're after specific features.
-    [String]$MinimumPSDependVersion,
+    $MinimumPSDependVersion,
 
-    [Switch]$AllowPrerelease,
+    [Parameter()]
+    [Switch]
+    $AllowPrerelease,
 
-    [Switch]$WithYAML
+    [Parameter()]
+    [Switch]
+    $WithYAML
 )
 
 # Load Defaults for parameters values from Resolve-Dependency.psd1 if not provided as parameter
@@ -143,7 +142,6 @@ $Policy = (Get-PSRepository $Gallery -ErrorAction Stop).InstallationPolicy
 Set-PSRepository -Name $Gallery -InstallationPolicy Trusted -ErrorAction Ignore
 try
 {
-
     Write-Progress -Activity "Bootstrap:" -PercentComplete 25 -CurrentOperation "Checking PowerShellGet"
     # Ensure the module is loaded and retrieve the version you have
     $PowerShellGetVersion = (Import-Module PowerShellGet -PassThru -ErrorAction SilentlyContinue).Version

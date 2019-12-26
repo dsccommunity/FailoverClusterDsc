@@ -7,10 +7,50 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 
 ## [Unreleased]
 
-## Changed
+### Changed
 
 - xFailOverCluster
+  - Updated the CI pipeline files to the latest template.
   - Changed unit tests to handle missing DscResource.Test better.
+  - Changed the Code of Conduct to the one adopted by DSC Community.
+  - Added `.markdownlint.json` to get the correct settings for the
+    MarkdownLint VS Code extension.
+
+### Fixed
+
+- xFailOverCluster
+  - Added CODE_OF_CONDUCT.md file, and a 'Code of Conduct' section in the
+    README.md.
+  - Improved CI pipeline
+    - Renamed the jobs
+    - Splitting up the testing in different jobs.
+  - URLs in the module manifest pointed in the wrong direction.
+  - Changed the encoding that will be used by ModuleBuilder (`ÙTF-8`).
+  - URLs to examples in README.md didn't take account for new folder
+    structure.
+  - Release pipeline stopped working in some circumstances, workaround is
+    to pin ModuleBuilder to version `1.0.0` for now.
+    *There is an issue with ModuleBuilder with preview strings using dash,*
+    *e.g. `fix0008-9`. The string is compliant with SemVer 2.0 but there*
+    *is a bug in `Publish-Module` that prevents the module to be released.*
+  - Added code coverage reporting to Azure DevOps.
+  - Update status badges in README.md.
+  - Replaced section 'Branches' with section 'Releases' in README.md.
+  - Pull request and issue template got minor updates.
+- xClusterPreferredOwner
+  - Fixed broken links to examples in README.md.
+- xClusterQuorum
+  - Fixed broken link to examples in README.md ([issue #208](https://github.com/dsccommunity/xFailOverCluster/issues/208).
+- CommonResourceHelper
+  - Added `en-US` localization folder to pass PSSA rule.
+- xCluster
+  - Added script file information to the example `1-CreateFirstNodeOfAFailoverCluster.ps1`.
+
+### Removed
+
+- Removed the file `.codecov.yml` since Codecov is no longer used.
+- Removed the file `Deploy.PSDeploy.ps1` since it is not longer used by
+  the build pipeline.
 
 ## [1.14.1] - 2019-12-18
 

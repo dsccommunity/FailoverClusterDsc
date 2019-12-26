@@ -38,10 +38,10 @@ PrivateData = @{
         Tags = @('DesiredStateConfiguration', 'DSC', 'DSCResourceKit', 'DSCResource')
 
         # A URL to the license for this module.
-        LicenseUri = 'https://github.com/PowerShell/xFailOverCluster/blob/master/LICENSE'
+        LicenseUri = 'https://github.com/dsccommunity/xFailOverCluster/blob/master/LICENSE'
 
         # A URL to the main website for this project.
-        ProjectUri = 'https://github.com/PowerShell/xFailOverCluster'
+        ProjectUri = 'https://github.com/dsccommunity/xFailOverCluster'
 
         # A URL to an icon representing this module.
         IconUri = 'https://dsccommunity.org/images/DSC_Logo_300p.png'

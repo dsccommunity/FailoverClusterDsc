@@ -1,29 +1,28 @@
 # xFailOverCluster
 
-The **xFailOverCluster** module contains DSC resources for deployment and
-configuration of Failover Clustering.
-
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
-For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/)
-or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any
-additional questions or comments.
-
-## Branches
-
-### master
-
 [![Build Status](https://dev.azure.com/dsccommunity/xFailOverCluster/_apis/build/status/dsccommunity.xFailOverCluster?branchName=master)](https://dev.azure.com/dsccommunity/xFailOverCluster/_build/latest?definitionId=5&branchName=master)
-[![codecov](https://codecov.io/gh/dsccommunity/xFailOverCluster/branch/master/graph/badge.svg)](https://codecov.io/gh/PowerShell/xFailOverCluster/branch/master)
+![Azure DevOps coverage (branch)](https://img.shields.io/azure-devops/coverage/dsccommunity/xFailOverCluster/5/master)
+[![Azure DevOps tests](https://img.shields.io/azure-devops/tests/dsccommunity/xFailOverCluster/5/master)](https://dsccommunity.visualstudio.com/xFailOverCluster/_test/analytics?definitionId=5&contextType=build)
+[![PowerShell Gallery (with prereleases)](https://img.shields.io/powershellgallery/vpre/xFailOverCluster?label=xFailOverCluster%20Preview)](https://www.powershellgallery.com/packages/xFailOverCluster/)
+[![PowerShell Gallery](https://img.shields.io/powershellgallery/v/xFailOverCluster?label=xFailOverCluster)](https://www.powershellgallery.com/packages/xFailOverCluster/)
 
-This is the development branch to which contributions should be proposed by
-contributors as pull requests. For each merge a preview release will be
+This module contains DSC resources for deployment and configuration of
+Windows Server Failover Cluster
+
+## Code of Conduct
+
+This project has adopted this [Code of Conduct](CODE_OF_CONDUCT.md).
+
+## Releases
+
+For each merge to the branch `master` a preview release will be
 deployed to [PowerShell Gallery](https://www.powershellgallery.com/).
 Periodically a release version tag will be pushed which will deploy a
 full release to [PowerShell Gallery](https://www.powershellgallery.com/).
 
 ## Contributing
 
-Please check out common DSC Resources [contributing guidelines](https://github.com/PowerShell/DscResource.Kit/blob/master/CONTRIBUTING.md).
+Please check out common DSC Community [contributing guidelines](https://dsccommunity.org/guidelines/contributing).
 
 ## Change log
 
@@ -71,12 +70,12 @@ the target node ($env:COMPUTERNAME) to the cluster.
 
 #### Examples for xCluster
 
-* [Create first node of a failover cluster](/Examples/Resources/xCluster/1-CreateFirstNodeOfAFailoverCluster.ps1)
-* [Join additional node to a failover cluster](/Examples/Resources/xCluster/2-JoinAdditionalNodeToFailoverCluster.ps1)
-* [Create failover cluster with two nodes](/Examples/Resources/xCluster/3-CreateFailoverClusterWithTwoNodes.ps1)
-* [Create first node of a failover cluster with DHCP](/Examples/Resources/xCluster/4-CreateFirstNodeOfAFailoverClusterWithDHCP.ps1)
-* [Join additional node to a failover cluster with DHCP](/Examples/Resources/xCluster/5-JoinAdditionalNodeToFailoverClusterWithDHCP.ps1)
-* [Create failover cluster and ignoring a network](/Examples/Resources/xCluster/4-CreateFailoverClusterAndIgnoreANetwork.ps1)
+* [Create first node of a failover cluster](/source/Examples/Resources/xCluster/1-CreateFirstNodeOfAFailoverCluster.ps1)
+* [Join additional node to a failover cluster](/source/Examples/Resources/xCluster/2-JoinAdditionalNodeToFailoverCluster.ps1)
+* [Create failover cluster with two nodes](/source/Examples/Resources/xCluster/3-CreateFailoverClusterWithTwoNodes.ps1)
+* [Create first node of a failover cluster with DHCP](/source/Examples/Resources/xCluster/4-CreateFirstNodeOfAFailoverClusterWithDHCP.ps1)
+* [Join additional node to a failover cluster with DHCP](/source/Examples/Resources/xCluster/5-JoinAdditionalNodeToFailoverClusterWithDHCP.ps1)
+* [Create failover cluster and ignoring a network](/source/Examples/Resources/xCluster/4-CreateFailoverClusterAndIgnoreANetwork.ps1)
 
 ### xClusterDisk
 
@@ -97,8 +96,8 @@ Configures shared disks in a cluster.
 
 #### Examples for xClusterDisk
 
-* [Add a cluster disk to the failover cluster](/Examples/Resources/xClusterDisk/1-AddClusterDisk.ps1)
-* [Remove a cluster disk from the failover cluster](/Examples/Resources/xClusterDisk/2-RemoveClusterDisk.ps1)
+* [Add a cluster disk to the failover cluster](/source/Examples/Resources/xClusterDisk/1-AddClusterDisk.ps1)
+* [Remove a cluster disk from the failover cluster](/source/Examples/Resources/xClusterDisk/2-RemoveClusterDisk.ps1)
 
 ### xClusterNetwork
 
@@ -141,7 +140,7 @@ See this article for more information about cluster network role values;
 
 #### Examples for xClusterNetwork
 
-* [Change properties of two cluster network resources in the failover cluster](/Examples/Resources/xClusterNetwork/1-ChangeClusterNetwork.ps1)
+* [Change properties of two cluster network resources in the failover cluster](/source/Examples/Resources/xClusterNetwork/1-ChangeClusterNetwork.ps1)
 
 ### xClusterPreferredOwner
 
@@ -164,8 +163,8 @@ cluster.
 
 #### Examples for xClusterPreferredOwner
 
-* [Add preferred owners to a cluster group and cluster resources](/Examples/Resources/xClusterDisk/1-AddPreferredOwner.ps1)
-* [Remove preferred owners from a cluster group and cluster resources](/Examples/Resources/xClusterDisk/2-RemovePreferredOwner.ps1)
+* [Add preferred owners to a cluster group and cluster resources](/source/Examples/Resources/xClusterPreferredOwner/1-AddPreferredOwner.ps1)
+* [Remove preferred owners from a cluster group and cluster resources](/source/Examples/Resources/xClusterPreferredOwner/2-RemovePreferredOwner.ps1)
 
 ### xClusterProperty
 
@@ -228,7 +227,7 @@ Configures cluster properties on a failover cluster.
 
 #### Examples for xClusterProperty
 
-* [Set failover cluster properties](/Examples/Resources/xClusterProperty/1-SetClusterProperties.ps1)
+* [Set failover cluster properties](/source/Examples/Resources/xClusterProperty/1-SetClusterProperties.ps1)
 
 ### xClusterQuorum
 
@@ -256,11 +255,11 @@ quorum type, please see the article
 
 #### Examples for xClusterQuorum
 
-* [Set quorum to node majority](/Examples/Resources/xClusterQuorum/1-SetQuorumToNodeMajority.ps1)
-* [Set quorum to node and disk majority](/Examples/Resources/xClusterQuorum/2-SetQuorumToNodeAndDiskMajority.ps1)
-* [Set quorum to node and file share majority](/Examples/Resources/xClusterQuorum/3-SetQuorumToNodeAndFileShareMajority.ps1)
-* [Set quorum to disk only](/Examples/Resources/xClusterQuorum/4-SetQuorumToDiskOnly.ps1)
-* [Set quorum to node and cloud](/Examples/Resources/xClusterQuorum/5-SetQuorumToNodeAndCloudMajority.1)
+* [Set quorum to node majority](/source/Examples/Resources/xClusterQuorum/1-SetQuorumToNodeMajority.ps1)
+* [Set quorum to node and disk majority](/source/Examples/Resources/xClusterQuorum/2-SetQuorumToNodeAndDiskMajority.ps1)
+* [Set quorum to node and file share majority](/source/Examples/Resources/xClusterQuorum/3-SetQuorumToNodeAndFileShareMajority.ps1)
+* [Set quorum to disk only](/source/Examples/Resources/xClusterQuorum/4-SetQuorumToDiskOnly.ps1)
+* [Set quorum to node and cloud](/source/Examples/Resources/xClusterQuorum/5-SetQuorumToNodeAndCloudMajority.ps1)
 
 ### xWaitForCluster
 
@@ -280,4 +279,4 @@ Ensures that a node waits for a remote cluster is created.
 
 #### Examples for xWaitForCluster
 
-* [Wait for failover cluster to be present](/Examples/Resources/xWaitForCluster/1-WaitForFailoverClusterToBePresent.ps1)
+* [Wait for failover cluster to be present](/source/Examples/Resources/xWaitForCluster/1-WaitForFailoverClusterToBePresent.ps1)

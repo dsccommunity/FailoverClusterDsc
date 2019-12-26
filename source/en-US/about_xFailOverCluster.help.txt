@@ -22,4 +22,4 @@ SEE ALSO
   - https://github.com/dsccommunity/xFailOverCluster
 
 KEYWORDS
-    DSC, DscResource, SqlServer
+    DSC, DscResource, Cluster, WSFC, FCI

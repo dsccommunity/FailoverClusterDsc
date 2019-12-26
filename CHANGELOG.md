@@ -35,7 +35,7 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
     structure.
   - Release pipeline stopped working in some circumstances, workaround is
     to pin ModuleBuilder to version `1.0.0` for now.
-    *There are a issue with ModuleBuilder using preview strings using dash,*
+    *There is an issue with ModuleBuilder with preview strings using dash,*
     *e.g. `fix0008-9`. The string is compliant with SemVer 2.0 but there*
     *is a bug in `Publish-Module` that prevents the module to be released.*
   - Added code coverage reporting to Azure DevOps.

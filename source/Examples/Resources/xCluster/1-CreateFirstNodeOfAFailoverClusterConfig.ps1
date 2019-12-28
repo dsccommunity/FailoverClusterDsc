@@ -1,6 +1,6 @@
 <#PSScriptInfo
 
-.VERSION 1.0.1
+.VERSION 1.0.0
 
 .GUID 2a4174f6-aa62-49c8-bee3-a288f70ebcfc
 
@@ -39,7 +39,7 @@ Updated author and copyright notice.
         This example shows how to create the failover cluster on the first node.
 #>
 
-Configuration Example
+Configuration CreateFirstNodeOfAFailoverClusterConfig
 {
     param(
         [Parameter(Mandatory = $true)]

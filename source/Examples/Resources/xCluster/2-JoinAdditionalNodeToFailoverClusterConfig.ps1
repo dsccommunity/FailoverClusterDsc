@@ -1,9 +1,45 @@
-<#
-.EXAMPLE
-    This example shows how to add an additional node to the failover cluster.
+<#PSScriptInfo
+
+.VERSION 1.0.0
+
+.GUID 593e1540-3778-4260-9389-1deceb419c8c
+
+.AUTHOR DSC Community
+
+.COMPANYNAME DSC Community
+
+.COPYRIGHT DSC Community contributors. All rights reserved.
+
+.TAGS DSCConfiguration
+
+.LICENSEURI https://github.com/dsccommunity/xFailOverCluster/blob/master/LICENSE
+
+.PROJECTURI https://github.com/dsccommunity/xFailOverCluster
+
+.ICONURI
+
+.EXTERNALMODULEDEPENDENCIES
+
+.REQUIREDSCRIPTS
+
+.EXTERNALSCRIPTDEPENDENCIES
+
+.RELEASENOTES
+Updated author and copyright notice.
+
+.PRIVATEDATA 2016-Datacenter,2016-Datacenter-Server-Core
+
 #>
 
-Configuration Example
+#Requires -Module xFailOverCluster
+
+
+<#
+    .DESCRIPTION
+        This example shows how to add an additional node to the failover cluster.
+#>
+
+Configuration JoinAdditionalNodeToFailoverClusterConfig
 {
     param(
         [Parameter(Mandatory = $true)]

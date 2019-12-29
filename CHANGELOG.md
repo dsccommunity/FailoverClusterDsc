@@ -7,6 +7,12 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 
 ## [Unreleased]
 
+### Added
+
+- xFailOverCluster
+  - Add the module MarkdownLinkCheck to dependent modules to active the
+    markdown link tests.
+
 ### Changed
 
 - xFailOverCluster

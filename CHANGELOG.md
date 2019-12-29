@@ -12,6 +12,8 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 - xFailOverCluster
   - Add the module MarkdownLinkCheck to dependent modules to active the
     markdown link tests.
+  - Added the filetypes to the file `.gitattributes` according to the
+    Plaster template.
 
 ### Changed
 
@@ -21,6 +23,8 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
   - Changed the Code of Conduct to the one adopted by DSC Community.
   - Added `.markdownlint.json` to get the correct settings for the
     MarkdownLint VS Code extension.
+  - Changed Visual Studio Code settings to the file `settings.json` according
+    to the Plaster template.
 
 ### Fixed
 

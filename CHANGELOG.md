@@ -15,7 +15,8 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
   - Added the filetypes to the file `.gitattributes` according to the
     Plaster template.
   - Update examples to be ready to be published to the PowerShell Gallery.
-
+  - Added a CONTRIBUTING.md.
+  
 ### Changed
 
 - xFailOverCluster

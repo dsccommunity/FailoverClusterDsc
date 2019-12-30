@@ -2,7 +2,7 @@
 
 .VERSION 1.0.0
 
-.GUID 2a4174f6-aa62-49c8-bee3-a288f70ebcfc
+.GUID 71dcec9b-f457-4ac3-8ab8-c8de501e96de
 
 .AUTHOR DSC Community
 
@@ -25,7 +25,7 @@
 .EXTERNALSCRIPTDEPENDENCIES
 
 .RELEASENOTES
-Updated author and copyright notice.
+First version.
 
 .PRIVATEDATA 2016-Datacenter,2016-Datacenter-Server-Core
 
@@ -33,15 +33,19 @@ Updated author and copyright notice.
 
 #Requires -Module xFailOverCluster
 
-
 <#
     .DESCRIPTION
-        This example shows how to create the failover cluster on the first node.
+        This example shows how to wait for the failover cluster to be present.
+        For example if the failover cluster was created on the first node and the
+        second node at the same time, then second node must wait for the first
+        node to create the cluster. Otherwise both nodes might try to create the
+        same cluster.
 #>
 
-Configuration CreateFirstNodeOfAFailoverClusterConfig
+Configuration xWaitForCluster_WaitForFailoverClusterToBePresentConfig
 {
-    param(
+    param
+    (
         [Parameter(Mandatory = $true)]
         [PSCredential]
         $ActiveDirectoryAdministratorCredential
@@ -71,18 +75,20 @@ Configuration CreateFirstNodeOfAFailoverClusterConfig
             DependsOn = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringPowerShellFeature'
         }
 
-        xCluster CreateCluster
+        xWaitForCluster WaitForCluster
+        {
+            Name             = 'Cluster01'
+            RetryIntervalSec = 10
+            RetryCount       = 60
+            DependsOn        = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringCmdInterfaceFeature'
+        }
+
+        xCluster JoinSecondNodeToCluster
         {
             Name                          = 'Cluster01'
             StaticIPAddress               = '192.168.100.20/24'
-
-            <#
-                This user must have the permission to create the CNO (Cluster Name Object) in Active Directory,
-                unless it is prestaged.
-            #>
             DomainAdministratorCredential = $ActiveDirectoryAdministratorCredential
-
-            DependsOn                     = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringCmdInterfaceFeature'
+            DependsOn                     = '[xWaitForCluster]WaitForCluster'
         }
     }
 }

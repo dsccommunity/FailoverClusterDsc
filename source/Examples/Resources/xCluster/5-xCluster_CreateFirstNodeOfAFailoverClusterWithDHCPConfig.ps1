@@ -1,12 +1,48 @@
-<#
-.EXAMPLE
-    This example shows how to create the failover cluster on the first node
-    using DHCP to assign the IP address to the cluster.
+<#PSScriptInfo
+
+.VERSION 1.0.0
+
+.GUID 518fe78a-4f4a-4591-89c7-a6c797228486
+
+.AUTHOR DSC Community
+
+.COMPANYNAME DSC Community
+
+.COPYRIGHT DSC Community contributors. All rights reserved.
+
+.TAGS DSCConfiguration
+
+.LICENSEURI https://github.com/dsccommunity/xFailOverCluster/blob/master/LICENSE
+
+.PROJECTURI https://github.com/dsccommunity/xFailOverCluster
+
+.ICONURI
+
+.EXTERNALMODULEDEPENDENCIES
+
+.REQUIREDSCRIPTS
+
+.EXTERNALSCRIPTDEPENDENCIES
+
+.RELEASENOTES
+First version.
+
+.PRIVATEDATA 2016-Datacenter,2016-Datacenter-Server-Core
+
 #>
 
-Configuration Example
+#Requires -Module xFailOverCluster
+
+<#
+    .DESCRIPTION
+        This example shows how to create the failover cluster on the first node
+        using DHCP to assign the IP address to the cluster.
+#>
+
+Configuration xCluster_CreateFirstNodeOfAFailoverClusterWithDHCPConfig
 {
-    param(
+    param
+    (
         [Parameter(Mandatory = $true)]
         [PSCredential]
         $ActiveDirectoryAdministratorCredential

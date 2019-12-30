@@ -1,12 +1,47 @@
-<#
-.EXAMPLE
-    This example shows how to add an additional node to the failover cluster
-    when the cluster was assigned an IP address from a DHCP.
+<#PSScriptInfo
+
+.VERSION 1.0.0
+
+.GUID 593e1540-3778-4260-9389-1deceb419c8c
+
+.AUTHOR DSC Community
+
+.COMPANYNAME DSC Community
+
+.COPYRIGHT DSC Community contributors. All rights reserved.
+
+.TAGS DSCConfiguration
+
+.LICENSEURI https://github.com/dsccommunity/xFailOverCluster/blob/master/LICENSE
+
+.PROJECTURI https://github.com/dsccommunity/xFailOverCluster
+
+.ICONURI
+
+.EXTERNALMODULEDEPENDENCIES
+
+.REQUIREDSCRIPTS
+
+.EXTERNALSCRIPTDEPENDENCIES
+
+.RELEASENOTES
+First version.
+
+.PRIVATEDATA 2016-Datacenter,2016-Datacenter-Server-Core
+
 #>
 
-Configuration Example
+#Requires -Module xFailOverCluster
+
+<#
+    .DESCRIPTION
+        This example shows how to add an additional node to the failover cluster.
+#>
+
+Configuration xCluster_JoinAdditionalNodeToFailoverClusterConfig
 {
-    param(
+    param
+    (
         [Parameter(Mandatory = $true)]
         [PSCredential]
         $ActiveDirectoryAdministratorCredential
@@ -47,6 +82,7 @@ Configuration Example
         xCluster JoinSecondNodeToCluster
         {
             Name                          = 'Cluster01'
+            StaticIPAddress               = '192.168.100.20/24'
             DomainAdministratorCredential = $ActiveDirectoryAdministratorCredential
             DependsOn                     = '[xWaitForCluster]WaitForCluster'
         }

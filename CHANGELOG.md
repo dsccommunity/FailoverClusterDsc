@@ -14,6 +14,7 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
     markdown link tests.
   - Added the filetypes to the file `.gitattributes` according to the
     Plaster template.
+  - Update examples to be ready to be published to the PowerShell Gallery.
 
 ### Changed
 

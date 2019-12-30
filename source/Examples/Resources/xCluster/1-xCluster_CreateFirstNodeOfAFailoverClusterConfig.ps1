@@ -2,7 +2,7 @@
 
 .VERSION 1.0.0
 
-.GUID 593e1540-3778-4260-9389-1deceb419c8c
+.GUID 2a4174f6-aa62-49c8-bee3-a288f70ebcfc
 
 .AUTHOR DSC Community
 
@@ -25,7 +25,7 @@
 .EXTERNALSCRIPTDEPENDENCIES
 
 .RELEASENOTES
-Updated author and copyright notice.
+First version.
 
 .PRIVATEDATA 2016-Datacenter,2016-Datacenter-Server-Core
 
@@ -33,13 +33,12 @@ Updated author and copyright notice.
 
 #Requires -Module xFailOverCluster
 
-
 <#
     .DESCRIPTION
-        This example shows how to add an additional node to the failover cluster.
+        This example shows how to create the failover cluster on the first node.
 #>
 
-Configuration JoinAdditionalNodeToFailoverClusterConfig
+Configuration xCluster_CreateFirstNodeOfAFailoverClusterConfig
 {
     param(
         [Parameter(Mandatory = $true)]
@@ -71,20 +70,18 @@ Configuration JoinAdditionalNodeToFailoverClusterConfig
             DependsOn = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringPowerShellFeature'
         }
 
-        xWaitForCluster WaitForCluster
-        {
-            Name             = 'Cluster01'
-            RetryIntervalSec = 10
-            RetryCount       = 60
-            DependsOn        = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringCmdInterfaceFeature'
-        }
-
-        xCluster JoinSecondNodeToCluster
+        xCluster CreateCluster
         {
             Name                          = 'Cluster01'
             StaticIPAddress               = '192.168.100.20/24'
+
+            <#
+                This user must have the permission to create the CNO (Cluster Name Object) in Active Directory,
+                unless it is prestaged.
+            #>
             DomainAdministratorCredential = $ActiveDirectoryAdministratorCredential
-            DependsOn                     = '[xWaitForCluster]WaitForCluster'
+
+            DependsOn                     = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringCmdInterfaceFeature'
         }
     }
 }

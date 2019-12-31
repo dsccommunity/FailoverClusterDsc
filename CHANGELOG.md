@@ -27,6 +27,8 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
     MarkdownLint VS Code extension.
   - Changed Visual Studio Code settings to the file `settings.json` according
     to the Plaster template.
+  - Set `testRunTitle` for PublishTestResults task so that a helpful name is
+    displayed in Azure DevOps for each test run.
 
 ### Fixed
 

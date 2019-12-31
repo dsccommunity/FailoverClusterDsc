@@ -16,7 +16,7 @@
 
 .PROJECTURI https://github.com/dsccommunity/xFailOverCluster
 
-.ICONURI
+.ICONURI https://dsccommunity.org/images/DSC_Logo_300p.png
 
 .EXTERNALMODULEDEPENDENCIES
 

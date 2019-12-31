@@ -2,7 +2,7 @@
 
 .VERSION 1.0.0
 
-.GUID 2367ad2e-51be-4ab6-b0df-f34ae10bbbe3
+.GUID 593e1540-3778-4260-9389-1deceb419c8c
 
 .AUTHOR DSC Community
 
@@ -16,7 +16,7 @@
 
 .PROJECTURI https://github.com/dsccommunity/xFailOverCluster
 
-.ICONURI
+.ICONURI https://dsccommunity.org/images/DSC_Logo_300p.png
 
 .EXTERNALMODULEDEPENDENCIES
 

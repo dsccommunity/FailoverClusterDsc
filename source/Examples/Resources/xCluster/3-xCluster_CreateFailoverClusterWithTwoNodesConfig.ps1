@@ -1,14 +1,53 @@
-<#
-.EXAMPLE
-    In this example, we will create a failover cluster with two servers.
+<#PSScriptInfo
 
-    Assumptions:
-    - We will assume that a Domain Controller already exists, and that both servers are already domain joined.
-    - Both servers are using the same certificate, and that the certificate are installed on both servers so
-      that LCM (Local Configuration Manager) can appropriately handle secrets such as the Active Directory
-      administrator credential.
-    - The example also assumes that the CNO (Cluster Name Object) is either prestaged or that the Active Directory
-      administrator credential has the appropriate permission to create the CNO (Cluster Name Object).
+.VERSION 1.0.0
+
+.GUID 2367ad2e-51be-4ab6-b0df-f34ae10bbbe3
+
+.AUTHOR DSC Community
+
+.COMPANYNAME DSC Community
+
+.COPYRIGHT DSC Community contributors. All rights reserved.
+
+.TAGS DSCConfiguration
+
+.LICENSEURI https://github.com/dsccommunity/xFailOverCluster/blob/master/LICENSE
+
+.PROJECTURI https://github.com/dsccommunity/xFailOverCluster
+
+.ICONURI https://dsccommunity.org/images/DSC_Logo_300p.png
+
+.EXTERNALMODULEDEPENDENCIES
+
+.REQUIREDSCRIPTS
+
+.EXTERNALSCRIPTDEPENDENCIES
+
+.RELEASENOTES
+First version.
+
+.PRIVATEDATA 2016-Datacenter,2016-Datacenter-Server-Core
+
+#>
+
+#Requires -Module xFailOverCluster
+
+<#
+    .DESCRIPTION
+        In this example, we will create a failover cluster with two servers.
+
+    .NOTES
+        Assumptions:
+        - We will assume that a Domain Controller already exists, and that both
+          servers are already domain joined.
+        - Both servers are using the same certificate, and that the certificate
+          are installed on both servers so that LCM (Local Configuration Manager)
+          can appropriately handle secrets such as the Active Directory
+          administrator credential.
+        - The example also assumes that the CNO (Cluster Name Object) is either
+          prestaged or that the Active Directory administrator credential has the
+          appropriate permission to create the CNO (Cluster Name Object).
 #>
 
 $ConfigurationData = @{
@@ -75,9 +114,10 @@ $ConfigurationData = @{
     )
 }
 
-Configuration Example
+Configuration xCluster_CreateFailoverClusterWithTwoNodesConfig
 {
-    param(
+    param
+    (
         [Parameter(Mandatory = $true)]
         [PSCredential]
         $ActiveDirectoryAdministratorCredential

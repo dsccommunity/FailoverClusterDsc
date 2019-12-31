@@ -1,14 +1,51 @@
-<#
-.EXAMPLE
-    This example shows how to watif or the failover cluster to be present. For example
-    if the failover cluster was created on the first node and the second node at the
-    same time, then second node must wait for the first node to create the cluster.
-    otherwise both nodes might try to create the same cluster.
+<#PSScriptInfo
+
+.VERSION 1.0.0
+
+.GUID 71dcec9b-f457-4ac3-8ab8-c8de501e96de
+
+.AUTHOR DSC Community
+
+.COMPANYNAME DSC Community
+
+.COPYRIGHT DSC Community contributors. All rights reserved.
+
+.TAGS DSCConfiguration
+
+.LICENSEURI https://github.com/dsccommunity/xFailOverCluster/blob/master/LICENSE
+
+.PROJECTURI https://github.com/dsccommunity/xFailOverCluster
+
+.ICONURI https://dsccommunity.org/images/DSC_Logo_300p.png
+
+.EXTERNALMODULEDEPENDENCIES
+
+.REQUIREDSCRIPTS
+
+.EXTERNALSCRIPTDEPENDENCIES
+
+.RELEASENOTES
+First version.
+
+.PRIVATEDATA 2016-Datacenter,2016-Datacenter-Server-Core
+
 #>
 
-Configuration Example
+#Requires -Module xFailOverCluster
+
+<#
+    .DESCRIPTION
+        This example shows how to wait for the failover cluster to be present.
+        For example if the failover cluster was created on the first node and the
+        second node at the same time, then second node must wait for the first
+        node to create the cluster. Otherwise both nodes might try to create the
+        same cluster.
+#>
+
+Configuration xWaitForCluster_WaitForFailoverClusterToBePresentConfig
 {
-    param(
+    param
+    (
         [Parameter(Mandatory = $true)]
         [PSCredential]
         $ActiveDirectoryAdministratorCredential

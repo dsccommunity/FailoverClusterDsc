@@ -1,8 +1,8 @@
 <#PSScriptInfo
 
-.VERSION 1.0.1
+.VERSION 1.0.0
 
-.GUID 2a4174f6-aa62-49c8-bee3-a288f70ebcfc
+.GUID b9cc4c58-306a-49d7-b81e-73038cee30d8
 
 .AUTHOR DSC Community
 
@@ -16,7 +16,7 @@
 
 .PROJECTURI https://github.com/dsccommunity/xFailOverCluster
 
-.ICONURI
+.ICONURI https://dsccommunity.org/images/DSC_Logo_300p.png
 
 .EXTERNALMODULEDEPENDENCIES
 
@@ -25,7 +25,7 @@
 .EXTERNALSCRIPTDEPENDENCIES
 
 .RELEASENOTES
-Updated author and copyright notice.
+First version.
 
 .PRIVATEDATA 2016-Datacenter,2016-Datacenter-Server-Core
 
@@ -33,15 +33,16 @@ Updated author and copyright notice.
 
 #Requires -Module xFailOverCluster
 
-
 <#
     .DESCRIPTION
-        This example shows how to create the failover cluster on the first node.
+        This example shows how to add an additional node to the failover cluster
+        when the cluster was assigned an IP address from a DHCP.
 #>
 
-Configuration Example
+Configuration xCluster_JoinAdditionalNodeToFailoverClusterWithDHCPConfig
 {
-    param(
+    param
+    (
         [Parameter(Mandatory = $true)]
         [PSCredential]
         $ActiveDirectoryAdministratorCredential
@@ -71,18 +72,19 @@ Configuration Example
             DependsOn = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringPowerShellFeature'
         }
 
-        xCluster CreateCluster
+        xWaitForCluster WaitForCluster
+        {
+            Name             = 'Cluster01'
+            RetryIntervalSec = 10
+            RetryCount       = 60
+            DependsOn        = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringCmdInterfaceFeature'
+        }
+
+        xCluster JoinSecondNodeToCluster
         {
             Name                          = 'Cluster01'
-            StaticIPAddress               = '192.168.100.20/24'
-
-            <#
-                This user must have the permission to create the CNO (Cluster Name Object) in Active Directory,
-                unless it is prestaged.
-            #>
             DomainAdministratorCredential = $ActiveDirectoryAdministratorCredential
-
-            DependsOn                     = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringCmdInterfaceFeature'
+            DependsOn                     = '[xWaitForCluster]WaitForCluster'
         }
     }
 }

@@ -1,9 +1,44 @@
-<#
-.EXAMPLE
-    This example shows how to create the a failover cluster on the first node and ignoring a network.
+<#PSScriptInfo
+
+.VERSION 1.0.0
+
+.GUID 2a4174f6-aa62-49c8-bee3-a288f70ebcfc
+
+.AUTHOR DSC Community
+
+.COMPANYNAME DSC Community
+
+.COPYRIGHT DSC Community contributors. All rights reserved.
+
+.TAGS DSCConfiguration
+
+.LICENSEURI https://github.com/dsccommunity/xFailOverCluster/blob/master/LICENSE
+
+.PROJECTURI https://github.com/dsccommunity/xFailOverCluster
+
+.ICONURI https://dsccommunity.org/images/DSC_Logo_300p.png
+
+.EXTERNALMODULEDEPENDENCIES
+
+.REQUIREDSCRIPTS
+
+.EXTERNALSCRIPTDEPENDENCIES
+
+.RELEASENOTES
+First version.
+
+.PRIVATEDATA 2016-Datacenter,2016-Datacenter-Server-Core
+
 #>
 
-Configuration Example
+#Requires -Module xFailOverCluster
+
+<#
+    .DESCRIPTION
+        This example shows how to create the failover cluster on the first node.
+#>
+
+Configuration xCluster_CreateFirstNodeOfAFailoverClusterConfig
 {
     param(
         [Parameter(Mandatory = $true)]
@@ -39,7 +74,6 @@ Configuration Example
         {
             Name                          = 'Cluster01'
             StaticIPAddress               = '192.168.100.20/24'
-            IgnoreNetwork                 = @('10.0.2.0/24')
 
             <#
                 This user must have the permission to create the CNO (Cluster Name Object) in Active Directory,

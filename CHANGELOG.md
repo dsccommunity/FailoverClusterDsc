@@ -7,6 +7,16 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 
 ## [Unreleased]
 
+### Added
+
+- xFailOverCluster
+  - Add the module MarkdownLinkCheck to dependent modules to active the
+    markdown link tests.
+  - Added the filetypes to the file `.gitattributes` according to the
+    Plaster template.
+  - Update examples to be ready to be published to the PowerShell Gallery.
+  - Added a CONTRIBUTING.md.
+  
 ### Changed
 
 - xFailOverCluster
@@ -15,6 +25,10 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
   - Changed the Code of Conduct to the one adopted by DSC Community.
   - Added `.markdownlint.json` to get the correct settings for the
     MarkdownLint VS Code extension.
+  - Changed Visual Studio Code settings to the file `settings.json` according
+    to the Plaster template.
+  - Set `testRunTitle` for PublishTestResults task so that a helpful name is
+    displayed in Azure DevOps for each test run.
 
 ### Fixed
 
@@ -40,7 +54,7 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 - xClusterPreferredOwner
   - Fixed broken links to examples in README.md.
 - xClusterQuorum
-  - Fixed broken link to examples in README.md ([issue #208](https://github.com/dsccommunity/xFailOverCluster/issues/208).
+  - Fixed broken link to examples in README.md ([issue #208](https://github.com/dsccommunity/xFailOverCluster/issues/208)).
 - CommonResourceHelper
   - Added `en-US` localization folder to pass PSSA rule.
 - xCluster

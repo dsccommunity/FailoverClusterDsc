@@ -51,6 +51,7 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
   - Update status badges in README.md.
   - Replaced section 'Branches' with section 'Releases' in README.md.
   - Pull request and issue template got minor updates.
+  - Update module manifest exporting resources and fixed style.
 - xClusterPreferredOwner
   - Fixed broken links to examples in README.md.
 - xClusterQuorum

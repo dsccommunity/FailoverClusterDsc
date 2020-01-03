@@ -39,7 +39,7 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
     - Renamed the jobs
     - Splitting up the testing in different jobs.
   - URLs in the module manifest pointed in the wrong direction.
-  - Changed the encoding that will be used by ModuleBuilder (`ÙTF-8`).
+  - Changed the encoding that will be used by ModuleBuilder (`UTF-8`).
   - URLs to examples in README.md didn't take account for new folder
     structure.
   - Release pipeline stopped working in some circumstances, workaround is

@@ -85,6 +85,7 @@ stages:
               arguments: "-Tasks test -PesterScript 'tests/Unit'"
               pwsh: false
           - task: PublishTestResults@2
+            displayName: Publish Test Results
             condition: succeededOrFailed()
             inputs:
               testResultsFormat: 'NUnit'

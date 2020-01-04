@@ -30,8 +30,8 @@ stages:
               ModuleVersion: $(GitVersion.Informationalversion)
           - task: PublishBuildArtifacts@1
             inputs:
-              PathtoPublish: 'output/'
-              ArtifactName: 'output'
+              pathToPublish: 'output/'
+              artifactName: 'output'
               publishLocation: 'Container'
 
   - stage: Test
@@ -95,6 +95,27 @@ stages:
               codeCoverageTool: 'JaCoCo'
               summaryFileLocation: 'output/testResults/CodeCov*.xml'
               pathToSources: '$(Build.SourcesDirectory)/output/$(DscBuildVariable.RepositoryName)'
+          - task: PublishBuildArtifacts@1
+            inputs:
+              pathToPublish: 'output/testResults/'
+              artifactName: 'testResults'
+              publishLocation: 'Container'
+
+      - job: Upload_Codecov
+        dependsOn: Test_Unit
+        pool:
+          vmImage: 'ubuntu 16.04'
+        timeoutInMinutes: 0
+        steps:
+          - task: DownloadBuildArtifacts@0
+            inputs:
+              buildType: 'current'
+              downloadType: 'single'
+              artifactName: 'testResults'
+              downloadPath: '$(Build.SourcesDirectory)/output'
+          - script: |
+              bash <(curl -s https://codecov.io/bash) -f "./output/testResults/Codecov*.xml"
+            displayName: 'Upload to codecov.io'
 
       - job: Test_Integration
         pool:

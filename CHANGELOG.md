@@ -56,6 +56,7 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
   - Update GitVersion.yml with the correct regular expression.
   - Fix import statement in all tests, making sure it throws if module
     DscResource.Test cannot be imported.
+  - Adding back publishing code coverage to Codecov.io.
 - xClusterPreferredOwner
   - Fixed broken links to examples in README.md.
 - xClusterQuorum

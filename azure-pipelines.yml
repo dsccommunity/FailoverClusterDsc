@@ -115,22 +115,6 @@ stages:
               artifactName: 'testResults'
               publishLocation: 'Container'
 
-      - job: Upload_Codecov
-        dependsOn: Test_Unit
-        pool:
-          vmImage: 'ubuntu 16.04'
-        timeoutInMinutes: 0
-        steps:
-          - task: DownloadBuildArtifacts@0
-            inputs:
-              buildType: 'current'
-              downloadType: 'single'
-              artifactName: 'testResults'
-              downloadPath: '$(Build.SourcesDirectory)/output'
-          - script: |
-              bash <(curl -s https://codecov.io/bash) -f "./output/testResults/Codecov*.xml"
-            displayName: 'Upload to codecov.io'
-
       - job: Test_Integration
         displayName: 'Integration'
         pool:
@@ -165,6 +149,22 @@ stages:
               testResultsFormat: 'NUnit'
               testResultsFiles: 'output/testResults/NUnit*.xml'
               testRunTitle: 'Integration (Windows Server Core)'
+
+      - job: Upload_Codecov
+        dependsOn: Test_Unit
+        pool:
+          vmImage: 'ubuntu 16.04'
+        timeoutInMinutes: 0
+        steps:
+          - task: DownloadBuildArtifacts@0
+            inputs:
+              buildType: 'current'
+              downloadType: 'single'
+              artifactName: 'testResults'
+              downloadPath: '$(Build.SourcesDirectory)/output'
+          - script: |
+              bash <(curl -s https://codecov.io/bash) -v -f "./output/testResults/Codecov*.xml"
+            displayName: 'Upload to codecov.io'
 
   - stage: Deploy
     dependsOn: Test

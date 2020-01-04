@@ -156,16 +156,16 @@ stages:
           vmImage: 'ubuntu 16.04'
         timeoutInMinutes: 0
         steps:
-          - pwsh: |
-              Rename-Item -Path './output/testResults/Codecov*.xml' -NewName 'JaCoCo_coverage.xml' -Verbose -ErrorAction 'Stop'
-            name: RenameCoverageFile
-            displayName: Rename Coverage File
           - task: DownloadBuildArtifacts@0
             inputs:
               buildType: 'current'
               downloadType: 'single'
               artifactName: 'testResults'
               downloadPath: '$(Build.SourcesDirectory)/output'
+          - pwsh: |
+              Rename-Item -Path './output/testResults/Codecov*.xml' -NewName 'JaCoCo_coverage.xml' -Verbose -ErrorAction 'Stop'
+            name: RenameCoverageFile
+            displayName: Rename Coverage File
           - script: |
               bash <(curl -s https://codecov.io/bash) -f "./output/testResults/JaCoCo_coverage.xml"
             displayName: 'Upload to codecov.io'

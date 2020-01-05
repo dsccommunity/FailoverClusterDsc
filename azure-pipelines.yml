@@ -163,7 +163,18 @@ stages:
               artifactName: 'testResults'
               downloadPath: '$(Build.SourcesDirectory)/output'
           - pwsh: |
-              Rename-Item -Path './output/testResults/Codecov*.xml' -NewName 'JaCoCo_coverage.xml' -Verbose -ErrorAction 'Stop'
+              $xml = Select-Xml -Path './CodeCov*.xml' -XPath ''
+              $nodes = $xml.Node.SelectNodes("/report/package");
+              foreach ($node in $nodes)
+              {
+                  $node.SetAttribute("name", ($node.GetAttribute('name') -replace '\d+\.\d+\.\d+', 'source'))
+              }
+              $nodes = $xml.Node.SelectNodes("/report/package/class");
+              foreach ($node in $nodes)
+              {
+                  $node.SetAttribute("name", ($node.GetAttribute('name') -replace '\d+\.\d+\.\d+', 'source'))
+              }
+              $xml.Node.Save("./output/testResults/JaCoCo_coverage.xml")
             name: RenameCoverageFile
             displayName: Rename Coverage File
           - script: |

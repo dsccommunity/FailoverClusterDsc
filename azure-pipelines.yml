@@ -180,6 +180,11 @@ stages:
           - script: |
               bash <(curl -s https://codecov.io/bash) -f "./output/testResults/JaCoCo_coverage.xml"
             displayName: 'Upload to codecov.io'
+          - task: PublishBuildArtifacts@1
+            inputs:
+              pathToPublish: 'output/testResults/JaCoCo_coverage.xml'
+              artifactName: 'coverage'
+              publishLocation: 'Container'
 
   - stage: Deploy
     dependsOn: Test

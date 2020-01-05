@@ -163,7 +163,7 @@ stages:
               artifactName: 'testResults'
               downloadPath: '$(Build.SourcesDirectory)/output'
           - pwsh: |
-              $xml = Select-Xml -Path './CodeCov*.xml' -XPath ''
+              $xml = Select-Xml -Path './CodeCov*.xml' -XPath '.'
               $nodes = $xml.Node.SelectNodes("/report/package");
               foreach ($node in $nodes)
               {

@@ -169,8 +169,8 @@ stages:
               artifactName: 'output'
               downloadPath: '$(Build.SourcesDirectory)'
           - task: PowerShell@2
-            name: publishPrerelease
-            displayName: 'Publish Prerelease'
+            name: publishRelease
+            displayName: 'Publish Release'
             inputs:
               filePath: './build.ps1'
               arguments: '-tasks publish'

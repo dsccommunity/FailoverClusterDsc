@@ -29,6 +29,7 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
     to the Plaster template.
   - Set `testRunTitle` for PublishTestResults task so that a helpful name is
     displayed in Azure DevOps for each test run.
+  - Set a display name on all the jobs and tasks in the CI pipeline.
 
 ### Fixed
 

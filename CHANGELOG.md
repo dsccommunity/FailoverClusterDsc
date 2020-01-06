@@ -53,6 +53,7 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
   - Replaced section 'Branches' with section 'Releases' in README.md.
   - Pull request and issue template got minor updates.
   - Update module manifest exporting resources and fixed style.
+  - Update GitVersion.yml with the correct regular expression.
 - xClusterPreferredOwner
   - Fixed broken links to examples in README.md.
 - xClusterQuorum

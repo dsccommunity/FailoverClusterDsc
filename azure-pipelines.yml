@@ -11,7 +11,8 @@ trigger:
 stages:
   - stage: Build
     jobs:
-      - job: BuildModuleJob
+      - job: Build_Module
+        displayName: 'Build Module'
         pool:
           vmImage: 'ubuntu 16.04'
         steps:
@@ -41,6 +42,7 @@ stages:
     dependsOn: Build
     jobs:
       - job: Test_HQRM
+        displayName: 'Test HQRM'
         pool:
           vmImage: 'win1803'
         timeoutInMinutes: 0
@@ -68,6 +70,7 @@ stages:
               testRunTitle: 'HQRM'
 
       - job: Test_Unit
+        displayName: 'Test Unit'
         pool:
           vmImage: 'win1803'
         timeoutInMinutes: 0
@@ -108,6 +111,7 @@ stages:
               pathToSources: '$(Build.SourcesDirectory)/output/$(dscBuildVariable.RepositoryName)'
 
       - job: Test_Integration
+        displayName: 'Test Integration'
         pool:
           vmImage: 'win1803'
         timeoutInMinutes: 0
@@ -153,7 +157,8 @@ stages:
         )
       )
     jobs:
-      - job: Deploy_Artefact
+      - job: Deploy_Module
+        displayName: 'Deploy Module'
         pool:
           vmImage: 'ubuntu 16.04'
         steps:

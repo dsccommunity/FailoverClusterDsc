@@ -11,8 +11,8 @@ trigger:
 stages:
   - stage: Build
     jobs:
-      - job: Pack_Module
-        displayName: 'Pack Module'
+      - job: Package_Module
+        displayName: 'Package Module'
         pool:
           vmImage: 'ubuntu 16.04'
         steps:

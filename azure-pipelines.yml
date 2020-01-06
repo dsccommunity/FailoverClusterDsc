@@ -56,7 +56,7 @@ stages:
               downloadPath: '$(Build.SourcesDirectory)'
           - task: PowerShell@2
             name: test
-            displayName: 'Test Module (HQRM)'
+            displayName: 'Run HQRM Test'
             inputs:
               filePath: './build.ps1'
               arguments: '-Tasks hqrmtest'
@@ -90,7 +90,7 @@ stages:
               downloadPath: '$(Build.SourcesDirectory)'
           - task: PowerShell@2
             name: test
-            displayName: 'Test Module (Unit)'
+            displayName: 'Run Unit Test'
             inputs:
               filePath: './build.ps1'
               arguments: "-Tasks test -PesterScript 'tests/Unit'"
@@ -132,7 +132,7 @@ stages:
               pwsh: false
           - task: PowerShell@2
             name: test
-            displayName: 'Test Module (Integration)'
+            displayName: 'Run Integration Test'
             inputs:
               filePath: './build.ps1'
               arguments: "-Tasks test -PesterScript 'tests/Integration' -CodeCoverageThreshold 0"

@@ -183,6 +183,8 @@ stages:
                   $node.SetAttribute('cb', 0)
               }
               $xml.Node.Save("./output/testResults/JaCoCo_coverage.xml")
+              $fileContent = Get-Content -Path './output/testResults/JaCoCo_coverage.xml' -Encoding 'Unicode' -Raw
+              $fileContent | Out-File -FilePath './output/testResults/JaCoCo_coverage.xml' -Encoding 'ascii'
             name: RenameCoverageFile
             displayName: 'Rename & Parse Coverage File'
           - script: |

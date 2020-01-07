@@ -167,12 +167,18 @@ stages:
               $nodes = $xml.Node.SelectNodes("/report/package");
               foreach ($node in $nodes)
               {
-                  $node.SetAttribute("name", ($node.GetAttribute('name') -replace '\d+\.\d+\.\d+', 'source'))
+                  $node.SetAttribute('name', ($node.GetAttribute('name') -replace '\d+\.\d+\.\d+', 'source'))
               }
               $nodes = $xml.Node.SelectNodes("/report/package/class");
               foreach ($node in $nodes)
               {
-                  $node.SetAttribute("name", ($node.GetAttribute('name') -replace '\d+\.\d+\.\d+', 'source'))
+                  $node.SetAttribute('name', ($node.GetAttribute('name') -replace '\d+\.\d+\.\d+', 'source'))
+              }
+              $nodes = $xml.Node.SelectNodes("/report/package/sourcefile/line");
+              foreach ($node in $nodes)
+              {
+                  $node.SetAttribute('mb', 0)
+                  $node.SetAttribute('cb', 0)
               }
               $xml.Node.Save("./output/testResults/JaCoCo_coverage.xml")
             name: RenameCoverageFile

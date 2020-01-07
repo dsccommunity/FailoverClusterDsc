@@ -150,13 +150,15 @@ stages:
               testResultsFiles: 'output/testResults/NUnit*.xml'
               testRunTitle: 'Integration (Windows Server Core)'
 
-      - job: Upload_Codecov
+      - job: Code_Coverage
+        displayName: 'Publish Code Coverage'
         dependsOn: Test_Unit
         pool:
           vmImage: 'ubuntu 16.04'
         timeoutInMinutes: 0
         steps:
           - task: DownloadBuildArtifacts@0
+            displayName: 'Download Build Artifact'
             inputs:
               buildType: 'current'
               downloadType: 'single'
@@ -182,11 +184,12 @@ stages:
               }
               $xml.Node.Save("./output/testResults/JaCoCo_coverage.xml")
             name: RenameCoverageFile
-            displayName: Rename Coverage File
+            displayName: 'Rename & Parse Coverage File'
           - script: |
               bash <(curl -s https://codecov.io/bash) -f "./output/testResults/JaCoCo_coverage.xml"
-            displayName: 'Upload to codecov.io'
+            displayName: 'Upload to Codecov.io'
           - task: PublishBuildArtifacts@1
+            displayName: 'Publish Coverage Artifact'
             inputs:
               pathToPublish: 'output/testResults/JaCoCo_coverage.xml'
               artifactName: 'coverage'

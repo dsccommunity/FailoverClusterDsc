@@ -16,7 +16,9 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
     Plaster template.
   - Update examples to be ready to be published to the PowerShell Gallery.
   - Added a CONTRIBUTING.md.
-  
+  - Replaced module CommonResourceHelper with the PowerShell Gallery module
+    DscResource.Common.
+    
 ### Changed
 
 - xFailOverCluster

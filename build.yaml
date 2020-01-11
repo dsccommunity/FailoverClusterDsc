@@ -56,7 +56,7 @@ BuildWorkflow:
 Pester:
   OutputFormat: NUnitXML
   ExcludeFromCodeCoverage:
-    - Modules
+    - Modules/DscResource.Common
   Script:
     - tests/Unit
   ExcludeTag:
@@ -68,6 +68,8 @@ DscTest:
     - 'Common Tests - New Error-Level Script Analyzer Rules'
   ExcludeSourceFile:
     - output
+  ExcludeModuleFile:
+    - Modules/DscResource.Common
 
 Resolve-Dependency:
   Gallery: 'PSGallery'

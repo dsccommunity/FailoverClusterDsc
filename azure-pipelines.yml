@@ -167,16 +167,16 @@ stages:
               downloadPath: '$(Build.SourcesDirectory)/output'
           - pwsh: |
               $xml = Select-Xml -Path './output/testResults/CodeCov*.xml' -XPath '.'
-              $nodes = $xml.Node.SelectNodes("/report/package");
-              foreach ($node in $nodes)
-              {
-                  $node.SetAttribute('name', ($node.GetAttribute('name') -replace '\d+\.\d+\.\d+', 'source'))
-              }
-              $nodes = $xml.Node.SelectNodes("/report/package/class");
-              foreach ($node in $nodes)
-              {
-                  $node.SetAttribute('name', ($node.GetAttribute('name') -replace '\d+\.\d+\.\d+', 'source'))
-              }
+              # $nodes = $xml.Node.SelectNodes("/report/package");
+              # foreach ($node in $nodes)
+              # {
+              #     $node.SetAttribute('name', ($node.GetAttribute('name') -replace '\d+\.\d+\.\d+', 'source'))
+              # }
+              # $nodes = $xml.Node.SelectNodes("/report/package/class");
+              # foreach ($node in $nodes)
+              # {
+              #     $node.SetAttribute('name', ($node.GetAttribute('name') -replace '\d+\.\d+\.\d+', 'source'))
+              # }
               $nodes = $xml.Node.SelectNodes("/report/package/sourcefile/line");
               foreach ($node in $nodes)
               {

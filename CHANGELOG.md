@@ -54,6 +54,8 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
   - Pull request and issue template got minor updates.
   - Update module manifest exporting resources and fixed style.
   - Update GitVersion.yml with the correct regular expression.
+  - Fix import statement in all tests, making sure it throws if module
+    DscResource.Test cannot be imported.
 - xClusterPreferredOwner
   - Fixed broken links to examples in README.md.
 - xClusterQuorum

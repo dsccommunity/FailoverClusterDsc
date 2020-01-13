@@ -82,7 +82,7 @@ function Write-ModuleStubFile
         "    and are only being used as stubs."
         "#>"
         "[System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingUserNameAndPassWordParams', '')]"
-        "param()"
+        "param ()"
         ""
     } -Process {
         $signature = $null

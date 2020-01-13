@@ -153,7 +153,8 @@ stages:
         or(
           eq(variables['Build.SourceBranch'], 'refs/heads/master'),
           startsWith(variables['Build.SourceBranch'], 'refs/tags/')
-        )
+        ),
+        startsWith(variables['Build.Repository.Name'], 'dsccommunity')
       )
     jobs:
       - job: Deploy_Module

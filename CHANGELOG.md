@@ -16,7 +16,9 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
     Plaster template.
   - Update examples to be ready to be published to the PowerShell Gallery.
   - Added a CONTRIBUTING.md.
-  
+  - Replaced module CommonResourceHelper with the PowerShell Gallery module
+    DscResource.Common v0.2.0.
+
 ### Changed
 
 - xFailOverCluster
@@ -30,6 +32,9 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
   - Set `testRunTitle` for PublishTestResults task so that a helpful name is
     displayed in Azure DevOps for each test run.
   - Set a display name on all the jobs and tasks in the CI pipeline.
+  - The deploy step is now only run when merged to branch `master` in the
+    DSC Community upstream repository (not to branch `master` in a fork
+    which always failed due to missing credentials).
 
 ### Fixed
 

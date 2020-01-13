@@ -17,4 +17,7 @@
     'DscResource.Test'          = 'latest'
     'DscResource.AnalyzerRules' = 'latest'
     xDscResourceDesigner        = 'latest'
+
+    # Dependent modules
+    'DscResource.Common'        = '0.2.0'
 }

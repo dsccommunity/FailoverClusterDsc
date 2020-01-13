@@ -3,7 +3,7 @@
     method and is required for the tests.
 #>
 [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingPlainTextForPassword', '')]
-param()
+param ()
 
 $script:DSCModuleName = 'xFailOverCluster'
 $script:DSCResourceName = 'MSFT_xCluster'

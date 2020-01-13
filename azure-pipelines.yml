@@ -154,7 +154,7 @@ stages:
           eq(variables['Build.SourceBranch'], 'refs/heads/master'),
           startsWith(variables['Build.SourceBranch'], 'refs/tags/')
         ),
-        startsWith(variables['System.TeamFoundationCollectionUri'], 'https://dev.azure.com/dsccommunity')
+        contains(variables['System.TeamFoundationCollectionUri'], 'dsccommunity')
       )
     jobs:
       - job: Deploy_Module

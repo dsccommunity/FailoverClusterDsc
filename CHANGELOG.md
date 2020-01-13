@@ -61,7 +61,8 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
   - Update GitVersion.yml with the correct regular expression.
   - Fix import statement in all tests, making sure it throws if module
     DscResource.Test cannot be imported.
-  - Update the deploy step so that it skips deploy on merge to forks.
+  - Update the deploy stage so that it is skipped when merging
+    branch master in forks.
 - xClusterPreferredOwner
   - Fixed broken links to examples in README.md.
 - xClusterQuorum

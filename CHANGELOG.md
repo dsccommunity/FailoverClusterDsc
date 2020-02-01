@@ -64,6 +64,7 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
   - Update the deploy stage so that it is skipped when merging
     branch master in forks.
   - Adding back publishing code coverage to Codecov.io.
+    - Add stats badge for Codecov.io in README.md.
 - xClusterPreferredOwner
   - Fixed broken links to examples in README.md.
 - xClusterQuorum
@@ -75,7 +76,6 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 
 ### Removed
 
-- Removed the file `.codecov.yml` since Codecov is no longer used.
 - Removed the file `Deploy.PSDeploy.ps1` since it is not longer used by
   the build pipeline.
 

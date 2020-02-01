@@ -2,6 +2,7 @@
 
 [![Build Status](https://dev.azure.com/dsccommunity/xFailOverCluster/_apis/build/status/dsccommunity.xFailOverCluster?branchName=master)](https://dev.azure.com/dsccommunity/xFailOverCluster/_build/latest?definitionId=5&branchName=master)
 ![Azure DevOps coverage (branch)](https://img.shields.io/azure-devops/coverage/dsccommunity/xFailOverCluster/5/master)
+[![codecov](https://codecov.io/gh/dsccommunity/xFailOverCluster/branch/master/graph/badge.svg)](https://codecov.io/gh/dsccommunity/xFailOverCluster)
 [![Azure DevOps tests](https://img.shields.io/azure-devops/tests/dsccommunity/xFailOverCluster/5/master)](https://dsccommunity.visualstudio.com/xFailOverCluster/_test/analytics?definitionId=5&contextType=build)
 [![PowerShell Gallery (with prereleases)](https://img.shields.io/powershellgallery/vpre/xFailOverCluster?label=xFailOverCluster%20Preview)](https://www.powershellgallery.com/packages/xFailOverCluster/)
 [![PowerShell Gallery](https://img.shields.io/powershellgallery/v/xFailOverCluster?label=xFailOverCluster)](https://www.powershellgallery.com/packages/xFailOverCluster/)

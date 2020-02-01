@@ -2,6 +2,9 @@ trigger:
   branches:
     include:
     - master
+  paths:
+    exclude:
+    - CHANGELOG.md
   tags:
     include:
     - "v*"
@@ -165,38 +168,9 @@ stages:
               downloadType: 'single'
               artifactName: 'testResults'
               downloadPath: '$(Build.SourcesDirectory)/output'
-          - pwsh: |
-              $xml = Select-Xml -Path './output/testResults/CodeCov*.xml' -XPath '.'
-              # $nodes = $xml.Node.SelectNodes("/report/package");
-              # foreach ($node in $nodes)
-              # {
-              #     $node.SetAttribute('name', ($node.GetAttribute('name') -replace '\d+\.\d+\.\d+', 'source'))
-              # }
-              # $nodes = $xml.Node.SelectNodes("/report/package/class");
-              # foreach ($node in $nodes)
-              # {
-              #     $node.SetAttribute('name', ($node.GetAttribute('name') -replace '\d+\.\d+\.\d+', 'source'))
-              # }
-              $nodes = $xml.Node.SelectNodes("/report/package/sourcefile/line");
-              foreach ($node in $nodes)
-              {
-                  $node.SetAttribute('mb', 0)
-                  $node.SetAttribute('cb', 0)
-              }
-              $xml.Node.Save("./output/testResults/JaCoCo_coverage.xml")
-              $fileContent = Get-Content -Path './output/testResults/JaCoCo_coverage.xml' -Encoding 'Unicode' -Raw
-              $fileContent | Out-File -FilePath './output/testResults/JaCoCo_coverage.xml' -Encoding 'ascii'
-            name: RenameCoverageFile
-            displayName: 'Rename & Parse Coverage File'
           - script: |
               bash <(curl -s https://codecov.io/bash) -f "./output/testResults/JaCoCo_coverage.xml"
             displayName: 'Upload to Codecov.io'
-          - task: PublishBuildArtifacts@1
-            displayName: 'Publish Coverage Artifact'
-            inputs:
-              pathToPublish: 'output/testResults/JaCoCo_coverage.xml'
-              artifactName: 'coverage'
-              publishLocation: 'Container'
 
   - stage: Deploy
     dependsOn: Test

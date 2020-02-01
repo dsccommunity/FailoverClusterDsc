@@ -2,6 +2,9 @@ trigger:
   branches:
     include:
     - master
+  paths:
+    exclude:
+    - CHANGELOG.md
   tags:
     include:
     - "v*"
@@ -34,8 +37,8 @@ stages:
           - task: PublishBuildArtifacts@1
             displayName: 'Publish Build Artifact'
             inputs:
-              PathtoPublish: 'output/'
-              ArtifactName: 'output'
+              pathToPublish: 'output/'
+              artifactName: 'output'
               publishLocation: 'Container'
 
   - stage: Test
@@ -109,6 +112,12 @@ stages:
               codeCoverageTool: 'JaCoCo'
               summaryFileLocation: 'output/testResults/CodeCov*.xml'
               pathToSources: '$(Build.SourcesDirectory)/output/$(dscBuildVariable.RepositoryName)'
+          - task: PublishBuildArtifacts@1
+            displayName: 'Publish Test Artifact'
+            inputs:
+              pathToPublish: 'output/testResults/'
+              artifactName: 'testResults'
+              publishLocation: 'Container'
 
       - job: Test_Integration
         displayName: 'Integration'
@@ -144,6 +153,24 @@ stages:
               testResultsFormat: 'NUnit'
               testResultsFiles: 'output/testResults/NUnit*.xml'
               testRunTitle: 'Integration (Windows Server Core)'
+
+      - job: Code_Coverage
+        displayName: 'Publish Code Coverage'
+        dependsOn: Test_Unit
+        pool:
+          vmImage: 'ubuntu 16.04'
+        timeoutInMinutes: 0
+        steps:
+          - task: DownloadBuildArtifacts@0
+            displayName: 'Download Build Artifact'
+            inputs:
+              buildType: 'current'
+              downloadType: 'single'
+              artifactName: 'testResults'
+              downloadPath: '$(Build.SourcesDirectory)/output'
+          - script: |
+              bash <(curl -s https://codecov.io/bash) -f "./output/testResults/JaCoCo_coverage.xml"
+            displayName: 'Upload to Codecov.io'
 
   - stage: Deploy
     dependsOn: Test

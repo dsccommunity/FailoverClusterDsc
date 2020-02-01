@@ -63,6 +63,7 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
     DscResource.Test cannot be imported.
   - Update the deploy stage so that it is skipped when merging
     branch master in forks.
+  - Adding back publishing code coverage to Codecov.io.
 - xClusterPreferredOwner
   - Fixed broken links to examples in README.md.
 - xClusterQuorum

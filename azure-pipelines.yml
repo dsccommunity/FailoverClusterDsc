@@ -159,6 +159,13 @@ stages:
             inputs:
               buildType: 'current'
               downloadType: 'single'
+              artifactName: 'output'
+              downloadPath: '$(Build.SourcesDirectory)'
+          - task: DownloadBuildArtifacts@0
+            displayName: 'Download Build Artifact'
+            inputs:
+              buildType: 'current'
+              downloadType: 'single'
               artifactName: 'testResults'
               downloadPath: '$(Build.SourcesDirectory)/output'
           - task: PublishCodeCoverageResults@1

@@ -105,13 +105,6 @@ stages:
               testResultsFormat: 'NUnit'
               testResultsFiles: 'output/testResults/NUnit*.xml'
               testRunTitle: 'Unit (Windows Server Core)'
-          - task: PublishCodeCoverageResults@1
-            displayName: 'Publish Code Coverage'
-            condition: succeededOrFailed()
-            inputs:
-              codeCoverageTool: 'JaCoCo'
-              summaryFileLocation: 'output/testResults/CodeCov*.xml'
-              pathToSources: '$(Build.SourcesDirectory)/output/$(dscBuildVariable.RepositoryName)'
           - task: PublishBuildArtifacts@1
             displayName: 'Publish Test Artifact'
             inputs:
@@ -168,6 +161,13 @@ stages:
               downloadType: 'single'
               artifactName: 'testResults'
               downloadPath: '$(Build.SourcesDirectory)/output'
+          - task: PublishCodeCoverageResults@1
+            displayName: 'Publish Code Coverage'
+            condition: succeededOrFailed()
+            inputs:
+              codeCoverageTool: 'JaCoCo'
+              summaryFileLocation: 'output/testResults/JaCoCo_coverage.xml'
+              pathToSources: '$(Build.SourcesDirectory)/output/$(dscBuildVariable.RepositoryName)'
           - script: |
               bash <(curl -s https://codecov.io/bash) -f "./output/testResults/JaCoCo_coverage.xml"
             displayName: 'Upload to Codecov.io'

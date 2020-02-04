@@ -178,6 +178,7 @@ stages:
           - script: |
               bash <(curl -s https://codecov.io/bash) -f "./output/testResults/JaCoCo_coverage.xml"
             displayName: 'Upload to Codecov.io'
+            condition: succeededOrFailed()
 
   - stage: Deploy
     dependsOn: Test

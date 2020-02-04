@@ -162,7 +162,7 @@ stages:
               artifactName: 'output'
               downloadPath: '$(Build.SourcesDirectory)'
           - task: DownloadBuildArtifacts@0
-            displayName: 'Download Build Artifact'
+            displayName: 'Download Test Artifact'
             inputs:
               buildType: 'current'
               downloadType: 'single'

@@ -42,7 +42,7 @@ stages:
           - task: PublishBuildArtifacts@1
             displayName: 'Publish Build Artifact'
             inputs:
-              pathToPublish: $(buildFolderName)/'
+              pathToPublish: '$(buildFolderName)/'
               artifactName: $(buildArtifactName)
               publishLocation: 'Container'
 

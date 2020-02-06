@@ -18,6 +18,9 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
   - Added a CONTRIBUTING.md.
   - Replaced module CommonResourceHelper with the PowerShell Gallery module
     DscResource.Common v0.2.0.
+  - Adding back publishing code coverage to Codecov.io.
+    - Add status badge for Codecov.io in README.md.
+    - Fix Azure Pipelines code coverage ([issue #236](https://github.com/dsccommunity/xFailOverCluster/issues/236)).
 
 ### Changed
 
@@ -63,8 +66,6 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
     DscResource.Test cannot be imported.
   - Update the deploy stage so that it is skipped when merging
     branch master in forks.
-  - Adding back publishing code coverage to Codecov.io.
-    - Add stats badge for Codecov.io in README.md.
 - xClusterPreferredOwner
   - Fixed broken links to examples in README.md.
 - xClusterQuorum

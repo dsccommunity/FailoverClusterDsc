@@ -114,7 +114,7 @@ stages:
       - job: Test_Integration
         displayName: 'Integration'
         pool:
-          vmImage: 'win1803'
+          vmImage: 'windows-2019'
         timeoutInMinutes: 0
         steps:
           - task: DownloadBuildArtifacts@0

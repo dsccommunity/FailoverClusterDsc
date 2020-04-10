@@ -40,6 +40,8 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
     which always failed due to missing credentials).
   - Only run CI pipeline on branch `master` when there are changes to files
     inside the `source` folder.
+  - Changed integration tests to run on a a build image with Windows Server
+    2019 since the one we previously used was removed from Azure Pipelines.
 
 ### Fixed
 

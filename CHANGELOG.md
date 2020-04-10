@@ -38,6 +38,8 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
   - The deploy step is now only run when merged to branch `master` in the
     DSC Community upstream repository (not to branch `master` in a fork
     which always failed due to missing credentials).
+  - Only run CI pipeline on branch `master` when there are changes to files
+    inside the `source` folder.
 
 ### Fixed
 

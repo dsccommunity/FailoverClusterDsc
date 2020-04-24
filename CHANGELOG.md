@@ -38,8 +38,8 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
   - The deploy step is now only run when merged to branch `master` in the
     DSC Community upstream repository (not to branch `master` in a fork
     which always failed due to missing credentials).
-  - Only run CI pipeline on branch `master` when there are changes to files
-    inside the `source` folder.
+  - Only run the CI pipeline on branch `master` when there are changes to
+    files inside the `source` folder.
   - Changed integration tests to run on a a build image with Windows Server
     2019 since the one we previously used was removed from Azure Pipelines ([issue #233](https://github.com/dsccommunity/xFailOverCluster/issues/233)).
 

@@ -42,6 +42,7 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
     files inside the `source` folder.
   - Changed integration tests to run on a a build image with Windows Server
     2019 since the one we previously used was removed from Azure Pipelines ([issue #233](https://github.com/dsccommunity/xFailOverCluster/issues/233)).
+  - Updated CI pipeline to get version from the property `NuGetVersionV2`.
 
 ### Fixed
 

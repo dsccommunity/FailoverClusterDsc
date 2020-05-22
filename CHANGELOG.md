@@ -79,6 +79,7 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
   - Added `en-US` localization folder to pass PSSA rule.
 - xCluster
   - Added script file information to the example `1-CreateFirstNodeOfAFailoverCluster.ps1`.
+  - Fixed Describe-block descriptions ([issue #234](https://github.com/dsccommunity/xFailOverCluster/issues/234)).
 
 ### Removed
 

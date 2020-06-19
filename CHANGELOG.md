@@ -43,6 +43,9 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
   - Changed integration tests to run on a a build image with Windows Server
     2019 since the one we previously used was removed from Azure Pipelines ([issue #233](https://github.com/dsccommunity/xFailOverCluster/issues/233)).
   - Updated CI pipeline to get version from the property `NuGetVersionV2`.
+  - Pin Pester to 4.10.1 in `RequiredModule.psd1` since the tests does
+    not support Pester 5.
+  - Updated repository to use the latest version of the module ModuleBuilder.
 
 ### Fixed
 

@@ -50,7 +50,6 @@ foreach ($moduleVersion in @('2012', '2016'))
 
     try
     {
-
         InModuleScope $script:DSCResourceName {
             $mockAdministratorUserName = 'COMPANY\ClusterAdmin'
             $mockAdministratorPassword = ConvertTo-SecureString -String 'dummyPassW0rd' -AsPlainText -Force
@@ -570,7 +569,7 @@ foreach ($moduleVersion in @('2012', '2016'))
             [MockLibImpersonation]::ReturnValue = $false
             $mockLibImpersonationObject = [MockLibImpersonation]::New()
 
-            Describe "xCluster_$moduleVersion\Set-ImpersonateAs' -Tag 'Helper" {
+            Describe 'xCluster_$moduleVersion\Set-ImpersonateAs' -Tag 'Helper' {
                 Context 'When impersonating credentials fails' {
                     It 'Should throw the correct error message' {
                         Mock -CommandName Add-Type -MockWith {
@@ -583,7 +582,7 @@ foreach ($moduleVersion in @('2012', '2016'))
                 }
             }
 
-            Describe "xCluster_$moduleVersion\Close-UserToken' -Tag 'Helper" {
+            Describe 'xCluster_$moduleVersion\Close-UserToken' -Tag 'Helper' {
                 Context 'When closing user token fails' {
                     It 'Should throw the correct error message' {
                         Mock -CommandName Add-Type -MockWith {

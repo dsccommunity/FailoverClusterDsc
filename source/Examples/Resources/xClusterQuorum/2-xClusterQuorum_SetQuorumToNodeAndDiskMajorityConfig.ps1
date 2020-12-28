@@ -12,7 +12,7 @@
 
 .TAGS DSCConfiguration
 
-.LICENSEURI https://github.com/dsccommunity/xFailOverCluster/blob/master/LICENSE
+.LICENSEURI https://github.com/dsccommunity/xFailOverCluster/blob/main/LICENSE
 
 .PROJECTURI https://github.com/dsccommunity/xFailOverCluster
 

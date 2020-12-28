@@ -25,6 +25,7 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 ### Changed
 
 - xFailOverCluster
+  - Renamed `master` branch to `main` ([issue #246](https://github.com/dsccommunity/xFailOverCluster/issues/246)).
   - Updated the CI pipeline files to the latest template.
   - Changed unit tests to handle missing DscResource.Test better.
   - Changed the Code of Conduct to the one adopted by DSC Community.

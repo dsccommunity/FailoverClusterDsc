@@ -51,6 +51,9 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 ### Fixed
 
 - xFailOverCluster
+  - The component `gitversion` that is used in the pipeline was wrongly configured
+    when the repository moved to the new default branch `main`. It no longer throws
+    an error when using newer versions of GitVersion.
   - Added CODE_OF_CONDUCT.md file, and a 'Code of Conduct' section in the
     README.md.
   - Improved CI pipeline

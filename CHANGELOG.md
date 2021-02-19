@@ -87,6 +87,7 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 - xCluster
   - Added script file information to the example `1-CreateFirstNodeOfAFailoverCluster.ps1`.
   - Fixed Describe-block descriptions ([issue #234](https://github.com/dsccommunity/xFailOverCluster/issues/234)).
+  - Made DomainAdministratorCredential optional ([issue #164](https://github.com/dsccommunity/xFailOverCluster/issues/164))
 
 ### Removed
 

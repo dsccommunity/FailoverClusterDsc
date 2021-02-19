@@ -66,8 +66,15 @@ the target node ($env:COMPUTERNAME) to the cluster.
   for cluster communication. To remove networks assigned an IP address through DHCP
   use the resource xClusterNetwork to change the role of the network. This parameter
   is only used during the creation of the cluster and is not monitored after.
-* **`[String]` DomainAdministratorCredential** _(Required)_: Credential used to
-  create the failover cluster in Active Directory.
+* **`[PSCredential]` DomainAdministratorCredential** _(Write)_: Credential used to
+  create the failover cluster in Active Directory. If this is not specified then 
+  the cluster computer object must have been prestaged as per the
+  [documentation](https://docs.microsoft.com/en-us/windows-server/failover-clustering/prestage-cluster-adds).
+    * If `PsDscRunAsCredential` is used, then that account must have been granted 
+    Full Control over the Cluster Name Object in Active Directory.
+    * Otherwise the Computer Account must have been granted Full Control 
+    over the Cluster Name Object in Active Directory.
+
 
 #### Examples for xCluster
 

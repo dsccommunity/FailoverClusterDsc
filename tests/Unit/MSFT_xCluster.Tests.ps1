@@ -228,6 +228,25 @@ foreach ($moduleVersion in @('2012', '2016'))
                         }
                     }
 
+                    Context 'When no DomainAdministratorCredential is provided' {
+
+                        $withNoDomainAdministratorCredential = $mockDefaultParameters.Clone()
+                        $withNoDomainAdministratorCredential.Remove('DomainAdministratorCredential')
+
+                        It 'Should not call Set-ImpersonateAs' {
+                            Mock -CommandName Set-ImpersonateAs -MockWith {Return 0}
+
+                            $getTargetResourceResult = Get-TargetResource @withNoDomainAdministratorCredential
+
+                            Assert-MockCalled -CommandName Set-ImpersonateAs -Exactly -Times 0 -Scope It
+                        }
+                        It 'Should return empty DomainAdministratorCredential in the hash' {
+
+                            $getTargetResourceResult = Get-TargetResource @withNoDomainAdministratorCredential
+                            $getTargetResourceResult.DomainAdministratorCredential | Should -BeNullOrEmpty
+                        }
+                    }
+
                     Assert-VerifiableMock
                 }
             }
@@ -344,6 +363,21 @@ foreach ($moduleVersion in @('2012', '2016'))
                                     Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
                                 }
                             }
+
+                            Context 'When no DomainAdministratorCredential is provided' {
+                                It 'Should not call Set-ImpersonateAs' {
+                                    $withNoDomainAdministratorCredential = $mockDefaultParameters.Clone()
+                                    $withNoDomainAdministratorCredential.Remove('DomainAdministratorCredential')
+                                    Mock -CommandName Set-ImpersonateAs -MockWith {Return 0}
+
+                                    {Set-TargetResource @withNoDomainAdministratorCredential} | Should Not Throw
+
+                                    Assert-MockCalled -CommandName Set-ImpersonateAs -Exactly -Times 0 -Scope It
+                                    Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It
+                                    Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
+                                    Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
+                                }
+                            }
                         }
 
                         Context 'When Get-Cluster throws an error' {
@@ -379,15 +413,31 @@ foreach ($moduleVersion in @('2012', '2016'))
                     }
 
                     Context 'When the cluster exist but the node is not part of the cluster' {
-                        It 'Should call Add-ClusterNode cmdlet' {
+                        BeforeAll {
                             Mock -CommandName Get-ClusterNode
                             Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter
-
+                        }
+                        It 'Should call Add-ClusterNode cmdlet' {
                             { Set-TargetResource @mockDefaultParameters } | Should -Not -Throw
 
                             Assert-MockCalled -CommandName New-Cluster -Exactly -Times 0 -Scope It
                             Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
                             Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 1 -Scope It
+                        }
+
+                        Context 'When no DomainAdministratorCredential is provided' {
+                            It 'Should not call Set-ImpersonateAs' {
+                                $withNoDomainAdministratorCredential = $mockDefaultParameters.Clone()
+                                $withNoDomainAdministratorCredential.Remove('DomainAdministratorCredential')
+                                Mock -CommandName Set-ImpersonateAs -MockWith {Return 0}
+
+                                {Set-TargetResource @withNoDomainAdministratorCredential} | Should Not Throw
+
+                                Assert-MockCalled -CommandName Set-ImpersonateAs -Exactly -Times 0 -Scope It
+                                Assert-MockCalled -CommandName New-Cluster -Exactly -Times 0 -Scope It
+                                Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
+                                Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 1 -Scope It
+                            }
                         }
                     }
 
@@ -447,6 +497,18 @@ foreach ($moduleVersion in @('2012', '2016'))
 
                         Assert-VerifiableMock
                     }
+
+                    Context 'When no DomainAdministratorCredential is provided' {
+                        It 'Should not call Set-ImpersonateAs' {
+                            $withNoDomainAdministratorCredential = $mockDefaultParameters.Clone()
+                            $withNoDomainAdministratorCredential.Remove('DomainAdministratorCredential')
+                            Mock -CommandName Set-ImpersonateAs -MockWith {Return 0}
+
+                            {Set-TargetResource @withNoDomainAdministratorCredential} | Should Not Throw
+
+                            Assert-MockCalled -CommandName Set-ImpersonateAs -Exactly -Times 0 -Scope It
+                        }
+                    }
                 }
             }
 
@@ -468,6 +530,22 @@ foreach ($moduleVersion in @('2012', '2016'))
 
                         $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message $script:localizedData.TargetNodeDomainMissing
                         { Test-TargetResource @mockDefaultParameters } | Should -Throw $mockCorrectErrorRecord
+                    }
+                }
+
+                Context 'When no DomainAdministratorCredential is provided' {
+                    $mockDynamicDomainName = $mockDomainName
+                    $mockDynamicServerName = $mockServerName
+
+                    It 'Should not call Set-ImpersonateAs' {
+                        Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter -Verifiable
+
+                        $withNoDomainAdministratorCredential = $mockDefaultParameters.Clone()
+                        $withNoDomainAdministratorCredential.Remove('DomainAdministratorCredential')
+                        Mock -CommandName Set-ImpersonateAs -MockWith {Return 0}
+
+                        $testTargetResourceResult = Test-TargetResource @withNoDomainAdministratorCredential
+                        Assert-MockCalled -CommandName Set-ImpersonateAs -Exactly -Times 0 -Scope It
                     }
                 }
 

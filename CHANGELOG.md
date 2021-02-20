@@ -7,6 +7,8 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 
 ## [Unreleased]
 
+## [1.15.0] - 2021-02-19
+
 ### Added
 
 - xFailOverCluster

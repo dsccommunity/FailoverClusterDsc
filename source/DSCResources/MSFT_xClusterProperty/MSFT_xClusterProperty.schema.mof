@@ -4,6 +4,7 @@ class MSFT_xClusterProperty : OMI_BaseResource
 {
     [Key, Description("Name of the cluster.")] String Name;
     [Write, Description("Specifies how many seconds after a node is evicted that the failover cluster service will wait before adding a new node.")] UInt32 AddEvictDelay;
+    [Write, Description("Controls the size of the Cluster Shared Volume Memory Cache in MB.")] Uint32 BlockCacheSize;
     [Write, Description("Controls the level of cluster logging.")] UInt32 ClusterLogLevel;
     [Write, Description("Controls the maximum size of the cluster log files on each of the nodes.")] UInt32 ClusterLogSize;
     [Write, Description("Controls the time interval, in milliseconds, that the cluster network driver waits between sending Cluster Service heartbeats across sites.")] UInt32 CrossSiteDelay;

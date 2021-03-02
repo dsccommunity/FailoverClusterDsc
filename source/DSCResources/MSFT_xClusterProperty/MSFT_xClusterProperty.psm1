@@ -28,6 +28,7 @@ function Get-TargetResource
     $returnValue = @{
         Name                     = $Name
         AddEvictDelay            = $cluster.AddEvictDelay
+        BlockCacheSize           = $cluster.BlockCacheSize
         ClusterLogLevel          = $cluster.ClusterLogLevel
         ClusterLogSize           = $cluster.ClusterLogSize
         CrossSiteDelay           = $cluster.CrossSiteDelay
@@ -56,6 +57,9 @@ function Get-TargetResource
 
     .PARAMETER AddEvictDelay
         Specifies how many seconds after a node is evicted that the failover cluster service will wait before adding a new node.
+
+    .PARAMETER BlockCacheSize
+        Controls the size of the Cluster Shared Volume Memory Cache in MB.
 
     .PARAMETER ClusterLogLevel
         Controls the level of cluster logging.
@@ -126,6 +130,10 @@ function Set-TargetResource
         [Parameter()]
         [System.UInt32]
         $AddEvictDelay,
+
+        [Parameter()]
+        [System.UInt32]
+        $BlockCacheSize,
 
         [Parameter()]
         [System.UInt32]
@@ -220,6 +228,9 @@ function Set-TargetResource
     .PARAMETER AddEvictDelay
         Specifies how many seconds after a node is evicted that the failover cluster service will wait before adding a new node.
 
+    .PARAMETER BlockCacheSize
+        Controls the size of the Cluster Shared Volume Memory Cache in MB.
+
     .PARAMETER ClusterLogLevel
         Controls the level of cluster logging.
 
@@ -290,6 +301,10 @@ function Test-TargetResource
         [Parameter()]
         [System.UInt32]
         $AddEvictDelay,
+
+        [Parameter()]
+        [System.UInt32]
+        $BlockCacheSize,
 
         [Parameter()]
         [System.UInt32]

@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md).
 
 ## [Unreleased]
+- xFailoverCluster
+  - Added the BlockCacheSize parameter to xClusterProperty. Controls Cluster Shared Volume memory caching.
 
 ## [1.15.0] - 2021-02-19
 

@@ -7,6 +7,8 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 
 ## [Unreleased]
 
+## [1.16.0] - 2021-03-17
+
 ### Added
 
 - xClusterProperty

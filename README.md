@@ -188,6 +188,8 @@ Configures cluster properties on a failover cluster.
 * **`[UInt32]` AddEvictDelay** _(Write)_: Specifies how many seconds after a
   node is evicted that the failover cluster service will wait before adding a
   new node.
+* **`[UInt32]` BlockCacheSize** _(Write)_: Controls the size of the Cluster
+  Shared Volume Memory Cache in MB.
 * **`[UInt32]` ClusterLogLevel** _(Write)_: Controls the level of cluster
   logging.
 * **`[UInt32]` ClusterLogSize** _(Write)_: Controls the maximum size of the

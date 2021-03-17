@@ -86,6 +86,7 @@ try
                 Mock -CommandName Get-Cluster -ParameterFilter {$Name -eq 'Cluster1'} -MockWith {
                     [PSCustomObject] @{
                         AddEvictDelay = 60
+                        BlockCacheSize = 1024
                         CrossSubnetDelay = 1000
                         CrossSubnetThreshold = 5
                         Description = ''
@@ -134,6 +135,16 @@ try
                 It 'Checks multiple string cluster properties and returns true if correct' {
                     Test-TargetResource -Name Cluster1 -Description '' -PreferredSite 'Default-First-Site-Name' `
                     | Should -Be $true
+                    Assert-MockCalled -CommandName Get-Cluster -Exactly -Times 1 -Scope It
+                }
+
+                It 'Checks single integer cluster property and returns true if correct' {
+                    Test-TargetResource -Name Cluster1 -BlockCacheSize 1024 | Should -Be $true
+                    Assert-MockCalled -CommandName Get-Cluster -Exactly -Times 1 -Scope It
+                }
+
+                It 'Checks single integer cluster property and returns false if incorrect' {
+                    Test-TargetResource -Name Cluster1 -BlockCacheSize 2048 | Should -Be $false
                     Assert-MockCalled -CommandName Get-Cluster -Exactly -Times 1 -Scope It
                 }
 

@@ -48,7 +48,6 @@ BuildWorkflow:
     - Publish_release_to_GitHub
     - publish_module_to_gallery
 
-
 ####################################################
 #       PESTER  Configuration                      #
 ####################################################
@@ -82,6 +81,8 @@ Resolve-Dependency:
 ModuleBuildTasks:
   Sampler:
     - '*.build.Sampler.ib.tasks'
+  Sampler.GitHubTasks:
+    - '*.ib.tasks'
 
 TaskHeader: |
   param($Path)

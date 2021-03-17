@@ -10,7 +10,13 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 ### Added
 
 - xClusterProperty
-  - Added the BlockCacheSize parameter which controls Cluster Shared Volume memory caching in MB ([issue #252](https://github.com/dsccommunity/xFailOverCluster/issues/252)).
+  - Added the BlockCacheSize parameter which controls Cluster Shared Volume 
+    memory caching in MB ([issue #252](https://github.com/dsccommunity/xFailOverCluster/issues/252)).
+
+### Changed
+
+- xFailOverCluster
+  - Update pipeline to use new deploy tasks.
 
 ## [1.15.0] - 2021-02-19
 

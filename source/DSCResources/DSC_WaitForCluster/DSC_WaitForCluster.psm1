@@ -40,7 +40,7 @@ function Get-TargetResource
     Write-Verbose -Message $script:localizedData.ReturnParameterValues
 
     @{
-        Name             = $Name
+        Name             = (Convert-DistinguishedNameToSimpleName $Name)
         RetryIntervalSec = $RetryIntervalSec
         RetryCount       = $RetryCount
     }
@@ -92,7 +92,7 @@ function Set-TargetResource
                 break
             }
 
-            $cluster = Get-Cluster -Name $Name -Domain $computerObject.Domain
+            $cluster = Get-Cluster -Name (Convert-DistinguishedNameToSimpleName $Name) -Domain $computerObject.Domain
 
             if ($null -ne $cluster)
             {
@@ -162,7 +162,7 @@ function Test-TargetResource
         }
         else
         {
-            $cluster = Get-Cluster -Name $Name -Domain $computerObject.Domain
+            $cluster = Get-Cluster -Name (Convert-DistinguishedNameToSimpleName $Name) -Domain $computerObject.Domain
             if ($null -eq $cluster)
             {
                 Write-Verbose -Message ($script:localizedData.ClusterAbsentWithDomain -f $Name, $computerObject.Domain)
@@ -182,3 +182,30 @@ function Test-TargetResource
     $testTargetResourceReturnValue
 }
 
+<#
+    .SYNOPSIS
+        This method is used to converted Distinguished Name to a Simple Name.
+
+    .PARAMETER CurrentValues
+        Distinguished Name to be converted to a Simple Name
+#>
+
+function Convert-DistinguishedNameToSimpleName {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', 'returnValue')]
+    [CmdletBinding()]
+    [OutputType([string])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [string]
+        $DistinguishedName
+    )
+
+    $returnValue = $DistinguishedName
+
+    if ($DistinguishedName -match '^(\s*CN\s*=\w*)((\s*,\s*OU\s*=\w*)*)((\s*,\s*DC\s*=\w*)*)$') {
+        $returnValue = ((($DistinguishedName -split ',')[0]) -split '=')[1]
+    }
+
+    return $returnValue
+}

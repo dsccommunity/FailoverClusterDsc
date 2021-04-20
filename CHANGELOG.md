@@ -11,13 +11,16 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 
 - New Resource
   - ClusterIPAddress
-    - Adds an IP address to the cluster. 
+    - Adds an IP address to the cluster.
 
 ### Changed
 
 - Cluster
   - New parameter KeepDownedNodesInCluster controls whether or not to evict
     nodes in a down state from the cluster.
+  - Now you can use distinguished naming of cluster to place it in an
+    organizational unit of your choice, e.g parameter `Name` can be se to
+    `'CN=CLUSTER,OU=BUSINESS,DC=RANDOM,DC=LOCAL'`.
 - FailoverClusterDsc
   - Update pipeline files to the latest from the Sampler project.
   - Moved all documentation from the README.md to the GitHub repository Wiki.

@@ -1,6 +1,8 @@
 $script:resourceHelperModulePath = Join-Path -Path $PSScriptRoot -ChildPath '..\..\Modules\DscResource.Common'
+$script:failoverClusterHelperModulePath = Join-Path -Path $PSScriptRoot -ChildPath '..\..\Modules\FailoverCluster.Common'
 
 Import-Module -Name $script:resourceHelperModulePath
+Import-Module -Name $script:failoverClusterHelperModulePath
 
 $script:localizedData = Get-LocalizedData -DefaultUICulture 'en-US'
 

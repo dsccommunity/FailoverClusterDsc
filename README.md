@@ -121,7 +121,7 @@ This resource is only able to change properties on cluster networks.  To add or 
 
 * **`[String]` Address** _(Key)_: The address for the cluster network in the format
   '10.0.0.0'.
-* **`[String]` AddressMask** _(Key)_: The address mask for the cluster network in
+* **`[String]` AddressMask** _(Write)_: The address mask for the cluster network in
   the format '255.255.255.0'.
 * **`[String]` Name** _(Write)_: The name of the cluster network. If the cluster
   network name is not in desired state it will be renamed to match this name.

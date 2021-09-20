@@ -7,6 +7,11 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 
 ## [Unreleased]
 
+### Fixed
+
+- xClusterNetwork
+  - Removed key property enforcement on AddressMask ([issue #260](https://github.com/dsccommunity/xFailOverCluster/issues/260)).
+
 ## [1.16.0] - 2021-03-17
 
 ### Added

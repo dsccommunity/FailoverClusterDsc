@@ -12,7 +12,8 @@ $script:localizedData = Get-LocalizedData -DefaultUICulture 'en-US'
         Distinguished Name to be converted to a Simple Name
 #>
 
-function Convert-DistinguishedNameToSimpleName {
+function Convert-DistinguishedNameToSimpleName
+{
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', 'returnValue')]
     [CmdletBinding()]
     [OutputType([string])]
@@ -25,7 +26,8 @@ function Convert-DistinguishedNameToSimpleName {
 
     $returnValue = $DistinguishedName
 
-    if ($DistinguishedName -match '^(\s*CN\s*=\w*)((\s*,\s*OU\s*=\w*)*)((\s*,\s*DC\s*=\w*)*)$') {
+    if ($DistinguishedName -match '^(\s*CN\s*=\w*)((\s*,\s*OU\s*=\w*)*)((\s*,\s*DC\s*=\w*)*)$')
+    {
         $returnValue = ((($DistinguishedName -split ',')[0]) -split '=')[1]
     }
 

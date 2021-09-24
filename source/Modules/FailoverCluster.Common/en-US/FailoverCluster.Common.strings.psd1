@@ -1,0 +1,1 @@
+# Localized resources for xCluster

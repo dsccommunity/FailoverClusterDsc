@@ -1,5 +1,5 @@
 $script:DSCModuleName = 'FailoverClusterDsc'
-$script:DSCResourceName = 'MSFT_WaitForCluster'
+$script:DSCResourceName = 'DSC_WaitForCluster'
 
 function Invoke-TestSetup
 {

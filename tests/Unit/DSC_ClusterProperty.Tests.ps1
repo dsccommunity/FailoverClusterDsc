@@ -1,5 +1,5 @@
 $script:DSCModuleName = 'FailoverClusterDsc'
-$script:DSCResourceName = 'MSFT_ClusterProperty'
+$script:DSCResourceName = 'DSC_ClusterProperty'
 
 try
 {
@@ -19,7 +19,7 @@ $script:testEnvironment = Initialize-TestEnvironment `
 try
 {
     InModuleScope $script:DSCResourceName {
-        $script:DSCResourceName = 'MSFT_ClusterProperty'
+        $script:DSCResourceName = 'DSC_ClusterProperty'
 
         Describe $script:DSCResourceName {
             Context "$($script:DSCResourceName)\Get-TargetResource" {

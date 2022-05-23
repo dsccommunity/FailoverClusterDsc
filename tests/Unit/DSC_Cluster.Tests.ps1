@@ -6,7 +6,7 @@
 param ()
 
 $script:DSCModuleName = 'FailoverClusterDsc'
-$script:DSCResourceName = 'MSFT_Cluster'
+$script:DSCResourceName = 'DSC_Cluster'
 
 function Invoke-TestSetup
 {

@@ -1,5 +1,5 @@
-$script:DSCModuleName = 'xFailOverCluster'
-$script:DSCResourceName = 'MSFT_xClusterDisk'
+$script:DSCModuleName = 'FailoverClusterDsc'
+$script:DSCResourceName = 'MSFT_ClusterDisk'
 
 function Invoke-TestSetup
 {
@@ -148,7 +148,7 @@ foreach ($moduleVersion in @('2012', '2016'))
                     }
                 )
             }
-            Describe "xClusterDisk_$moduleVersion\Get-TargetResource" {
+            Describe "ClusterDisk_$moduleVersion\Get-TargetResource" {
                 BeforeAll {
                     Mock -CommandName 'Get-CimInstance' -MockWith $mockCimInstance -ParameterFilter $mockCimInstance_ParameterFilter
                     Mock -CommandName 'Get-ClusterResource' -MockWith $mockClusterResource
@@ -262,7 +262,7 @@ foreach ($moduleVersion in @('2012', '2016'))
                 }
             }
 
-            Describe "xClusterDisk_$moduleVersion\Test-TargetResource" {
+            Describe "ClusterDisk_$moduleVersion\Test-TargetResource" {
                 BeforeAll {
                     Mock -CommandName 'Get-CimInstance' -MockWith $mockCimInstance -ParameterFilter $mockCimInstance_ParameterFilter
                     Mock -CommandName 'Get-ClusterResource' -MockWith $mockClusterResource
@@ -309,7 +309,7 @@ foreach ($moduleVersion in @('2012', '2016'))
                 }
             }
 
-            Describe "xClusterDisk_$moduleVersion\Set-TargetResource" {
+            Describe "ClusterDisk_$moduleVersion\Set-TargetResource" {
                 BeforeAll {
                     Mock -CommandName 'Get-CimInstance' -MockWith {
                         [PSCustomObject] @{

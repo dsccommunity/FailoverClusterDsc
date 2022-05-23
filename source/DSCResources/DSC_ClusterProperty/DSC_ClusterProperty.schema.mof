@@ -1,6 +1,6 @@
 
-[ClassVersion("1.0.0.0"), FriendlyName("xClusterProperty")]
-class MSFT_xClusterProperty : OMI_BaseResource
+[ClassVersion("1.0.0.0"), FriendlyName("ClusterProperty")]
+class DSC_ClusterProperty : OMI_BaseResource
 {
     [Key, Description("Name of the cluster.")] String Name;
     [Write, Description("Specifies how many seconds after a node is evicted that the failover cluster service will wait before adding a new node.")] UInt32 AddEvictDelay;

@@ -1,5 +1,5 @@
-[ClassVersion("1.0.0.0"), FriendlyName("xClusterQuorum")]
-class MSFT_xClusterQuorum : OMI_BaseResource
+[ClassVersion("1.0.0.0"), FriendlyName("ClusterQuorum")]
+class DSC_ClusterQuorum : OMI_BaseResource
 {
     [Key, Description("Specifies the resource is a single instance, the value must be 'Yes'."), ValueMap{"Yes"}, Values{"Yes"}] string IsSingleInstance;
     [Write, Description("Quorum type to use. Can be set to either NodeMajority, NodeAndDiskMajority, NodeAndFileShareMajority, NodeAndCloudMajority or DiskOnly."), ValueMap{"NodeMajority", "NodeAndDiskMajority", "NodeAndFileShareMajority", "NodeAndCloudMajority", "DiskOnly"}, Values{"NodeMajority", "NodeAndDiskMajority", "NodeAndFileShareMajority", "NodeAndCloudMajority", "DiskOnly"}] string Type;

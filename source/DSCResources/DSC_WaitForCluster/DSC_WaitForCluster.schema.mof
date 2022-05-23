@@ -1,7 +1,7 @@
 #pragma namespace("\\\\.\\root\\microsoft\\windows\\DesiredStateConfiguration")
 
-[ClassVersion("1.0.0"), FriendlyName("xWaitForCluster")]
-class MSFT_xWaitForCluster : OMI_BaseResource
+[ClassVersion("1.0.0"), FriendlyName("WaitForCluster")]
+class DSC_WaitForCluster : OMI_BaseResource
 {
     [Key, Description("Name of the cluster to wait for.")] string Name;
     [Write, Description("Interval to check for cluster existence. Default values is 10 seconds.")]  Uint64 RetryIntervalSec;

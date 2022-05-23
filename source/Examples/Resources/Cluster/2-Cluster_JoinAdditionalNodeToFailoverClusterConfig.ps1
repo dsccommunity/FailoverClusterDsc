@@ -12,9 +12,9 @@
 
 .TAGS DSCConfiguration
 
-.LICENSEURI https://github.com/dsccommunity/xFailOverCluster/blob/main/LICENSE
+.LICENSEURI https://github.com/dsccommunity/FailoverClusterDsc/blob/main/LICENSE
 
-.PROJECTURI https://github.com/dsccommunity/xFailOverCluster
+.PROJECTURI https://github.com/dsccommunity/FailoverClusterDsc
 
 .ICONURI https://dsccommunity.org/images/DSC_Logo_300p.png
 
@@ -31,14 +31,14 @@ First version.
 
 #>
 
-#Requires -Module xFailOverCluster
+#Requires -Module FailoverClusterDsc
 
 <#
     .DESCRIPTION
         This example shows how to add an additional node to the failover cluster.
 #>
 
-Configuration xCluster_JoinAdditionalNodeToFailoverClusterConfig
+Configuration Cluster_JoinAdditionalNodeToFailoverClusterConfig
 {
     param
     (
@@ -47,7 +47,7 @@ Configuration xCluster_JoinAdditionalNodeToFailoverClusterConfig
         $ActiveDirectoryAdministratorCredential
     )
 
-    Import-DscResource -ModuleName xFailOverCluster
+    Import-DscResource -ModuleName FailoverClusterDsc
 
     Node localhost
     {
@@ -71,7 +71,7 @@ Configuration xCluster_JoinAdditionalNodeToFailoverClusterConfig
             DependsOn = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringPowerShellFeature'
         }
 
-        xWaitForCluster WaitForCluster
+        WaitForCluster WaitForCluster
         {
             Name             = 'Cluster01'
             RetryIntervalSec = 10
@@ -79,12 +79,12 @@ Configuration xCluster_JoinAdditionalNodeToFailoverClusterConfig
             DependsOn        = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringCmdInterfaceFeature'
         }
 
-        xCluster JoinSecondNodeToCluster
+        Cluster JoinSecondNodeToCluster
         {
             Name                          = 'Cluster01'
             StaticIPAddress               = '192.168.100.20/24'
             DomainAdministratorCredential = $ActiveDirectoryAdministratorCredential
-            DependsOn                     = '[xWaitForCluster]WaitForCluster'
+            DependsOn                     = '[WaitForCluster]WaitForCluster'
         }
     }
 }

@@ -5,8 +5,8 @@
 [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingPlainTextForPassword', '')]
 param ()
 
-$script:DSCModuleName = 'xFailOverCluster'
-$script:DSCResourceName = 'MSFT_xCluster'
+$script:DSCModuleName = 'FailoverClusterDsc'
+$script:DSCResourceName = 'MSFT_Cluster'
 
 function Invoke-TestSetup
 {
@@ -157,7 +157,7 @@ foreach ($moduleVersion in @('2012', '2016'))
             [MockLibImpersonation]::ReturnValue = $true
             $mockLibImpersonationObject = [MockLibImpersonation]::New()
 
-            Describe "xCluster_$moduleVersion\Get-TargetResource" {
+            Describe "Cluster_$moduleVersion\Get-TargetResource" {
                 BeforeAll {
                     $mockGetTargetResourceParameters = $mockDefaultParameters.Clone()
                     $mockGetTargetResourceParameters.Remove('StaticIPAddress')
@@ -251,7 +251,7 @@ foreach ($moduleVersion in @('2012', '2016'))
                 }
             }
 
-            Describe "xCluster_$moduleVersion\Set-TargetResource" {
+            Describe "Cluster_$moduleVersion\Set-TargetResource" {
                 BeforeAll {
                     Mock -CommandName Add-Type -MockWith {
                         return $mockLibImpersonationObject
@@ -512,7 +512,7 @@ foreach ($moduleVersion in @('2012', '2016'))
                 }
             }
 
-            Describe "xCluster_$moduleVersion\Test-TargetResource" {
+            Describe "Cluster_$moduleVersion\Test-TargetResource" {
                 BeforeAll {
                     Mock -CommandName Add-Type -MockWith {
                         return $mockLibImpersonationObject
@@ -647,7 +647,7 @@ foreach ($moduleVersion in @('2012', '2016'))
             [MockLibImpersonation]::ReturnValue = $false
             $mockLibImpersonationObject = [MockLibImpersonation]::New()
 
-            Describe 'xCluster_$moduleVersion\Set-ImpersonateAs' -Tag 'Helper' {
+            Describe 'Cluster_$moduleVersion\Set-ImpersonateAs' -Tag 'Helper' {
                 Context 'When impersonating credentials fails' {
                     It 'Should throw the correct error message' {
                         Mock -CommandName Add-Type -MockWith {
@@ -660,7 +660,7 @@ foreach ($moduleVersion in @('2012', '2016'))
                 }
             }
 
-            Describe 'xCluster_$moduleVersion\Close-UserToken' -Tag 'Helper' {
+            Describe 'Cluster_$moduleVersion\Close-UserToken' -Tag 'Helper' {
                 Context 'When closing user token fails' {
                     It 'Should throw the correct error message' {
                         Mock -CommandName Add-Type -MockWith {

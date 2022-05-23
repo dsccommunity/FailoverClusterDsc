@@ -1,5 +1,5 @@
-$script:DSCModuleName = 'xFailOverCluster'
-$script:DSCResourceName = 'MSFT_xWaitForCluster'
+$script:DSCModuleName = 'FailoverClusterDsc'
+$script:DSCResourceName = 'MSFT_WaitForCluster'
 
 function Invoke-TestSetup
 {
@@ -74,7 +74,7 @@ foreach ($moduleVersion in @('2012', '2016'))
                 RetryCount       = $mockRetryCount
             }
 
-            Describe "xCluster_$moduleVersion\Get-TargetResource" -Tag Get {
+            Describe "Cluster_$moduleVersion\Get-TargetResource" -Tag Get {
                 Context 'When the system is either in the desired state or not in the desired state' {
                     It 'Returns a [System.Collection.Hashtable] type' {
                         $getTargetResourceResult = Get-TargetResource @mockDefaultParameters
@@ -92,7 +92,7 @@ foreach ($moduleVersion in @('2012', '2016'))
                 }
             }
 
-            Describe "xCluster_$moduleVersion\Set-TargetResource" -Tag Set {
+            Describe "Cluster_$moduleVersion\Set-TargetResource" -Tag Set {
                 Context 'When computers domain name cannot be evaluated' {
                     $mockDynamicDomainName = $null
 
@@ -148,7 +148,7 @@ foreach ($moduleVersion in @('2012', '2016'))
                 }
             }
 
-            Describe "xCluster_$moduleVersion\Test-TargetResource" -Tag Test {
+            Describe "Cluster_$moduleVersion\Test-TargetResource" -Tag Test {
                 BeforeEach {
                     Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockCimInstance_ParameterFilter -Verifiable
                 }

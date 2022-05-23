@@ -1,5 +1,5 @@
-$script:DSCModuleName = 'xFailOverCluster'
-$script:DSCResourceName = 'MSFT_xClusterQuorum'
+$script:DSCModuleName = 'FailoverClusterDsc'
+$script:DSCResourceName = 'MSFT_ClusterQuorum'
 
 function Invoke-TestSetup
 {
@@ -168,7 +168,7 @@ foreach ($moduleVersion in @('2012', '2016'))
                 IsSingleInstance = 'Yes'
             }
 
-            Describe "xClusterQuorum_$moduleVersion\Get-TargetResource" {
+            Describe "ClusterQuorum_$moduleVersion\Get-TargetResource" {
                 BeforeEach {
                     Mock -CommandName 'Get-ClusterQuorum' -MockWith $mockGetClusterQuorum
                     Mock -CommandName 'Get-ClusterParameter' -MockWith $mockGetClusterParameter_SharePath -ParameterFilter $mockGetClusterParameter_SharePath_ParameterFilter
@@ -361,7 +361,7 @@ foreach ($moduleVersion in @('2012', '2016'))
                 }
             }
 
-            Describe "xClusterQuorum_$moduleVersion\Test-TargetResource" {
+            Describe "ClusterQuorum_$moduleVersion\Test-TargetResource" {
                 BeforeEach {
                     Mock -CommandName 'Get-ClusterQuorum' -MockWith $mockGetClusterQuorum
                     Mock -CommandName 'Get-ClusterParameter' -MockWith $mockGetClusterParameter_SharePath -ParameterFilter $mockGetClusterParameter_SharePath_ParameterFilter
@@ -571,7 +571,7 @@ foreach ($moduleVersion in @('2012', '2016'))
                 }
             }
 
-            Describe "xClusterQuorum_$moduleVersion\Set-TargetResource" {
+            Describe "ClusterQuorum_$moduleVersion\Set-TargetResource" {
                 BeforeEach {
                     Mock -CommandName 'Set-ClusterQuorum'
 

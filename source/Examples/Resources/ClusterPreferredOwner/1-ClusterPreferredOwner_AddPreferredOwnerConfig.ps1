@@ -12,9 +12,9 @@
 
 .TAGS DSCConfiguration
 
-.LICENSEURI https://github.com/dsccommunity/xFailOverCluster/blob/main/LICENSE
+.LICENSEURI https://github.com/dsccommunity/FailoverClusterDsc/blob/main/LICENSE
 
-.PROJECTURI https://github.com/dsccommunity/xFailOverCluster
+.PROJECTURI https://github.com/dsccommunity/FailoverClusterDsc
 
 .ICONURI https://dsccommunity.org/images/DSC_Logo_300p.png
 
@@ -31,7 +31,7 @@ First version.
 
 #>
 
-#Requires -Module xFailOverCluster
+#Requires -Module FailoverClusterDsc
 
 <#
     .DESCRIPTION
@@ -42,13 +42,13 @@ First version.
         This example assumes the failover cluster is already present.
 #>
 
-Configuration xClusterPreferredOwner_AddPreferredOwnerConfig
+Configuration ClusterPreferredOwner_AddPreferredOwnerConfig
 {
-    Import-DscResource -ModuleName xFailOverCluster
+    Import-DscResource -ModuleName FailoverClusterDsc
 
     Node localhost
     {
-        xClusterPreferredOwner 'AddOwnersForClusterGroup1'
+        ClusterPreferredOwner 'AddOwnersForClusterGroup1'
         {
             Ensure           = 'Present'
             ClusterName      = 'TESTCLU1'
@@ -57,7 +57,7 @@ Configuration xClusterPreferredOwner_AddPreferredOwnerConfig
             ClusterResources = @('Resource1', 'Resource2')
         }
 
-        xClusterPreferredOwner 'AddOwnersForClusterGroup2'
+        ClusterPreferredOwner 'AddOwnersForClusterGroup2'
         {
             Ensure           = 'Present'
             ClusterName      = 'TESTCLU1'

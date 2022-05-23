@@ -1,5 +1,5 @@
-[ClassVersion("1.0.0.0"), FriendlyName("xClusterPreferredOwner")]
-class MSFT_xClusterPreferredOwner : OMI_BaseResource
+[ClassVersion("1.0.0.0"), FriendlyName("ClusterPreferredOwner")]
+class DSC_ClusterPreferredOwner : OMI_BaseResource
 {
     [Key, Description("Name of the cluster group.")] String ClusterGroup;
     [Key, Description("Name of the cluster.")] String ClusterName;

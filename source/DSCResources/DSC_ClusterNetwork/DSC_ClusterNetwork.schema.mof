@@ -1,5 +1,5 @@
-[ClassVersion("1.0.0.0"), FriendlyName("xClusterNetwork")]
-class MSFT_xClusterNetwork : OMI_BaseResource
+[ClassVersion("1.0.0.0"), FriendlyName("ClusterNetwork")]
+class DSC_ClusterNetwork : OMI_BaseResource
 {
     [Key, Description("The address for the cluster network in the format '10.0.0.0'.")] String Address;
     [Key, Description("The address mask for the cluster network in the format '255.255.255.0'.")] String AddressMask;

@@ -12,9 +12,9 @@
 
 .TAGS DSCConfiguration
 
-.LICENSEURI https://github.com/dsccommunity/xFailOverCluster/blob/main/LICENSE
+.LICENSEURI https://github.com/dsccommunity/FailoverClusterDsc/blob/main/LICENSE
 
-.PROJECTURI https://github.com/dsccommunity/xFailOverCluster
+.PROJECTURI https://github.com/dsccommunity/FailoverClusterDsc
 
 .ICONURI https://dsccommunity.org/images/DSC_Logo_300p.png
 
@@ -31,7 +31,7 @@ First version.
 
 #>
 
-#Requires -Module xFailOverCluster
+#Requires -Module FailoverClusterDsc
 
 <#
     .DESCRIPTION
@@ -86,8 +86,8 @@ $ConfigurationData = @{
                 Replace with your own CNO (Cluster Name Object) and IP address.
 
                 Please note that if the CNO is prestaged, then the computer object must be disabled for the
-                resource xCluster to be able to create the cluster.
-                If the CNO is not prestaged, then the credential used in the xCluster resource must have
+                resource Cluster to be able to create the cluster.
+                If the CNO is not prestaged, then the credential used in the Cluster resource must have
                 the permission in Active Directory to create the CNO (Cluster Name Object).
             #>
             ClusterName                 = 'Cluster01'
@@ -114,7 +114,7 @@ $ConfigurationData = @{
     )
 }
 
-Configuration xCluster_CreateFailoverClusterWithTwoNodesConfig
+Configuration Cluster_CreateFailoverClusterWithTwoNodesConfig
 {
     param
     (
@@ -123,7 +123,7 @@ Configuration xCluster_CreateFailoverClusterWithTwoNodesConfig
         $ActiveDirectoryAdministratorCredential
     )
 
-    Import-DscResource -ModuleName xFailOverCluster
+    Import-DscResource -ModuleName FailoverClusterDsc
 
     Node $AllNodes.Where{$_.Role -eq 'FirstServerNode' }.NodeName
     {
@@ -147,7 +147,7 @@ Configuration xCluster_CreateFailoverClusterWithTwoNodesConfig
             DependsOn = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringPowerShellFeature'
         }
 
-        xCluster CreateCluster
+        Cluster CreateCluster
         {
             Name                          = $Node.ClusterName
             StaticIPAddress               = $Node.ClusterIPAddress
@@ -179,7 +179,7 @@ Configuration xCluster_CreateFailoverClusterWithTwoNodesConfig
             DependsOn = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringPowerShellFeature'
         }
 
-        xWaitForCluster WaitForCluster
+        WaitForCluster WaitForCluster
         {
             Name             = $Node.ClusterName
             RetryIntervalSec = 10
@@ -187,12 +187,12 @@ Configuration xCluster_CreateFailoverClusterWithTwoNodesConfig
             DependsOn        = '[WindowsFeature]AddRemoteServerAdministrationToolsClusteringCmdInterfaceFeature'
         }
 
-        xCluster JoinSecondNodeToCluster
+        Cluster JoinSecondNodeToCluster
         {
             Name                          = $Node.ClusterName
             StaticIPAddress               = $Node.ClusterIPAddress
             DomainAdministratorCredential = $ActiveDirectoryAdministratorCredential
-            DependsOn                     = '[xWaitForCluster]WaitForCluster'
+            DependsOn                     = '[WaitForCluster]WaitForCluster'
         }
     }
 }

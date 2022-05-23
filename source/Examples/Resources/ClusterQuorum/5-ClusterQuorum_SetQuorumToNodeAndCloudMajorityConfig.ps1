@@ -12,9 +12,9 @@
 
 .TAGS DSCConfiguration
 
-.LICENSEURI https://github.com/dsccommunity/xFailOverCluster/blob/main/LICENSE
+.LICENSEURI https://github.com/dsccommunity/FailoverClusterDsc/blob/main/LICENSE
 
-.PROJECTURI https://github.com/dsccommunity/xFailOverCluster
+.PROJECTURI https://github.com/dsccommunity/FailoverClusterDsc
 
 .ICONURI https://dsccommunity.org/images/DSC_Logo_300p.png
 
@@ -31,7 +31,7 @@ First version.
 
 #>
 
-#Requires -Module xFailOverCluster
+#Requires -Module FailoverClusterDsc
 
 <#
     .DESCRIPTION
@@ -48,13 +48,13 @@ First version.
         cloud witness https://docs.microsoft.com/en-us/windows-server/failover-clustering/deploy-cloud-witness
 #>
 
-Configuration xClusterQuorum_SetQuorumToNodeAndCloudMajorityConfig
+Configuration ClusterQuorum_SetQuorumToNodeAndCloudMajorityConfig
 {
-    Import-DscResource -ModuleName xFailOverCluster
+    Import-DscResource -ModuleName FailoverClusterDsc
 
     Node localhost
     {
-        xClusterQuorum 'SetQuorumToNodeAndCloudMajority'
+        ClusterQuorum 'SetQuorumToNodeAndCloudMajority'
         {
             IsSingleInstance        = 'Yes'
             Type                    = 'NodeAndCloudMajority'

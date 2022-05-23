@@ -12,9 +12,9 @@
 
 .TAGS DSCConfiguration
 
-.LICENSEURI https://github.com/dsccommunity/xFailOverCluster/blob/main/LICENSE
+.LICENSEURI https://github.com/dsccommunity/FailoverClusterDsc/blob/main/LICENSE
 
-.PROJECTURI https://github.com/dsccommunity/xFailOverCluster
+.PROJECTURI https://github.com/dsccommunity/FailoverClusterDsc
 
 .ICONURI https://dsccommunity.org/images/DSC_Logo_300p.png
 
@@ -31,7 +31,7 @@ First version.
 
 #>
 
-#Requires -Module xFailOverCluster
+#Requires -Module FailoverClusterDsc
 
 <#
     .DESCRIPTION
@@ -42,13 +42,13 @@ First version.
         This example assumes the failover cluster is already present.
 #>
 
-Configuration xClusterNetwork_ChangeClusterNetworkConfig
+Configuration ClusterNetwork_ChangeClusterNetworkConfig
 {
-    Import-DscResource -ModuleName xFailOverCluster
+    Import-DscResource -ModuleName FailoverClusterDsc
 
     Node localhost
     {
-        xClusterNetwork 'ChangeNetwork-10'
+        ClusterNetwork 'ChangeNetwork-10'
         {
             Address     = '10.0.0.0'
             AddressMask = '255.255.255.0'
@@ -57,7 +57,7 @@ Configuration xClusterNetwork_ChangeClusterNetworkConfig
             Metric      = '10'
         }
 
-        xClusterNetwork 'ChangeNetwork-192'
+        ClusterNetwork 'ChangeNetwork-192'
         {
             Address     = '192.168.0.0'
             AddressMask = '255.255.255.0'

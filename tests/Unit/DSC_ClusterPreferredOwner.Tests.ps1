@@ -1,5 +1,5 @@
-$script:DSCModuleName = 'xFailOverCluster'
-$script:DSCResourceName = 'MSFT_xClusterPreferredOwner'
+$script:DSCModuleName = 'FailoverClusterDsc'
+$script:DSCResourceName = 'MSFT_ClusterPreferredOwner'
 
 function Invoke-TestSetup
 {
@@ -140,7 +140,7 @@ foreach ($moduleVersion in @('2012', '2016'))
                 }
             }
 
-            Describe "xClusterDisk_$moduleVersion\Get-TargetResource" {
+            Describe "ClusterDisk_$moduleVersion\Get-TargetResource" {
                 BeforeAll {
                     Mock -CommandName 'Get-ClusterGroup' -ParameterFilter $mockGetClusterGroup_ParameterFilter -MockWith $mockGetClusterGroup
                     Mock -CommandName 'Get-ClusterOwnerNode' -MockWith $GetClusterOwnerNode
@@ -233,7 +233,7 @@ foreach ($moduleVersion in @('2012', '2016'))
                 }
             }
 
-            Describe "xClusterDisk_$moduleVersion\Test-TargetResource" {
+            Describe "ClusterDisk_$moduleVersion\Test-TargetResource" {
                 BeforeAll {
                     Mock -CommandName 'Get-ClusterGroup' -ParameterFilter $mockGetClusterGroup_ParameterFilter -MockWith $mockGetClusterGroup
                     Mock -CommandName 'Get-ClusterOwnerNode' -MockWith $GetClusterOwnerNode
@@ -289,7 +289,7 @@ foreach ($moduleVersion in @('2012', '2016'))
                 }
             }
 
-            Describe "xClusterDisk_$moduleVersion\Set-TargetResource" {
+            Describe "ClusterDisk_$moduleVersion\Set-TargetResource" {
                 BeforeAll {
                     Mock -CommandName 'Get-ClusterGroup' -ParameterFilter $mockGetClusterGroup_ParameterFilter -MockWith $mockGetClusterGroup
                     Mock -CommandName 'Get-ClusterOwnerNode' -MockWith $GetClusterOwnerNode

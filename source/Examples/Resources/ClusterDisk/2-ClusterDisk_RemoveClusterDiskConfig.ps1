@@ -12,9 +12,9 @@
 
 .TAGS DSCConfiguration
 
-.LICENSEURI https://github.com/dsccommunity/xFailOverCluster/blob/main/LICENSE
+.LICENSEURI https://github.com/dsccommunity/FailoverClusterDsc/blob/main/LICENSE
 
-.PROJECTURI https://github.com/dsccommunity/xFailOverCluster
+.PROJECTURI https://github.com/dsccommunity/FailoverClusterDsc
 
 .ICONURI https://dsccommunity.org/images/DSC_Logo_300p.png
 
@@ -31,7 +31,7 @@ First version.
 
 #>
 
-#Requires -Module xFailOverCluster
+#Requires -Module FailoverClusterDsc
 
 <#
     .DESCRIPTION
@@ -42,20 +42,20 @@ First version.
         This example assumes the failover cluster is already present.
 #>
 
-Configuration xClusterDisk_RemoveClusterDiskConfig
+Configuration ClusterDisk_RemoveClusterDiskConfig
 {
-    Import-DscResource -ModuleName xFailOverCluster
+    Import-DscResource -ModuleName FailoverClusterDsc
 
     Node localhost
     {
-        xClusterDisk 'AddClusterDisk-SQL2017-DATA'
+        ClusterDisk 'AddClusterDisk-SQL2017-DATA'
         {
             Number = 1
             Ensure = 'Absent'
             Label  = 'SQL2016-DATA'
         }
 
-        xClusterDisk 'AddClusterDisk-SQL2017-LOG'
+        ClusterDisk 'AddClusterDisk-SQL2017-LOG'
         {
             Number = 2
             Ensure = 'Absent'

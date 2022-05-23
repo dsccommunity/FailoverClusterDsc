@@ -1,5 +1,5 @@
-$script:DSCModuleName = 'xFailOverCluster'
-$script:DSCResourceName = 'MSFT_xClusterNetwork'
+$script:DSCModuleName = 'FailoverClusterDsc'
+$script:DSCResourceName = 'MSFT_ClusterNetwork'
 
 function Invoke-TestSetup
 {
@@ -124,7 +124,7 @@ foreach ($moduleVersion in @('2012', '2016'))
                 Metric      = $mockAbsentClusterNetworkMetric
             }
 
-            Describe "xClusterNetwork_$moduleVersion\Get-TargetResource" {
+            Describe "ClusterNetwork_$moduleVersion\Get-TargetResource" {
                 Mock -CommandName 'Get-ClusterNetwork' -MockWith $mockGetClusterNetwork
 
                 Context 'When the system is not in the desired state' {
@@ -207,7 +207,7 @@ foreach ($moduleVersion in @('2012', '2016'))
                     }
                 }
             }
-            Describe "xClusterNetwork_$moduleVersion\Test-TargetResource" {
+            Describe "ClusterNetwork_$moduleVersion\Test-TargetResource" {
                 Mock -CommandName 'Get-ClusterNetwork' -MockWith $mockGetClusterNetwork
 
                 Context 'When the system is not in the desired state' {
@@ -271,7 +271,7 @@ foreach ($moduleVersion in @('2012', '2016'))
                 }
             }
 
-            Describe "xClusterNetwork_$moduleVersion\Set-TargetResource" {
+            Describe "ClusterNetwork_$moduleVersion\Set-TargetResource" {
                 Mock -CommandName 'Get-ClusterNetwork' -MockWith $mockGetClusterNetwork
 
                 Context 'When the system is not in the desired state' {

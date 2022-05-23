@@ -12,9 +12,9 @@
 
 .TAGS DSCConfiguration
 
-.LICENSEURI https://github.com/dsccommunity/xFailOverCluster/blob/main/LICENSE
+.LICENSEURI https://github.com/dsccommunity/FailoverClusterDsc/blob/main/LICENSE
 
-.PROJECTURI https://github.com/dsccommunity/xFailOverCluster
+.PROJECTURI https://github.com/dsccommunity/FailoverClusterDsc
 
 .ICONURI https://dsccommunity.org/images/DSC_Logo_300p.png
 
@@ -31,7 +31,7 @@ First version.
 
 #>
 
-#Requires -Module xFailOverCluster
+#Requires -Module FailoverClusterDsc
 
 <#
     .DESCRIPTION
@@ -42,13 +42,13 @@ First version.
        This example assumes the failover cluster is already present.
 #>
 
-Configuration xClusterQuorum_SetQuorumToNodeAndDiskMajorityConfig
+Configuration ClusterQuorum_SetQuorumToNodeAndDiskMajorityConfig
 {
-    Import-DscResource -ModuleName xFailOverCluster
+    Import-DscResource -ModuleName FailoverClusterDsc
 
     Node localhost
     {
-        xClusterQuorum 'SetQuorumToNodeAndDiskMajority'
+        ClusterQuorum 'SetQuorumToNodeAndDiskMajority'
         {
             IsSingleInstance = 'Yes'
             Type             = 'NodeAndDiskMajority'

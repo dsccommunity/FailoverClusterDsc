@@ -12,9 +12,9 @@
 
 .TAGS DSCConfiguration
 
-.LICENSEURI https://github.com/dsccommunity/xFailOverCluster/blob/main/LICENSE
+.LICENSEURI https://github.com/dsccommunity/FailoverClusterDsc/blob/main/LICENSE
 
-.PROJECTURI https://github.com/dsccommunity/xFailOverCluster
+.PROJECTURI https://github.com/dsccommunity/FailoverClusterDsc
 
 .ICONURI https://dsccommunity.org/images/DSC_Logo_300p.png
 
@@ -31,7 +31,7 @@ First version.
 
 #>
 
-#Requires -Module xFailOverCluster
+#Requires -Module FailoverClusterDsc
 
 <#
     .DESCRIPTION
@@ -47,13 +47,13 @@ First version.
         groups and cluster resources are present.
 #>
 
-Configuration xClusterPreferredOwner_RemovePreferredOwnerConfig
+Configuration ClusterPreferredOwner_RemovePreferredOwnerConfig
 {
-    Import-DscResource -ModuleName xFailOverCluster
+    Import-DscResource -ModuleName FailoverClusterDsc
 
     Node localhost
     {
-        xClusterPreferredOwner 'RemoveOwnersForClusterGroup1'
+        ClusterPreferredOwner 'RemoveOwnersForClusterGroup1'
         {
             Ensure           = 'Absent'
             ClusterName      = 'TESTCLU1'
@@ -62,7 +62,7 @@ Configuration xClusterPreferredOwner_RemovePreferredOwnerConfig
             ClusterResources = @('Resource1', 'Resource2')
         }
 
-        xClusterPreferredOwner 'RemoveOwnersForClusterGroup2'
+        ClusterPreferredOwner 'RemoveOwnersForClusterGroup2'
         {
             Ensure           = 'Absent'
             ClusterName      = 'TESTCLU1'

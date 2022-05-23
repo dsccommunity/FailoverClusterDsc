@@ -1,0 +1,10 @@
+#pragma namespace("\\\\.\\root\\microsoft\\windows\\DesiredStateConfiguration")
+
+[ClassVersion("1.0.0"), FriendlyName("ClusterIPAddress")]
+class DSC_ClusterIPAddress : OMI_BaseResource
+{
+    [Key, Description("")] String IPAddress;
+    [Write, Description("")] String SubnetMask;
+    [Key, Description("")] String IPandSubnetMask;
+    [Write, Description(""), ValueMap{"Present", "Absent"},Values{"Present", "Absent"}] String Ensure;
+};

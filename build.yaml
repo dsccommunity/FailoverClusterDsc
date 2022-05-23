@@ -30,7 +30,7 @@ BuildWorkflow:
 
   build:
     - Clean
-    - Build_Module_ModuleBuilder
+    #- Build_Module_ModuleBuilder
     - Build_NestedModules_ModuleBuilder
     - Create_Changelog_Release_Output
     - Generate_Conceptual_Help

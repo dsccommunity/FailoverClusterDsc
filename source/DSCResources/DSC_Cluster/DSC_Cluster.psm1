@@ -19,7 +19,7 @@ $script:localizedData = Get-LocalizedData -DefaultUICulture 'en-US'
         using Static IP can be ignored, networks that are assigned an IP address
         through DHCP cannot be ignored, and are added for cluster communication.
         To remove networks assigned an IP address through DHCP use the resource
-        xClusterNetwork to change the role of the network.
+        ClusterNetwork to change the role of the network.
         This parameter is only used during the creation of the cluster and is
         not monitored after.
 
@@ -108,7 +108,7 @@ function Get-TargetResource
         using Static IP can be ignored, networks that are assigned an IP address
         through DHCP cannot be ignored, and are added for cluster communication.
         To remove networks assigned an IP address through DHCP use the resource
-        xClusterNetwork to change the role of the network.
+        ClusterNetwork to change the role of the network.
         This parameter is only used during the creation of the cluster and is
         not monitored after.
 
@@ -271,7 +271,7 @@ function Set-TargetResource
         using Static IP can be ignored, networks that are assigned an IP address
         through DHCP cannot be ignored, and are added for cluster communication.
         To remove networks assigned an IP address through DHCP use the resource
-        xClusterNetwork to change the role of the network.
+        ClusterNetwork to change the role of the network.
         This parameter is only used during the creation of the cluster and is
         not monitored after.
 

@@ -1,5 +1,5 @@
 TOPIC
-    about_xFailOverCluster
+    about_FailOverClusterDsc
 
 SHORT DESCRIPTION
     DSC resources for deployment and configuration of Windows Server Failover Cluster.
@@ -8,7 +8,7 @@ LONG DESCRIPTION
     This module contains DSC resources for deployment and configuration of Windows Server Failover Cluster.
 
 EXAMPLES
-    PS C:\> Get-DscResource -Module xFailOverCluster
+    PS C:\> Get-DscResource -Module FailOverClusterDsc
 
 NOTE:
     Thank you to the DSC Community contributors who contributed to this module by
@@ -16,10 +16,10 @@ NOTE:
 
 TROUBLESHOOTING NOTE:
     Go to the Github repository for read about issues, submit a new issue, and read
-    about new releases. https://github.com/dsccommunity/xFailOverCluster
+    about new releases. https://github.com/dsccommunity/FailOverClusterDsc
 
 SEE ALSO
-  - https://github.com/dsccommunity/xFailOverCluster
+  - https://github.com/dsccommunity/FailOverClusterDsc
 
 KEYWORDS
     DSC, DscResource, Cluster, WSFC, FCI

@@ -1,11 +1,11 @@
-# xFailOverCluster
+# FailOverClusterDsc
 
-[![Build Status](https://dev.azure.com/dsccommunity/xFailOverCluster/_apis/build/status/dsccommunity.xFailOverCluster?branchName=main)](https://dev.azure.com/dsccommunity/xFailOverCluster/_build/latest?definitionId=5&branchName=main)
-![Azure DevOps coverage (branch)](https://img.shields.io/azure-devops/coverage/dsccommunity/xFailOverCluster/5/main)
-[![codecov](https://codecov.io/gh/dsccommunity/xFailOverCluster/branch/main/graph/badge.svg)](https://codecov.io/gh/dsccommunity/xFailOverCluster)
-[![Azure DevOps tests](https://img.shields.io/azure-devops/tests/dsccommunity/xFailOverCluster/5/main)](https://dsccommunity.visualstudio.com/xFailOverCluster/_test/analytics?definitionId=5&contextType=build)
-[![PowerShell Gallery (with prereleases)](https://img.shields.io/powershellgallery/vpre/xFailOverCluster?label=xFailOverCluster%20Preview)](https://www.powershellgallery.com/packages/xFailOverCluster/)
-[![PowerShell Gallery](https://img.shields.io/powershellgallery/v/xFailOverCluster?label=xFailOverCluster)](https://www.powershellgallery.com/packages/xFailOverCluster/)
+[![Build Status](https://dev.azure.com/dsccommunity/FailOverClusterDsc/_apis/build/status/dsccommunity.FailOverClusterDsc?branchName=main)](https://dev.azure.com/dsccommunity/FailOverClusterDsc/_build/latest?definitionId=5&branchName=main)
+![Azure DevOps coverage (branch)](https://img.shields.io/azure-devops/coverage/dsccommunity/FailOverClusterDsc/5/main)
+[![codecov](https://codecov.io/gh/dsccommunity/FailOverClusterDsc/branch/main/graph/badge.svg)](https://codecov.io/gh/dsccommunity/FailOverClusterDsc)
+[![Azure DevOps tests](https://img.shields.io/azure-devops/tests/dsccommunity/FailOverClusterDsc/5/main)](https://dsccommunity.visualstudio.com/FailOverClusterDsc/_test/analytics?definitionId=5&contextType=build)
+[![PowerShell Gallery (with prereleases)](https://img.shields.io/powershellgallery/vpre/FailOverClusterDsc?label=FailOverClusterDsc%20Preview)](https://www.powershellgallery.com/packages/FailOverClusterDsc/)
+[![PowerShell Gallery](https://img.shields.io/powershellgallery/v/FailOverClusterDsc?label=FailOverClusterDsc)](https://www.powershellgallery.com/packages/FailOverClusterDsc/)
 
 This module contains DSC resources for deployment and configuration of
 Windows Server Failover Cluster

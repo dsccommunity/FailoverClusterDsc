@@ -10,13 +10,11 @@ trigger:
     - "v*"
     exclude:
     - "*-*"
-
 variables:
   buildFolderName: output
   buildArtifactName: output
   testResultFolderName: testResults
   testArtifactName: testResults
-  sourceFolderName: source
 
 stages:
   - stage: Build
@@ -26,16 +24,12 @@ stages:
         pool:
           vmImage: 'ubuntu-latest'
         steps:
-          - pwsh: |
-              dotnet tool install --global GitVersion.Tool
-              $gitVersionObject = dotnet-gitversion | ConvertFrom-Json
-              $gitVersionObject.PSObject.Properties.ForEach{
-                  Write-Host -Object "Setting Task Variable '$($_.Name)' with value '$($_.Value)'."
-                  Write-Host -Object "##vso[task.setvariable variable=$($_.Name);]$($_.Value)"
-              }
-              Write-Host -Object "##vso[build.updatebuildnumber]$($gitVersionObject.FullSemVer)"
-            displayName: Calculate ModuleVersion (GitVersion)
-
+          - task: GitVersion@5
+            name: gitVersion
+            displayName: 'Evaluate Next Version'
+            inputs:
+              runtime: 'core'
+              configFilePath: 'GitVersion.yml'
           - task: PowerShell@2
             name: package
             displayName: 'Build & Package Module'
@@ -44,15 +38,13 @@ stages:
               arguments: '-ResolveDependency -tasks pack'
               pwsh: true
             env:
-              ModuleVersion: $(NuGetVersionV2)
-
-          - task: PublishPipelineArtifact@1
-            displayName: 'Publish Pipeline Artifact'
+              ModuleVersion: $(gitVersion.NuGetVersionV2)
+          - task: PublishBuildArtifacts@1
+            displayName: 'Publish Build Artifact'
             inputs:
-              targetPath: '$(buildFolderName)/'
-              artifact: $(buildArtifactName)
-              publishLocation: 'pipeline'
-              parallel: true
+              pathToPublish: '$(buildFolderName)/'
+              artifactName: $(buildArtifactName)
+              publishLocation: 'Container'
 
   - stage: Test
     dependsOn: Build
@@ -63,13 +55,13 @@ stages:
           vmImage: 'windows-2019'
         timeoutInMinutes: 0
         steps:
-          - task: DownloadPipelineArtifact@2
-            displayName: 'Download Pipeline Artifact'
+          - task: DownloadBuildArtifacts@0
+            displayName: 'Download Build Artifact'
             inputs:
               buildType: 'current'
-              artifactName: $(buildArtifactName)
-              targetPath: '$(Build.SourcesDirectory)/$(buildArtifactName)'
-
+              downloadType: 'single'
+              artifactName: 'output'
+              downloadPath: '$(Build.SourcesDirectory)'
           - task: PowerShell@2
             name: test
             displayName: 'Run HQRM Test'
@@ -77,28 +69,27 @@ stages:
               filePath: './build.ps1'
               arguments: '-Tasks hqrmtest'
               pwsh: false
-
           - task: PublishTestResults@2
             displayName: 'Publish Test Results'
+            condition: succeededOrFailed()
             inputs:
               testResultsFormat: 'NUnit'
-              testResultsFiles: '$(buildFolderName)/$(testResultFolderName)/NUnit*.xml'
+              testResultsFiles: 'output/testResults/NUnit*.xml'
               testRunTitle: 'HQRM'
-            condition: succeededOrFailed()
 
-      - job: Test_Unit_2019
-        displayName: 'Unit (Windows Server 2019)'
+      - job: Test_Unit
+        displayName: 'Unit'
         pool:
           vmImage: 'windows-2019'
         timeoutInMinutes: 0
         steps:
-          - task: DownloadPipelineArtifact@2
-            displayName: 'Download Pipeline Artifact'
+          - task: DownloadBuildArtifacts@0
+            displayName: 'Download Build Artifact'
             inputs:
               buildType: 'current'
+              downloadType: 'single'
               artifactName: $(buildArtifactName)
-              targetPath: '$(Build.SourcesDirectory)/$(buildArtifactName)'
-
+              downloadPath: '$(Build.SourcesDirectory)'
           - task: PowerShell@2
             name: test
             displayName: 'Run Unit Test'
@@ -106,159 +97,92 @@ stages:
               filePath: './build.ps1'
               arguments: "-Tasks test -PesterScript 'tests/Unit'"
               pwsh: false
-
           - task: PublishTestResults@2
             displayName: 'Publish Test Results'
+            condition: succeededOrFailed()
             inputs:
               testResultsFormat: 'NUnit'
               testResultsFiles: '$(buildFolderName)/$(testResultFolderName)/NUnit*.xml'
-              testRunTitle: 'Unit (Windows Server 2019)'
-            condition: succeededOrFailed()
-
-          - task: PublishPipelineArtifact@1
+              testRunTitle: 'Unit (Windows Server Core)'
+          - task: PublishBuildArtifacts@1
             displayName: 'Publish Test Artifact'
             inputs:
-              targetPath: '$(buildFolderName)/$(testResultFolderName)/'
+              pathToPublish: '$(buildFolderName)/$(testResultFolderName)/'
               artifactName: $(testArtifactName)
-              parallel: true
+              publishLocation: 'Container'
+
+      - job: Test_Integration
+        displayName: 'Integration'
+        pool:
+          vmImage: 'windows-2019'
+        timeoutInMinutes: 0
+        steps:
+          - task: DownloadBuildArtifacts@0
+            displayName: 'Download Build Artifact'
+            inputs:
+              buildType: 'current'
+              downloadType: 'single'
+              artifactName: $(buildArtifactName)
+              downloadPath: '$(Build.SourcesDirectory)'
+          - task: PowerShell@2
+            name: configureWinRM
+            displayName: 'Configure WinRM'
+            inputs:
+              targetType: 'inline'
+              script: 'winrm quickconfig -quiet'
+              pwsh: false
+          - task: PowerShell@2
+            name: test
+            displayName: 'Run Integration Test'
+            inputs:
+              filePath: './build.ps1'
+              arguments: "-Tasks test -PesterScript 'tests/Integration' -CodeCoverageThreshold 0"
+              pwsh: false
+          - task: PublishTestResults@2
+            displayName: 'Publish Test Results'
+            condition: succeededOrFailed()
+            inputs:
+              testResultsFormat: 'NUnit'
+              testResultsFiles: '$(buildFolderName)/$(testResultFolderName)/NUnit*.xml'
+              testRunTitle: 'Integration (Windows Server Core)'
 
       - job: Code_Coverage
         displayName: 'Publish Code Coverage'
-        dependsOn: Test_Unit_2019
+        dependsOn: Test_Unit
         pool:
           vmImage: 'ubuntu-latest'
         timeoutInMinutes: 0
         steps:
-          - task: DownloadPipelineArtifact@2
-            displayName: 'Download Pipeline Artifact'
+          - pwsh: |
+              $repositoryOwner,$repositoryName = $env:BUILD_REPOSITORY_NAME -split '/'
+              echo "##vso[task.setvariable variable=RepositoryOwner;isOutput=true]$repositoryOwner"
+              echo "##vso[task.setvariable variable=RepositoryName;isOutput=true]$repositoryName"
+            name: dscBuildVariable
+            displayName: 'Set Environment Variables'
+          - task: DownloadBuildArtifacts@0
+            displayName: 'Download Build Artifact'
             inputs:
               buildType: 'current'
+              downloadType: 'single'
               artifactName: $(buildArtifactName)
-              targetPath: '$(Build.SourcesDirectory)/$(buildArtifactName)'
-
-          - task: DownloadPipelineArtifact@2
+              downloadPath: '$(Build.SourcesDirectory)'
+          - task: DownloadBuildArtifacts@0
             displayName: 'Download Test Artifact'
             inputs:
               buildType: 'current'
+              downloadType: 'single'
               artifactName: $(testArtifactName)
-              targetPath: '$(Build.SourcesDirectory)/$(buildFolderName)/$(testResultFolderName)'
-
+              downloadPath: '$(Build.SourcesDirectory)/$(buildFolderName)'
           - task: PublishCodeCoverageResults@1
-            displayName: 'Publish Code Coverage to Azure DevOps'
+            displayName: 'Publish Azure Code Coverage'
+            condition: succeededOrFailed()
             inputs:
               codeCoverageTool: 'JaCoCo'
-              summaryFileLocation: '$(Build.SourcesDirectory)/$(buildFolderName)/$(testResultFolderName)/JaCoCo_coverage.xml'
-              pathToSources: '$(Build.SourcesDirectory)/$(sourceFolderName)/'
-
+              summaryFileLocation: '$(buildFolderName)/$(testResultFolderName)/JaCoCo_coverage.xml'
+              pathToSources: '$(Build.SourcesDirectory)/$(buildFolderName)/$(dscBuildVariable.RepositoryName)'
           - script: |
               bash <(curl -s https://codecov.io/bash) -f "./$(buildFolderName)/$(testResultFolderName)/JaCoCo_coverage.xml"
-            displayName: 'Publish Code Coverage to Codecov.io'
-
-      - job: Test_Integration_2019
-        displayName: 'Integration (Windows Server 2019)'
-        pool:
-          vmImage: 'windows-2019'
-        timeoutInMinutes: 0
-        steps:
-          - task: DownloadPipelineArtifact@2
-            displayName: 'Download Pipeline Artifact'
-            inputs:
-              buildType: 'current'
-              artifactName: $(buildArtifactName)
-              targetPath: '$(Build.SourcesDirectory)/$(buildArtifactName)'
-
-          - task: PowerShell@2
-            name: configureWinRM
-            displayName: 'Configure WinRM'
-            inputs:
-              targetType: 'inline'
-              script: 'winrm quickconfig -quiet'
-              pwsh: false
-
-          - powershell: |
-              Set-Service -Name wuauserv -StartupType Manual -Verbose
-              Start-Service -name wuauserv -Verbose
-
-          - task: PowerShell@2
-            name: test
-            displayName: 'Run Integration Test'
-            inputs:
-              filePath: './build.ps1'
-              arguments: "-Tasks test -PesterScript 'tests/Integration' -CodeCoverageThreshold 0"
-              pwsh: false
-
-          - task: PublishTestResults@2
-            displayName: 'Publish Test Results'
-            inputs:
-              testResultsFormat: 'NUnit'
-              testResultsFiles: '$(buildFolderName)/$(testResultFolderName)/NUnit*.xml'
-              testRunTitle: 'Integration (Windows Server 2019)'
-            condition: succeededOrFailed()
-
-      - job: Test_Unit_2022
-        displayName: 'Unit (Windows Server 2022)'
-        pool:
-          vmImage: 'windows-2022'
-        timeoutInMinutes: 0
-        steps:
-          - task: DownloadPipelineArtifact@2
-            displayName: 'Download Pipeline Artifact'
-            inputs:
-              buildType: 'current'
-              artifactName: $(buildArtifactName)
-              targetPath: '$(Build.SourcesDirectory)/$(buildArtifactName)'
-
-          - task: PowerShell@2
-            name: test
-            displayName: 'Run Unit Test'
-            inputs:
-              filePath: './build.ps1'
-              arguments: "-Tasks test -PesterScript 'tests/Unit'"
-              pwsh: false
-
-          - task: PublishTestResults@2
-            displayName: 'Publish Test Results'
-            inputs:
-              testResultsFormat: 'NUnit'
-              testResultsFiles: '$(buildFolderName)/$(testResultFolderName)/NUnit*.xml'
-              testRunTitle: 'Unit (Windows Server 2022)'
-            condition: succeededOrFailed()
-
-      - job: Test_Integration_2022
-        displayName: 'Integration (Windows Server 2022)'
-        pool:
-          vmImage: 'windows-2022'
-        timeoutInMinutes: 0
-        steps:
-          - task: DownloadPipelineArtifact@2
-            displayName: 'Download Pipeline Artifact'
-            inputs:
-              buildType: 'current'
-              artifactName: $(buildArtifactName)
-              targetPath: '$(Build.SourcesDirectory)/$(buildArtifactName)'
-
-          - task: PowerShell@2
-            name: configureWinRM
-            displayName: 'Configure WinRM'
-            inputs:
-              targetType: 'inline'
-              script: 'winrm quickconfig -quiet'
-              pwsh: false
-
-          - task: PowerShell@2
-            name: test
-            displayName: 'Run Integration Test'
-            inputs:
-              filePath: './build.ps1'
-              arguments: "-Tasks test -PesterScript 'tests/Integration' -CodeCoverageThreshold 0"
-              pwsh: false
-
-          - task: PublishTestResults@2
-            displayName: 'Publish Test Results'
-            inputs:
-              testResultsFormat: 'NUnit'
-              testResultsFiles: '$(buildFolderName)/$(testResultFolderName)/NUnit*.xml'
-              testRunTitle: 'Integration (Windows Server 2022)'
+            displayName: 'Upload to Codecov.io'
             condition: succeededOrFailed()
 
   - stage: Deploy
@@ -278,13 +202,13 @@ stages:
         pool:
           vmImage: 'ubuntu-latest'
         steps:
-          - task: DownloadPipelineArtifact@2
-            displayName: 'Download Pipeline Artifact'
+          - task: DownloadBuildArtifacts@0
+            displayName: 'Download Build Artifact'
             inputs:
               buildType: 'current'
-              artifactName: $(buildArtifactName)
-              targetPath: '$(Build.SourcesDirectory)/$(buildArtifactName)'
-
+              downloadType: 'single'
+              artifactName: 'output'
+              downloadPath: '$(Build.SourcesDirectory)'
           - task: PowerShell@2
             name: publishRelease
             displayName: 'Publish Release'
@@ -297,7 +221,6 @@ stages:
               GalleryApiToken: $(GalleryApiToken)
               ReleaseBranch: main
               MainGitBranch: main
-
           - task: PowerShell@2
             name: sendChangelogPR
             displayName: 'Send Changelog PR'

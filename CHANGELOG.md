@@ -6,7 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md).
 
 ## [Unreleased]
-- Rename module to FailoverClusterDsc
+- BREAKING CHANGE
+  - Renamed xFailOverCluster to FailoverClusterDsc - fixes [Issue #69](https://github.com/PowerShell/xFailOverCluster/issues/69).
+  - Changed all MSFT_xResourceName to DSC_ResourceName.
+  - Updated DSCResources, Examples, Modules and Tests for new naming.
+  - Updated README.md from xFailOverCluster to CertifcateDsc
 ## [1.16.0] - 2021-03-17
 
 ### Added

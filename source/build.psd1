@@ -1,3 +1,4 @@
 @{
-    Path = 'FailoverClusterDsc.psd1' # or build will break on Linux
+    Path = 'xFailOverCluster.psd1' # or build will break on Linux
 }
+

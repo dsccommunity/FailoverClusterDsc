@@ -85,16 +85,12 @@ Function Test-TargetResource
         $Ensure = 'Present',
 
         # IPAddress to add to Cluster
-        [Parameter(Mandatory = $true,
-                   ValueFromPipelineByPropertyName = $true,
-                   Position = 0)]
+        [Parameter(Mandatory = $true)]
         [IPAddress]
         $IPAddress,
 
         # SubnetMask of IPAddress
-        [Parameter(Mandatory = $true,
-                   ValueFromPipelineByPropertyName = $true,
-                   Position = 1)]
+        [Parameter(Mandatory = $true)]
         [IPAddress]
         $SubnetMask
     )
@@ -152,16 +148,12 @@ function Get-Subnet
     Param
     (
         # IPAddress to add to Cluster
-        [Parameter(Mandatory = $true,
-                   ValueFromPipelineByPropertyName = $true,
-                   Position = 0)]
+        [Parameter(Mandatory = $true)]
         [IPAddress]
         $IPAddress,
 
         # SubnetMask of IPAddress
-        [Parameter(Mandatory = $true,
-                   ValueFromPipelineByPropertyName = $true,
-                   Position = 1)]
+        [Parameter(Mandatory = $true)]
         [IPAddress]
         $SubnetMask
     )
@@ -183,9 +175,6 @@ function Get-Subnet
     .EXAMPLE
         # Using the default ParameterSet of both IP Address and Subnet
         Add-ClusterIPAddressDependency -IPAddress 10.235.32.137 -Subnet 255.255.255.128 -Verbose
-    .EXAMPLE
-        # Using the Combined ParameterSet
-        Add-ClusterIPAddressDependency -IPandSubnet 10.235.32.137/255.255.255.128 -Verbose
 #>
 function Add-ClusterIPAddressDependency
 {
@@ -193,16 +182,12 @@ function Add-ClusterIPAddressDependency
     Param
     (
         # IPAddress to add to Cluster
-        [Parameter(Mandatory = $true,
-                   ValueFromPipelineByPropertyName = $true,
-                   Position = 0)]
+        [Parameter(Mandatory = $true)]
         [IPAddress]
         $IPAddress,
 
         # SubnetMask of IPAddress
-        [Parameter(Mandatory = $true,
-                   ValueFromPipelineByPropertyName = $true,
-                   Position = 1)]
+        [Parameter(Mandatory = $true)]
         [IPAddress]
         $SubnetMask,
 
@@ -284,17 +269,12 @@ function Add-ClusterIPAddressDependency
         IP address to check whether it's in the Cluster's DependencyExpression
     .PARAMETER SubnetMask
         The subnet mask of the IPAddress
-    .PARAMETER IPandSubnet
-        Combined IP address and subnet mask in the format 10.245.10.32/255.255.255.0
     .EXAMPLE
         Example using complete IPAddress and Subnetmask default ParameterSet
         Test-ClusterIPAddressDependency -IPAddress 10.235.0.141 -SubnetMask 255.255.255.128 -verbose
     .EXAMPLE
         Example using IPAddress from default ParameterSet
         Test-ClusterIPAddressDependency -IPAddress 10.235.0.141 -verbose
-    .EXAMPLE
-        Example using Combined ParameterSet
-        Test-ClusterIPAddressDependency -IPandSubnet 10.235.0.141/255.255.255.128 -verbose
 #>
 function Test-ClusterIPAddressDependency
 {
@@ -303,16 +283,12 @@ function Test-ClusterIPAddressDependency
     Param
     (
         # IPAddress to add to Cluster
-        [Parameter(Mandatory = $true,
-                   ValueFromPipelineByPropertyName = $true,
-                   Position = 0)]
+        [Parameter(Mandatory = $true)]
         [IPAddress]
         $IPAddress,
 
         # SubnetMask of IPAddress
-        [Parameter(Mandatory = $true,
-                   ValueFromPipelineByPropertyName = $true,
-                   Position = 1)]
+        [Parameter(Mandatory = $true)]
         [IPAddress]
         $SubnetMask
     )
@@ -352,16 +328,14 @@ function Test-ClusterNetwork
     Param
     (
         # IPAddress to add to Cluster
-        [Parameter(Mandatory=$true,
-                   ValueFromPipelineByPropertyName=$true,
-                   Position=0)]
-        [IPAddress]$IPAddress,
+        [Parameter(Mandatory = $true)]
+        [IPAddress]
+        $IPAddress,
 
         # SubnetMask of IPAddress
-        [Parameter(Mandatory=$false,
-                   ValueFromPipelineByPropertyName=$true,
-                   Position=1)]
-        [IPAddress]$SubnetMask
+        [Parameter(Mandatory = $true)]
+        [IPAddress]
+        $SubnetMask
     )
 
     $clusterNetworks = Get-ClusterNetworkList

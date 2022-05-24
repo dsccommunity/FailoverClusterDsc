@@ -28,162 +28,136 @@ Function Get-TargetResource
                    Position=0)]
         [String]$IPandSubnet
     )
-    Begin
+    switch ( $PsCmdlet.ParameterSetName )
     {
-      $f = "$($PSCmdlet.CommandRunTime): "
-      switch ( $PsCmdlet.ParameterSetName ) {
         "Combined" {
-            Write-Verbose "$f Combined IP and SubnetMask were passed as $IPandSubnet"
+            Write-Verbose -Message ($script:localizedData.CombinedIPandSubnetMask -f $IPandSubnet)
 
             [IPAddress]$IPAddress  = $IPandSubnet.Split('/')[0]
             [IPAddress]$SubnetMask = $IPandSubnet.Split('/')[1]
-            Write-Verbose "$f IP and SubnetMask split as $IPAddress and $SubnetMask"
+            Write-Verbose -Message ($script:localizedData.SplitIPandSubnetMask -f $IPAddress, $SubnetMask)
         }
-      }
     }
-    Process
-    {
-      Write-Verbose "$f Getting all networks added to this cluster."
-      $clusterNetworks = New-Object "System.Collections.Generic.List[PSCustomObject]"
-      Foreach ( $network in Get-ClusterNetwork ) {
-          $clusterNetworks.Add([PSCustomObject]@{
-              Address     = $network.Address
-              AddressMask = $network.AddressMask
-          })
 
-          Write-Verbose "$f Found cluster network $($network.Address)/$($Network.AddressMask)"
-      }
-    }
-    End
-    {
-      return $clusterNetworks
-    }
+    return Get-ClusterNetworkList
+
 }
 
 Function Set-TargetResource
 {
-  Param
-  (
-      # IPAddress to add to Cluster
-      [Parameter(Mandatory=$true,
-                 ValueFromPipelineByPropertyName=$true,
-                 ParameterSetName = "Default"
-                 )]
-      [IPAddress]$IPAddress,
+    Param
+    (
+        # IPAddress to add to Cluster
+        [Parameter(Mandatory=$true,
+                    ValueFromPipelineByPropertyName=$true,
+                    ParameterSetName = "Default"
+                    )]
+        [IPAddress]
+        $IPAddress,
 
-      # SubnetMask of IPAddress
-      [Parameter(Mandatory=$false,
-                 ValueFromPipelineByPropertyName=$true,
-                 ParameterSetName = "Default"
-                 )]
-      [IPAddress]$SubnetMask,
+        # SubnetMask of IPAddress
+        [Parameter(Mandatory=$false,
+                    ValueFromPipelineByPropertyName=$true,
+                    ParameterSetName = "Default"
+                    )]
+        [IPAddress]
+        $SubnetMask,
 
-      #CombinedIPAddressandSubnet
-      [Parameter(Mandatory=$true,
-                 ValueFromPipelineBYPropertyName=$true,
-                 ParameterSetName="Combined"
+        #CombinedIPAddressandSubnet
+        [Parameter(Mandatory=$true,
+                    ValueFromPipelineBYPropertyName=$true,
+                    ParameterSetName="Combined"
                 )]
-      [String]$IPandSubnet
-  )
-  Begin
-  {
-    $f = "$($PSCmdlet.CommandRunTime): "
-    switch ( $PsCmdlet.ParameterSetName ) {
-      "Combined" {
-          Write-Verbose "$f Combined IP and SubnetMask were passed as $IPandSubnet"
+        [String]
+        $IPandSubnet
+    )
 
-          [IPAddress]$IPAddress  = $IPandSubnet.Split('/')[0]
-          [IPAddress]$SubnetMask = $IPandSubnet.Split('/')[1]
-          Write-Verbose "$f IP and SubnetMask split as $IPAddress and $SubnetMask"
-      }
-    }
-    $ErrorActionPreference = 'Stop'
-  }
-  Process
-  {
-    # We've gotten here because the IPAddress given is not in the DependencyExpression for the cluster
-    # We need to Check if the network is added to the cluster. If not, we fail. If it is, we can append the IPAddress
+    switch ( $PsCmdlet.ParameterSetName )
+    {
+        "Combined" {
+            Write-Verbose -Message ($script:localizedData.CombinedIPandSubnetMask -f $IPandSubnet)
 
-    # How can this be made more idempotent?
-    $params = @{
-      IPAddress  = $IPAddress
-      SubnetMask = $SubnetMask
-      VerbosePreference = $VerbosePreference
-    }
-    $networkAdded = Test-ClusterNetwork @params
-
-    if ( -not $networkAdded ) {
-      Write-Error "$f ClusterNetwork for IPAddress $IPAddress and subnet mask $SubnetMask is not part of this Cluster"
-      break
-    } else {
-      Write-Verbose "$f The subnet for IPAddress $IPAddress and subnet mask $SubnetMask is part of this Cluster"
-
-      Try {
-        $params = @{
-          IPAddress  = $IPAddress
-          SubnetMask = $SubnetMask
-          VerbosePreference = $VerbosePreference
+            [IPAddress]$IPAddress  = $IPandSubnet.Split('/')[0]
+            [IPAddress]$SubnetMask = $IPandSubnet.Split('/')[1]
+            Write-Verbose -Message ($script:localizedData.SplitIPandSubnetMask -f $IPAddress, $SubnetMask)
         }
-        Write-Verbose "$f Attempting to add $IPAddress/$SubnetMask as a Cluster Dependency"
-        Add-ClusterIPAddressDependency @params
-      }
-      Catch {
-        Write-Error $error[0]
-        break
-      }
     }
-  }
-  End
-  {
+    if ($Ensure -eq 'Present')
+    {
+        # We've gotten here because the IPAddress given is not in the DependencyExpression for the cluster
+        # We need to Check if the network is added to the cluster. If not, we fail. If it is, we can append the IPAddress
+        if ( -not $(Test-ClusterNetwork -IPAddress $IPAddress -SubnetMask $SubnetMask) )
+        {
+            Write-Error "$f ClusterNetwork for IPAddress $IPAddress and subnet mask $SubnetMask is not part of this Cluster"
+            break
+        }
+        else
+        {
+            $params = @{
+                IPAddress   = $IPAddress
+                SubnetMask  = $SubnetMask
+                ErrorAction = 'Stop'
+            }
+            Add-ClusterIPAddressDependency @params
 
-  }
+        }
+    }
+    else
+    {
+        if (Test-ClusterIPAddressDependency -IPAddress $IPAddress -SubnetMask $SubnetMask) {
+            Remove-ClusterIPAddressDependency -IPAddress $IPAddress -Subnet $SubnetMask
+        }
+    }
 }
 
 Function Test-TargetResource
 {
-  Param
-  (
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    Param
+    (
 
-      [ValidateSet("Present", "Absent")]
-      [string]$Ensure = "Present",
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Present', 'Absent')]
+        $Ensure = 'Present',
 
-      # IPAddress to add to Cluster
-      [Parameter(Mandatory=$true,
-                 ValueFromPipelineByPropertyName=$true,
-                 ParameterSetName = "Default"
-      )]
-      [IPAddress]$IPAddress,
+        # IPAddress to add to Cluster
+        [Parameter(Mandatory=$true,
+                    ValueFromPipelineByPropertyName=$true,
+                    ParameterSetName = "Default"
+        )]
+        [IPAddress]
+        $IPAddress,
 
-      # SubnetMask of IPAddress
-      [Parameter(Mandatory=$false,
-                 ValueFromPipelineByPropertyName=$true,
-                 ParameterSetName = "Default"
+        # SubnetMask of IPAddress
+        [Parameter(Mandatory=$false,
+                    ValueFromPipelineByPropertyName=$true,
+                    ParameterSetName = "Default"
                 )]
-      [IPAddress]$SubnetMask,
+        [IPAddress]
+        $SubnetMask,
 
-      #CombinedIPAddressandSubnet
-      [Parameter(Mandatory=$true,
-                 ValueFromPipelineBYPropertyName=$true,
-                 ParameterSetName="Combined"
+        #CombinedIPAddressandSubnet
+        [Parameter(Mandatory=$true,
+                    ValueFromPipelineBYPropertyName=$true,
+                    ParameterSetName="Combined"
                 )]
-      [String]$IPandSubnet
-  )
-  Begin
-  {
-    $f = "$($PSCmdlet.CommandRunTime): "
-    switch ( $PsCmdlet.ParameterSetName ) {
-      "Combined" {
-          Write-Verbose "$f Combined IP and SubnetMask were passed as $IPandSubnet"
+        [String]
+        $IPandSubnet
+    )
 
-          [IPAddress]$IPAddress  = $IPandSubnet.Split('/')[0]
-          [IPAddress]$SubnetMask = $IPandSubnet.Split('/')[1]
-          Write-Verbose "$f IP and SubnetMask split as $IPAddress and $SubnetMask"
-      }
+    switch ( $PsCmdlet.ParameterSetName )
+    {
+        "Combined" {
+            Write-Verbose -Message ($script:localizedData.CombinedIPandSubnetMask -f $IPandSubnet)
+
+            [IPAddress]$IPAddress  = $IPandSubnet.Split('/')[0]
+            [IPAddress]$SubnetMask = $IPandSubnet.Split('/')[1]
+            Write-Verbose -Message ($script:localizedData.SplitIPandSubnetMask -f $IPAddress, $SubnetMask)
+        }
     }
-    $ErrorActionPreference = 'Stop'
-  }
-  Process
-  {
+
     # If IPAddress is not in ClusterResource DependencyExpression #fail
     # If IPAddress' Subnet is not in ClusterNetworks #fail
     $params = @{
@@ -191,25 +165,50 @@ Function Test-TargetResource
       SubnetMask = $SubnetMask
       VerbosePreference = $VerbosePreference
     }
-    $returnObj = Test-ClusterIPAddressDependency @params
+    $testResult = Test-ClusterIPAddressDependency @params
 
-  }
-  End
-  {
-      return $returnObj
-  }
+    if ($Ensure)
+    {
+        if ($testResult)
+        {
+            return $True
+        }
+        else
+        {
+            return $False
+        }
+    }
+    else
+    {
+        if ($testResult)
+        {
+            return $False
+        }
+        else
+        {
+            return $True
+        }
+    }
+
+
 }
 
 
 <#
-.Synopsis
-   Given an IP Address and a Subnet Mask, returns the IP Addresses subnet.
-.DESCRIPTION
-   Returns an IPAddress object of the subnet mask of the given IPAddress and Subnet.
-.EXAMPLE
-   Get-Subnet -IPAddress 10.235.32.129 -SubnetMask 255.255.255.128
-.EXAMPLE
-   Get-Subnet -IPandSubnet 10.235.32.129/255.255.255.128
+    .Synopsis
+        Given an IP Address and a Subnet Mask, returns the IP Addresses subnet.
+    .DESCRIPTION
+        Returns an IPAddress object of the subnet mask of the given IPAddress and Subnet.
+    .PARAMETER IPAddress
+        IP address to add to the Cluster's DependencyExpression
+    .PARAMETER SubnetMask
+        The subnet mask of the IPAddress
+    .PARAMETER IPandSubnet
+        Combined IP address and subnet mask in the format 10.245.10.32/255.255.255.0
+    .EXAMPLE
+        Get-Subnet -IPAddress 10.235.32.129 -SubnetMask 255.255.255.128
+    .EXAMPLE
+        Get-Subnet -IPandSubnet 10.235.32.129/255.255.255.128
 #>
 function Get-Subnet
 {
@@ -239,44 +238,39 @@ function Get-Subnet
                    Position=0)]
         [String]$IPandSubnet
     )
-
-    Begin
+    switch ( $PsCmdlet.ParameterSetName )
     {
-        $f = "$($PSCmdlet.CommandRunTime): "
-        switch ( $PsCmdlet.ParameterSetName ) {
-          "Combined" {
-              Write-Verbose "$f Combined IP and SubnetMask were passed as $IPandSubnet"
+        "Combined" {
+            Write-Verbose -Message ($script:localizedData.CombinedIPandSubnetMask -f $IPandSubnet)
 
-              [IPAddress]$IPAddress  = $IPandSubnet.Split('/')[0]
-              [IPAddress]$SubnetMask = $IPandSubnet.Split('/')[1]
-              Write-Verbose "$f IP and SubnetMask split as $IPAddress and $SubnetMask"
-          }
+            [IPAddress]$IPAddress  = $IPandSubnet.Split('/')[0]
+            [IPAddress]$SubnetMask = $IPandSubnet.Split('/')[1]
+            Write-Verbose -Message ($script:localizedData.SplitIPandSubnetMask -f $IPAddress, $SubnetMask)
         }
-        $ErrorActionPreference = 'Stop'
     }
-    Process
-    {
-        $subnet = [IPAddress]($Ipaddress.Address -band $SubnetMask.Address)
-    }
-    End
-    {
-        return $Subnet
-    }
+
+    return [IPAddress]($Ipaddress.Address -band $SubnetMask.Address)
 }
 
 <#
-.Synopsis
-   Adds an IPAddress as a Dependency to a Windows Cluster
-.DESCRIPTION
-   Adds an IP Address resource to a Windows Cluster's Dependecy Expression
-.EXAMPLE
-   # Using the default ParameterSet of both IP Address and Subnet
-   Add-ClusterIPAddressDependency -IPAddress 10.235.32.137 -Subnet 255.255.255.128 -Verbose
-.EXAMPLE
-    # Using the Combined ParameterSet
-    Add-ClusterIPAddressDependency -IPandSubnet 10.235.32.137/255.255.255.128 -Verbose
-.AUTHOR
-    Nick Germany
+    .Synopsis
+        Adds an IPAddress as a Dependency to a Windows Cluster
+    .DESCRIPTION
+        Adds an IP Address resource to a Windows Cluster's Dependecy Expression
+    .PARAMETER IPAddress
+        IP address to add to the Cluster's DependencyExpression
+    .PARAMETER SubnetMask
+        The subnet mask of the IPAddress
+    .PARAMETER IPandSubnet
+        Combined IP address and subnet mask in the format 10.245.10.32/255.255.255.0
+    .PARAMETER ClusterName
+        Name of the cluster to add IP Address resource to
+    .EXAMPLE
+        # Using the default ParameterSet of both IP Address and Subnet
+        Add-ClusterIPAddressDependency -IPAddress 10.235.32.137 -Subnet 255.255.255.128 -Verbose
+    .EXAMPLE
+        # Using the Combined ParameterSet
+        Add-ClusterIPAddressDependency -IPandSubnet 10.235.32.137/255.255.255.128 -Verbose
 #>
 function Add-ClusterIPAddressDependency
 {
@@ -304,107 +298,105 @@ function Add-ClusterIPAddressDependency
                    ValueFromPipelineBYPropertyName=$true,
                    ParameterSetName="Combined",
                    Position=0)]
-        [String]$IPandSubnet
+        [String]$IPandSubnet,
+        [String]$ClusterName = 'Cluster Name'
     )
 
-    Begin
+    switch ( $PsCmdlet.ParameterSetName )
     {
-        $f = "$($PSCmdlet.CommandRunTime): "
-        switch ( $PsCmdlet.ParameterSetName ) {
-          "Combined" {
-              Write-Verbose "$f Combined IP and SubnetMask were passed as $IPandSubnet"
+        "Combined" {
+            Write-Verbose -Message ($script:localizedData.CombinedIPandSubnetMask -f $IPandSubnet)
 
-              [IPAddress]$IPAddress  = $IPandSubnet.Split('/')[0]
-              [IPAddress]$SubnetMask = $IPandSubnet.Split('/')[1]
-              Write-Verbose "$f IP and SubnetMask split as $IPAddress and $SubnetMask"
-          }
+            [IPAddress]$IPAddress  = $IPandSubnet.Split('/')[0]
+            [IPAddress]$SubnetMask = $IPandSubnet.Split('/')[1]
+            Write-Verbose -Message ($script:localizedData.SplitIPandSubnetMask -f $IPAddress, $SubnetMask)
         }
     }
-    Process
-    {
-        #* Get Windows Cluster resource
-        Write-Verbose "$f Getting Windows Cluster resource"
-        $cluster = Get-ClusterResource | Where-Object { $_.name -eq 'Cluster Name'}
 
-        #* Create new IPAddress resource and add the IPAddress parameters to it
-        Write-Verbose "$f Creating new IP Address cluster resource for IP $IPAddress and Subnet Mask $SubnetMask"
+    #* Get Windows Cluster resource
+    $cluster = Get-ClusterResource | Where-Object { $_.name -eq $ClusterName}
+
+    #* Create new IPAddress resource and add the IPAddress parameters to it
+    Write-Verbose -Message ($script:localizedData.CreateNewIPResource -f $IPAddress,$SubnetMask)
+    $params = @{
+        Name         = "IP Address $IPAddress"
+        ResourceType = "IP Address"
+        Group        = $($cluster.OwnerGroup)
+    }
+    $ipResource = Add-ClusterResource @params
+    $parameter1 = New-Object Microsoft.FailoverClusters.PowerShell.ClusterParameter $ipResource,Address,$ipAddress
+    $parameter2 = New-Object Microsoft.FailoverClusters.PowerShell.ClusterParameter $ipResource,SubnetMask,$subnetMask
+    $parameterList = $parameter1,$parameter2
+
+    #* Add the IP Address resource to the cluster
+    Try
+    {
+        Write-Verbose -Message ($script:localizedData.AddIPAddressResource)
+        $parameterList | Set-ClusterParameter -ErrorAction Stop
+    }
+    Catch
+    {
+        #TODO Add error handling here for failure. Most likely reasons are
+        #* IP Address already exists (does this check actually IP Address or just IP Address Name)
+        #* IP Address network has yet to be added to the Cluster
+        New-InvalidOperationException -Message $_.Exception.Message -ErrorRecord $_
+    }
+
+    $ipResources = Get-ClusterResource | Where-Object
+    {
+        ( $_.OwnerGroup -eq $cluster.OwnerGroup ) -and
+        ( $_.ResourceType -eq 'IP Address' )
+    }
+
+    $dependencyExpression = ''
+    $ipResourceCount = $ipResources.count
+    $i = 0
+    while ( $i -lt $ipResourceCount )
+    {
+        if ( $i -eq $ipResourceCount )
+        {
+            $dependencyExpression += "[$($ipResources[$i].name)]"
+        }
+        else
+        {
+            $dependencyExpression += "[$($ipResources[$i].name)] or "
+        }
+        $i++
+    }
+
+    #Set cluster resources
+    Try {
         $params = @{
-          Name         = "IP Address $IPAddress"
-          ResourceType = "IP Address"
-          Group        = $($cluster.OwnerGroup)
+        Resource    = $($cluster.Name)
+        Dependency  = $dependencyExpression
+        ErrorAction = 'Stop'
         }
-        $ipResource = Add-ClusterResource @params
-        $parameter1 = New-Object Microsoft.FailoverClusters.PowerShell.ClusterParameter $ipResource,Address,$ipAddress
-        $parameter2 = New-Object Microsoft.FailoverClusters.PowerShell.ClusterParameter $ipResource,SubnetMask,$subnetMask
-        $parameterList = $parameter1,$parameter2
-
-        #* Add the IP Address resource to the cluster
-        Try {
-            Write-Verbose "$f Attempting to add the IP Address resource to the cluster"
-            $ErrorActionPreference = 'Stop'
-            $parameterList | Set-ClusterParameter
-        } Catch {
-          #TODO Add error handling here for failure. Most likely reasons are
-          #* IP Address already exists (does this check actuall IP Address or just IP Address Name)
-          #* IP Address network has yet to be added to the Cluster
-          Write-Error "$f failed to add the IP Address resource to the cluster"
-          break
-        }
-
-        Write-Verbose "$f Getting all IP Address resources from the Windows Cluster"
-        $ipResources = Get-ClusterResource | Where-Object {
-            ( $_.OwnerGroup -eq $cluster.OwnerGroup ) -and
-            ( $_.ResourceType -eq 'IP Address' )
-          }
-
-        Write-Verbose "$f Building IP Resource DependencyExpression"
-        $dependencyExpression = ''
-        $i = 0
-        while ( $i -lt ( $ipResources.count ) ) {
-          if ( $i -eq ( $ipResources.count -  1) ) {
-              $dependencyExpression += "[$($ipResources[$i].name)]"
-          } else {
-              $dependencyExpression += "[$($ipResources[$i].name)] or "
-          }
-          $i++
-        }
-
-        #Set cluster resources
-        Try {
-          $params = @{
-            Resource    = $($cluster.Name)
-            Dependency  = $dependencyExpression
-            ErrorAction = 'Stop'
-          }
-          Write-Verbose "$f Setting DependencyExpression  as $dependencyExpression"
-          Set-ClusterResourceDependency @params
-        } Catch {
-          #TODO error handling for when adding the depenencies list fails
-          Write-Error "$f Failed to set DependencyExpression"
-          break
-        }
-
-    }
-    End
-    {
-      return $True
+        Write-Verbose -Message ($script:localizedData.SetDependencyExpression -f $dependencyExpression)
+        Set-ClusterResourceDependency @params
+    } Catch {
+        #TODO error handling for when adding the depenencies list fails
+        New-InvalidOperationException -Message $_.Exception.Message -ErrorRecord $_
     }
 }
 
 <#
-.Synopsis
-   Tests whether a given IPAddress is part of the Cluster's DependencyExpression
-.DESCRIPTION
-   Long description
-.EXAMPLE
-   Example using complete IPAddress and Subnetmask default ParameterSet
-   Test-ClusterIPAddressDependency -IPAddress 10.235.0.141 -SubnetMask 255.255.255.128 -verbose
-.EXAMPLE
-   Example using IPAddress from default ParameterSet
-   Test-ClusterIPAddressDependency -IPAddress 10.235.0.141 -verbose
-.EXAMPLE
-   Example using Combined ParameterSet
-   Test-ClusterIPAddressDependency -IPandSubnet 10.235.0.141/255.255.255.128 -verbose
+    .Synopsis
+        Tests whether a given IPAddress is part of the Cluster's DependencyExpression
+    .PARAMETER IPAddress
+        IP address to check whether it's in the Cluster's DependencyExpression
+    .PARAMETER SubnetMask
+        The subnet mask of the IPAddress
+    .PARAMETER IPandSubnet
+        Combined IP address and subnet mask in the format 10.245.10.32/255.255.255.0
+    .EXAMPLE
+        Example using complete IPAddress and Subnetmask default ParameterSet
+        Test-ClusterIPAddressDependency -IPAddress 10.235.0.141 -SubnetMask 255.255.255.128 -verbose
+    .EXAMPLE
+        Example using IPAddress from default ParameterSet
+        Test-ClusterIPAddressDependency -IPAddress 10.235.0.141 -verbose
+    .EXAMPLE
+        Example using Combined ParameterSet
+        Test-ClusterIPAddressDependency -IPandSubnet 10.235.0.141/255.255.255.128 -verbose
 #>
 function Test-ClusterIPAddressDependency
 {
@@ -436,53 +428,55 @@ function Test-ClusterIPAddressDependency
 
     Begin
     {
-        $f = "$($PSCmdlet.CommandRunTime): "
-        switch ( $PsCmdlet.ParameterSetName ) {
-          "Combined" {
-              Write-Verbose "$f Combined IP and SubnetMask were passed as $IPandSubnet"
+        switch ( $PsCmdlet.ParameterSetName )
+        {
+            "Combined" {
+                Write-Verbose -Message ($script:localizedData.CombinedIPandSubnetMask -f $IPandSubnet)
 
-              [IPAddress]$IPAddress  = $IPandSubnet.Split('/')[0]
-              [IPAddress]$SubnetMask = $IPandSubnet.Split('/')[1]
-              Write-Verbose "$f IP and SubnetMask split as $IPAddress and $SubnetMask"
-          }
+                [IPAddress]$IPAddress  = $IPandSubnet.Split('/')[0]
+                [IPAddress]$SubnetMask = $IPandSubnet.Split('/')[1]
+                Write-Verbose -Message ($script:localizedData.SplitIPandSubnetMask -f $IPAddress, $SubnetMask)
+            }
         }
-        $ErrorActionPreference = 'Stop'
     }
     Process
     {
-      Try {
-        Write-Verbose "$f Getting Cluster DependencyExpression"
-        $cluster = Get-ClusterResource | Where-Object {$_.name -eq 'Cluster Name'}
-        $dependencyExpression = (Get-ClusterResourceDependency -Resource $cluster.Name).DependencyExpression
-      } Catch {
-        Write-Error "$f Failed to get cluster dependencies. Is $($env:ComputerName) joined to a cluster?"
-      }
+        $dependencyExpression = Get-ClusterResourceDependencyExpression
 
-      Write-Verbose "$f Testing if $IPAddress is in DependencyExpression $dependencyExpression"
-      If ( $dependencyExpression -match $IPAddress ) {
-        Write-Verbose "$f $IPAddress is in DependencyExpression $dependencyExpression"
-        $returnObj = $True
-      } else {
-        Write-Verbose "$f $IPAddress is not in DependencyExpression $dependencyExpression"
-        $returnObj = $False
-      }
+        Write-Verbose -Message ($script:localizedData.TestDependencyExpression -f $IPAddress, $dependencyExpression)
+        If ( $dependencyExpression -match $IPAddress )
+        {
+            Write-Verbose -Message ($script:localizedData.SuccessfulTestDependencyExpression -f $IPAddress, $dependencyExpression
+            return $True
+        }
+        else
+        {
+            Write-Verbose -Message ($script:localizedData.FailedTestDependencyExpression -f $IPAddress, $dependencyExpression
+            return $False
+        }
     }
     End
     {
-      return $returnObj
+
     }
 }
 
 <#
-.Synopsis
-   Checks whether the ClusterNetwork for a given IPAddress has been added to a Cluster
-.DESCRIPTION
-   Given an IPAddress and SubnetMask this cmdlet will check if the correct ClusterNetwork has
-   been added to the cluster.
-.EXAMPLE
-   Test-ClusterNetwork -IPAddress 10.245.10.32 -SubnetMask 255.255.255.0
-.EXAMPLE
-   Test-ClusterNetwork -IPandSubnet 10.245.10.32/255.255.255.0
+    .Synopsis
+        Checks whether the ClusterNetwork for a given IPAddress has been added to a Cluster
+    .DESCRIPTION
+        Given an IPAddress and SubnetMask this cmdlet will check if the correct ClusterNetwork has
+        been added to the cluster.
+    .PARAMETER IPAddress
+        IP address to check whether it's subnet is a cluster network already
+    .PARAMETER SubnetMask
+        The subnet mask of the IPAddress
+    .PARAMETER IPandSubnet
+        Combined IP address and subnet mask in the format 10.245.10.32/255.255.255.0
+    .EXAMPLE
+    Test-ClusterNetwork -IPAddress 10.245.10.32 -SubnetMask 255.255.255.0
+    .EXAMPLE
+    Test-ClusterNetwork -IPandSubnet 10.245.10.32/255.255.255.0
 #>
 function Test-ClusterNetwork
 {
@@ -514,49 +508,86 @@ function Test-ClusterNetwork
 
     Begin
     {
-        $f = "$($PSCmdlet.CommandRunTime): "
-        switch ( $PsCmdlet.ParameterSetName ) {
-          "Combined" {
-              Write-Verbose "$f Combined IP and SubnetMask were passed as $IPandSubnet"
+        switch ( $PsCmdlet.ParameterSetName )
+        {
+            "Combined" {
+                Write-Verbose -Message ($script:localizedData.CombinedIPandSubnetMask -f $IPandSubnet)
 
-              [IPAddress]$IPAddress  = $IPandSubnet.Split('/')[0]
-              [IPAddress]$SubnetMask = $IPandSubnet.Split('/')[1]
-              Write-Verbose "$f IP and SubnetMask split as $IPAddress and $SubnetMask"
-          }
+                [IPAddress]$IPAddress  = $IPandSubnet.Split('/')[0]
+                [IPAddress]$SubnetMask = $IPandSubnet.Split('/')[1]
+                Write-Verbose -Message ($script:localizedData.SplitIPandSubnetMask -f $IPAddress, $SubnetMask)
+            }
         }
-        $ErrorActionPreference = 'Stop'
     }
     Process
     {
-        Write-Verbose "$f Getting all networks added to this cluster."
-        $clusterNetworks = New-Object "System.Collections.Generic.List[PSCustomObject]"
-        Foreach ( $network in Get-ClusterNetwork ) {
-            $clusterNetworks.Add([PSCustomObject]@{
-                Address     = $network.Address
-                AddressMask = $network.AddressMask
-            })
+        $clusterNetworks = Get-ClusterNetworkList
+        Write-Verbose -Message ($script:localizedData.GetSubnetfromIPAddressandSubnetMask -f $IPAddress, $SubnetMask)
+        $subnet = $(Get-Subnet -IPAddress $IPAddress -SubnetMask $SubnetMask -Verbose -ErrorAction Stop)
+        Write-Verbose -Message ($script:localizedData.FoundSubnetfromIPAddressandSubnetMask -f $IPAddress, $SubnetMask, $Subnet)
 
-            Write-Verbose "$f Found cluster network $($network.Address)/$($Network.AddressMask)"
-        }
-
-        Write-Verbose "$f Getting the subnet of the given IPAddress $IPAddress with subnet mask $SubnetMask"
-        $subnet = $(Get-Subnet -IPAddress $IPAddress -SubnetMask $SubnetMask -Verbose)
-        Write-Verbose "$f IPAddress $IPAddress with Subnet Mask $SubnetMask is in subnet $Subnet"
-
-        $returnObj = $False
-
-        foreach ( $network in $clusterNetworks ) {
-          if (
-               ( $network.Address -eq $subnet.IPAddressToString ) -and
-               ( $network.AddressMask -eq $SubnetMask.IPAddressToString )
-            ){
-            Write-Verbose "$f Subnet $($network.address) for IPAddress $IPAddress network $subnet is added to the cluster"
-            $returnObj = $True
-          }
+        foreach ( $network in $clusterNetworks )
+        {
+            if (( $network.Address -eq $subnet.IPAddressToString ) -and
+                ( $network.AddressMask -eq $SubnetMask.IPAddressToString ))
+            {
+                Write-Verbose -Message ($script:localizedData.NetworkAlreadyInCluster -f $($network.address), $IPAddress, $subnet)
+                return $True
+            }
         }
     }
     End
     {
-        return $returnObj
+        return $false
+    }
+}
+
+<#
+    .SYNOPSIS
+        Returns a list of PSCustomObjects representing the network and subnet mask of all networks in the cluster.
+#>
+function Get-ClusterNetworkList {
+    [CmdletBinding()]
+    [Alias()]
+    Param
+    ()
+
+    Write-Verbose -Message ($script:localizedData.GetClusterNetworks)
+    $networks = New-Object "System.Collections.Generic.List[PSCustomObject]"
+    Foreach ( $network in Get-ClusterNetwork )
+    {
+        $clusterNetworks.Add([PSCustomObject]@{
+            Address     = $network.Address
+            AddressMask = $network.AddressMask
+        })
+        Write-Verbose -Message ($script:localizedData.FoundClusterNetwork -f $($network.Address), $($network.AddressMask))
+    }
+
+    return $networks
+}
+
+<#
+    .SYNOPSIS
+        Returns the cluster Dependency expression for a given cluster.
+    .PARAMETER ClusterName
+        The name of the cluster to get the Dependency expression
+#>
+function Get-ClusterResourceDependencyExpression {
+    [CmdletBinding()]
+    [Alias()]
+    Param
+    (
+        [String]$ClusterName = 'Cluster Name'
+    )
+
+    Try
+    {
+        Write-Verbose -Message ($script:localizedData.GetClusterResourceExpression)
+        $cluster = Get-ClusterResource | Where-Object {$_.name -eq $ClusterName}
+        return $(Get-ClusterResourceDependency -Resource $cluster.Name).DependencyExpression
+    }
+    Catch
+    {
+        New-InvalidOperationException -Message $_.Exception.Message -ErrorRecord $_
     }
 }

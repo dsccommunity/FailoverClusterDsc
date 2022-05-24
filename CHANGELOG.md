@@ -7,6 +7,8 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 
 ## [Unreleased]
 
+## [1.16.1] - 2022-05-24
+
 ### Deprecated
 
 - **The module _xFailOverCluster_ will be renamed to _FailoverClusterDsc_ ([issue #69](https://github.com/dsccommunity/xFailOverCluster/issues/69)).

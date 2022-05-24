@@ -13,6 +13,8 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
   - Updated DSCResources, Examples, Modules and Tests for new naming.
   - Updated README.md from _xFailOverCluster_ to _FailoverClusterDsc_
 
+## [1.16.1] - 2022-05-24
+
 ### Deprecated
 
 - **The module _xFailOverCluster_ will be renamed to _FailoverClusterDsc_ ([issue #69](https://github.com/dsccommunity/xFailOverCluster/issues/69)).

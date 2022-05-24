@@ -26,15 +26,7 @@
     # Aliases to export from this module
     AliasesToExport      = @()
 
-    DscResourcesToExport = @(
-        'Cluster'
-        'ClusterDisk'
-        'ClusterNetwork'
-        'ClusterPreferredOwner'
-        'ClusterProperty'
-        'ClusterQuorum'
-        'WaitForCluster'
-    )
+    DscResourcesToExport = @()
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
     PrivateData          = @{

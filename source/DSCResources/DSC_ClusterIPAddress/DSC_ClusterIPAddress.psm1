@@ -50,7 +50,7 @@ Function Set-TargetResource
         # We need to Check if the network is added to the cluster. If not, we fail. If it is, we can append the IPAddress
         if ( -not $(Test-ClusterNetwork -IPAddress $IPAddress -SubnetMask $SubnetMask) )
         {
-            Write-Error "$f ClusterNetwork for IPAddress $IPAddress and subnet mask $SubnetMask is not part of this Cluster"
+            New-InvalidArgumentException -Message ($script:localizedData.NonExistantClusterNetwork -f $IPAddress,$SubnetMask)
             break
         }
         else
@@ -61,7 +61,6 @@ Function Set-TargetResource
                 ErrorAction = 'Stop'
             }
             Add-ClusterIPAddressDependency @params
-
         }
     }
     else
@@ -199,31 +198,8 @@ function Add-ClusterIPAddressDependency
     #* Get Windows Cluster resource
     $cluster = Get-ClusterResource | Where-Object { $_.name -eq $ClusterName}
 
-    #* Create new IPAddress resource and add the IPAddress parameters to it
-    Write-Verbose -Message ($script:localizedData.CreateNewIPResource -f $IPAddress,$SubnetMask)
-    $params = @{
-        Name         = "IP Address $IPAddress"
-        ResourceType = "IP Address"
-        Group        = $($cluster.OwnerGroup)
-    }
-    $ipResource = Add-ClusterResource @params
-    $parameter1 = New-Object Microsoft.FailoverClusters.PowerShell.ClusterParameter $ipResource,Address,$ipAddress
-    $parameter2 = New-Object Microsoft.FailoverClusters.PowerShell.ClusterParameter $ipResource,SubnetMask,$subnetMask
-    $parameterList = $parameter1,$parameter2
-
-    #* Add the IP Address resource to the cluster
-    Try
-    {
-        Write-Verbose -Message ($script:localizedData.AddIPAddressResource)
-        $parameterList | Set-ClusterParameter -ErrorAction Stop
-    }
-    Catch
-    {
-        #TODO Add error handling here for failure. Most likely reasons are
-        #* IP Address already exists (does this check actually IP Address or just IP Address Name)
-        #* IP Address network has yet to be added to the Cluster
-        New-InvalidOperationException -Message $_.Exception.Message -ErrorRecord $_
-    }
+    $ipResource = Add-ClusterIPResource -IPAddress $IPAddress -OwnerGroup $cluster.OwnerGroup
+    Add-ClusterIPParameter -IPAddressResource $ipResource -IPAddress $IPAddress -AddressMask $SubnetMask
 
     $ipResources = Get-ClusterResource | Where-Object
     {
@@ -248,7 +224,8 @@ function Add-ClusterIPAddressDependency
     }
 
     #Set cluster resources
-    Try {
+    Try
+    {
         $params = @{
         Resource    = $($cluster.Name)
         Dependency  = $dependencyExpression
@@ -256,7 +233,9 @@ function Add-ClusterIPAddressDependency
         }
         Write-Verbose -Message ($script:localizedData.SetDependencyExpression -f $dependencyExpression)
         Set-ClusterResourceDependency @params
-    } Catch {
+    }
+    Catch
+    {
         #TODO error handling for when adding the depenencies list fails
         New-InvalidOperationException -Message $_.Exception.Message -ErrorRecord $_
     }
@@ -402,6 +381,186 @@ function Get-ClusterResourceDependencyExpression {
     }
     Catch
     {
+        New-InvalidOperationException -Message $_.Exception.Message -ErrorRecord $_
+    }
+}
+
+<#
+    .Synopsis
+        Adds an IP Address Resource to a given Cluster Group and returns an IPAddress Resource
+    .PARAMETER IPAddress
+        IP address to check whether it's subnet is a cluster network already
+    .PARAMETER OwnerGroup
+        OwnerGroup of the cluster to add the IP resource to
+#>
+function Add-ClusterIPResource
+{
+    [CmdletBinding()]
+    [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterResource])]
+    Param
+    (
+        # IPAddress to add to Cluster
+        [Parameter(Mandatory = $true)]
+        [IPAddress]
+        $IPAddress,
+
+        # Owner Group of the cluster
+        [Parameter(Mandatory = $true)]
+        [IPAddress]
+        $OwnerGroup
+    )
+
+    Try
+    {
+        #* Create new IPAddress resource and add the IPAddress parameters to it
+        Write-Verbose -Message ($script:localizedData.CreateNewIPResource -f $IPAddress,$SubnetMask)
+        $params = @{
+            Name         = "IP Address $IPAddress"
+            ResourceType = 'IP Address'
+            Group        = $OwnerGroup
+            ErrorAction  = 'Stop'
+        }
+        return Add-ClusterResource @params
+    }
+    Catch
+    {
+        New-InvalidOperationException -Message $_.Exception.Message -ErrorRecord $_
+    }
+}
+
+<#
+    .Synopsis
+        Removes an IP Address Resource to a given Cluster Group and returns an IPAddress Resource
+    .PARAMETER IPAddress
+        IP address to remove from the cluster
+#>
+function Remove-ClusterIPResource
+{
+    [CmdletBinding()]
+    [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterResource])]
+    Param
+    (
+        # IPAddress to add to Cluster
+        [Parameter(Mandatory = $true)]
+        [IPAddress]
+        $IPAddress,
+
+        # Owner Group of the cluster
+        [Parameter(Mandatory = $true)]
+        [IPAddress]
+        $OwnerGroup
+    )
+
+    Try
+    {
+        #* Create new IPAddress resource and add the IPAddress parameters to it
+        Write-Verbose -Message ($script:localizedData.CreateNewIPResource -f $IPAddress,$SubnetMask)
+        $params = @{
+            Name         = "IP Address $IPAddress"
+            ResourceType = 'IP Address'
+            Group        = $OwnerGroup
+            ErrorAction  = 'Stop'
+        }
+        Remove-ClusterResource @params
+    }
+    Catch
+    {
+        New-InvalidOperationException -Message $_.Exception.Message -ErrorRecord $_
+    }
+}
+
+<#
+    .Synopsis
+        Adds an IP address resource to cluster parameter
+    .PARAMETER IPAddressResource
+        IP cddress resource to add to the cluster parameter
+    .PARAMETER IPAddress
+        IP address to add to the cluster parameter
+    .PARAMETER AddressMask
+        Address mask of the IP address
+#>
+function Add-ClusterIPParameter
+{
+    [CmdletBinding()]
+    Param
+    (
+        # IPAddress to add to Cluster
+        [Parameter(Mandatory = $true)]
+        [Microsoft.FailoverClusters.PowerShell.ClusterResource]
+        $IPAddressResource,
+
+        [Parameter(Mandatory = $true)]
+        [IPAddress]
+        $IPAddress,
+
+        [Parameter(Mandatory = $true)]
+        [IPAddress]
+        $AddressMask
+    )
+
+    $parameter1 = New-Object Microsoft.FailoverClusters.PowerShell.ClusterParameter $IPAddressResource,Address,$IPAddress
+    $parameter2 = New-Object Microsoft.FailoverClusters.PowerShell.ClusterParameter $IPAddressResource,SubnetMask,$AddressMask
+    $parameterList = $parameter1,$parameter2
+
+    #* Add the IP Address resource to the cluster
+    Try
+    {
+        Write-Verbose -Message ($script:localizedData.AddIPAddressResource -f $IPAddress,$AddressMask)
+        $parameterList | Set-ClusterParameter -ErrorAction Stop
+    }
+    Catch
+    {
+        #TODO Add error handling here for failure. Most likely reasons are
+        #* IP Address already exists (does this check actually IP Address or just IP Address Name)
+        #* IP Address network has yet to be added to the Cluster
+        New-InvalidOperationException -Message $_.Exception.Message -ErrorRecord $_
+    }
+}
+
+<#
+    .Synopsis
+        Removes an IP address to the cluster parameter
+    .PARAMETER IPAddressResource
+        IP cddress resource to remove to the cluster parameter
+    .PARAMETER IPAddress
+        IP address to remove to the cluster parameter
+    .PARAMETER AddressMask
+        Address mask of the IP address
+#>
+function Remove-ClusterIPParameter
+{
+    [CmdletBinding()]
+    Param
+    (
+        # IPAddress to add to Cluster
+        [Parameter(Mandatory = $true)]
+        [Microsoft.FailoverClusters.PowerShell.ClusterResource]
+        $IPAddressResource,
+
+        [Parameter(Mandatory = $true)]
+        [IPAddress]
+        $IPAddress,
+
+        [Parameter(Mandatory = $true)]
+        [IPAddress]
+        $AddressMask
+    )
+
+    $parameter1 = New-Object Microsoft.FailoverClusters.PowerShell.ClusterParameter $IPAddressResource,Address,$IPAddress
+    $parameter2 = New-Object Microsoft.FailoverClusters.PowerShell.ClusterParameter $IPAddressResource,SubnetMask,$AddressMask
+    $parameterList = $parameter1,$parameter2
+
+    #* Add the IP Address resource to the cluster
+    Try
+    {
+        Write-Verbose -Message ($script:localizedData.RemoveIPAddressResource -f $IPAddress,$AddressMask)
+        $parameterList | Set-ClusterParameter -Delete -ErrorAction Stop
+    }
+    Catch
+    {
+        #TODO Add error handling here for failure. Most likely reasons are
+        #* IP Address already exists (does this check actually IP Address or just IP Address Name)
+        #* IP Address network has yet to be added to the Cluster
         New-InvalidOperationException -Message $_.Exception.Message -ErrorRecord $_
     }
 }

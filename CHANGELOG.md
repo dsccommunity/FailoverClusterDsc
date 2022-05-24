@@ -6,11 +6,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md).
 
 ## [Unreleased]
+### Changed
 - BREAKING CHANGE
-  - Renamed xFailOverCluster to FailoverClusterDsc - fixes [Issue #69](https://github.com/PowerShell/xFailOverCluster/issues/69).
+  - Renamed _xFailOverCluster_ to _FailoverClusterDsc_ - fixes [Issue #69](https://github.com/PowerShell/xFailOverCluster/issues/69).
   - Changed all MSFT_xResourceName to DSC_ResourceName.
   - Updated DSCResources, Examples, Modules and Tests for new naming.
-  - Updated README.md from xFailOverCluster to CertifcateDsc
+  - Updated README.md from _xFailOverCluster_ to _FailoverClusterDsc_
+
+## [1.16.1] - 2022-05-24
+
+### Deprecated
+
+- **The module _xFailOverCluster_ will be renamed to _FailoverClusterDsc_ ([issue #69](https://github.com/dsccommunity/xFailOverCluster/issues/69)).
+  The version `v1.6.1` will be the the last release of _xFailOverCluster_.
+  The Version `v2.0.0` will be released as _FailoverClusterDsc_, it will be
+  released shortly after the `v1.6.1` release to be able to start transition
+  to the new module. The prefix 'x' will be removed from all resources in
+  _FailoverClusterDsc_.**
+
 ## [1.16.0] - 2021-03-17
 
 ### Added
@@ -21,14 +34,14 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 
 ### Changed
 
-- FailOverClusterDsc
+- xFailOverCluster
   - Update pipeline to use new deploy tasks.
 
 ## [1.15.0] - 2021-02-19
 
 ### Added
 
-- FailOverClusterDsc
+- xFailOverCluster
   - Add the module MarkdownLinkCheck to dependent modules to active the
     markdown link tests.
   - Added the filetypes to the file `.gitattributes` according to the
@@ -43,7 +56,7 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 
 ### Changed
 
-- FailOverClusterDsc
+- xFailOverCluster
   - Renamed `master` branch to `main` ([issue #246](https://github.com/dsccommunity/FailOverClusterDsc/issues/246)).
   - Updated the CI pipeline files to the latest template.
   - Changed unit tests to handle missing DscResource.Test better.
@@ -69,7 +82,7 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 
 ### Fixed
 
-- FailOverClusterDsc
+- xFailOverCluster
   - The component `gitversion` that is used in the pipeline was wrongly configured
     when the repository moved to the new default branch `main`. It no longer throws
     an error when using newer versions of GitVersion.
@@ -117,7 +130,7 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 
 ### Changed
 
-- FailOverClusterDsc
+- xFailOverCluster
   - Changed the pipeline to publish test results for both success and failure.
 
 ### Fixed
@@ -132,12 +145,12 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 
 ### Added
 
-- FailOverClusterDsc
+- xFailOverCluster
   - Added automatic release with a new CI pipeline.
 
 ### Changed
 
-- FailOverClusterDsc
+- xFailOverCluster
   - Moved the helper module `CommonResourceHelper` to the `Modules` folder.
 - CommonResourceHelper
   - Update `Get-LocalizedData` to handle new location of helper module.

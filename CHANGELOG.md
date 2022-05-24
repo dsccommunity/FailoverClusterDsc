@@ -9,7 +9,7 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 
 ### Deprecated
 
-**The module _xFailOverCluster_ will be renamed _FailoverClusterDsc_ ([issue #69](https://github.com/dsccommunity/xFailOverCluster/issues/69)).
+- **The module _xFailOverCluster_ will be renamed _FailoverClusterDsc_ ([issue #69](https://github.com/dsccommunity/xFailOverCluster/issues/69)).
 The version `v1.6.1` will be the the last release of _xFailOverCluster_.
 The Version `v2.0.0` will be release as _FailoverClusterDsc_, it will be
 released shortly after the `v1.6.1` release to easily transition to the

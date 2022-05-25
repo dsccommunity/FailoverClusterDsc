@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md).
 
 ## [Unreleased]
+
+## [2.0.0] - 2022-05-25
 ### Changed
 - BREAKING CHANGE
   - Renamed _xFailOverCluster_ to _FailoverClusterDsc_ - fixes [Issue #69](https://github.com/PowerShell/xFailOverCluster/issues/69).

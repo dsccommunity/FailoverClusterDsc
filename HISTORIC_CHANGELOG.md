@@ -1,4 +1,4 @@
-# Historic change log for xFailOverCluster
+# Historic change log for FailOverClusterDsc
 
 The release notes in the PowerShell Module manifest cannot exceed 10000
 characters. Due to a bug in the CI deploy pipeline this is not handled.

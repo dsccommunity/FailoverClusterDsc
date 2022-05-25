@@ -17,8 +17,7 @@
     MarkdownLinkCheck           = 'latest'
     'DscResource.Test'          = 'latest'
     'DscResource.AnalyzerRules' = 'latest'
+    'DscResource.DocGenerator'  = 'latest'
+    'DscResource.Common'        = 'latest'
     xDscResourceDesigner        = 'latest'
-
-    # Dependent modules
-    'DscResource.Common'        = '0.2.0'
 }

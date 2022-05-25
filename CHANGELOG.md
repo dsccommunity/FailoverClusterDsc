@@ -1,4 +1,4 @@
-# Change log for xFailOverCluster
+# Change log for FailOverClusterDsc
 
 The format is based on and uses the types of changes according to [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md).
 
 ## [Unreleased]
+### Changed
+- BREAKING CHANGE
+  - Renamed _xFailOverCluster_ to _FailoverClusterDsc_ - fixes [Issue #69](https://github.com/PowerShell/xFailOverCluster/issues/69).
+  - Changed all MSFT_xResourceName to DSC_ResourceName.
+  - Updated DSCResources, Examples, Modules and Tests for new naming.
+  - Updated README.md from _xFailOverCluster_ to _FailoverClusterDsc_
 
 ## [1.16.1] - 2022-05-24
 
@@ -24,7 +30,7 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 
 - xClusterProperty
   - Added the BlockCacheSize parameter which controls Cluster Shared Volume
-    memory caching in MB ([issue #252](https://github.com/dsccommunity/xFailOverCluster/issues/252)).
+    memory caching in MB ([issue #252](https://github.com/dsccommunity/FailOverClusterDsc/issues/252)).
 
 ### Changed
 
@@ -46,12 +52,12 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
     DscResource.Common v0.2.0.
   - Adding back publishing code coverage to Codecov.io.
     - Add status badge for Codecov.io in README.md.
-    - Fix Azure Pipelines code coverage ([issue #236](https://github.com/dsccommunity/xFailOverCluster/issues/236)).
+    - Fix Azure Pipelines code coverage ([issue #236](https://github.com/dsccommunity/FailOverClusterDsc/issues/236)).
 
 ### Changed
 
 - xFailOverCluster
-  - Renamed `master` branch to `main` ([issue #246](https://github.com/dsccommunity/xFailOverCluster/issues/246)).
+  - Renamed `master` branch to `main` ([issue #246](https://github.com/dsccommunity/FailOverClusterDsc/issues/246)).
   - Updated the CI pipeline files to the latest template.
   - Changed unit tests to handle missing DscResource.Test better.
   - Changed the Code of Conduct to the one adopted by DSC Community.
@@ -68,7 +74,7 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
   - Only run the CI pipeline on branch `master` when there are changes to
     files inside the `source` folder.
   - Changed integration tests to run on a a build image with Windows Server
-    2019 since the one we previously used was removed from Azure Pipelines ([issue #233](https://github.com/dsccommunity/xFailOverCluster/issues/233)).
+    2019 since the one we previously used was removed from Azure Pipelines ([issue #233](https://github.com/dsccommunity/FailOverClusterDsc/issues/233)).
   - Updated CI pipeline to get version from the property `NuGetVersionV2`.
   - Pin Pester to 4.10.1 in `RequiredModule.psd1` since the tests does
     not support Pester 5.
@@ -107,13 +113,13 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 - xClusterPreferredOwner
   - Fixed broken links to examples in README.md.
 - xClusterQuorum
-  - Fixed broken link to examples in README.md ([issue #208](https://github.com/dsccommunity/xFailOverCluster/issues/208)).
+  - Fixed broken link to examples in README.md ([issue #208](https://github.com/dsccommunity/FailOverClusterDsc/issues/208)).
 - CommonResourceHelper
   - Added `en-US` localization folder to pass PSSA rule.
 - xCluster
   - Added script file information to the example `1-CreateFirstNodeOfAFailoverCluster.ps1`.
-  - Fixed Describe-block descriptions ([issue #234](https://github.com/dsccommunity/xFailOverCluster/issues/234)).
-  - Made DomainAdministratorCredential optional ([issue #164](https://github.com/dsccommunity/xFailOverCluster/issues/164))
+  - Fixed Describe-block descriptions ([issue #234](https://github.com/dsccommunity/FailOverClusterDsc/issues/234)).
+  - Made DomainAdministratorCredential optional ([issue #164](https://github.com/dsccommunity/FailOverClusterDsc/issues/164))
 
 ### Removed
 
@@ -132,7 +138,7 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 - CommonResourceHelper
   - Fix unit tests to load the helper modules using module manifest.
   - Fix to correctly export the functions in the helper module
-    ([issue #214](https://github.com/dsccommunity/xFailOverCluster/issues/214)).
+    ([issue #214](https://github.com/dsccommunity/FailOverClusterDsc/issues/214)).
   - Fix typo in module manifest.
 
 ## [1.14.0] - 2019-12-17

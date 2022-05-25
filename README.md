@@ -1,11 +1,11 @@
-# xFailOverCluster
+# FailOverClusterDsc
 
-[![Build Status](https://dev.azure.com/dsccommunity/xFailOverCluster/_apis/build/status/dsccommunity.xFailOverCluster?branchName=main)](https://dev.azure.com/dsccommunity/xFailOverCluster/_build/latest?definitionId=5&branchName=main)
-![Azure DevOps coverage (branch)](https://img.shields.io/azure-devops/coverage/dsccommunity/xFailOverCluster/5/main)
-[![codecov](https://codecov.io/gh/dsccommunity/xFailOverCluster/branch/main/graph/badge.svg)](https://codecov.io/gh/dsccommunity/xFailOverCluster)
-[![Azure DevOps tests](https://img.shields.io/azure-devops/tests/dsccommunity/xFailOverCluster/5/main)](https://dsccommunity.visualstudio.com/xFailOverCluster/_test/analytics?definitionId=5&contextType=build)
-[![PowerShell Gallery (with prereleases)](https://img.shields.io/powershellgallery/vpre/xFailOverCluster?label=xFailOverCluster%20Preview)](https://www.powershellgallery.com/packages/xFailOverCluster/)
-[![PowerShell Gallery](https://img.shields.io/powershellgallery/v/xFailOverCluster?label=xFailOverCluster)](https://www.powershellgallery.com/packages/xFailOverCluster/)
+[![Build Status](https://dev.azure.com/dsccommunity/FailOverClusterDsc/_apis/build/status/dsccommunity.FailOverClusterDsc?branchName=main)](https://dev.azure.com/dsccommunity/FailOverClusterDsc/_build/latest?definitionId=5&branchName=main)
+![Azure DevOps coverage (branch)](https://img.shields.io/azure-devops/coverage/dsccommunity/FailOverClusterDsc/5/main)
+[![codecov](https://codecov.io/gh/dsccommunity/FailOverClusterDsc/branch/main/graph/badge.svg)](https://codecov.io/gh/dsccommunity/FailOverClusterDsc)
+[![Azure DevOps tests](https://img.shields.io/azure-devops/tests/dsccommunity/FailOverClusterDsc/5/main)](https://dsccommunity.visualstudio.com/FailOverClusterDsc/_test/analytics?definitionId=5&contextType=build)
+[![PowerShell Gallery (with prereleases)](https://img.shields.io/powershellgallery/vpre/FailOverClusterDsc?label=FailOverClusterDsc%20Preview)](https://www.powershellgallery.com/packages/FailOverClusterDsc/)
+[![PowerShell Gallery](https://img.shields.io/powershellgallery/v/FailOverClusterDsc?label=FailOverClusterDsc)](https://www.powershellgallery.com/packages/FailOverClusterDsc/)
 
 This module contains DSC resources for deployment and configuration of
 Windows Server Failover Cluster
@@ -31,30 +31,30 @@ A full list of changes in each version can be found in the [change log](CHANGELO
 
 ## Resources
 
-* [**xCluster**](#xcluster) Ensures that a group of machines form a cluster.
-* [**xClusterDisk**](#xclusterdisk) Configures shared disks in a cluster.
-* [**xClusterNetwork**](#xclusternetwork) Configures as cluster network in a failover
+* [**Cluster**](#cluster) Ensures that a group of machines form a cluster.
+* [**ClusterDisk**](#clusterdisk) Configures shared disks in a cluster.
+* [**ClusterNetwork**](#clusternetwork) Configures as cluster network in a failover
   cluster.
-* [**xClusterPreferredOwner**](#xclusterpreferredowner) Configures preferred
+* [**ClusterPreferredOwner**](#clusterpreferredowner) Configures preferred
   owner of a cluster group in a cluster.
-* [**xClusterProperty**](#xclusterproperty) Configures cluster properties on a
+* [**ClusterProperty**](#clusterproperty) Configures cluster properties on a
   failover cluster.
-* [**xClusterQuorum**](#xclusterquorum) Configures quorum in a cluster.
-* [**xWaitForCluster**](#xwaitforcluster) Ensures that a node waits for a remote
+* [**ClusterQuorum**](#clusterquorum) Configures quorum in a cluster.
+* [**WaitForCluster**](#waitforcluster) Ensures that a node waits for a remote
   cluster is created.
 
-### xCluster
+### Cluster
 
 Used to configure a failover cluster. If the cluster does not exist, it will be
 created in the domain and the static IP address will be assigned to the cluster.
 When the cluster exist (either it was created or already existed), it will add
 the target node ($env:COMPUTERNAME) to the cluster.
 
-#### Requirements for xCluster
+#### Requirements for Cluster
 
 * Target machine must be running Windows Server 2008 R2 or later.
 
-#### Parameters for xCluster
+#### Parameters for Cluster
 
 * **`[String]` Name** _(Key)_: Name of the failover cluster.
 * **`[String]` StaticIPAddress** _(Write)_: The static IP address of the failover
@@ -64,7 +64,7 @@ the target node ($env:COMPUTERNAME) to the cluster.
   creating the cluster. Only networks using Static IP can be ignored, networks
   that are assigned an IP address through DHCP cannot be ignored, and are added
   for cluster communication. To remove networks assigned an IP address through DHCP
-  use the resource xClusterNetwork to change the role of the network. This parameter
+  use the resource ClusterNetwork to change the role of the network. This parameter
   is only used during the creation of the cluster and is not monitored after.
 * **`[PSCredential]` DomainAdministratorCredential** _(Write)_: Credential used to
   create the failover cluster in Active Directory. If this is not specified then 
@@ -76,24 +76,24 @@ the target node ($env:COMPUTERNAME) to the cluster.
     over the Cluster Name Object in Active Directory.
 
 
-#### Examples for xCluster
+#### Examples for Cluster
 
-* [Create first node of a failover cluster](/source/Examples/Resources/xCluster/1-xCluster_CreateFirstNodeOfAFailoverClusterConfig.ps1)
-* [Join additional node to a failover cluster](/source/Examples/Resources/xCluster/2-xCluster_JoinAdditionalNodeToFailoverClusterConfig.ps1)
-* [Create failover cluster with two nodes](/source/Examples/Resources/xCluster/3-xCluster_CreateFailoverClusterWithTwoNodesConfig.ps1)
-* [Create first node of a failover cluster and ignoring a network subnet](/source/Examples/Resources/xCluster/4-xCluster_CreateFailoverClusterAndIgnoreANetworkConfig.ps1)
-* [Create first node of a failover cluster with DHCP](/source/Examples/Resources/xCluster/5-xCluster_CreateFirstNodeOfAFailoverClusterWithDHCPConfig.ps1)
-* [Join additional node to a failover cluster with DHCP](/source/Examples/Resources/xCluster/6-xCluster_JoinAdditionalNodeToFailoverClusterWithDHCPConfig.ps1)
+* [Create first node of a failover cluster](/source/Examples/Resources/Cluster/1-Cluster_CreateFirstNodeOfAFailoverClusterConfig.ps1)
+* [Join additional node to a failover cluster](/source/Examples/Resources/Cluster/2-Cluster_JoinAdditionalNodeToFailoverClusterConfig.ps1)
+* [Create failover cluster with two nodes](/source/Examples/Resources/Cluster/3-Cluster_CreateFailoverClusterWithTwoNodesConfig.ps1)
+* [Create first node of a failover cluster and ignoring a network subnet](/source/Examples/Resources/Cluster/4-Cluster_CreateFailoverClusterAndIgnoreANetworkConfig.ps1)
+* [Create first node of a failover cluster with DHCP](/source/Examples/Resources/Cluster/5-Cluster_CreateFirstNodeOfAFailoverClusterWithDHCPConfig.ps1)
+* [Join additional node to a failover cluster with DHCP](/source/Examples/Resources/Cluster/6-Cluster_JoinAdditionalNodeToFailoverClusterWithDHCPConfig.ps1)
 
-### xClusterDisk
+### ClusterDisk
 
 Configures shared disks in a cluster.
 
-#### Requirements for xClusterDisk
+#### Requirements for ClusterDisk
 
 * Target machine must be running Windows Server 2008 R2 or later.
 
-#### Parameters for xClusterDisk
+#### Parameters for ClusterDisk
 
 * **`[String]` Number** _(Key)_: The disk number of the cluster disk.
 * **`[String]` Ensure** _(Write)_: Define if the cluster disk should be added
@@ -102,22 +102,22 @@ Configures shared disks in a cluster.
 * **`[String]` Label** _(Write)_: The disk label that should be assigned to the
   disk on the Failover Cluster disk resource.
 
-#### Examples for xClusterDisk
+#### Examples for ClusterDisk
 
-* [Add a cluster disk to the failover cluster](/source/Examples/Resources/xClusterDisk/1-xClusterDisk_AddClusterDiskConfig.ps1)
-* [Remove a cluster disk from the failover cluster](/source/Examples/Resources/xClusterDisk/2-xClusterDisk_RemoveClusterDiskConfig.ps1)
+* [Add a cluster disk to the failover cluster](/source/Examples/Resources/ClusterDisk/1-ClusterDisk_AddClusterDiskConfig.ps1)
+* [Remove a cluster disk from the failover cluster](/source/Examples/Resources/ClusterDisk/2-ClusterDisk_RemoveClusterDiskConfig.ps1)
 
-### xClusterNetwork
+### ClusterNetwork
 
 Configures a cluster network in a failover cluster.
 
-This resource is only able to change properties on cluster networks.  To add or remove networks from the cluster, add or remove them from the cluster members.  By adding a new subnet on one of the cluster nodes, the network will be added to the cluster, and metadata can be set using the xClusterNetwork module.
+This resource is only able to change properties on cluster networks.  To add or remove networks from the cluster, add or remove them from the cluster members.  By adding a new subnet on one of the cluster nodes, the network will be added to the cluster, and metadata can be set using the ClusterNetwork module.
 
-#### Requirements for xClusterNetwork
+#### Requirements for ClusterNetwork
 
 * Target machine must be running Windows Server 2008 R2 or later.
 
-#### Parameters for xClusterNetwork
+#### Parameters for ClusterNetwork
 
 * **`[String]` Address** _(Key)_: The address for the cluster network in the format
   '10.0.0.0'.
@@ -146,20 +146,20 @@ The cluster network role can be set to either the value 0, 1 or 3.
 See this article for more information about cluster network role values;
 [Configuring Windows Failover Cluster Networks](https://blogs.technet.microsoft.com/askcore/2014/02/19/configuring-windows-failover-cluster-networks/)
 
-#### Examples for xClusterNetwork
+#### Examples for ClusterNetwork
 
-* [Change properties of two cluster network resources in the failover cluster](/source/Examples/Resources/xClusterNetwork/1-xClusterNetwork_ChangeClusterNetworkConfig.ps1)
+* [Change properties of two cluster network resources in the failover cluster](/source/Examples/Resources/ClusterNetwork/1-ClusterNetwork_ChangeClusterNetworkConfig.ps1)
 
-### xClusterPreferredOwner
+### ClusterPreferredOwner
 
 Configures preferred owners of a cluster group and cluster resources in a failover
 cluster.
 
-#### Requirements for xClusterPreferredOwner
+#### Requirements for ClusterPreferredOwner
 
 * Target machine must be running Windows Server 2008 R2 or later.
 
-#### Parameters for xClusterPreferredOwner
+#### Parameters for ClusterPreferredOwner
 
 * **`[String]` ClusterGroup** _(Key)_: Name of the cluster group.
 * **`[String]` ClusterName** _(Key)_: Name of the cluster.
@@ -169,20 +169,20 @@ cluster.
 * **`[String]` Ensure** _(Write)_: If the preferred owners should be present or
   absent. Default value is 'Present'. { *Present* | Absent }
 
-#### Examples for xClusterPreferredOwner
+#### Examples for ClusterPreferredOwner
 
-* [Add preferred owners to a cluster group and cluster resources](/source/Examples/Resources/xClusterPreferredOwner/1-xClusterPreferredOwner_AddPreferredOwnerConfig.ps1)
-* [Remove preferred owners from a cluster group and cluster resources](/source/Examples/Resources/xClusterPreferredOwner/2-xClusterPreferredOwner_RemovePreferredOwnerConfig.ps1)
+* [Add preferred owners to a cluster group and cluster resources](/source/Examples/Resources/ClusterPreferredOwner/1-ClusterPreferredOwner_AddPreferredOwnerConfig.ps1)
+* [Remove preferred owners from a cluster group and cluster resources](/source/Examples/Resources/ClusterPreferredOwner/2-ClusterPreferredOwner_RemovePreferredOwnerConfig.ps1)
 
-### xClusterProperty
+### ClusterProperty
 
 Configures cluster properties on a failover cluster.
 
-#### Requirements for xClusterProperty
+#### Requirements for ClusterProperty
 
 * Target machine must be running Windows Server 2008 R2 or later.
 
-#### Parameters for xClusterProperty
+#### Parameters for ClusterProperty
 
 * **`[String]` Name** _(Key)_: Name of the cluster.
 * **`[UInt32]` AddEvictDelay** _(Write)_: Specifies how many seconds after a
@@ -235,21 +235,21 @@ Configures cluster properties on a failover cluster.
   after a system shutdown is initiated that the failover cluster service will
   wait for resources to go offline.
 
-#### Examples for xClusterProperty
+#### Examples for ClusterProperty
 
-* [Set failover cluster properties](/source/Examples/Resources/xClusterProperty/1-xClusterProperty_SetClusterPropertiesConfig.ps1)
+* [Set failover cluster properties](/source/Examples/Resources/ClusterProperty/1-ClusterProperty_SetClusterPropertiesConfig.ps1)
 
-### xClusterQuorum
+### ClusterQuorum
 
 Configures quorum in a cluster. For information on how to choose the correct
 quorum type, please see the article
 [Understanding Quorum Configurations in a Failover Cluster](https://technet.microsoft.com/en-us/library/cc731739(v=ws.11).aspx).
 
-#### Requirements for xClusterQuorum
+#### Requirements for ClusterQuorum
 
 * Target machine must be running Windows Server 2008 R2 or later.
 
-#### Parameters for xClusterQuorum
+#### Parameters for ClusterQuorum
 
 * **`[String]` IsSingleInstance** _(Key)_: Specifies the resource is a single
   instance, the value must be 'Yes'.
@@ -263,23 +263,23 @@ quorum type, please see the article
   type is set to NodeAndCloudMajority. The key is currently not updated if the
   resource is already set.
 
-#### Examples for xClusterQuorum
+#### Examples for ClusterQuorum
 
-* [Set quorum to node majority](/source/Examples/Resources/xClusterQuorum/1-xClusterQuorum_SetQuorumToNodeMajorityConfig.ps1)
-* [Set quorum to node and disk majority](/source/Examples/Resources/xClusterQuorum/2-xClusterQuorum_SetQuorumToNodeAndDiskMajorityConfig.ps1)
-* [Set quorum to node and file share majority](/source/Examples/Resources/xClusterQuorum/3-xClusterQuorum_SetQuorumToNodeAndFileShareMajorityConfig.ps1)
-* [Set quorum to disk only](/source/Examples/Resources/xClusterQuorum/4-xClusterQuorum_SetQuorumToDiskOnlyConfig.ps1)
-* [Set quorum to node and cloud](/source/Examples/Resources/xClusterQuorum/5-xClusterQuorum_SetQuorumToNodeAndCloudMajorityConfig.ps1)
+* [Set quorum to node majority](/source/Examples/Resources/ClusterQuorum/1-ClusterQuorum_SetQuorumToNodeMajorityConfig.ps1)
+* [Set quorum to node and disk majority](/source/Examples/Resources/ClusterQuorum/2-ClusterQuorum_SetQuorumToNodeAndDiskMajorityConfig.ps1)
+* [Set quorum to node and file share majority](/source/Examples/Resources/ClusterQuorum/3-ClusterQuorum_SetQuorumToNodeAndFileShareMajorityConfig.ps1)
+* [Set quorum to disk only](/source/Examples/Resources/ClusterQuorum/4-ClusterQuorum_SetQuorumToDiskOnlyConfig.ps1)
+* [Set quorum to node and cloud](/source/Examples/Resources/ClusterQuorum/5-ClusterQuorum_SetQuorumToNodeAndCloudMajorityConfig.ps1)
 
-### xWaitForCluster
+### WaitForCluster
 
 Ensures that a node waits for a remote cluster is created.
 
-#### Requirements for xWaitForCluster
+#### Requirements for WaitForCluster
 
 * Target machine must be running Windows Server 2008 R2 or later.
 
-#### Parameters for xWaitForCluster
+#### Parameters for WaitForCluster
 
 * **`[String]` Name** _(Key)_: Name of the cluster to wait for.
 * **`[UInt64]` RetryIntervalSec** _(Write)_: Interval to check for cluster
@@ -287,6 +287,6 @@ Ensures that a node waits for a remote cluster is created.
 * **`[UInt32]` RetryCount** _(Write)_: Maximum number of retries to check for
   cluster existence. Default value is 50 retries.
 
-#### Examples for xWaitForCluster
+#### Examples for WaitForCluster
 
-* [Wait for failover cluster to be present](/source/Examples/Resources/xWaitForCluster/1-xWaitForCluster_WaitForFailoverClusterToBePresentConfig.ps1)
+* [Wait for failover cluster to be present](/source/Examples/Resources/WaitForCluster/1-WaitForCluster_WaitForFailoverClusterToBePresentConfig.ps1)

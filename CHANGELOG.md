@@ -10,6 +10,8 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 - FailoverClusterDsc
   - Update pipeline files to the latest from the Sampler project.
   - Move somme documentation from README-md to the GitHub repository Wiki.
+- ClusterPreferredOwner
+  - Minor fix to tests.
 
 ## [2.0.0] - 2022-05-25
 

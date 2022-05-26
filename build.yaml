@@ -2,25 +2,26 @@
 ####################################################
 #          ModuleBuilder Configuration             #
 ####################################################
+
 CopyPaths:
-    - DSCResources
-    - en-US
+  - en-US
+  - DSCResources
 Encoding: UTF8
 VersionedOutputDirectory: true
 
 ####################################################
-#   ModuleBuilder Dependent Modules Configuration  #
+#      ModuleBuilder Submodules Configuration      #
 ####################################################
 
 NestedModule:
-  DscResource.Common:
-    CopyOnly: true
-    Path: ./output/RequiredModules/DscResource.Common
-    AddToManifest: false
-    Exclude: PSGetModuleInfo.xml
+    DscResource.Common:
+      CopyOnly: true
+      Path: ./output/RequiredModules/DscResource.Common
+      AddToManifest: false
+      Exclude: PSGetModuleInfo.xml
 
 ####################################################
-#       Pipeline Configuration                     #
+#       Sampler Pipeline Configuration             #
 ####################################################
 BuildWorkflow:
   '.':
@@ -32,6 +33,8 @@ BuildWorkflow:
     - Build_Module_ModuleBuilder
     - Build_NestedModules_ModuleBuilder
     - Create_changelog_release_output
+    - Generate_Conceptual_Help
+    - Generate_Wiki_Content
 
   pack:
     - build
@@ -45,8 +48,11 @@ BuildWorkflow:
     - Pester_if_Code_Coverage_Under_Threshold
 
   publish:
-    - Publish_release_to_GitHub
     - publish_module_to_gallery
+    - Publish_Release_To_GitHub
+    - Publish_GitHub_Wiki_Content
+
+
 
 ####################################################
 #       PESTER  Configuration                      #
@@ -58,7 +64,6 @@ Pester:
     - Modules/DscResource.Common
   Script:
     - tests/Unit
-  ExcludeTag:
   Tag:
   CodeCoverageThreshold: 85
   CodeCoverageOutputFile: JaCoCo_coverage.xml
@@ -66,23 +71,21 @@ Pester:
 
 DscTest:
   ExcludeTag:
-    - 'Common Tests - New Error-Level Script Analyzer Rules'
+    - "Common Tests - New Error-Level Script Analyzer Rules"
+  Tag:
   ExcludeSourceFile:
     - output
   ExcludeModuleFile:
     - Modules/DscResource.Common
   MainGitBranch: main
 
-Resolve-Dependency:
-  Gallery: 'PSGallery'
-  AllowPrerelease: false
-  Verbose: false
-
 ModuleBuildTasks:
   Sampler:
     - '*.build.Sampler.ib.tasks'
   Sampler.GitHubTasks:
     - '*.ib.tasks'
+  DscResource.DocGenerator:
+    - 'Task.*'
 
 TaskHeader: |
   param($Path)
@@ -101,3 +104,16 @@ GitHubConfig:
   GitHubConfigUserName: dscbot
   GitHubConfigUserEmail: dsccommunity@outlook.com
   UpdateChangelogOnPrerelease: false
+
+####################################################
+#      DscResource.DocGenerator Configuration      #
+####################################################
+DscResource.DocGenerator:
+  Generate_Conceptual_Help:
+    MarkdownCodeRegularExpression:
+      - '\`(.+?)\`' # Match inline code-block
+      - '\\(\\)' # Match escaped backslash
+      - '\[[^\[]+\]\((.+?)\)' # Match markdown URL
+      - '_(.+?)_' # Match Italic (underscore)
+      - '\*\*(.+?)\*\*' # Match bold
+      - '\*(.+?)\*' # Match Italic (asterisk)

@@ -7,6 +7,9 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 
 ## [Unreleased]
 
+- FailoverClusterDsc
+  - Update pipeline files to the latest from the Sampler project.
+
 ## [2.0.0] - 2022-05-25
 
 ### Changed

@@ -58,15 +58,6 @@ The resource examples are also available in the [FailoverClusterDsc Wiki](https:
 
 ### Cluster
 
-Used to configure a failover cluster. If the cluster does not exist, it will be
-created in the domain and the static IP address will be assigned to the cluster.
-When the cluster exist (either it was created or already existed), it will add
-the target node ($env:COMPUTERNAME) to the cluster.
-
-#### Requirements for Cluster
-
-* Target machine must be running Windows Server 2008 R2 or later.
-
 #### Parameters for Cluster
 
 * **`[String]` Name** _(Key)_: Name of the failover cluster.
@@ -100,12 +91,6 @@ the target node ($env:COMPUTERNAME) to the cluster.
 
 ### ClusterDisk
 
-Configures shared disks in a cluster.
-
-#### Requirements for ClusterDisk
-
-* Target machine must be running Windows Server 2008 R2 or later.
-
 #### Parameters for ClusterDisk
 
 * **`[String]` Number** _(Key)_: The disk number of the cluster disk.
@@ -122,14 +107,6 @@ Configures shared disks in a cluster.
 
 ### ClusterNetwork
 
-Configures a cluster network in a failover cluster.
-
-This resource is only able to change properties on cluster networks.  To add or remove networks from the cluster, add or remove them from the cluster members.  By adding a new subnet on one of the cluster nodes, the network will be added to the cluster, and metadata can be set using the ClusterNetwork module.
-
-#### Requirements for ClusterNetwork
-
-* Target machine must be running Windows Server 2008 R2 or later.
-
 #### Parameters for ClusterNetwork
 
 * **`[String]` Address** _(Key)_: The address for the cluster network in the format
@@ -145,32 +122,11 @@ This resource is only able to change properties on cluster networks.  To add or 
   the cluster network metric number is not in desired state it will be changed to
   match this metric number.
 
-#### Role parameter
-
-This parameter sets the role of the cluster network. If the cluster network role
-is not in desired state it will change to match this role.
-
-The cluster network role can be set to either the value 0, 1 or 3.
-
-0 = Do not allow cluster network communication
-1 = Allow cluster network communication only
-3 = Allow cluster network communication and client connectivity
-
-See this article for more information about cluster network role values;
-[Configuring Windows Failover Cluster Networks](https://blogs.technet.microsoft.com/askcore/2014/02/19/configuring-windows-failover-cluster-networks/)
-
 #### Examples for ClusterNetwork
 
 * [Change properties of two cluster network resources in the failover cluster](/source/Examples/Resources/ClusterNetwork/1-ClusterNetwork_ChangeClusterNetworkConfig.ps1)
 
 ### ClusterPreferredOwner
-
-Configures preferred owners of a cluster group and cluster resources in a failover
-cluster.
-
-#### Requirements for ClusterPreferredOwner
-
-* Target machine must be running Windows Server 2008 R2 or later.
 
 #### Parameters for ClusterPreferredOwner
 
@@ -188,12 +144,6 @@ cluster.
 * [Remove preferred owners from a cluster group and cluster resources](/source/Examples/Resources/ClusterPreferredOwner/2-ClusterPreferredOwner_RemovePreferredOwnerConfig.ps1)
 
 ### ClusterProperty
-
-Configures cluster properties on a failover cluster.
-
-#### Requirements for ClusterProperty
-
-* Target machine must be running Windows Server 2008 R2 or later.
 
 #### Parameters for ClusterProperty
 
@@ -254,14 +204,6 @@ Configures cluster properties on a failover cluster.
 
 ### ClusterQuorum
 
-Configures quorum in a cluster. For information on how to choose the correct
-quorum type, please see the article
-[Understanding Quorum Configurations in a Failover Cluster](https://technet.microsoft.com/en-us/library/cc731739(v=ws.11).aspx).
-
-#### Requirements for ClusterQuorum
-
-* Target machine must be running Windows Server 2008 R2 or later.
-
 #### Parameters for ClusterQuorum
 
 * **`[String]` IsSingleInstance** _(Key)_: Specifies the resource is a single
@@ -285,12 +227,6 @@ quorum type, please see the article
 * [Set quorum to node and cloud](/source/Examples/Resources/ClusterQuorum/5-ClusterQuorum_SetQuorumToNodeAndCloudMajorityConfig.ps1)
 
 ### WaitForCluster
-
-Ensures that a node waits for a remote cluster is created.
-
-#### Requirements for WaitForCluster
-
-* Target machine must be running Windows Server 2008 R2 or later.
 
 #### Parameters for WaitForCluster
 

@@ -10,11 +10,11 @@ Function Get-TargetResource
     (
 
         [Parameter(Mandatory = $true)]
-        [ipaddress]
+        [System.Net.IPAddress]
         $Address,
 
         [Parameter(Mandatory = $true)]
-        [ipaddress]
+        [System.Net.IPAddress]
         $AddressMask
 
     )
@@ -35,29 +35,29 @@ Function Set-TargetResource
 
         # IPAddress to add to Cluster
         [Parameter(Mandatory = $true)]
-        [IPAddress]
+        [System.Net.IPAddress]
         $IPAddress,
 
         # SubnetMask of IPAddress
         [Parameter(Mandatory = $true)]
-        [IPAddress]
-        $SubnetMask
+        [System.Net.IPAddress]
+        $AddressMask
     )
 
     if ($Ensure -eq 'Present')
     {
         # We've gotten here because the IPAddress given is not in the DependencyExpression for the cluster
         # We need to Check if the network is added to the cluster. If not, we fail. If it is, we can append the IPAddress
-        if ( -not $(Test-ClusterNetwork -IPAddress $IPAddress -SubnetMask $SubnetMask) )
+        if ( -not $(Test-ClusterNetwork -IPAddress $IPAddress -AddressMask $AddressMask) )
         {
-            New-InvalidArgumentException -Message ($script:localizedData.NonExistantClusterNetwork -f $IPAddress,$SubnetMask)
+            New-InvalidArgumentException -Message ($script:localizedData.NonExistantClusterNetwork -f $IPAddress,$AddressMask)
             break
         }
         else
         {
             $params = @{
                 IPAddress   = $IPAddress
-                SubnetMask  = $SubnetMask
+                AddressMask  = $AddressMask
                 ErrorAction = 'Stop'
             }
             Add-ClusterIPAddressDependency @params
@@ -65,8 +65,8 @@ Function Set-TargetResource
     }
     else
     {
-        if (Test-ClusterIPAddressDependency -IPAddress $IPAddress -SubnetMask $SubnetMask) {
-            Remove-ClusterIPAddressDependency -IPAddress $IPAddress -Subnet $SubnetMask
+        if (Test-ClusterIPAddressDependency -IPAddress $IPAddress -AddressMask $AddressMask) {
+            Remove-ClusterIPAddressDependency -IPAddress $IPAddress -Subnet $AddressMask
         }
     }
 }
@@ -85,20 +85,20 @@ Function Test-TargetResource
 
         # IPAddress to add to Cluster
         [Parameter(Mandatory = $true)]
-        [IPAddress]
+        [System.Net.IPAddress]
         $IPAddress,
 
         # SubnetMask of IPAddress
         [Parameter(Mandatory = $true)]
-        [IPAddress]
-        $SubnetMask
+        [System.Net.IPAddress]
+        $AddressMask
     )
 
     # If IPAddress is not in ClusterResource DependencyExpression #fail
     # If IPAddress' Subnet is not in ClusterNetworks #fail
     $params = @{
       IPAddress  = $IPAddress
-      SubnetMask = $SubnetMask
+      AddressMask = $AddressMask
       VerbosePreference = $VerbosePreference
     }
     $testResult = Test-ClusterIPAddressDependency @params
@@ -135,29 +135,29 @@ Function Test-TargetResource
         Returns an IPAddress object of the subnet mask of the given IPAddress and Subnet.
     .PARAMETER IPAddress
         IP address to add to the Cluster's DependencyExpression
-    .PARAMETER SubnetMask
+    .PARAMETER AddressMask
         The subnet mask of the IPAddress
     .EXAMPLE
-        Get-Subnet -IPAddress 10.235.32.129 -SubnetMask 255.255.255.128
+        Get-Subnet -IPAddress 10.235.32.129 -AddressMask 255.255.255.128
 #>
 function Get-Subnet
 {
     [CmdletBinding()]
-    [OutputType([IpAddress])]
+    [OutputType([System.Net.IPAddress])]
     Param
     (
         # IPAddress to add to Cluster
         [Parameter(Mandatory = $true)]
-        [IPAddress]
+        [System.Net.IPAddress]
         $IPAddress,
 
         # SubnetMask of IPAddress
         [Parameter(Mandatory = $true)]
-        [IPAddress]
-        $SubnetMask
+        [System.Net.IPAddress]
+        $AddressMask
     )
 
-    return [IPAddress]($Ipaddress.Address -band $SubnetMask.Address)
+    return [System.Net.IPAddress]($Ipaddress.Address -band $AddressMask.Address)
 }
 
 <#
@@ -167,7 +167,7 @@ function Get-Subnet
         Adds an IP Address resource to a Windows Cluster's Dependecy Expression
     .PARAMETER IPAddress
         IP address to add to the Cluster's DependencyExpression
-    .PARAMETER SubnetMask
+    .PARAMETER AddressMask
         The subnet mask of the IPAddress
     .PARAMETER ClusterName
         Name of the cluster to add IP Address resource to
@@ -178,19 +178,19 @@ function Get-Subnet
 function Add-ClusterIPAddressDependency
 {
     [CmdletBinding()]
-    Param
+    param
     (
         # IPAddress to add to Cluster
         [Parameter(Mandatory = $true)]
-        [IPAddress]
+        [System.Net.IPAddress]
         $IPAddress,
 
         # SubnetMask of IPAddress
         [Parameter(Mandatory = $true)]
-        [IPAddress]
-        $SubnetMask,
+        [System.Net.IPAddress]
+        $AddressMask,
 
-        [String]
+        [System.String]
         $ClusterName = 'Cluster Name'
     )
 
@@ -199,7 +199,7 @@ function Add-ClusterIPAddressDependency
     $cluster = Get-ClusterResource | Where-Object { $_.name -eq $ClusterName}
 
     $ipResource = Add-ClusterIPResource -IPAddress $IPAddress -OwnerGroup $cluster.OwnerGroup
-    Add-ClusterIPParameter -IPAddressResource $ipResource -IPAddress $IPAddress -AddressMask $SubnetMask
+    Add-ClusterIPParameter -IPAddressResource $ipResource -IPAddress $IPAddress -AddressMask $AddressMask
 
     $ipResources = Get-ClusterResource | Where-Object
     {
@@ -227,9 +227,9 @@ function Add-ClusterIPAddressDependency
     Try
     {
         $params = @{
-        Resource    = $($cluster.Name)
-        Dependency  = $dependencyExpression
-        ErrorAction = 'Stop'
+            Resource    = $($cluster.Name)
+            Dependency  = $dependencyExpression
+            ErrorAction = 'Stop'
         }
         Write-Verbose -Message ($script:localizedData.SetDependencyExpression -f $dependencyExpression)
         Set-ClusterResourceDependency @params
@@ -246,11 +246,9 @@ function Add-ClusterIPAddressDependency
         Tests whether a given IPAddress is part of the Cluster's DependencyExpression
     .PARAMETER IPAddress
         IP address to check whether it's in the Cluster's DependencyExpression
-    .PARAMETER SubnetMask
-        The subnet mask of the IPAddress
     .EXAMPLE
-        Example using complete IPAddress and Subnetmask default ParameterSet
-        Test-ClusterIPAddressDependency -IPAddress 10.235.0.141 -SubnetMask 255.255.255.128 -verbose
+        Example using complete IPAddress and AddressMask default ParameterSet
+        Test-ClusterIPAddressDependency -IPAddress 10.235.0.141 -AddressMask 255.255.255.128 -verbose
     .EXAMPLE
         Example using IPAddress from default ParameterSet
         Test-ClusterIPAddressDependency -IPAddress 10.235.0.141 -verbose
@@ -259,17 +257,12 @@ function Test-ClusterIPAddressDependency
 {
     [CmdletBinding()]
     [OutputType([System.Boolean])]
-    Param
+    param
     (
         # IPAddress to add to Cluster
         [Parameter(Mandatory = $true)]
-        [IPAddress]
-        $IPAddress,
-
-        # SubnetMask of IPAddress
-        [Parameter(Mandatory = $true)]
-        [IPAddress]
-        $SubnetMask
+        [System.Net.IPAddress]
+        $IPAddress
     )
 
     $dependencyExpression = Get-ClusterResourceDependencyExpression
@@ -291,41 +284,40 @@ function Test-ClusterIPAddressDependency
     .Synopsis
         Checks whether the ClusterNetwork for a given IPAddress has been added to a Cluster
     .DESCRIPTION
-        Given an IPAddress and SubnetMask this cmdlet will check if the correct ClusterNetwork has
+        Given an IPAddress and AddressMask this cmdlet will check if the correct ClusterNetwork has
         been added to the cluster.
     .PARAMETER IPAddress
         IP address to check whether it's subnet is a cluster network already
-    .PARAMETER SubnetMask
+    .PARAMETER AddressMask
         The subnet mask of the IPAddress
     .EXAMPLE
-    Test-ClusterNetwork -IPAddress 10.245.10.32 -SubnetMask 255.255.255.0
+    Test-ClusterNetwork -IPAddress 10.245.10.32 -AddressMask 255.255.255.0
 #>
 function Test-ClusterNetwork
 {
     [CmdletBinding()]
-    [Alias()]
-    Param
+    param
     (
         # IPAddress to add to Cluster
         [Parameter(Mandatory = $true)]
-        [IPAddress]
+        [System.Net.IPAddress]
         $IPAddress,
 
         # SubnetMask of IPAddress
         [Parameter(Mandatory = $true)]
-        [IPAddress]
-        $SubnetMask
+        [System.Net.IPAddress]
+        $AddressMask
     )
 
     $clusterNetworks = Get-ClusterNetworkList
-    Write-Verbose -Message ($script:localizedData.GetSubnetfromIPAddressandSubnetMask -f $IPAddress, $SubnetMask)
-    $subnet = $(Get-Subnet -IPAddress $IPAddress -SubnetMask $SubnetMask -Verbose -ErrorAction Stop)
-    Write-Verbose -Message ($script:localizedData.FoundSubnetfromIPAddressandSubnetMask -f $IPAddress, $SubnetMask, $Subnet)
+    Write-Verbose -Message ($script:localizedData.GetSubnetfromIPAddressandAddressMask -f $IPAddress, $AddressMask)
+    $subnet = $(Get-Subnet -IPAddress $IPAddress -AddressMask $AddressMask -Verbose -ErrorAction Stop)
+    Write-Verbose -Message ($script:localizedData.FoundSubnetfromIPAddressandAddressMask -f $IPAddress, $AddressMask, $Subnet)
 
     foreach ( $network in $clusterNetworks )
     {
         if (( $network.Address -eq $subnet.IPAddressToString ) -and
-            ( $network.AddressMask -eq $SubnetMask.IPAddressToString ))
+            ( $network.AddressMask -eq $AddressMask.IPAddressToString ))
         {
             Write-Verbose -Message ($script:localizedData.NetworkAlreadyInCluster -f $($network.address), $IPAddress, $subnet)
             return $True
@@ -401,19 +393,19 @@ function Add-ClusterIPResource
     (
         # IPAddress to add to Cluster
         [Parameter(Mandatory = $true)]
-        [IPAddress]
+        [System.Net.IPAddress]
         $IPAddress,
 
         # Owner Group of the cluster
         [Parameter(Mandatory = $true)]
-        [IPAddress]
+        [System.Net.IPAddress]
         $OwnerGroup
     )
 
     Try
     {
         #* Create new IPAddress resource and add the IPAddress parameters to it
-        Write-Verbose -Message ($script:localizedData.CreateNewIPResource -f $IPAddress,$SubnetMask)
+        Write-Verbose -Message ($script:localizedData.CreateNewIPResource -f $IPAddress,$AddressMask)
         $params = @{
             Name         = "IP Address $IPAddress"
             ResourceType = 'IP Address'
@@ -442,19 +434,19 @@ function Remove-ClusterIPResource
     (
         # IPAddress to add to Cluster
         [Parameter(Mandatory = $true)]
-        [IPAddress]
+        [System.Net.IPAddress]
         $IPAddress,
 
         # Owner Group of the cluster
         [Parameter(Mandatory = $true)]
-        [IPAddress]
+        [System.Net.IPAddress]
         $OwnerGroup
     )
 
     Try
     {
         #* Create new IPAddress resource and add the IPAddress parameters to it
-        Write-Verbose -Message ($script:localizedData.CreateNewIPResource -f $IPAddress,$SubnetMask)
+        Write-Verbose -Message ($script:localizedData.CreateNewIPResource -f $IPAddress,$AddressMask)
         $params = @{
             Name         = "IP Address $IPAddress"
             ResourceType = 'IP Address'
@@ -490,11 +482,11 @@ function Add-ClusterIPParameter
         $IPAddressResource,
 
         [Parameter(Mandatory = $true)]
-        [IPAddress]
+        [System.Net.IPAddress]
         $IPAddress,
 
         [Parameter(Mandatory = $true)]
-        [IPAddress]
+        [System.Net.IPAddress]
         $AddressMask
     )
 
@@ -538,11 +530,11 @@ function Remove-ClusterIPParameter
         $IPAddressResource,
 
         [Parameter(Mandatory = $true)]
-        [IPAddress]
+        [System.Net.IPAddress]
         $IPAddress,
 
         [Parameter(Mandatory = $true)]
-        [IPAddress]
+        [System.Net.IPAddress]
         $AddressMask
     )
 

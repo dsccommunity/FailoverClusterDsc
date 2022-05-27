@@ -2,7 +2,7 @@
 
 ConvertFrom-StringData @'
     GetClusterNetworks = Getting all networks added to this cluster.
-    FoundClusterNetwork = Found cluster network {0}/{1}.
+    FoundClusterNetwork = Found cluster network with address {0} and address mask {1}.
     GetSubnetfromIPAddressandAddressMask = Getting the subnet of the given IPAddress {0} with subnet mask {1}
     FoundSubnetfromIPAddressandAddressMask = IP address {0} with subnet mask {1} is in subnet {2}.
     NetworkAlreadyInCluster = Subnet {0} for IPAddress {1} network {2} is added to the cluster

@@ -221,7 +221,7 @@ function Add-ClusterIPAddressDependency
     }
 
     #Set cluster resources
-    Try
+    try
     {
         $params = @{
             Resource    = $($cluster.Name)
@@ -231,7 +231,7 @@ function Add-ClusterIPAddressDependency
         Write-Verbose -Message ($script:localizedData.SetDependencyExpression -f $dependencyExpression)
         Set-ClusterResourceDependency @params
     }
-    Catch
+    catch
     {
         #TODO error handling for when adding the depenencies list fails
         New-InvalidOperationException -Message $_.Exception.Message -ErrorRecord $_
@@ -274,11 +274,11 @@ function Remove-ClusterIPAddressDependency
     #* Get Windows Cluster resource
     $cluster = Get-ClusterResource | Where-Object { $_.name -eq $ClusterName}
 
-    Try
+    try
     {
         $ipResource = Get-ClusterResource -Name "IP Address $IPAddress" -errorAction Stop
     }
-    Catch
+    catch
     {
         $errorMessage = $script:localizedData.IPResourceNotFound -f "IP Address $IPAddress"
         New-InvalidDataException -Message $errorMessage -ErrorID 'IPResourceNotFound'
@@ -309,7 +309,7 @@ function Remove-ClusterIPAddressDependency
     }
 
     #Set cluster resources
-    Try
+    try
     {
         $params = @{
             Resource    = $($cluster.Name)
@@ -319,7 +319,7 @@ function Remove-ClusterIPAddressDependency
         Write-Verbose -Message ($script:localizedData.SetDependencyExpression -f $dependencyExpression)
         Set-ClusterResourceDependency @params
     }
-    Catch
+    catch
     {
         #TODO error handling for when adding the depenencies list fails
         New-InvalidOperationException -Message $_.Exception.Message -ErrorRecord $_
@@ -353,7 +353,7 @@ function Test-ClusterIPAddressDependency
     $dependencyExpression = Get-ClusterResourceDependencyExpression
 
     Write-Verbose -Message ($script:localizedData.TestDependencyExpression -f $IPAddress, $dependencyExpression)
-    If ( $dependencyExpression -match $IPAddress )
+    if ( $dependencyExpression -match $IPAddress )
     {
         Write-Verbose -Message ($script:localizedData.SuccessfulTestDependencyExpression -f $IPAddress, $dependencyExpression)
         return $True
@@ -422,7 +422,7 @@ function Get-ClusterNetworkList {
 
     Write-Verbose -Message ($script:localizedData.GetClusterNetworks)
     $networks = New-Object "System.Collections.Generic.List[PSCustomObject]"
-    Foreach ( $network in Get-ClusterNetwork )
+    foreach ( $network in Get-ClusterNetwork )
     {
         $clusterNetworks.Add([PSCustomObject]@{
             Address     = $network.Address
@@ -449,13 +449,13 @@ function Get-ClusterResourceDependencyExpression {
         [String]$ClusterName = 'Cluster Name'
     )
 
-    Try
+    try
     {
         Write-Verbose -Message ($script:localizedData.GetClusterResourceExpression)
         $cluster = Get-ClusterResource | Where-Object {$_.name -eq $ClusterName}
         return $(Get-ClusterResourceDependency -Resource $cluster.Name).DependencyExpression
     }
-    Catch
+    catch
     {
         New-InvalidOperationException -Message $_.Exception.Message -ErrorRecord $_
     }
@@ -486,7 +486,7 @@ function Add-ClusterIPResource
         $OwnerGroup
     )
 
-    Try
+    try
     {
         #* Create new IPAddress resource and add the IPAddress parameters to it
         Write-Verbose -Message ($script:localizedData.CreateNewIPResource -f $IPAddress, $OwnerGroup)
@@ -498,7 +498,7 @@ function Add-ClusterIPResource
         }
         return Add-ClusterResource @params
     }
-    Catch
+    catch
     {
         New-InvalidOperationException -Message $_.Exception.Message -ErrorRecord $_
     }
@@ -528,7 +528,7 @@ function Remove-ClusterIPResource
         $OwnerGroup
     )
 
-    Try
+    try
     {
         #* Create new IPAddress resource and add the IPAddress parameters to it
         Write-Verbose -Message ($script:localizedData.CreateNewIPResource -f $IPAddress,$AddressMask)
@@ -540,7 +540,7 @@ function Remove-ClusterIPResource
         }
         Remove-ClusterResource @params
     }
-    Catch
+    catch
     {
         New-InvalidOperationException -Message $_.Exception.Message -ErrorRecord $_
     }
@@ -580,12 +580,12 @@ function Add-ClusterIPParameter
     $parameterList = $parameter1,$parameter2
 
     #* Add the IP Address resource to the cluster
-    Try
+    try
     {
         Write-Verbose -Message ($script:localizedData.AddIPAddressResource -f $IPAddress,$AddressMask)
         $parameterList | Set-ClusterParameter -ErrorAction Stop
     }
-    Catch
+    catch
     {
         #TODO Add error handling here for failure. Most likely reasons are
         #* IP Address already exists (does this check actually IP Address or just IP Address Name)
@@ -628,12 +628,12 @@ function Remove-ClusterIPParameter
     $parameterList = $parameter1,$parameter2
 
     #* Add the IP Address resource to the cluster
-    Try
+    try
     {
         Write-Verbose -Message ($script:localizedData.RemoveIPAddressResource -f $IPAddress,$AddressMask)
         $parameterList | Set-ClusterParameter -Delete -ErrorAction Stop
     }
-    Catch
+    catch
     {
         #TODO Add error handling here for failure. Most likely reasons are
         #* IP Address already exists (does this check actually IP Address or just IP Address Name)

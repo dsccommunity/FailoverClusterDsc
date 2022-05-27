@@ -19,8 +19,8 @@ function Get-TargetResource
         $AddressMask
 
     )
-    Validate-IPAddress -IPAddress $IPAddress
-    Validate-IPAddress -IPAddress $AddressMask
+    Test-IPAddress -IPAddress $IPAddress
+    Test-IPAddress -IPAddress $AddressMask
     Write-Verbose -Message ($script:localizedData.GetTargetResourceMessage -f $IPAddress, $AddressMask)
     return Get-ClusterNetworkList
 
@@ -47,8 +47,8 @@ function Set-TargetResource
         $AddressMask
     )
 
-    Validate-IPAddress -IPAddress $IPAddress
-    Validate-IPAddress -IPAddress $AddressMask
+    Test-IPAddress -IPAddress $IPAddress
+    Test-IPAddress -IPAddress $AddressMask
 
     Write-Verbose -Message ($script:localizedData.SetTargetResourceMessage -f $IPAddress, $AddressMask, $Ensure)
     if ($Ensure -eq 'Present')
@@ -102,8 +102,8 @@ function Test-TargetResource
         $AddressMask
     )
 
-    Validate-IPAddress -IPAddress $IPAddress
-    Validate-IPAddress -IPAddress $AddressMask
+    Test-IPAddress -IPAddress $IPAddress
+    Test-IPAddress -IPAddress $AddressMask
 
     Write-Verbose -Message ($script:localizedData.TestTargetResourceMessage -f $IPAddress, $AddressMask, $Ensure)
     # If IPAddress is not in ClusterResource DependencyExpression #fail
@@ -662,7 +662,7 @@ function Remove-ClusterIPParameter
     .PARAMETER IPAddress
         IP address to validate
 #>
-function Validate-IPAddress
+function Test-IPAddress
 {
     [CmdletBinding()]
     param

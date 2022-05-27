@@ -110,8 +110,8 @@ The resource examples are also available in the [FailoverClusterDsc Wiki](https:
 
 #### Parameters for ClusterIPAddress
 
-* **`[IPAddress]` IPAddress** _(Key)_: The IP address to add or remove from the cluster.
-* **`[IPAddress]` AddressMask** _(Write)_: The address mask of the IP address.
+* **`[String]` IPAddress** _(Key)_: The IP address to add or remove from the cluster.
+* **`[String]` AddressMask** _(Write)_: The address mask of the IP address.
 * **`[String]` Ensure** _(Write)_: Define if the IP address should be added
   (Present) or removed (Absent). Default value is 'Present'.
   { *Present* | Absent }

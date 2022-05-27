@@ -15,4 +15,5 @@ ConvertFrom-StringData @'
     NonExistantClusterNetwork =  Cluster Network for IP address {0} and address mask {1} is not part of this cluster"
     CreateNewIPResource = Created new IP resource with IP address {0} and owner group {1}.
     SetDependencyExpression = Set cluster resource dependency to {0}.
+    IPResourceNotFound = IP Resource named {0} not found.
 '@

@@ -3,10 +3,10 @@ $script:resourceHelperModulePath = Join-Path -Path $PSScriptRoot -ChildPath '..\
 Import-Module -Name $script:resourceHelperModulePath
 
 $script:localizedData = Get-LocalizedData -DefaultUICulture 'en-US'
-Function Get-TargetResource
+function Get-TargetResource
 {
     [CmdletBinding()]
-    Param
+    param
     (
 
         [Parameter(Mandatory = $true)]
@@ -23,9 +23,9 @@ Function Get-TargetResource
 
 }
 
-Function Set-TargetResource
+function Set-TargetResource
 {
-    Param
+    param
     (
 
         [Parameter()]
@@ -71,11 +71,11 @@ Function Set-TargetResource
     }
 }
 
-Function Test-TargetResource
+function Test-TargetResource
 {
     [CmdletBinding()]
     [OutputType([System.Boolean])]
-    Param
+    param
     (
 
         [Parameter()]
@@ -143,7 +143,7 @@ function Get-Subnet
 {
     [CmdletBinding()]
     [OutputType([System.Net.IPAddress])]
-    Param
+    param
     (
         # IPAddress to add to Cluster
         [Parameter(Mandatory = $true)]
@@ -177,7 +177,7 @@ function Get-Subnet
 function Add-ClusterIPAddressDependency
 {
     [CmdletBinding()]
-    Param
+    param
     (
         [Parameter(Mandatory = $true)]
         [System.Net.IPAddress]
@@ -197,6 +197,94 @@ function Add-ClusterIPAddressDependency
 
     $ipResource = Add-ClusterIPResource -IPAddress $IPAddress -OwnerGroup $cluster.OwnerGroup
     Add-ClusterIPParameter -IPAddressResource $ipResource -IPAddress $IPAddress -AddressMask $AddressMask
+
+    $ipResources = Get-ClusterResource | Where-Object
+    {
+        ( $_.OwnerGroup -eq $cluster.OwnerGroup ) -and
+        ( $_.ResourceType -eq 'IP Address' )
+    }
+
+    $dependencyExpression = ''
+    $ipResourceCount = $ipResources.count
+    $i = 0
+    while ( $i -lt $ipResourceCount )
+    {
+        if ( $i -eq $ipResourceCount )
+        {
+            $dependencyExpression += "[$($ipResources[$i].name)]"
+        }
+        else
+        {
+            $dependencyExpression += "[$($ipResources[$i].name)] or "
+        }
+        $i++
+    }
+
+    #Set cluster resources
+    Try
+    {
+        $params = @{
+            Resource    = $($cluster.Name)
+            Dependency  = $dependencyExpression
+            ErrorAction = 'Stop'
+        }
+        Write-Verbose -Message ($script:localizedData.SetDependencyExpression -f $dependencyExpression)
+        Set-ClusterResourceDependency @params
+    }
+    Catch
+    {
+        #TODO error handling for when adding the depenencies list fails
+        New-InvalidOperationException -Message $_.Exception.Message -ErrorRecord $_
+    }
+}
+
+
+<#
+    .Synopsis
+        Removes an IPAddress as a Dependency to a Windows Cluster
+    .DESCRIPTION
+        Removes an IP Address resource to a Windows Cluster's Dependecy Expression
+    .PARAMETER IPAddress
+        IP address to remove to the Cluster's DependencyExpression
+    .PARAMETER AddressMask
+        The subnet mask of the IPAddress
+    .PARAMETER ClusterName
+        Name of the cluster to add IP Address resource to
+    .EXAMPLE
+        Remove-ClusterIPAddressDependency -IPAddress 10.235.32.137 -Subnet 255.255.255.128 -Verbose
+#>
+function Remove-ClusterIPAddressDependency
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.Net.IPAddress]
+        $IPAddress,
+
+        [Parameter(Mandatory = $true)]
+        [System.Net.IPAddress]
+        $AddressMask,
+
+        [Parameter()]
+        [System.String]
+        $ClusterName = 'Cluster Name'
+    )
+
+    #* Get Windows Cluster resource
+    $cluster = Get-ClusterResource | Where-Object { $_.name -eq $ClusterName}
+
+    Try
+    {
+        $ipResource = Get-ClusterResource -Name "IP Address $IPAddress" -errorAction Stop
+    }
+    Catch
+    {
+        $errorMessage = $script:localizedData.IPResourceNotFound -f "IP Address $IPAddress"
+        New-InvalidDataException -Message $errorMessage -ErrorID 'IPResourceNotFound'
+    }
+    Remove-ClusterIPResource -IPAddress $IPAddress -OwnerGroup $cluster.OwnerGroup
+    Remove-ClusterIPParameter -IPAddressResource $ipResource -IPAddress $IPAddress -AddressMask $AddressMask
 
     $ipResources = Get-ClusterResource | Where-Object
     {
@@ -356,7 +444,7 @@ function Get-ClusterResourceDependencyExpression {
     [CmdletBinding()]
     [Alias()]
     [OutputType([System.String])] #Could be a [Microsoft.FailoverClusters.PowerShell.ClusterResourceDependency]
-    Param
+    param
     (
         [String]$ClusterName = 'Cluster Name'
     )
@@ -385,7 +473,7 @@ function Add-ClusterIPResource
 {
     [CmdletBinding()]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterResource])]
-    Param
+    param
     (
         # IPAddress to add to Cluster
         [Parameter(Mandatory = $true)]
@@ -427,7 +515,7 @@ function Add-ClusterIPResource
 function Remove-ClusterIPResource
 {
     [CmdletBinding()]
-    Param
+    param
     (
         # IPAddress to add to Cluster
         [Parameter(Mandatory = $true)]
@@ -471,7 +559,7 @@ function Remove-ClusterIPResource
 function Add-ClusterIPParameter
 {
     [CmdletBinding()]
-    Param
+    param
     (
         # IPAddress to add to Cluster
         [Parameter(Mandatory = $true)]
@@ -519,7 +607,7 @@ function Add-ClusterIPParameter
 function Remove-ClusterIPParameter
 {
     [CmdletBinding()]
-    Param
+    param
     (
         # IPAddress to add to Cluster
         [Parameter(Mandatory = $true)]

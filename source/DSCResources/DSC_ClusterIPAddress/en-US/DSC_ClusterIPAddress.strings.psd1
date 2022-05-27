@@ -19,4 +19,5 @@ ConvertFrom-StringData @'
     GetTargetResourceMessage = Getting target resource state for IP address {0} and address mask {1}.
     SetTargetResourceMessage = Setting target resource state for IP address {0} and address mask {1} and ensure {2}.
     TestTargetResourceMessage = Testing target resource state for IP address {0} and address mask {1} and ensure {2}.
+    InvalidIPAddress = {0} is not a valid IP address.
 '@

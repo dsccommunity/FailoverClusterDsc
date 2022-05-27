@@ -10,14 +10,16 @@ function Get-TargetResource
     (
 
         [Parameter(Mandatory = $true)]
-        [IPAddress]
+        [System.String]
         $IPAddress,
 
         [Parameter(Mandatory = $true)]
-        [IPAddress]
+        [System.String]
         $AddressMask
 
     )
+    Validate-IPAddress -IPAddress $IPAddress
+    Validate-IPAddress -IPAddress $AddressMask
     Write-Verbose -Message ($script:localizedData.GetTargetResourceMessage -f $IPAddress, $AddressMask)
     return Get-ClusterNetworkList
 
@@ -35,14 +37,17 @@ function Set-TargetResource
 
         # IPAddress to add to Cluster
         [Parameter(Mandatory = $true)]
-        [IPAddress]
+        [System.String]
         $IPAddress,
 
         # SubnetMask of IPAddress
         [Parameter(Mandatory = $true)]
-        [IPAddress]
+        [System.String]
         $AddressMask
     )
+
+    Validate-IPAddress -IPAddress $IPAddress
+    Validate-IPAddress -IPAddress $AddressMask
 
     Write-Verbose -Message ($script:localizedData.SetTargetResourceMessage -f $IPAddress, $AddressMask, $Ensure)
     if ($Ensure -eq 'Present')
@@ -87,14 +92,18 @@ function Test-TargetResource
 
         # IPAddress to add to Cluster
         [Parameter(Mandatory = $true)]
-        [IPAddress]
+        [System.String]
         $IPAddress,
 
         # SubnetMask of IPAddress
         [Parameter(Mandatory = $true)]
-        [IPAddress]
+        [System.String]
         $AddressMask
     )
+
+    Validate-IPAddress -IPAddress $IPAddress
+    Validate-IPAddress -IPAddress $AddressMask
+
     Write-Verbose -Message ($script:localizedData.TestTargetResourceMessage -f $IPAddress, $AddressMask, $Ensure)
     # If IPAddress is not in ClusterResource DependencyExpression #fail
     # If IPAddress' Subnet is not in ClusterNetworks #fail
@@ -393,7 +402,7 @@ function Test-ClusterNetwork
 
     $clusterNetworks = Get-ClusterNetworkList
     Write-Verbose -Message ($script:localizedData.GetSubnetfromIPAddressandAddressMask -f $IPAddress, $AddressMask)
-    $subnet = $(Get-Subnet -IPAddress $IPAddress -AddressMask $AddressMask -Verbose -ErrorAction Stop)
+    $subnet = $(Get-Subnet -IPAddress $IPAddress -AddressMask $AddressMask -ErrorAction Stop)
     Write-Verbose -Message ($script:localizedData.FoundSubnetfromIPAddressandAddressMask -f $IPAddress, $AddressMask, $Subnet)
 
     foreach ( $network in $clusterNetworks )
@@ -643,5 +652,35 @@ function Remove-ClusterIPParameter
         #* IP Address already exists (does this check actually IP Address or just IP Address Name)
         #* IP Address network has yet to be added to the Cluster
         New-InvalidOperationException -Message $_.Exception.Message -ErrorRecord $_
+    }
+}
+
+<#
+    .Synopsis
+        Validates a given IP address
+    .PARAMETER IPAddress
+        IP address to validate
+#>
+function Validate-IPAddress
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $IPAddress
+    )
+
+    try
+    {
+        [System.Net.IPAddress]$IPAddress
+    }
+    catch
+    {
+        #TODO Add error handling here for failure. Most likely reasons are
+        #* IP Address already exists (does this check actually IP Address or just IP Address Name)
+        #* IP Address network has yet to be added to the Cluster
+        $message = $script:localizedData.InvalidIPAddress -f $IPAddress
+        New-InvalidArgumentException -Message $message -Argument "IPAddress"
     }
 }

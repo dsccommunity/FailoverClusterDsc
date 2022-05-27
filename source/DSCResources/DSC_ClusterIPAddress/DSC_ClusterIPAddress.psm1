@@ -125,7 +125,8 @@ function Test-TargetResource
             $testTargetResourceReturnValue = $True
         }
     }
-
+    Write-Verbose -message "testtargetresourcereturnvalue is type {0}" -f ($testTargetResourceReturnValue).GetType().Name
+    Write-Verbose -message "testtargetresourcereturnvalue is value {0}" -f $testTargetResourceReturnValue
     $testTargetResourceReturnValue
 }
 

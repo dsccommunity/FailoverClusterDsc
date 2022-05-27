@@ -178,18 +178,17 @@ function Get-Subnet
 function Add-ClusterIPAddressDependency
 {
     [CmdletBinding()]
-    param
+    Param
     (
-        # IPAddress to add to Cluster
         [Parameter(Mandatory = $true)]
         [System.Net.IPAddress]
         $IPAddress,
 
-        # SubnetMask of IPAddress
         [Parameter(Mandatory = $true)]
         [System.Net.IPAddress]
         $AddressMask,
 
+        [Parameter()]
         [System.String]
         $ClusterName = 'Cluster Name'
     )

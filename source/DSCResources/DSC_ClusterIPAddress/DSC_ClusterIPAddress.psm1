@@ -11,14 +11,14 @@ function Get-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.Net.IPAddress]
-        $Address,
+        $IPAddress,
 
         [Parameter(Mandatory = $true)]
         [System.Net.IPAddress]
         $AddressMask
 
     )
-
+    Write-Verbose -Message ($script:localizedData.GetTargetResourceMessage -f $IPAddress, $AddressMask)
     return Get-ClusterNetworkList
 
 }
@@ -44,6 +44,7 @@ function Set-TargetResource
         $AddressMask
     )
 
+    Write-Verbose -Message ($script:localizedData.SetTargetResourceMessage -f $IPAddress, $AddressMask, $Ensure)
     if ($Ensure -eq 'Present')
     {
         # We've gotten here because the IPAddress given is not in the DependencyExpression for the cluster
@@ -65,7 +66,8 @@ function Set-TargetResource
     }
     else
     {
-        if (Test-ClusterIPAddressDependency -IPAddress $IPAddress -AddressMask $AddressMask) {
+        if (Test-ClusterIPAddressDependency -IPAddress $IPAddress -AddressMask $AddressMask)
+        {
             Remove-ClusterIPAddressDependency -IPAddress $IPAddress -Subnet $AddressMask
         }
     }
@@ -93,15 +95,10 @@ function Test-TargetResource
         [System.Net.IPAddress]
         $AddressMask
     )
-
+    Write-Verbose -Message ($script:localizedData.TestTargetResourceMessage -f $IPAddress, $AddressMask, $Ensure)
     # If IPAddress is not in ClusterResource DependencyExpression #fail
     # If IPAddress' Subnet is not in ClusterNetworks #fail
-    $params = @{
-      IPAddress  = $IPAddress
-      AddressMask = $AddressMask
-      VerbosePreference = $VerbosePreference
-    }
-    $testResult = Test-ClusterIPAddressDependency @params
+    $testResult = Test-ClusterIPAddressDependency -IPAddress $IPAddress -AddressMask $AddressMask
 
     if ($Ensure -eq 'Present')
     {
@@ -416,7 +413,8 @@ function Test-ClusterNetwork
     .SYNOPSIS
         Returns a list of PSCustomObjects representing the network and subnet mask of all networks in the cluster.
 #>
-function Get-ClusterNetworkList {
+function Get-ClusterNetworkList
+{
     [CmdletBinding()]
     param()
 
@@ -440,13 +438,16 @@ function Get-ClusterNetworkList {
     .PARAMETER ClusterName
         The name of the cluster to get the Dependency expression
 #>
-function Get-ClusterResourceDependencyExpression {
+function Get-ClusterResourceDependencyExpression
+{
     [CmdletBinding()]
     [Alias()]
     [OutputType([System.String])] #Could be a [Microsoft.FailoverClusters.PowerShell.ClusterResourceDependency]
     param
     (
-        [String]$ClusterName = 'Cluster Name'
+        [Parameter()]
+        [String]
+        $ClusterName = 'Cluster Name'
     )
 
     try

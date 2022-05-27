@@ -109,6 +109,7 @@ function Test-TargetResource
     # If IPAddress is not in ClusterResource DependencyExpression #fail
     # If IPAddress' Subnet is not in ClusterNetworks #fail
     $testResult = Test-ClusterIPAddressDependency -IPAddress $IPAddress
+    $testTargetResourceReturnValue = $false
 
     if ($Ensure -eq 'Present')
     {
@@ -118,16 +119,16 @@ function Test-TargetResource
     {
         if ($testResult)
         {
-            $testTargetResourceReturnValue = $False
+            $testTargetResourceReturnValue = $false
         }
         else
         {
-            $testTargetResourceReturnValue = $True
+            $testTargetResourceReturnValue = $true
         }
     }
-    Write-Verbose -message "testtargetresourcereturnvalue is type {0}" -f ($testTargetResourceReturnValue).GetType().Name
-    Write-Verbose -message "testtargetresourcereturnvalue is value {0}" -f $testTargetResourceReturnValue
-    $testTargetResourceReturnValue
+    Write-Verbose -message ("testtargetresourcereturnvalue is type {0}" -f ($testTargetResourceReturnValue).GetType().Name)
+    Write-Verbose -message ("testtargetresourcereturnvalue is value {0}" -f $testTargetResourceReturnValue)
+    return [System.Boolean]$testTargetResourceReturnValue
 }
 
 <#

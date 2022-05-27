@@ -112,19 +112,21 @@ function Test-TargetResource
 
     if ($Ensure -eq 'Present')
     {
-        return $testResult
+        $testTargetResourceReturnValue = $testResult
     }
     else
     {
         if ($testResult)
         {
-            return $False
+            $testTargetResourceReturnValue = $False
         }
         else
         {
-            return $True
+            $testTargetResourceReturnValue = $True
         }
     }
+
+    $testTargetResourceReturnValue
 }
 
 <#

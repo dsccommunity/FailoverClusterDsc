@@ -6,6 +6,7 @@ $script:localizedData = Get-LocalizedData -DefaultUICulture 'en-US'
 function Get-TargetResource
 {
     [CmdletBinding()]
+    [OutputType([Hashtable])]
     param
     (
 

@@ -1,4 +1,4 @@
-# Change log for FailOverClusterDsc
+# Changelog for FailOverClusterDsc
 
 The format is based on and uses the types of changes according to [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -7,6 +7,22 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 
 ## [Unreleased]
 ### Changed
+- BREAKING CHANGE
+  - Renamed _xFailOverCluster_ to _FailoverClusterDsc_ - fixes [Issue #69](https://github.com/PowerShell/xFailOverCluster/issues/69).
+  - Changed all MSFT_xResourceName to DSC_ResourceName.
+  - Updated DSCResources, Examples, Modules and Tests for new naming.
+  - Updated README.md from _xFailOverCluster_ to _FailoverClusterDsc_
+
+- FailoverClusterDsc
+  - Update pipeline files to the latest from the Sampler project.
+  - Move somme documentation from README-md to the GitHub repository Wiki.
+- ClusterPreferredOwner
+  - Minor fix to tests.
+
+## [2.0.0] - 2022-05-25
+
+### Changed
+
 - BREAKING CHANGE
   - Renamed _xFailOverCluster_ to _FailoverClusterDsc_ - fixes [Issue #69](https://github.com/PowerShell/xFailOverCluster/issues/69).
   - Changed all MSFT_xResourceName to DSC_ResourceName.

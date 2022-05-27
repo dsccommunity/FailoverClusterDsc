@@ -401,7 +401,7 @@ function Add-ClusterIPResource
     Try
     {
         #* Create new IPAddress resource and add the IPAddress parameters to it
-        Write-Verbose -Message ($script:localizedData.CreateNewIPResource -f $IPAddress,$AddressMask)
+        Write-Verbose -Message ($script:localizedData.CreateNewIPResource -f $IPAddress, $OwnerGroup)
         $params = @{
             Name         = "IP Address $IPAddress"
             ResourceType = 'IP Address'

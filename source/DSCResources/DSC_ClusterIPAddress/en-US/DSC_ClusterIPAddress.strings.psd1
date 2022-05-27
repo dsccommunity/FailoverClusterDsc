@@ -1,8 +1,6 @@
 # Localized resources for xCluster
 
 ConvertFrom-StringData @'
-    CombinedIPAndAddressMask = Combined IP address and subnet mask were passed as {0}.
-    SplitIPandAddressMask = IP address and subnet mask split as {0} and {1}.
     GetClusterNetworks = Getting all networks added to this cluster.
     FoundClusterNetwork = Found cluster network {0}/{1}.
     GetSubnetfromIPAddressandAddressMask = Getting the subnet of the given IPAddress {0} with subnet mask {1}
@@ -15,4 +13,6 @@ ConvertFrom-StringData @'
     RemoveIPAddressResource = Removing IP address {0} with address mask {1} to the cluster parameters
     AddIPAddressResource = Adding IP address {0} with address mask {1} to the cluster parameters
     NonExistantClusterNetwork =  Cluster Network for IP address {0} and address mask {1} is not part of this cluster"
+    CreateNewIPResource = Created new IP resource with IP address {0} and owner group {1}.
+    SetDependencyExpression = Set cluster resource dependency to {0}.
 '@

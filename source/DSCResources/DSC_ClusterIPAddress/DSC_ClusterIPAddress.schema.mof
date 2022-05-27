@@ -4,6 +4,6 @@
 class DSC_ClusterIPAddress : OMI_BaseResource
 {
     [Key, Description("IP address to add to the Failover Cluster")] String IPAddress;
-    [Write, Description("Subnet mask of the IP address to add to the Failover Cluster")] String SubnetMask;
+    [Write, Description("Address mask of the IP address to add to the Failover Cluster")] String AddressMask;
     [Write, Description("Enforce whether the IP Address is present or absent from the Failover Cluster"), ValueMap{"Present", "Absent"},Values{"Present", "Absent"}] String Ensure;
 };

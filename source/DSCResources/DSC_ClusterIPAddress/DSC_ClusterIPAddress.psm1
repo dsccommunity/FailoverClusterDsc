@@ -113,7 +113,10 @@ function Test-TargetResource
 
     if ($Ensure -eq 'Present')
     {
+        Write-Verbose -Message ("Ensure is {0}" -f $Ensure)
         $testTargetResourceReturnValue = $testResult
+        Write-Verbose -message ("testResult is type {0}" -f ($testResult).GetType().Name)
+        Write-Verbose -message ("testResult is value {0}" -f $testResult)
     }
     else
     {
@@ -128,7 +131,7 @@ function Test-TargetResource
     }
     Write-Verbose -message ("testtargetresourcereturnvalue is type {0}" -f ($testTargetResourceReturnValue).GetType().Name)
     Write-Verbose -message ("testtargetresourcereturnvalue is value {0}" -f $testTargetResourceReturnValue)
-    return [System.Boolean]$testTargetResourceReturnValue
+    return $testTargetResourceReturnValue
 }
 
 <#
@@ -432,7 +435,7 @@ function Get-ClusterNetworkList
     $networks = New-Object "System.Collections.Generic.List[PSCustomObject]"
     foreach ( $network in Get-ClusterNetwork )
     {
-        $clusterNetworks.Add([PSCustomObject]@{
+        $networks.Add([PSCustomObject]@{
             Address     = $network.Address
             AddressMask = $network.AddressMask
         })

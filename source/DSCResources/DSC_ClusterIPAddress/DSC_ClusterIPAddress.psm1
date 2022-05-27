@@ -112,14 +112,7 @@ function Test-TargetResource
 
     if ($Ensure -eq 'Present')
     {
-        if ($testResult)
-        {
-            return $True
-        }
-        else
-        {
-            return $False
-        }
+        return $testResult
     }
     else
     {

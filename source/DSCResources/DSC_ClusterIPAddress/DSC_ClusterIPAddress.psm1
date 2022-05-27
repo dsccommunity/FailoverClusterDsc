@@ -127,7 +127,6 @@ Function Test-TargetResource
     }
 }
 
-
 <#
     .Synopsis
         Given an IP Address and a Subnet Mask, returns the IP Addresses subnet.
@@ -192,7 +191,6 @@ function Add-ClusterIPAddressDependency
         [System.String]
         $ClusterName = 'Cluster Name'
     )
-
 
     #* Get Windows Cluster resource
     $cluster = Get-ClusterResource | Where-Object { $_.name -eq $ClusterName}
@@ -332,9 +330,7 @@ function Test-ClusterNetwork
 #>
 function Get-ClusterNetworkList {
     [CmdletBinding()]
-    [Alias()]
-    Param
-    ()
+    param()
 
     Write-Verbose -Message ($script:localizedData.GetClusterNetworks)
     $networks = New-Object "System.Collections.Generic.List[PSCustomObject]"
@@ -359,6 +355,7 @@ function Get-ClusterNetworkList {
 function Get-ClusterResourceDependencyExpression {
     [CmdletBinding()]
     [Alias()]
+    [OutputType([System.String])] #Could be a [Microsoft.FailoverClusters.PowerShell.ClusterResourceDependency]
     Param
     (
         [String]$ClusterName = 'Cluster Name'
@@ -424,11 +421,12 @@ function Add-ClusterIPResource
         Removes an IP Address Resource to a given Cluster Group and returns an IPAddress Resource
     .PARAMETER IPAddress
         IP address to remove from the cluster
+    .PARAMETER OwnerGroup
+        OwnerGroup of the cluster to remove the IP resource from
 #>
 function Remove-ClusterIPResource
 {
     [CmdletBinding()]
-    [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterResource])]
     Param
     (
         # IPAddress to add to Cluster

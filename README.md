@@ -46,6 +46,7 @@ The resource examples are also available in the [FailoverClusterDsc Wiki](https:
 
 * [**Cluster**](#cluster) Ensures that a group of machines form a cluster.
 * [**ClusterDisk**](#clusterdisk) Configures shared disks in a cluster.
+* [**ClusterIPAddress**](#ClusterIPAddress) Configures an IP address in a cluster.
 * [**ClusterNetwork**](#clusternetwork) Configures as cluster network in a failover
   cluster.
 * [**ClusterPreferredOwner**](#clusterpreferredowner) Configures preferred
@@ -58,18 +59,6 @@ The resource examples are also available in the [FailoverClusterDsc Wiki](https:
 
 ### Cluster
 
-<<<<<<< HEAD
-Used to configure a failover cluster. If the cluster does not exist, it will be
-created in the domain and the static IP address will be assigned to the cluster.
-When the cluster exist (either it was created or already existed), it will add
-the target node ($env:COMPUTERNAME) to the cluster.
-
-#### Requirements for Cluster
-
-* Target machine must be running Windows Server 2008 R2 or later.
-
-=======
->>>>>>> origin/main
 #### Parameters for Cluster
 
 * **`[String]` Name** _(Key)_: Name of the failover cluster.
@@ -103,15 +92,6 @@ the target node ($env:COMPUTERNAME) to the cluster.
 
 ### ClusterDisk
 
-<<<<<<< HEAD
-Configures shared disks in a cluster.
-
-#### Requirements for ClusterDisk
-
-* Target machine must be running Windows Server 2008 R2 or later.
-
-=======
->>>>>>> origin/main
 #### Parameters for ClusterDisk
 
 * **`[String]` Number** _(Key)_: The disk number of the cluster disk.
@@ -126,19 +106,24 @@ Configures shared disks in a cluster.
 * [Add a cluster disk to the failover cluster](/source/Examples/Resources/ClusterDisk/1-ClusterDisk_AddClusterDiskConfig.ps1)
 * [Remove a cluster disk from the failover cluster](/source/Examples/Resources/ClusterDisk/2-ClusterDisk_RemoveClusterDiskConfig.ps1)
 
+### ClusterIPAddress
+
+#### Parameters for ClusterIPAddress
+
+* **`[IPAddress]` IPAddress** _(Key)_: The IP address to add or remove from the cluster.
+* **`[IPAddress]` AddressMask** _(Write)_: The address mask of the IP address.
+* **`[String]` Ensure** _(Write)_: Define if the IP address should be added
+  (Present) or removed (Absent). Default value is 'Present'.
+  { *Present* | Absent }
+
+#### Examples for ClusterIPAddress
+
+* [Add a cluster IP address to the failover cluster](/source/Examples/Resources/ClusterIPAddress/1-ClusterIPAddress_AddClusterIPAddress.ps1)
+* [Remove a IP address from the failover cluster](/source/Examples/Resources/ClusterIPAddress/2-ClusterIPAddress_RemoveClusterIPAddress.ps1)
+
+
 ### ClusterNetwork
 
-<<<<<<< HEAD
-Configures a cluster network in a failover cluster.
-
-This resource is only able to change properties on cluster networks.  To add or remove networks from the cluster, add or remove them from the cluster members.  By adding a new subnet on one of the cluster nodes, the network will be added to the cluster, and metadata can be set using the ClusterNetwork module.
-
-#### Requirements for ClusterNetwork
-
-* Target machine must be running Windows Server 2008 R2 or later.
-
-=======
->>>>>>> origin/main
 #### Parameters for ClusterNetwork
 
 * **`[String]` Address** _(Key)_: The address for the cluster network in the format
@@ -160,29 +145,6 @@ This resource is only able to change properties on cluster networks.  To add or 
 
 ### ClusterPreferredOwner
 
-<<<<<<< HEAD
-0 = Do not allow cluster network communication
-1 = Allow cluster network communication only
-3 = Allow cluster network communication and client connectivity
-
-See this article for more information about cluster network role values;
-[Configuring Windows Failover Cluster Networks](https://blogs.technet.microsoft.com/askcore/2014/02/19/configuring-windows-failover-cluster-networks/)
-
-#### Examples for ClusterNetwork
-
-* [Change properties of two cluster network resources in the failover cluster](/source/Examples/Resources/ClusterNetwork/1-ClusterNetwork_ChangeClusterNetworkConfig.ps1)
-
-### ClusterPreferredOwner
-
-Configures preferred owners of a cluster group and cluster resources in a failover
-cluster.
-
-#### Requirements for ClusterPreferredOwner
-
-* Target machine must be running Windows Server 2008 R2 or later.
-
-=======
->>>>>>> origin/main
 #### Parameters for ClusterPreferredOwner
 
 * **`[String]` ClusterGroup** _(Key)_: Name of the cluster group.
@@ -200,15 +162,6 @@ cluster.
 
 ### ClusterProperty
 
-<<<<<<< HEAD
-Configures cluster properties on a failover cluster.
-
-#### Requirements for ClusterProperty
-
-* Target machine must be running Windows Server 2008 R2 or later.
-
-=======
->>>>>>> origin/main
 #### Parameters for ClusterProperty
 
 * **`[String]` Name** _(Key)_: Name of the cluster.
@@ -268,17 +221,6 @@ Configures cluster properties on a failover cluster.
 
 ### ClusterQuorum
 
-<<<<<<< HEAD
-Configures quorum in a cluster. For information on how to choose the correct
-quorum type, please see the article
-[Understanding Quorum Configurations in a Failover Cluster](https://technet.microsoft.com/en-us/library/cc731739(v=ws.11).aspx).
-
-#### Requirements for ClusterQuorum
-
-* Target machine must be running Windows Server 2008 R2 or later.
-
-=======
->>>>>>> origin/main
 #### Parameters for ClusterQuorum
 
 * **`[String]` IsSingleInstance** _(Key)_: Specifies the resource is a single
@@ -303,15 +245,6 @@ quorum type, please see the article
 
 ### WaitForCluster
 
-<<<<<<< HEAD
-Ensures that a node waits for a remote cluster is created.
-
-#### Requirements for WaitForCluster
-
-* Target machine must be running Windows Server 2008 R2 or later.
-
-=======
->>>>>>> origin/main
 #### Parameters for WaitForCluster
 
 * **`[String]` Name** _(Key)_: Name of the cluster to wait for.

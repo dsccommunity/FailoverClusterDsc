@@ -416,7 +416,10 @@ function Test-ClusterNetwork
 function Get-ClusterNetworkList
 {
     [CmdletBinding()]
-    param()
+    param
+    (
+
+    )
 
     Write-Verbose -Message ($script:localizedData.GetClusterNetworks)
     $networks = New-Object "System.Collections.Generic.List[PSCustomObject]"

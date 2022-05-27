@@ -72,9 +72,9 @@ function Set-TargetResource
     }
     else
     {
-        if (Test-ClusterIPAddressDependency -IPAddress $IPAddress -AddressMask $AddressMask)
+        if (Test-ClusterIPAddressDependency -IPAddress $IPAddress)
         {
-            Remove-ClusterIPAddressDependency -IPAddress $IPAddress -Subnet $AddressMask
+            Remove-ClusterIPAddressDependency -IPAddress $IPAddress
         }
     }
 }
@@ -108,7 +108,7 @@ function Test-TargetResource
     Write-Verbose -Message ($script:localizedData.TestTargetResourceMessage -f $IPAddress, $AddressMask, $Ensure)
     # If IPAddress is not in ClusterResource DependencyExpression #fail
     # If IPAddress' Subnet is not in ClusterNetworks #fail
-    $testResult = Test-ClusterIPAddressDependency -IPAddress $IPAddress -AddressMask $AddressMask
+    $testResult = Test-ClusterIPAddressDependency -IPAddress $IPAddress
 
     if ($Ensure -eq 'Present')
     {
@@ -179,7 +179,7 @@ function Get-Subnet
         Name of the cluster to add IP Address resource to
     .EXAMPLE
         # Using the default ParameterSet of both IP Address and Subnet
-        Add-ClusterIPAddressDependency -IPAddress 10.235.32.137 -Subnet 255.255.255.128 -Verbose
+        Add-ClusterIPAddressDependency -IPAddress 10.235.32.137 -AddressMask 255.255.255.128 -Verbose
 #>
 function Add-ClusterIPAddressDependency
 {
@@ -258,7 +258,7 @@ function Add-ClusterIPAddressDependency
     .PARAMETER ClusterName
         Name of the cluster to add IP Address resource to
     .EXAMPLE
-        Remove-ClusterIPAddressDependency -IPAddress 10.235.32.137 -Subnet 255.255.255.128 -Verbose
+        Remove-ClusterIPAddressDependency -IPAddress 10.235.32.137 -AddressMask 255.255.255.128 -Verbose
 #>
 function Remove-ClusterIPAddressDependency
 {
@@ -455,7 +455,7 @@ function Get-ClusterResourceDependencyExpression
 {
     [CmdletBinding()]
     [Alias()]
-    [OutputType([System.String])] #Could be a [Microsoft.FailoverClusters.PowerShell.ClusterResourceDependency]
+    [OutputType([System.String])]
     param
     (
         [Parameter()]

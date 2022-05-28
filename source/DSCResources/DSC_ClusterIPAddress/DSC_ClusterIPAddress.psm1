@@ -515,7 +515,7 @@ function Add-ClusterIPResource
     (
         # IPAddress to add to Cluster
         [Parameter(Mandatory = $true)]
-        [IPAddress]
+        [System.String]
         $IPAddress,
 
         # Owner Group of the cluster
@@ -524,12 +524,15 @@ function Add-ClusterIPResource
         $OwnerGroup
     )
 
+    Test-IPAddress -IPAddress $IPAddress
+
     try
     {
         #* Create new IPAddress resource and add the IPAddress parameters to it
         Write-Verbose -Message ($script:localizedData.CreateNewIPResource -f $IPAddress, $OwnerGroup)
+        $resourceName = "IP Address $IPAddress"
         $params = @{
-            Name         = "IP Address $IPAddress"
+            Name         = $resourceName
             ResourceType = 'IP Address'
             Group        = $OwnerGroup
             ErrorAction  = 'Stop'
@@ -541,7 +544,7 @@ function Add-ClusterIPResource
         New-InvalidOperationException -Message $_.Exception.Message -ErrorRecord $_
     }
 
-    return $params.Name
+    return $resourceName
 }
 
 <#

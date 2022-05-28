@@ -311,11 +311,13 @@ function Remove-ClusterIPAddressDependency
     }
     catch
     {
+        #! Here we need to check if IP Address is original IP Resource named: 'Cluster IP Address'
         $errorMessage = $script:localizedData.IPResourceNotFound -f "IP Address $IPAddress"
         New-InvalidDataException -Message $errorMessage -ErrorID 'IPResourceNotFound'
     }
     Remove-ClusterIPResource -IPAddress $IPAddress -OwnerGroup $cluster.OwnerGroup
-    Remove-ClusterIPParameter -IPAddressResource $ipResource -IPAddress $IPAddress -AddressMask $AddressMask
+    #* I dont think below is necessary. Removing the resource will remove the IP
+    #Remove-ClusterIPParameter -IPAddressResource $ipResource -IPAddress $IPAddress -AddressMask $AddressMask
 
     $ipResources = Get-ClusterResource | Where-Object
     {
@@ -324,9 +326,9 @@ function Remove-ClusterIPAddressDependency
     }
 
     $dependencyExpression = ''
-    $ipResourceCount = $ipResources.count
+    $ipResourceCount = $ipResources.count -1
     $i = 0
-    while ( $i -lt $ipResourceCount )
+    while ( $i -le $ipResourceCount )
     {
         if ( $i -eq $ipResourceCount )
         {
@@ -580,6 +582,7 @@ function Remove-ClusterIPResource
             ResourceType = 'IP Address'
             Group        = $OwnerGroup
             ErrorAction  = 'Stop'
+            Confirm      = $False
         }
         Remove-ClusterResource @params
     }

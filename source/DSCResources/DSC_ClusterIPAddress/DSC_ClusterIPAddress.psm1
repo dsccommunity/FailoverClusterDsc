@@ -139,7 +139,7 @@ function Test-TargetResource
         else
         {
             if ( ($ipResource.IPAddress -eq $IPAddress) -and
-                ($ipResource.SubnetMask -eq $AddressMask) )
+                ($ipResource.AddressMask -eq $AddressMask) )
             {
                 $result = $true
             }
@@ -151,14 +151,10 @@ function Test-TargetResource
         {
             $result = $true
         }
-        else
-        {
-            $result = $false
-        }
     }
     Write-Verbose -message ("result is type {0}" -f ($result).GetType().Name)
     Write-Verbose -message ("result is value {0}" -f $result)
-    return $result
+    $result
 }
 
 <#

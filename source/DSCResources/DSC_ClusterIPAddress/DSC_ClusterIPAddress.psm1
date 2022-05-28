@@ -537,7 +537,7 @@ function Add-ClusterIPResource
             Group        = $OwnerGroup
             ErrorAction  = 'Stop'
         }
-        Add-ClusterResource @params
+        $resource = Add-ClusterResource @params
     }
     catch
     {
@@ -638,13 +638,16 @@ function Add-ClusterIPParameter
         $IPAddressResource,
 
         [Parameter(Mandatory = $true)]
-        [IPAddress]
+        [System.String]
         $IPAddress,
 
         [Parameter(Mandatory = $true)]
-        [IPAddress]
+        [System.String]
         $AddressMask
     )
+
+    Test-IPAddress -IPAddress $IPAddress
+    Test-IPAddress -IPAddress $AddressMask
 
     $parameter1 = New-Object Microsoft.FailoverClusters.PowerShell.ClusterParameter $IPAddressResource,Address,$IPAddress
     $parameter2 = New-Object Microsoft.FailoverClusters.PowerShell.ClusterParameter $IPAddressResource,SubnetMask,$AddressMask

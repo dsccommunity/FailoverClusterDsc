@@ -91,10 +91,7 @@ function Set-TargetResource
     }
     else
     {
-        if (Test-ClusterIPAddressDependency -IPAddress $IPAddress)
-        {
-            Remove-ClusterIPAddressDependency -IPAddress $IPAddress
-        }
+        Remove-ClusterIPAddressDependency -IPAddress $IPAddress -AddressMask $AddressMask
     }
 }
 
@@ -235,6 +232,8 @@ function Add-ClusterIPAddressDependency
         ( $_.ResourceType -eq 'IP Address' )
     }
 
+    #! Need to write
+    #$dependencyExpression = New-ClusterDependencyExpression -IpAddressResource $ipResources
     $dependencyExpression = ''
     $ipResourceCount = $ipResources.count -1
     $i = 0
@@ -307,6 +306,7 @@ function Remove-ClusterIPAddressDependency
 
     try
     {
+        #! this probably does not stop, but returns null or empty
         $ipResource = Get-ClusterResource -Name "IP Address $IPAddress" -errorAction Stop
     }
     catch
@@ -325,6 +325,8 @@ function Remove-ClusterIPAddressDependency
         ( $_.ResourceType -eq 'IP Address' )
     }
 
+    #! Need to write
+    #$dependencyExpression = New-ClusterDependencyExpression -IpAddressResource $ipResources
     $dependencyExpression = ''
     $ipResourceCount = $ipResources.count -1
     $i = 0
@@ -576,7 +578,7 @@ function Remove-ClusterIPResource
     try
     {
         #* Create new IPAddress resource and add the IPAddress parameters to it
-        Write-Verbose -Message ($script:localizedData.CreateNewIPResource -f $IPAddress,$AddressMask)
+        Write-Verbose -Message ($script:localizedData.RemoveIPResource -f $IPAddress)
         $params = @{
             Name         = "IP Address $IPAddress"
             ResourceType = 'IP Address'

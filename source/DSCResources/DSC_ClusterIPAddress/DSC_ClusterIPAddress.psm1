@@ -232,23 +232,7 @@ function Add-ClusterIPAddressDependency
         ( $_.ResourceType -eq 'IP Address' )
     }
 
-    #! Need to write
-    #$dependencyExpression = New-ClusterDependencyExpression -IpAddressResource $ipResources
-    $dependencyExpression = ''
-    $ipResourceCount = $ipResources.count -1
-    $i = 0
-    while ( $i -le $ipResourceCount )
-    {
-        if ( $i -eq $ipResourceCount )
-        {
-            $dependencyExpression += "[$($ipResources[$i].name)]"
-        }
-        else
-        {
-            $dependencyExpression += "[$($ipResources[$i].name)] or "
-        }
-        $i++
-    }
+    $dependencyExpression = Create-ClusterIPDependency -ClusterResource $ipResources
 
     #Set cluster resources
     try
@@ -315,7 +299,7 @@ function Remove-ClusterIPAddressDependency
         $errorMessage = $script:localizedData.IPResourceNotFound -f "IP Address $IPAddress"
         New-InvalidDataException -Message $errorMessage -ErrorID 'IPResourceNotFound'
     }
-    Remove-ClusterIPResource -IPAddress $IPAddress -OwnerGroup $cluster.OwnerGroup
+    Remove-ClusterResource -InputObject $ipResource -Confirm:$False
     #* I dont think below is necessary. Removing the resource will remove the IP
     #Remove-ClusterIPParameter -IPAddressResource $ipResource -IPAddress $IPAddress -AddressMask $AddressMask
 
@@ -325,23 +309,7 @@ function Remove-ClusterIPAddressDependency
         ( $_.ResourceType -eq 'IP Address' )
     }
 
-    #! Need to write
-    #$dependencyExpression = New-ClusterDependencyExpression -IpAddressResource $ipResources
-    $dependencyExpression = ''
-    $ipResourceCount = $ipResources.count -1
-    $i = 0
-    while ( $i -le $ipResourceCount )
-    {
-        if ( $i -eq $ipResourceCount )
-        {
-            $dependencyExpression += "[$($ipResources[$i].name)]"
-        }
-        else
-        {
-            $dependencyExpression += "[$($ipResources[$i].name)] or "
-        }
-        $i++
-    }
+    $dependencyExpression = Create-ClusterIPDependency -ClusterResource $ipResources
 
     #Set cluster resources
     try
@@ -749,4 +717,40 @@ function Test-IPAddress
         $message = $script:localizedData.InvalidIPAddress -f $IPAddress
         New-InvalidArgumentException -Message $message -Argument "IPAddress"
     }
+}
+
+<#
+    .Synopsis
+        Creates a new cluster IP Dependency
+    .PARAMETER ClusterResource
+        Cluster resources to create IP Dependency from
+#>
+function Create-ClusterIPDependency
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [Microsoft.FailoverClusters.PowerShell.ClusterResource[]]
+        $ClusterResource
+    )
+
+    $dependencyExpression = ''
+    $ipResourceCount = $ipResources.count -1
+    $i = 0
+    while ( $i -le $ipResourceCount )
+    {
+        if ( $i -eq $ipResourceCount )
+        {
+            $dependencyExpression += "[$($ipResources[$i].name)]"
+        }
+        else
+        {
+            $dependencyExpression += "[$($ipResources[$i].name)] or "
+        }
+        $i++
+    }
+
+    return $dependencyExpression
 }

@@ -9,15 +9,18 @@ function Get-TargetResource
     [OutputType([Hashtable])]
     param
     (
-
         [Parameter(Mandatory = $true)]
         [System.String]
         $IPAddress,
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        $AddressMask
+        $AddressMask,
 
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Present', 'Absent')]
+        $Ensure = 'Present'
     )
     Test-IPAddress -IPAddress $IPAddress
     Test-IPAddress -IPAddress $AddressMask
@@ -33,13 +36,13 @@ function Get-TargetResource
         {
             Write-Verbose -Message ($script:localizedData.FoundIPResource -f $IPAddress)
             $result = @{
-                IPAddress = $ipResourceDetails.Address
+                IPAddress   = $ipResourceDetails.Address
                 AddressMask = $ipResourceDetails.AddressMask
+                Ensure      = $Ensure
             }
         }
     }
-
-    return $result
+    $result
 }
 
 function Set-TargetResource
@@ -143,7 +146,11 @@ function Test-TargetResource
     }
     else
     {
-        if ([System.String]::IsNullOrEmpty($ipResource))
+        <#
+            $ipResource will always have some contents, but if IPAddress is null or empty,
+            the resource does not exist.
+        #>
+        if ([System.String]::IsNullOrEmpty($ipResource.IPAddress))
         {
             $result = $true
         }
@@ -600,7 +607,7 @@ function Get-ClusterIPResource
     $addressMask = ($IPAddressResource | Get-ClusterParameter -Name SubnetMask).Value
     $network = ($IPAddressResource | Get-ClusterParameter -Name Network).Value
     Write-Verbose -Message ($script:localizedData.FoundIPAddressResource -f $address, $addressMask, $network)
-    return @{
+    @{
         Address     = $address
         AddressMask = $addressMask
         Network     = $network

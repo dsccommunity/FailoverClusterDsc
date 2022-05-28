@@ -155,8 +155,6 @@ function Test-TargetResource
             $result = $true
         }
     }
-    Write-Verbose -message ("result is type {0}" -f ($result).GetType().Name)
-    Write-Verbose -message ("result is value {0}" -f $result)
     $result
 }
 
@@ -728,7 +726,7 @@ function Test-IPAddress
 
     try
     {
-        [System.Net.IPAddress]$IPAddress
+        $ipObject = [System.Net.IPAddress]::Parse($IPAddress)
     }
     catch
     {

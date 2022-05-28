@@ -32,7 +32,10 @@ function Get-TargetResource
         if ( $ipResourceDetails.Address -eq $IPAddress )
         {
             Write-Verbose -Message ($script:localizedData.FoundIPResource -f $IPAddress)
-            $result = $ipResourceDetails
+            $result = @{
+                IPAddress = $ipResourceDetails.Address
+                AddressMask = $ipResourceDetails.AddressMask
+            }
         }
     }
 
@@ -135,7 +138,7 @@ function Test-TargetResource
         }
         else
         {
-            if ( ($ipResource.Address -eq $IPAddress) -and
+            if ( ($ipResource.IPAddress -eq $IPAddress) -and
                 ($ipResource.SubnetMask -eq $AddressMask) )
             {
                 $result = $true

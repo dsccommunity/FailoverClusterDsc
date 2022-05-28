@@ -22,8 +22,21 @@ function Get-TargetResource
     Test-IPAddress -IPAddress $IPAddress
     Test-IPAddress -IPAddress $AddressMask
     Write-Verbose -Message ($script:localizedData.GetTargetResourceMessage -f $IPAddress, $AddressMask)
-    return Get-ClusterNetworkList
+    $result = @{}
+    $ipResources = Get-ClusterResource | Where-Object {$_.ResourceType -eq 'IP Address'}
 
+    foreach ( $ipResource in $ipResources )
+    {
+        $ipResourceDetails = Get-ClusterIPResource -IPAddressResource $ipResource
+
+        if ( $ipResourceDetails.Address -eq $IPAddress )
+        {
+            Write-Verbose -Message ($script:localizedData.FoundIPResource -f $IPAddress)
+            $result = $ipResourceDetails
+        }
+    }
+
+    return $result
 }
 
 function Set-TargetResource
@@ -106,32 +119,43 @@ function Test-TargetResource
     Test-IPAddress -IPAddress $AddressMask
 
     Write-Verbose -Message ($script:localizedData.TestTargetResourceMessage -f $IPAddress, $AddressMask, $Ensure)
-    # If IPAddress is not in ClusterResource DependencyExpression #fail
-    # If IPAddress' Subnet is not in ClusterNetworks #fail
-    $testResult = Test-ClusterIPAddressDependency -IPAddress $IPAddress
-    $testTargetResourceReturnValue = $false
+    # # If IPAddress is not in ClusterResource DependencyExpression #fail
+    # # If IPAddress' Subnet is not in ClusterNetworks #fail
+    # $testResult = Test-ClusterIPAddressDependency -IPAddress $IPAddress
+    # $testTargetResourceReturnValue = $false
+
+    $ipResource = Get-TargetResource -IPAddress $IPAddress -AddressMask $AddressMask
+    $result = $false
 
     if ($Ensure -eq 'Present')
     {
-        Write-Verbose -Message ("Ensure is {0}" -f $Ensure)
-        $testTargetResourceReturnValue = $testResult
-        Write-Verbose -message ("testResult is type {0}" -f ($testResult).GetType().Name)
-        Write-Verbose -message ("testResult is value {0}" -f $testResult)
-    }
-    else
-    {
-        if ($testResult)
+        if ([System.String]::IsNullOrEmpty($ipResource))
         {
-            $testTargetResourceReturnValue = $false
+            $result = $false
         }
         else
         {
-            $testTargetResourceReturnValue = $true
+            if ( ($ipResource.Address -eq $IPAddress) -and
+                ($ipResource.SubnetMask -eq $AddressMask) )
+            {
+                $result = $true
+            }
         }
     }
-    Write-Verbose -message ("testtargetresourcereturnvalue is type {0}" -f ($testTargetResourceReturnValue).GetType().Name)
-    Write-Verbose -message ("testtargetresourcereturnvalue is value {0}" -f $testTargetResourceReturnValue)
-    return $testTargetResourceReturnValue
+    else
+    {
+        if ([System.String]::IsNullOrEmpty($ipResource))
+        {
+            $result = $true
+        }
+        else
+        {
+            $result = $false
+        }
+    }
+    Write-Verbose -message ("result is type {0}" -f ($result).GetType().Name)
+    Write-Verbose -message ("result is value {0}" -f $result)
+    return $result
 }
 
 <#
@@ -557,6 +581,33 @@ function Remove-ClusterIPResource
     catch
     {
         New-InvalidOperationException -Message $_.Exception.Message -ErrorRecord $_
+    }
+}
+
+<#
+    .Synopsis
+        Gets the IP resource information of a Given Cluster IP address Resource
+    .PARAMETER IPAddressResource
+        IP cddress resource to get to information from
+#>
+function Get-ClusterIPResource
+{
+    [CmdletBinding()]
+    param
+    (
+        # IPAddress to add to Cluster
+        [Parameter(Mandatory = $true)]
+        [Microsoft.FailoverClusters.PowerShell.ClusterResource]
+        $IPAddressResource
+    )
+
+    $address = ($IPAddressResource | Get-ClusterParameter -Name Address).Value
+    $addressMask = ($IPAddressResource | Get-ClusterParameter -Name SubnetMask).Value
+    $network = ($IPAddressResource | Get-ClusterParameter -Name Network).Value
+    return @{
+        Address     = $address
+        AddressMask = $addressMask
+        Network     = $network
     }
 }
 

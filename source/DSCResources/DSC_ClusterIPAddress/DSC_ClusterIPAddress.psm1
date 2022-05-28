@@ -751,6 +751,6 @@ function Create-ClusterIPDependency
         }
         $i++
     }
-
+    Write-Verbose -Message ($script:localizedData.NewDependencyExpression -f $dependencyExpression)
     return $dependencyExpression
 }

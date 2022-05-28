@@ -14,6 +14,7 @@ ConvertFrom-StringData @'
     AddIPAddressResource = Adding IP address {0} with address mask {1} to the cluster parameters
     NonExistantClusterNetwork =  Cluster Network for IP address {0} and address mask {1} is not part of this cluster"
     CreateNewIPResource = Created new IP resource with IP address {0} and owner group {1}.
+    RemoveIPResource = Removing IP resource with IP address {0}.
     SetDependencyExpression = Set cluster resource dependency to {0}.
     IPResourceNotFound = IP Resource named {0} not found.
     GetTargetResourceMessage = Getting target resource state for IP address {0} and address mask {1}.
@@ -22,4 +23,5 @@ ConvertFrom-StringData @'
     InvalidIPAddress = {0} is not a valid IP address.
     FoundIPResource = Found IP address resource matching IP address {0}.
     FoundIPAddressResource = Found IP address resource with IP address {0}, address mask {1} in network ${2}.
+    NewDependencyExpression = Created new dependency expression {0}.
 '@

@@ -232,7 +232,7 @@ function Add-ClusterIPAddressDependency
         ( $_.ResourceType -eq 'IP Address' )
     }
 
-    $dependencyExpression = Create-ClusterIPDependency -ClusterResource $ipResources
+    $dependencyExpression = Create-ClusterIPDependencyExpression -ClusterResource $ipResources
 
     #Set cluster resources
     try
@@ -309,7 +309,7 @@ function Remove-ClusterIPAddressDependency
         ( $_.ResourceType -eq 'IP Address' )
     }
 
-    $dependencyExpression = Create-ClusterIPDependency -ClusterResource $ipResources
+    $dependencyExpression = Create-ClusterIPDependencyExpression -ClusterResource $ipResources
 
     #Set cluster resources
     try
@@ -725,7 +725,7 @@ function Test-IPAddress
     .PARAMETER ClusterResource
         Cluster resources to create IP Dependency from
 #>
-function Create-ClusterIPDependency
+function Create-ClusterIPDependencyExpression
 {
     [CmdletBinding()]
     [OutputType([System.String])]
@@ -744,8 +744,9 @@ function Create-ClusterIPDependency
     else
     {
         $dependencyExpression = ''
+        $clusterResourceCount = $ClusterResource.count - 1
         $i = 0
-        while ( $i -le ($clusterResourceCount.count -1 ) )
+        while ( $i -le $clusterResourceCount )
         {
             if ( $i -eq $clusterResourceCount )
         {

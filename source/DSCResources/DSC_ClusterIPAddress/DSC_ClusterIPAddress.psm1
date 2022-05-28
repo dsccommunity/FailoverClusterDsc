@@ -520,7 +520,7 @@ function Add-ClusterIPResource
 
         # Owner Group of the cluster
         [Parameter(Mandatory = $true)]
-        [IPAddress]
+        [System.String]
         $OwnerGroup
     )
 
@@ -562,7 +562,7 @@ function Remove-ClusterIPResource
 
         # Owner Group of the cluster
         [Parameter(Mandatory = $true)]
-        [IPAddress]
+        [System.String]
         $OwnerGroup
     )
 

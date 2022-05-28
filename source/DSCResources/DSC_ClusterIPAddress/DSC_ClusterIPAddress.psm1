@@ -226,19 +226,19 @@ function Add-ClusterIPAddressDependency
     #* Get Windows Cluster resource
     $cluster = Get-ClusterResource | Where-Object { $_.name -eq $ClusterName}
 
-    $ipResource = Add-ClusterIPResource -IPAddress $IPAddress -OwnerGroup $cluster.OwnerGroup
+    $ipResourceName = Add-ClusterIPResource -IPAddress $IPAddress -OwnerGroup $cluster.OwnerGroup
+    $ipResource = Get-ClusterResource -Name $ipResourceName
     Add-ClusterIPParameter -IPAddressResource $ipResource -IPAddress $IPAddress -AddressMask $AddressMask
 
-    $ipResources = Get-ClusterResource | Where-Object
-    {
+    $ipResources = Get-ClusterResource | Where-Object {
         ( $_.OwnerGroup -eq $cluster.OwnerGroup ) -and
         ( $_.ResourceType -eq 'IP Address' )
     }
 
     $dependencyExpression = ''
-    $ipResourceCount = $ipResources.count
+    $ipResourceCount = $ipResources.count -1
     $i = 0
-    while ( $i -lt $ipResourceCount )
+    while ( $i -le $ipResourceCount )
     {
         if ( $i -eq $ipResourceCount )
         {
@@ -510,7 +510,7 @@ function Get-ClusterResourceDependencyExpression
 function Add-ClusterIPResource
 {
     [CmdletBinding()]
-    [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterResource])]
+    [OutputType([System.String])]
     param
     (
         # IPAddress to add to Cluster
@@ -534,12 +534,14 @@ function Add-ClusterIPResource
             Group        = $OwnerGroup
             ErrorAction  = 'Stop'
         }
-        return Add-ClusterResource @params
+        Add-ClusterResource @params
     }
     catch
     {
         New-InvalidOperationException -Message $_.Exception.Message -ErrorRecord $_
     }
+
+    return $params.Name
 }
 
 <#

@@ -132,11 +132,7 @@ function Test-TargetResource
 
     if ($Ensure -eq 'Present')
     {
-        if ([System.String]::IsNullOrEmpty($ipResource))
-        {
-            $result = $false
-        }
-        else
+        if (-not ([System.String]::IsNullOrEmpty($ipResource)))
         {
             if ( ($ipResource.IPAddress -eq $IPAddress) -and
                 ($ipResource.AddressMask -eq $AddressMask) )
@@ -603,6 +599,7 @@ function Get-ClusterIPResource
     $address = ($IPAddressResource | Get-ClusterParameter -Name Address).Value
     $addressMask = ($IPAddressResource | Get-ClusterParameter -Name SubnetMask).Value
     $network = ($IPAddressResource | Get-ClusterParameter -Name Network).Value
+    Write-Verbose -Message ($script:localizedData.FoundIPAddressResource -f $address, $addressMask, $network)
     return @{
         Address     = $address
         AddressMask = $addressMask

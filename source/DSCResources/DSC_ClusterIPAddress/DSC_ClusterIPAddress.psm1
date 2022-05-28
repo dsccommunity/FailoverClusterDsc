@@ -291,7 +291,7 @@ function Remove-ClusterIPAddressDependency
     try
     {
         #! this probably does not stop, but returns null or empty
-        $ipResource = Get-ClusterResource -Name "IP Address $IPAddress" -errorAction Stop
+        $ipResource = Get-ClusterResource -Name "IP Address $IPAddress" -ErrorAction Stop
     }
     catch
     {
@@ -300,12 +300,11 @@ function Remove-ClusterIPAddressDependency
         New-InvalidDataException -Message $errorMessage -ErrorID 'IPResourceNotFound'
     }
 
-    Remove-ClusterResource -InputObject $ipResource -Confirm:$False
+    Remove-ClusterResource -InputObject $ipResource -Force
     #* I dont think below is necessary. Removing the resource will remove the IP
     #Remove-ClusterIPParameter -IPAddressResource $ipResource -IPAddress $IPAddress -AddressMask $AddressMask
 
-    $ipResources = Get-ClusterResource | Where-Object
-    {
+    $ipResources = Get-ClusterResource | Where-Object {
         ( $_.OwnerGroup -eq $cluster.OwnerGroup ) -and
         ( $_.ResourceType -eq 'IP Address' )
     }
@@ -328,6 +327,7 @@ function Remove-ClusterIPAddressDependency
         #TODO error handling for when adding the depenencies list fails
         New-InvalidOperationException -Message $_.Exception.Message -ErrorRecord $_
     }
+}
 
 <#
     .Synopsis

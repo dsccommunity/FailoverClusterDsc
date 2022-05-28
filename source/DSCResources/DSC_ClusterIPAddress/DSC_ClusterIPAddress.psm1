@@ -299,6 +299,7 @@ function Remove-ClusterIPAddressDependency
         $errorMessage = $script:localizedData.IPResourceNotFound -f "IP Address $IPAddress"
         New-InvalidDataException -Message $errorMessage -ErrorID 'IPResourceNotFound'
     }
+
     Remove-ClusterResource -InputObject $ipResource -Confirm:$False
     #* I dont think below is necessary. Removing the resource will remove the IP
     #Remove-ClusterIPParameter -IPAddressResource $ipResource -IPAddress $IPAddress -AddressMask $AddressMask
@@ -327,7 +328,6 @@ function Remove-ClusterIPAddressDependency
         #TODO error handling for when adding the depenencies list fails
         New-InvalidOperationException -Message $_.Exception.Message -ErrorRecord $_
     }
-}
 
 <#
     .Synopsis
@@ -736,20 +736,27 @@ function Create-ClusterIPDependency
         $ClusterResource
     )
 
-    $dependencyExpression = ''
-    $ipResourceCount = $ipResources.count -1
-    $i = 0
-    while ( $i -le $ipResourceCount )
+    if ($ipResources.count -eq 1)
     {
-        if ( $i -eq $ipResourceCount )
+        $dependencyExpression = "[$($ClusterResource.name)]"
+    }
+
+    else
+    {
+        $dependencyExpression = ''
+        $i = 0
+        while ( $i -le ($clusterResourceCount.count -1 ) )
         {
-            $dependencyExpression += "[$($ipResources[$i].name)]"
+            if ( $i -eq $clusterResourceCount )
+        {
+            $dependencyExpression += "[$($ClusterResource[$i].name)]"
         }
         else
         {
-            $dependencyExpression += "[$($ipResources[$i].name)] or "
+            $dependencyExpression += "[$($ClusterResource[$i].name)] or "
         }
         $i++
+        }
     }
     Write-Verbose -Message ($script:localizedData.NewDependencyExpression -f $dependencyExpression)
     return $dependencyExpression

@@ -213,15 +213,11 @@ function Add-ClusterIPAddressDependency
 
         [Parameter(Mandatory = $true)]
         [IPAddress]
-        $AddressMask,
-
-        [Parameter()]
-        [System.String]
-        $ClusterName = 'Cluster Name'
+        $AddressMask
     )
 
     #* Get Windows Cluster resource
-    $cluster = Get-ClusterResource | Where-Object { $_.name -eq $ClusterName}
+    $cluster = Get-ClusterResource | Where-Object { $_.name -eq 'Cluster Name'}
 
     $ipResourceName = Add-ClusterIPResource -IPAddress $IPAddress -OwnerGroup $cluster.OwnerGroup
     $ipResource = Get-ClusterResource -Name $ipResourceName
@@ -262,8 +258,6 @@ function Add-ClusterIPAddressDependency
         IP address to remove to the Cluster's DependencyExpression
     .PARAMETER AddressMask
         The subnet mask of the IPAddress
-    .PARAMETER ClusterName
-        Name of the cluster to add IP Address resource to
     .EXAMPLE
         Remove-ClusterIPAddressDependency -IPAddress 10.235.32.137 -AddressMask 255.255.255.128 -Verbose
 #>
@@ -278,15 +272,11 @@ function Remove-ClusterIPAddressDependency
 
         [Parameter(Mandatory = $true)]
         [IPAddress]
-        $AddressMask,
-
-        [Parameter()]
-        [System.String]
-        $ClusterName = 'Cluster Name'
+        $AddressMask
     )
 
     #* Get Windows Cluster resource
-    $cluster = Get-ClusterResource | Where-Object { $_.name -eq $ClusterName}
+    $cluster = Get-ClusterResource | Where-Object { $_.name -eq 'Cluster Name'}
 
     try
     {
@@ -444,25 +434,19 @@ function Get-ClusterNetworkList
 <#
     .SYNOPSIS
         Returns the cluster Dependency expression for a given cluster.
-    .PARAMETER ClusterName
-        The name of the cluster to get the Dependency expression
 #>
 function Get-ClusterResourceDependencyExpression
 {
     [CmdletBinding()]
-    [Alias()]
     [OutputType([System.String])]
     param
     (
-        [Parameter()]
-        [String]
-        $ClusterName = 'Cluster Name'
     )
 
     try
     {
         Write-Verbose -Message ($script:localizedData.GetClusterResourceExpression)
-        $cluster = Get-ClusterResource | Where-Object {$_.name -eq $ClusterName}
+        $cluster = Get-ClusterResource | Where-Object {$_.name -eq 'Cluster Name'}
         return $(Get-ClusterResourceDependency -Resource $cluster.Name).DependencyExpression
     }
     catch

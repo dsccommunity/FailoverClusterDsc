@@ -10,6 +10,7 @@ function Invoke-TestSetup
     try
     {
         Import-Module -Name DscResource.Test -Force -ErrorAction 'Stop'
+        Import-Module -Name FailoverClusters
     }
     catch [System.IO.FileNotFoundException]
     {

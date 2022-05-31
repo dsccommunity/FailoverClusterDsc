@@ -5,9 +5,6 @@ function Invoke-TestSetup
 {
     param
     (
-        [Parameter(Mandatory = $true)]
-        [string]
-        $ModuleVersion
     )
 
     try
@@ -25,8 +22,8 @@ function Invoke-TestSetup
         -ResourceType 'Mof' `
         -TestType 'Unit'
 
-    Import-Module -Name (Join-Path -Path $PSScriptRoot -ChildPath "Stubs\FailoverClusters$ModuleVersion.stubs.psm1") -Global -Force
-    $global:moduleVersion = $ModuleVersion
+    # Import-Module -Name (Join-Path -Path $PSScriptRoot -ChildPath "Stubs\FailoverClusters$ModuleVersion.stubs.psm1") -Global -Force
+    # $global:moduleVersion = $ModuleVersion
 }
 
 function Invoke-TestCleanup

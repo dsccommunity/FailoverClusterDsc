@@ -51,16 +51,14 @@ try {
 
                 Context 'When Ensure is set to ''Absent'' and the IP Address is not added to the cluster' {
                     Mock -CommandName Get-ClusterResource -MockWith {
-                        return [Microsoft.FailoverClusters.PowerShell.ClusterResource]@{}
+                        return @{}
                     }
 
                     Mock -CommandName Get-ClusterIPResource -MockWith {
                         return @{}
-                        } `
-                        -ParameterFilter {
-                            $IPAddressResource -and
-                            $IPAddressResource -eq 'Microsoft.FailoverClusters.PowerShell.ClusterResource'
-                        }
+                    }
+
+                    Mock -CommandName Get-ClusterParameter -MockWith {}
 
                     It 'Should return an empty hashtable' {
                         Get-TargetResource @mockTestParameters | Should -Be @{}

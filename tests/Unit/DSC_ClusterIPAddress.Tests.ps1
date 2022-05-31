@@ -36,6 +36,8 @@ function Invoke-TestCleanup
 }
 
 try {
+    Invoke-TestSetup
+
     InModuleScope $script:dscResourceName {
         Describe "$script:dscModuleName\Get-TargetResource" {
             Mock -CommandName Test-IPAddress -MockWith {

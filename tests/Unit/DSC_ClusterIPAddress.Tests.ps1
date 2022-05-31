@@ -38,6 +38,9 @@ function Invoke-TestCleanup
 try {
     InModuleScope $script:dscResourceName {
         Describe "$script:dscModuleName\Get-TargetResource" {
+            Mock -CommandName Test-IPAddress -MockWith {
+                return $True
+            }
 
             Context 'When the system is in the desired state' {
                 $mockTestParmaters = @{
@@ -47,11 +50,6 @@ try {
                 }
 
                 Context 'When Ensure is set to ''Absent'' and the IP Address is not added to the cluster' {
-
-                    Mock -CommandName Test-IPAddress -MockWith {
-                        return $True
-                    }
-
                     Mock -CommandName Get-ClusterResource -MockWith {
                         return @{}
                     }
@@ -76,11 +74,6 @@ try {
                         IPAddress   = $mockTestParameters.Address
                         AddressMask = $mockTestParameters.AddressMask
                         Ensure      = 'Present'
-                    }
-
-
-                    Mock -CommandName Test-IPAddress -MockWith {
-                        return $True
                     }
 
                     Mock -CommandName Get-ClusterResource -MockWith {
@@ -113,10 +106,6 @@ try {
                         AddressMask = '255.255.255.0'
                     }
 
-                    Mock -CommandName Test-IPAddress -MockWith {
-                        return $True
-                    }
-
                     Mock -CommandName Get-ClusterResource -MockWith {
                         return @{}
                     }
@@ -141,11 +130,6 @@ try {
                         IPAddress   = $mockTestParameters.Address
                         AddressMask = $mockTestParameters.AddressMask
                         Ensure      = 'Absent'
-                    }
-
-
-                    Mock -CommandName Test-IPAddress -MockWith {
-                        return $True
                     }
 
                     Mock -CommandName Get-ClusterResource -MockWith {

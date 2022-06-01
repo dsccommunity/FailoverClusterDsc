@@ -10,7 +10,6 @@ function Invoke-TestSetup
     try
     {
         Import-Module -Name DscResource.Test -Force -ErrorAction 'Stop'
-        Import-Module -Name FailoverClusters
     }
     catch [System.IO.FileNotFoundException]
     {
@@ -42,50 +41,50 @@ try {
                 return $True
             }
 
-            # Context 'When the system is in the desired state' {
-            #     $mockTestParmaters = @{
-            #         Ensure      = 'Absent'
-            #         Address     = '192.168.1.41'
-            #         AddressMask = '255.255.255.0'
-            #     }
+            Context 'When the system is in the desired state' {
+                $mockTestParmaters = @{
+                    Ensure      = 'Absent'
+                    Address     = '192.168.1.41'
+                    AddressMask = '255.255.255.0'
+                }
 
-            #     Context 'When Ensure is set to ''Present'' and the IP Address is added to the cluster' {
-            #         $mockTestParmaters = @{
-            #             Ensure      = 'Present'
-            #             IPAddress   = '192.168.1.41'
-            #             AddressMask = '255.255.255.0'
-            #         }
+                Context 'When Ensure is set to ''Present'' and the IP Address is added to the cluster' {
+                    $mockTestParmaters = @{
+                        Ensure      = 'Present'
+                        IPAddress   = '192.168.1.41'
+                        AddressMask = '255.255.255.0'
+                    }
 
-            #         $correctResult = @{
-            #             IPAddress   = $mockTestParameters.Address
-            #             AddressMask = $mockTestParameters.AddressMask
-            #             Ensure      = 'Present'
-            #         }
+                    $correctResult = @{
+                        IPAddress   = $mockTestParameters.Address
+                        AddressMask = $mockTestParameters.AddressMask
+                        Ensure      = 'Present'
+                    }
 
-            #         Mock -CommandName Get-ClusterResource -MockWith {
-            #             return @{
-            #                 Name         = "IP Address $($mockTestParameters.Address)"
-            #                 State        = 'Online'
-            #                 OnwerGroup   = 'Cluster Group'
-            #                 ResourceType = 'IP Address'
-            #             }
-            #         }
+                    Mock -CommandName Get-ClusterResource -MockWith {
+                        return @{
+                            Name         = "IP Address $($mockTestParameters.Address)"
+                            State        = 'Online'
+                            OnwerGroup   = 'Cluster Group'
+                            ResourceType = 'IP Address'
+                        }
+                    }
 
-            #         Mock -CommandName Get-ClusterIPResource -MockWith {
-            #             return @{
-            #                 Address     = $mockTestParameters.Address
-            #                 AddressMask = $mockTestParameters.AddressMask
-            #                 Network     = '192.168.1.1'
-            #             }
-            #         }
-            #         It 'Should return the correct hashtable' {
-            #             $result = Get-TargetResource @mockTestParameters
+                    Mock -CommandName Get-ClusterIPResource -MockWith {
+                        return @{
+                            Address     = $mockTestParameters.Address
+                            AddressMask = $mockTestParameters.AddressMask
+                            Network     = '192.168.1.1'
+                        }
+                    }
+                    It 'Should return the correct hashtable' {
+                        $result = Get-TargetResource @mockTestParameters
 
-            #             $result.Ensure      | Should -Be $correctResult.Ensure
-            #             $result.IPAddress   | Should -Be $correctResult.IPAddress
-            #             $result.AddressMask | Should -Be $correctResult.AddressMask
-            #         }
-            #     }
+                        $result.Ensure      | Should -Be $correctResult.Ensure
+                        $result.IPAddress   | Should -Be $correctResult.IPAddress
+                        $result.AddressMask | Should -Be $correctResult.AddressMask
+                    }
+                }
 
                 # Context 'When Ensure is set to ''Absent'' and the IP Address is not added to the cluster' {
                 #     Mock -CommandName Get-ClusterResource -MockWith {

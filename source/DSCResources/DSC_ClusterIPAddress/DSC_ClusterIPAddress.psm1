@@ -79,7 +79,9 @@ function Set-TargetResource
         # We need to Check if the network is added to the cluster. If not, we fail. If it is, we can append the IPAddress
         if ( -not $(Test-ClusterNetwork -IPAddress $IPAddress -AddressMask $AddressMask) )
         {
-            New-InvalidArgumentException -Message ($script:localizedData.NonExistantClusterNetwork -f $IPAddress,$AddressMask)
+            New-InvalidArgumentException `
+                -Message ($script:localizedData.NonExistantClusterNetwork -f $IPAddress,$AddressMask) `
+                -ArgumentName 'IPAddress'
         }
         else
         {

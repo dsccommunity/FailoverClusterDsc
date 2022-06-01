@@ -30,7 +30,7 @@ function Get-TargetResource
 
     foreach ( $ipResource in $ipResources )
     {
-        $ipResourceDetails = Get-ClusterIPResource -IPAddressResource $ipResource
+        $ipResourceDetails = Get-ClusterIPResource -IPAddressResourceName $ipResource.name
 
         if ( $ipResourceDetails.Address -eq $IPAddress )
         {
@@ -221,14 +221,14 @@ function Add-ClusterIPAddressDependency
 
     $ipResourceName = Add-ClusterIPResource -IPAddress $IPAddress -OwnerGroup $cluster.OwnerGroup
     $ipResource = Get-ClusterResource -Name $ipResourceName
-    Add-ClusterIPParameter -IPAddressResource $ipResource -IPAddress $IPAddress -AddressMask $AddressMask
+    Add-ClusterIPParameter -IPAddressResourceName $ipResource.Name -IPAddress $IPAddress -AddressMask $AddressMask
 
     $ipResources = Get-ClusterResource | Where-Object {
         ( $_.OwnerGroup -eq $cluster.OwnerGroup ) -and
         ( $_.ResourceType -eq 'IP Address' )
     }
 
-    $dependencyExpression = New-ClusterIPDependencyExpression -ClusterResource $ipResources
+    $dependencyExpression = New-ClusterIPDependencyExpression -ClusterResource $ipResources.Name
 
     #Set cluster resources
     try
@@ -299,7 +299,7 @@ function Remove-ClusterIPAddressDependency
         ( $_.ResourceType -eq 'IP Address' )
     }
 
-    $dependencyExpression = New-ClusterIPDependencyExpression -ClusterResource $ipResources
+    $dependencyExpression = New-ClusterIPDependencyExpression -ClusterResource $ipResources.Name
 
     #Set cluster resources
     try
@@ -559,13 +559,16 @@ function Get-ClusterIPResource
     (
         # IPAddress to add to Cluster
         [Parameter(Mandatory = $true)]
-        [Microsoft.FailoverClusters.PowerShell.ClusterResource]
-        $IPAddressResource
+        [System.String]
+        $IPAddressResourceName
     )
 
-    $address = ($IPAddressResource | Get-ClusterParameter -Name Address).Value
-    $addressMask = ($IPAddressResource | Get-ClusterParameter -Name SubnetMask).Value
-    $network = ($IPAddressResource | Get-ClusterParameter -Name Network).Value
+    $address = (Get-ClusterResource -Name $IPAddressResourceName | `
+        Get-ClusterParameter -Name Address).Value
+    $addressMask = (Get-ClusterResource -Name $IPAddressResourceName | `
+        Get-ClusterParameter -Name SubnetMask).Value
+    $network = (Get-ClusterResource -Name $IPAddressResourceName | `
+        Get-ClusterParameter -Name Network).Value
     Write-Verbose -Message ($script:localizedData.FoundIPAddressResource -f $address, $addressMask, $network)
     @{
         Address     = $address
@@ -591,8 +594,8 @@ function Add-ClusterIPParameter
     (
         # IPAddress to add to Cluster
         [Parameter(Mandatory = $true)]
-        [Microsoft.FailoverClusters.PowerShell.ClusterResource]
-        $IPAddressResource,
+        [System.String]
+        $IPAddressResourceName,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -606,8 +609,10 @@ function Add-ClusterIPParameter
     Test-IPAddress -IPAddress $IPAddress
     Test-IPAddress -IPAddress $AddressMask
 
-    $parameter1 = New-Object Microsoft.FailoverClusters.PowerShell.ClusterParameter $IPAddressResource,Address,$IPAddress
-    $parameter2 = New-Object Microsoft.FailoverClusters.PowerShell.ClusterParameter $IPAddressResource,SubnetMask,$AddressMask
+    $ipAddressResource = Get-ClusterResource -Name $IPAddressResourceName
+
+    $parameter1 = New-Object Microsoft.FailoverClusters.PowerShell.ClusterParameter $iPAddressResource,Address,$IPAddress
+    $parameter2 = New-Object Microsoft.FailoverClusters.PowerShell.ClusterParameter $iPAddressResource,SubnetMask,$AddressMask
     $parameterList = $parameter1,$parameter2
 
     #* Add the IP Address resource to the cluster
@@ -642,8 +647,8 @@ function Remove-ClusterIPParameter
     (
         # IPAddress to add to Cluster
         [Parameter(Mandatory = $true)]
-        [Microsoft.FailoverClusters.PowerShell.ClusterResource]
-        $IPAddressResource,
+        [System.String]
+        $IPAddressResourceName,
 
         [Parameter(Mandatory = $true)]
         [IPAddress]
@@ -654,8 +659,13 @@ function Remove-ClusterIPParameter
         $AddressMask
     )
 
-    $parameter1 = New-Object Microsoft.FailoverClusters.PowerShell.ClusterParameter $IPAddressResource,Address,$IPAddress
-    $parameter2 = New-Object Microsoft.FailoverClusters.PowerShell.ClusterParameter $IPAddressResource,SubnetMask,$AddressMask
+    Test-IPAddress -IPAddress $IPAddress
+    Test-IPAddress -IPAddress $AddressMask
+
+    $ipAddressResource = Get-ClusterResource -Name $IPAddressResourceName
+
+    $parameter1 = New-Object Microsoft.FailoverClusters.PowerShell.ClusterParameter $iPAddressResource,Address,$IPAddress
+    $parameter2 = New-Object Microsoft.FailoverClusters.PowerShell.ClusterParameter $iPAddressResource,SubnetMask,$AddressMask
     $parameterList = $parameter1,$parameter2
 
     #* Add the IP Address resource to the cluster
@@ -716,13 +726,13 @@ function New-ClusterIPDependencyExpression
     param
     (
         [Parameter(Mandatory = $true)]
-        [Microsoft.FailoverClusters.PowerShell.ClusterResource[]]
+        [System.String[]]
         $ClusterResource
     )
 
-    if ($ipResources.count -eq 1)
+    if ($ClusterResource.count -eq 1)
     {
-        $dependencyExpression = "[$($ClusterResource.name)]"
+        $dependencyExpression = "[$ClusterResource]"
     }
 
     else
@@ -734,11 +744,11 @@ function New-ClusterIPDependencyExpression
         {
             if ( $i -eq $clusterResourceCount )
         {
-            $dependencyExpression += "[$($ClusterResource[$i].name)]"
+            $dependencyExpression += "[$($ClusterResource[$i])]"
         }
         else
         {
-            $dependencyExpression += "[$($ClusterResource[$i].name)] or "
+            $dependencyExpression += "[$($ClusterResource[$i])] or "
         }
         $i++
         }

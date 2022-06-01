@@ -25,7 +25,13 @@ function Get-TargetResource
     Test-IPAddress -IPAddress $IPAddress
     Test-IPAddress -IPAddress $AddressMask
     Write-Verbose -Message ($script:localizedData.GetTargetResourceMessage -f $IPAddress, $AddressMask)
-    $result = @{}
+
+    $result = @{
+        IPAddress   = $null
+        AddressMask = $null
+        Ensure      = $Ensure
+    }
+
     $ipResources = Get-ClusterResource | Where-Object {$_.ResourceType -eq 'IP Address'}
 
     foreach ( $ipResource in $ipResources )
@@ -35,11 +41,8 @@ function Get-TargetResource
         if ( $ipResourceDetails.Address -eq $IPAddress )
         {
             Write-Verbose -Message ($script:localizedData.FoundIPResource -f $IPAddress)
-            $result = @{
-                IPAddress   = $ipResourceDetails.Address
-                AddressMask = $ipResourceDetails.AddressMask
-                Ensure      = $Ensure
-            }
+            $result.IPAddress = $ipResourceDetails.Address
+            $result.AddressMask = $ipResourceDetails.AddressMask
         }
     }
     $result

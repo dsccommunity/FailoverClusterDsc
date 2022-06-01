@@ -130,7 +130,7 @@ function Test-TargetResource
     # $testResult = Test-ClusterIPAddressDependency -IPAddress $IPAddress
     # $testTargetResourceReturnValue = $false
 
-    $ipResource = Get-TargetResource -IPAddress $IPAddress -AddressMask $AddressMask
+    $ipResource = Get-TargetResource -IPAddress $IPAddress -AddressMask $AddressMask -Ensure $Ensure
     $result = $false
 
     if ($Ensure -eq 'Present')

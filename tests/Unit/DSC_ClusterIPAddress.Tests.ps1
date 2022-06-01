@@ -42,14 +42,9 @@ try {
             }
 
             Context 'When the system is in the desired state' {
-                $mockTestParmaters = @{
-                    Ensure      = 'Absent'
-                    Address     = '192.168.1.41'
-                    AddressMask = '255.255.255.0'
-                }
 
                 Context 'When Ensure is set to ''Present'' and the IP Address is added to the cluster' {
-                    $mockTestParmaters = @{
+                    $mockTestParameters = @{
                         Ensure      = 'Present'
                         IPAddress   = '192.168.1.41'
                         AddressMask = '255.255.255.0'
@@ -70,6 +65,20 @@ try {
                         }
                     }
 
+                    # Mock -CommandName Get-ClusterParameter -MockWith {
+                    #     return $mockTestParameters.IPAddress
+                    #     } `
+                    #     -ParameterFilter {
+                    #         $Name -eq 'Address'
+                    #     }
+
+                    # Mock -CommandName Get-ClusterParameter -MockWith {
+                    #     return $mockTestParameters.AddressMask
+                    #     } `
+                    #     -ParameterFilter {
+                    #         $Name -eq 'SubnetMask'
+                    #     }
+
                     Mock -CommandName Get-ClusterIPResource -MockWith {
                         return @{
                             Address     = $mockTestParameters.Address
@@ -80,9 +89,9 @@ try {
                     It 'Should return the correct hashtable' {
                         $result = Get-TargetResource @mockTestParameters
 
-                        $result.Ensure      | Should -Be $correctResult.Ensure
-                        $result.IPAddress   | Should -Be $correctResult.IPAddress
-                        $result.AddressMask | Should -Be $correctResult.AddressMask
+                        $result.Ensure      | Should -Be $mockTestParameters.Ensure
+                        $result.IPAddress   | Should -Be $mockTestParameters.IPAddress
+                        $result.AddressMask | Should -Be $mockTestParameters.AddressMask
                     }
                 }
 

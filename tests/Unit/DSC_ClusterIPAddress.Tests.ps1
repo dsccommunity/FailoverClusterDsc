@@ -263,13 +263,13 @@ try {
                         }
                     }
 
-                    Test-TargetResource @mockTestParameters | Should -Be $false
+                    Test-TargetResource @mockTestParameters | Should -Be $true
                 }
             }
         }
 
         Describe "$script:DSCResourceName\Get-Subnet" {
-            Mock -CommandName Test-IPAddress -MockWith {return $true}
+            Mock -CommandName Test-IPAddress -MockWith {}
 
             $mockTestParameters = @{
                 IPAddress   = '192.168.1.41'

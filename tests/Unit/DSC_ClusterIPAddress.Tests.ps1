@@ -422,14 +422,122 @@ try {
         }
 
         Describe "$script:DSCResourceName\Test-ClusterIPAddressDependency" {
+            $IPAddress = '192.168.1.41'
 
+            Mock -CommandName Test-IPAddress
+
+            It "Should return true when IP address is in dependency expression" {
+                Mock -CommandName Get-ClusterResourceDependencyExpression -MockWith { return '[IP Address 192.168.1.41]' }
+                Test-ClusterIPAddressDependency -IPAddress $IPAddress | Should -Be $true
+                Assert-MockCalled -CommandName Test-IPAddress -Times 1
+            }
+
+            It "Should return false when IP address is not in dependency expression" {
+                Mock -CommandName Get-ClusterResourceDependencyExpression -MockWith { return '[IP Address 192.168.1.60]' }
+                Test-ClusterIPAddressDependency -IPAddress $IPAddress | Should -Be $false
+                Assert-MockCalled -CommandName Test-IPAddress -Times 1
+            }
+
+            It "Should return true when IP address is in dependency expression" {
+                Mock -CommandName Get-ClusterResourceDependencyExpression
+                Test-ClusterIPAddressDependency -IPAddress $IPAddress | Should -Be $false
+                Assert-MockCalled -CommandName Test-IPAddress -Times 1
+            }
         }
 
         Describe "$script:DSCResourceName\Test-ClusterNetwork" {
 
+            $mockTestParameters = @{
+                IPAddress   = '192.168.1.41'
+                AddressMask = '255.255.255.0'
+            }
+
+            $goodNetwork = '192.168.1.0'
+            $badNetwork  = '10.10.0.0'
+
+            Mock -CommandName Test-IPAddress
+            Mock -CommandName Get-Subnet -MockWith { return $goodNetwork }
+
+            It "Should return true when network is in cluster network list" {
+
+                Mock -CommandName Get-ClusterNetworkList -MockWith {
+                    return @{
+                        Address     = $goodNetwork
+                        AddressMask = $mockTestParameters.AddressMask
+                    }
+                }
+
+                Test-ClusterNetwork @mockTestParameters | Should -Be $true
+                Assert-MockCalled -CommandName Test-IPAddress -Times 2
+                Assert-MockCalled -CommandName Get-ClusterNetworkList -Times 1
+                Assert-MockCalled -CommandName Get-Subnet -Times 1
+
+            }
+
+            It "Should return false when network is not in cluster network list" {
+                Mock -CommandName Get-ClusterNetworkList -MockWith {
+                    return @{
+                        Address     = $badNetwork
+                        AddressMask = $mockTestParameters.AddressMask
+                    }
+                }
+
+                Test-ClusterNetwork @mockTestParameters | Should -Be $false
+                Assert-MockCalled -CommandName Test-IPAddress -Times 2
+                Assert-MockCalled -CommandName Get-ClusterNetworkList -Times 1
+                Assert-MockCalled -CommandName Get-Subnet -Times 1
+            }
         }
 
         Describe "$script:DSCResourceName\Get-ClusterNetworkList" {
+
+            $networks = New-Object -TypeName "System.Collections.Generic.List[PSCustomObject]"
+
+            $oneNetwork = [PSCustomObject]@{
+                Address     = '192.168.1.0'
+                AddressMask = '255.255.255.0'
+            }
+
+            $twoNetwork = [PSCustomObject]@{
+                Address     = '10.10.0.0'
+                AddressMask = '255.255.0.0'
+            }
+
+            $networks.Add($oneNetwork)
+            $networks.Add($twoNetwork)
+
+            It "Should return the expected list when there is one cluster network" {
+                Mock -CommandName Get-ClusterNetwork -MockWith {
+                    $networks = New-Object -TypeName "System.Collections.Generic.List[PSCustomObject]"
+                    $networks.Add($oneNetwork)
+                    return $networks
+                }
+
+                Get-ClusterNetworkList | Should -Be $oneNetwork
+
+            }
+
+            It "Should return the expected list when there are many cluster networks" {
+                Mock -CommandName Get-ClusterNetwork -MockWith {
+                    $networks = New-Object -TypeName "System.Collections.Generic.List[PSCustomObject]"
+                    $networks.Add($oneNetwork)
+                    $networks.Add($twoNetwork)
+                    return $networks
+                }
+
+                Get-ClusterNetworkList | Should -Be $networks
+            }
+
+            It "Should return an empty list when there is one cluster network" {
+
+                Mock -CommandName Get-ClusterNetwork -MockWith {
+                    $networks = New-Object -TypeName "System.Collections.Generic.List[PSCustomObject]"
+                    return $networks
+                }
+
+                (Get-ClusterNetworkList).Count | Should -BeExactly 0
+
+            }
 
         }
 

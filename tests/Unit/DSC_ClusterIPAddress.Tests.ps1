@@ -603,13 +603,58 @@ try {
 
         Describe "$script:DSCResourceName\Remove-ClusterIPParameter" {
 
+            $mockTestParameters = @{
+                IPAddress  = '192.168.1.41'
+                OwnerGroup = 'Cluster Group'
+            }
+
+            Mock -CommandName Test-IPAddress
+
+            It "Should not throw" {
+                Mock -CommandName Remove-ClusterResource
+
+                Remove-ClusterIPParameter | Should -Not -Throw
+            }
+
         }
 
         Describe "$script:DSCResourceName\Test-IPAddress" {
+            $goodIP = '192.168.1.41'
+            $badIP  = '19.420.250.1'
+
+            It "Should not throw" {
+                Test-IPAddress -IPAddress $goodIP
+            } | Should -Not -Throw
+
+            It "Should throw" {
+                Test-IPAddress -IPAddress $badIP
+            } | Should -Throw
 
         }
 
         Describe "$script:DSCResourceName\New-ClusterIPDependencyExpression" {
+
+            $oneClusterResource = 'IP Address 192.168.1.41'
+            $twoClusterResource = @('IP Address 192.168.1.41', 'IP Address 172.19.114.98')
+            $threeClusterResource = @('IP Address 192.168.1.41', 'IP Address 172.19.114.98', 'IP Address 10.10.45.41')
+
+            It "Should return the correct dependency expression with one resource" {
+                {
+                    New-ClusterIPDependencyExpression -ClusterResource $oneClusterResource
+                } | Should -Be "[$oneClusterResource]"
+            }
+
+            It "Should return the correct dependency expression with two resources" {
+                {
+                    New-ClusterIPDependencyExpression -ClusterResource $twoClusterResource
+                } | Should -Be "[$($twoClusterResource[0])] or [$($twoClusterResource[1])]"
+            }
+
+            It "Should return the correct dependency expression with three resources" {
+                {
+                    New-ClusterIPDependencyExpression -ClusterResource $twoClusterResource
+                } | Should -Be "[$($threeClusterResource[0])] or [$($threeClusterResource[1])] or [$($threeClusterResource[2])]"
+            }
 
         }
 

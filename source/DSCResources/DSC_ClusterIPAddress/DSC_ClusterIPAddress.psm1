@@ -544,23 +544,16 @@ function Remove-ClusterIPResource
 
     Test-IPAddress -IPAddress $IPAddress
 
-    try
-    {
-        #* Create new IPAddress resource and add the IPAddress parameters to it
-        Write-Verbose -Message ($script:localizedData.RemoveIPResource -f $IPAddress)
-        $params = @{
-            Name         = "IP Address $IPAddress"
-            ResourceType = 'IP Address'
-            Group        = $OwnerGroup
-            ErrorAction  = 'Stop'
-            Confirm      = $False
-        }
-        Remove-ClusterResource @params
+    #* Create new IPAddress resource and add the IPAddress parameters to it
+    Write-Verbose -Message ($script:localizedData.RemoveIPResource -f $IPAddress)
+    $params = @{
+        Name         = "IP Address $IPAddress"
+        ResourceType = 'IP Address'
+        Group        = $OwnerGroup
+        ErrorAction  = 'Stop'
+        Confirm      = $False
     }
-    catch
-    {
-        New-InvalidOperationException -Message $_.Exception.Message -ErrorRecord $_
-    }
+    Remove-ClusterResource @params
 }
 
 <#
@@ -716,19 +709,9 @@ function Test-IPAddress
         $IPAddress
     )
 
-    try
-    {
-        $ipObject = [System.Net.IPAddress]::Parse($IPAddress)
-    }
-    catch
-    {
-        #TODO Add error handling here for failure. Most likely reasons are
-        #* IP Address already exists (does this check actually IP Address or just IP Address Name)
-        #* IP Address network has yet to be added to the Cluster
-        $message = $script:localizedData.InvalidIPAddress -f $IPAddress
-        New-InvalidArgumentException -Message $message -Argument "IPAddress"
-    }
+    $ipObject = [System.Net.IPAddress]::Parse($IPAddress)
 }
+
 
 <#
     .Synopsis

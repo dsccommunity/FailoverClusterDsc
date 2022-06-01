@@ -206,9 +206,7 @@ try {
                         }
                     }
 
-                    {
-                        Test-TargetResource @mockTestParameters
-                    } | Should -Be $false
+                    Test-TargetResource @mockTestParameters | Should -Be $false
                 }
 
                 It "Should be false when IP address is added but address mask does not match" {
@@ -220,9 +218,7 @@ try {
                         }
                     }
 
-                    {
-                        Test-TargetResource @mockTestParameters
-                    } | Should -Be $false
+                    Test-TargetResource @mockTestParameters | Should -Be $false
                 }
 
                 It "Should be true when IP address is added and address masks match" {
@@ -234,9 +230,7 @@ try {
                         }
                     }
 
-                    {
-                        Test-TargetResource @mockTestParameters
-                    } | Should -Be $true
+                    Test-TargetResource @mockTestParameters | Should -Be $true
                 }
             }
 
@@ -257,9 +251,7 @@ try {
                         }
                     }
 
-                    {
-                        Test-TargetResource @mockTestParameters
-                    } | Should -Be $false
+                    Test-TargetResource @mockTestParameters | Should -Be $false
                 }
 
                 It "Should be true when IP address is not and should be Absent" {
@@ -271,9 +263,7 @@ try {
                         }
                     }
 
-                    {
-                        Test-TargetResource @mockTestParameters
-                    } | Should -Be $false
+                    Test-TargetResource @mockTestParameters | Should -Be $false
                 }
             }
         }
@@ -288,8 +278,60 @@ try {
 
             It "Should return the correct subnet" {
                 $result = Get-Subnet @mockTestParameters
-                $result | Should -Be '255.255.255.0'
+                $result | Should -Be '192.168.1.0'
             }
+        }
+
+        Describe "$script:DSCResourceName\Add-ClusterIPAddressDependency" {
+
+        }
+
+        Describe "$script:DSCResourceName\Remove-ClusterIPAddressDependency" {
+
+        }
+
+        Describe "$script:DSCResourceName\Test-ClusterIPAddressDependency" {
+
+        }
+
+        Describe "$script:DSCResourceName\Test-ClusterNetwork" {
+
+        }
+
+        Describe "$script:DSCResourceName\Get-ClusterNetworkList" {
+
+        }
+
+        Describe "$script:DSCResourceName\Get-ClusterDependencyExpression" {
+
+        }
+
+        Describe "$script:DSCResourceName\Add-ClusterIPResource" {
+
+        }
+
+        Describe "$script:DSCResourceName\Remove-ClusterIPResource" {
+
+        }
+
+        Describe "$script:DSCResourceName\Get-ClusterIPResource" {
+
+        }
+
+        Describe "$script:DSCResourceName\Add-ClusterIPParameter" {
+
+        }
+
+        Describe "$script:DSCResourceName\Remove-ClusterIPParameter" {
+
+        }
+
+        Describe "$script:DSCResourceName\Test-IPAddress" {
+
+        }
+
+        Describe "$script:DSCResourceName\New-ClusterIPDependencyExpression" {
+
         }
     }
 }

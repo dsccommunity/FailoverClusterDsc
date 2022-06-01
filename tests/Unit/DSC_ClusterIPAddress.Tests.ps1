@@ -36,6 +36,7 @@ try {
     Invoke-TestSetup
 
     InModuleScope $script:dscResourceName {
+        $script:DSCResourceName = 'DSC_ClusterIPAddress'
         Describe "$script:dscModuleName\Get-TargetResource" {
             Mock -CommandName Test-IPAddress -MockWith {
                 return $True
@@ -48,12 +49,6 @@ try {
                         Ensure      = 'Present'
                         IPAddress   = '192.168.1.41'
                         AddressMask = '255.255.255.0'
-                    }
-
-                    $correctResult = @{
-                        IPAddress   = $mockTestParameters.Address
-                        AddressMask = $mockTestParameters.AddressMask
-                        Ensure      = 'Present'
                     }
 
                     Mock -CommandName Get-ClusterResource -MockWith {
@@ -95,8 +90,6 @@ try {
                     Mock -CommandName Get-ClusterIPResource -MockWith {
                         return @{}
                     }
-
-                    Mock -CommandName Get-ClusterParameter -MockWith {}
 
                     It 'Should return an empty hashtable' {
                         $result = Get-TargetResource @mockTestParameters

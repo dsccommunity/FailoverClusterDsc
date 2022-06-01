@@ -228,13 +228,13 @@ function Add-ClusterIPAddressDependency
     Test-IPAddress -IPAddress $AddressMask
 
     #* Get Windows Cluster resource
-    $ownerGroup = Get-ClusterOwnerGroup
+    $clusterObj = Get-ClusterObject
 
-    $ipResourceName = Add-ClusterIPResource -IPAddress $IPAddress -OwnerGroup $ownerGroup
+    $ipResourceName = Add-ClusterIPResource -IPAddress $IPAddress -OwnerGroup $clusterObj.ownerGroup
     $ipResource = Get-ClusterResource -Name $ipResourceName
     Add-ClusterIPParameter -IPAddressResourceName $ipResource.Name -IPAddress $IPAddress -AddressMask $AddressMask
 
-    $ipResources = Get-ClusterIPResource -OwnerGroup $ownerGroup
+    $ipResources = Get-ClusterIPResource -OwnerGroup $clusterObj.ownerGroup
 
     $dependencyExpression = New-ClusterIPDependencyExpression -ClusterResource $ipResources.Name
 
@@ -287,7 +287,7 @@ function Remove-ClusterIPAddressDependency
     Test-IPAddress -IPAddress $AddressMask
 
     #* Get Windows Cluster resource
-    $cluster = Get-ClusterResource | Where-Object { $_.name -eq 'Cluster Name'}
+    $cluster = Get-ClusterObject
 
     try
     {
@@ -800,9 +800,9 @@ function New-ClusterIPDependencyExpression
 
 <#
     .Synopsis
-        Returns the cluster owner group
+        Returns an object representing the cluster
 #>
-function Get-ClusterOwnerGroup
+function Get-ClusterObject
 {
     [CmdletBinding()]
     [OutputType([System.String])]
@@ -812,5 +812,5 @@ function Get-ClusterOwnerGroup
 
     $cluster = Get-ClusterResource | Where-Object { $_.name -eq 'Cluster Name'}
 
-    return $cluster.OwnerGroup
+    return $cluster
 }

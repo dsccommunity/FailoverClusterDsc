@@ -208,7 +208,7 @@ try {
 
                     {
                         Test-TargetResource @mockTestParameters
-                    } | -Should -Be $false
+                    } | Should -Be $false
                 }
 
                 It "Should be false when IP address is added but address mask does not match" {
@@ -222,7 +222,7 @@ try {
 
                     {
                         Test-TargetResource @mockTestParameters
-                    } | -Should -Be $false
+                    } | Should -Be $false
                 }
 
                 It "Should be true when IP address is added and address masks match" {
@@ -236,7 +236,7 @@ try {
 
                     {
                         Test-TargetResource @mockTestParameters
-                    } | -Should -Be $true
+                    } | Should -Be $true
                 }
             }
 
@@ -259,7 +259,7 @@ try {
 
                     {
                         Test-TargetResource @mockTestParameters
-                    } | -Should -Be $false
+                    } | Should -Be $false
                 }
 
                 It "Should be true when IP address is not and should be Absent" {
@@ -273,8 +273,22 @@ try {
 
                     {
                         Test-TargetResource @mockTestParameters
-                    } | -Should -Be $false
+                    } | Should -Be $false
                 }
+            }
+        }
+
+        Describe "$script:DSCResourceName\Get-Subnet" {
+            Mock -CommandName Test-IPAddress -MockWith {return $true}
+
+            $mockTestParameters = @{
+                IPAddress   = '192.168.1.41'
+                AddressMask = '255.255.255.0'
+            }
+
+            It "Should return the correct subnet" {
+                $result = Get-Subnet @mockTestParameters
+                $result | Should -Be '255.255.255.0'
             }
         }
     }

@@ -140,34 +140,36 @@ try {
             Mock -CommandName Remove-ClusterIPAddressDependency
 
             Context "IP address should be present" {
-                $mockTestParameters = @{
-                    Ensure      = 'Present'
-                    IPAddress   = '192.168.1.41'
-                    AddressMask = '255.255.255.0'
-                }
-
-                $errorRecord = Get-InvalidArgumentRecord `
-                    -Message ($LocalizedData.NonExistantClusterNetwork -f $IPAddress, $SubnetMask) `
-                    -ArgumentName 'IPAddress', 'SubnetMask'
-
-                Mock -CommandName Test-ClusterNetwork -MockWith { $False }
 
                 It "Should throw if the network of the IP address and subnet mask combination is not added to the cluster" {
+                    $mockTestParameters = @{
+                        Ensure      = 'Present'
+                        IPAddress   = '192.168.1.41'
+                        AddressMask = '255.255.255.0'
+                    }
 
-                    Set-TargetResource @mockTestParameters | Should -Throw $errorRecord
+                    $errorRecord = Get-InvalidArgumentRecord `
+                        -Message ($LocalizedData.NonExistantClusterNetwork -f $IPAddress, $SubnetMask) `
+                        -ArgumentName 'IPAddress'
+
+                    Mock -CommandName Test-ClusterNetwork -MockWith { $False }
+
+                    {
+                        Set-TargetResource @mockTestParameters
+                    } | Should -Throw $errorRecord
                 }
-
-                $mockTestParameters = @{
-                    Ensure      = 'Present'
-                    IPAddress   = '192.168.1.41'
-                    AddressMask = '255.255.255.0'
-                }
-
-                Mock -CommandName Test-ClusterNetwork -MockWith { $True }
 
                 It "Should not throw" {
+                    $mockTestParameters = @{
+                        Ensure      = 'Present'
+                        IPAddress   = '192.168.1.41'
+                        AddressMask = '255.255.255.0'
+                    }
 
-                    Set-TargetResource @mockTestParameters | Should -Not -Throw
+                    Mock -CommandName Test-ClusterNetwork -MockWith { $True }
+                    {
+                        Set-TargetResource @mockTestParameters
+                    } | Should -Not -Throw
                 }
             }
 

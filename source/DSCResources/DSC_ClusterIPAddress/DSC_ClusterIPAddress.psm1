@@ -135,7 +135,7 @@ function Test-TargetResource
 
     if ($Ensure -eq 'Present')
     {
-        if (-not ([System.String]::IsNullOrEmpty($ipResource)))
+        if (-not ([System.String]::IsNullOrEmpty($ipResource.IPAddress)))
         {
             if ( ($ipResource.IPAddress -eq $IPAddress) -and
                 ($ipResource.AddressMask -eq $AddressMask) )

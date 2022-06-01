@@ -38,9 +38,7 @@ try {
     InModuleScope $script:dscResourceName {
         $script:DSCResourceName = 'DSC_ClusterIPAddress'
         Describe "$script:dscModuleName\Get-TargetResource" {
-            Mock -CommandName Test-IPAddress -MockWith {
-                return $True
-            }
+            Mock -CommandName Test-IPAddress
 
             Context 'When the IP address is already added to the cluster' {
 
@@ -137,9 +135,29 @@ try {
         }
 
         Describe "$script:dscModuleName\Set-TargetResource" {
+            Mock -CommandName Test-IPAddress
+            Mock -CommandName Add-ClusterIPDependency
+            Mock -CommandName Remove-ClusterIPAddressDependency
+
+            # Present
+            ## Should throw if Test-ClusterNetwork is false : New-InvalidArgumentException -Message ($script:localizedData.NonExistantClusterNetwork -f $IPAddress,$AddressMask)
+            ## Should Not throw
+            # Absent
+            ## Should not throw
         }
 
         Describe "$script:dscModuleName\Test-TargetResource" {
+            Mock -CommandName Test-IPAddress
+            # Present
+            ## Should throw if $ipResource.IPAddress is null or empty
+            ## False if $ipResource.ipaddress -ne $ipaddress
+            ## False if $ipResource.AddressMask -ne $AddressMask
+            ## True if $ipResource.ipaddress -e1 $ipaddress
+            ## True if $ipResource.AddressMask -eq $AddressMask
+            # Absent
+            ## Should throw if $ipResource.IPAddress is NOT null or empty
+            ## True if $ipResource.IPAddress -eq $null
+            ## False if -ne $null
         }
     }
 }

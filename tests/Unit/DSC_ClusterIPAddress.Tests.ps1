@@ -292,10 +292,10 @@ try {
             Mock -CommandName Get-ClusterObject -MockWith {
 
                 return @{
-                    Name         = "Cluster Name"
-                    State        = "Online"
-                    OwnerGroup   = "Cluster Group"
-                    ResourceType = "Network Name"
+                    Name         = 'Cluster Name'
+                    State        = 'Online'
+                    OwnerGroup   = 'Cluster Group'
+                    ResourceType = 'Network Name'
                 }
             }
 
@@ -543,9 +543,30 @@ try {
 
         Describe "$script:DSCResourceName\Get-ClusterDependencyExpression" {
 
+            $dependencyExpression = '[IP Address 192.168.1.41]'
+
+            It "Should return a cluster resource depedency string" {
+                Mock -CommandName Get-ClusterResource
+                Mock -CommandName Get-ClusterResourceDependency -MockWith {
+                    return $dependencyExpression
+                }
+
+                Get-ClusterDependencyExpression | Should -Be $dependencyExpression
+            }
+
         }
 
         Describe "$script:DSCResourceName\Add-ClusterIPResource" {
+            Mock -CommandName Test-IPAddress
+            Mock -CommandName Add-ClusterResource
+
+            $mockTestParameters = @{
+                IPAddress  = '192.168.1.41'
+                OwnerGroup = 'Cluster Group'
+            }
+            It "Should return the correct resource name" {
+                Add-ClusterIPResource @mockTestParameters | Should -Be "IP Address $($mockTestParameters.IPAddress)"
+            }
 
         }
 
@@ -554,7 +575,26 @@ try {
         }
 
         Describe "$script:DSCResourceName\Get-ClusterIPResource" {
+            $OwnerGroup = 'Cluster Group'
 
+            $mockData = @{
+                Name         = 'IP Address 192.168.1.41'
+                State        = 'Offline'
+                OwnerGroup   = 'Cluster Group'
+                ResourceType = 'IP Address'
+            }
+
+            Mock -CommandName Get-ClusterResource -MockWith {
+                return $mockData
+            }
+
+            It "Should return the cluster's IP resources" {
+                $return = Get-ClusterIPResource
+                $return.Name         | Should -Be $mockData.Name
+                $return.State        | Should -Be $mockData.State
+                $return.OwnerGroup   | Should -Be $mockData.OnwerGroup
+                $return.ResourceType | Should -Be $mockData.ResourceType
+            }
         }
 
         Describe "$script:DSCResourceName\Add-ClusterIPParameter" {

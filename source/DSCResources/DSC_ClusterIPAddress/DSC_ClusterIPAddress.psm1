@@ -446,16 +446,9 @@ function Get-ClusterResourceDependencyExpression
     (
     )
 
-    try
-    {
-        Write-Verbose -Message ($script:localizedData.GetClusterResourceExpression)
-        $cluster = Get-ClusterResource | Where-Object {$_.name -eq 'Cluster Name'}
-        return $(Get-ClusterResourceDependency -Resource $cluster.Name).DependencyExpression
-    }
-    catch
-    {
-        New-InvalidOperationException -Message $_.Exception.Message -ErrorRecord $_
-    }
+    Write-Verbose -Message ($script:localizedData.GetClusterResourceExpression)
+    $cluster = Get-ClusterResource | Where-Object {$_.name -eq 'Cluster Name'}
+    return $(Get-ClusterResourceDependency -Resource $cluster.Name).DependencyExpression
 }
 
 <#
@@ -485,23 +478,16 @@ function Add-ClusterIPResource
 
     Test-IPAddress -IPAddress $IPAddress
 
-    try
-    {
-        #* Create new IPAddress resource and add the IPAddress parameters to it
-        Write-Verbose -Message ($script:localizedData.CreateNewIPResource -f $IPAddress, $OwnerGroup)
-        $resourceName = "IP Address $IPAddress"
-        $params = @{
-            Name         = $resourceName
-            ResourceType = 'IP Address'
-            Group        = $OwnerGroup
-            ErrorAction  = 'Stop'
-        }
-        $resource = Add-ClusterResource @params
+    #* Create new IPAddress resource and add the IPAddress parameters to it
+    Write-Verbose -Message ($script:localizedData.CreateNewIPResource -f $IPAddress, $OwnerGroup)
+    $resourceName = "IP Address $IPAddress"
+    $params = @{
+        Name         = $resourceName
+        ResourceType = 'IP Address'
+        Group        = $OwnerGroup
+        ErrorAction  = 'Stop'
     }
-    catch
-    {
-        New-InvalidOperationException -Message $_.Exception.Message -ErrorRecord $_
-    }
+    $resource = Add-ClusterResource @params
 
     return $resourceName
 }
@@ -529,7 +515,7 @@ function Get-ClusterIPResource
         ( $_.ResourceType -eq 'IP Address' )
     }
 
-    return $resourceName
+    return $ipResources
 }
 
 <#

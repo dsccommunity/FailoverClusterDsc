@@ -283,7 +283,74 @@ try {
         }
 
         Describe "$script:DSCResourceName\Add-ClusterIPAddressDependency" {
+            $mockTestParameters = @{
+                IPAddress   = '192.168.1.41'
+                AddressMask = '255.255.255.0'
+            }
+
             Mock -CommandName Test-IPAddress -MockWith {}
+            Mock -CommandName Get-ClusterObject -MockWith {
+                return @{
+                    Name         = "Cluster Name"
+                    State        = "Online"
+                    OwnerGroup   = "Cluster Group"
+                    ResourceType = "Network Name"
+                }
+            }
+
+            Mock -CommandName Add-ClusterIPResource -MockWith { return 'IP Address 192.168.1.41' }
+            Mock -CommandName Get-ClusterResource -MockWith {
+                return @{
+                    Name         = 'IP Address 192.168.1.41'
+                    State        = 'Offline'
+                    OwnerGroup   = 'Cluster Group'
+                    ResourceType = 'IP Address'
+                }
+            }
+
+            Mock -CommandName Get-ClusterIPResource -MockWith {
+                return @{
+                    Name         = 'IP Address 192.168.1.41'
+                    State        = 'Offline'
+                    OwnerGroup   = 'Cluster Group'
+                    ResourceType = 'IP Address'
+                }
+            }
+
+            Mock -CommandName New-ClusterIPDependencyExpression -MockWith {
+                return '[IP Address 192.168.1.41]'
+            }
+
+            It "Should not throw" {
+                Mock -CommandName Set-ClusterResourceDependency
+
+                Add-ClusterIPAddressDependency @mockTestParameters | Should -Not -Throw
+                Assert-MockCalled -CommandName Set-ClusterResourceDependency -Times 1
+                Assert-MockCalled -CommandName Add-ClusterIPResource -Times 1
+                Assert-MockCalled -CommandName Get-ClusterResource -Times 1
+                Assert-MockCalled -CommandName Add-ClusterIPParameter -Times 1
+                Assert-MockCalled -CommandName Get-ClusterIPResource -Times 1
+                Assert-MockCalled -CommandName New-ClusterIPDependencyExpression -Times 1
+            }
+
+            It "Should throw the expected InvalidOperationException" {
+                $errorRecord = "Exception thrown in Set-ClusterResourceDependency"
+
+                Mock -CommandName Set-ClusterResourceDependency { throw $errorRecord }
+
+                Mock -CommandName New-InvalidOperationException -MockWith {
+                    throw $errorRecord
+                }
+
+                Add-ClusterIPAddressDependency @mockTestParameters | Should -Throw $errorRecord
+                Assert-MockCalled -CommandName Set-ClusterResourceDependency -Times 1
+                Assert-MockCalled -CommandName Add-ClusterIPResource -Times 1
+                Assert-MockCalled -CommandName Get-ClusterResource -Times 1
+                Assert-MockCalled -CommandName Add-ClusterIPParameter -Times 1
+                Assert-MockCalled -CommandName Get-ClusterIPResource -Times 1
+                Assert-MockCalled -CommandName New-ClusterIPDependencyExpression -Times 1
+                Assert-MockCalled -CommandName New-InvalidOperationException -Times 1
+            }
         }
 
         Describe "$script:DSCResourceName\Remove-ClusterIPAddressDependency" {

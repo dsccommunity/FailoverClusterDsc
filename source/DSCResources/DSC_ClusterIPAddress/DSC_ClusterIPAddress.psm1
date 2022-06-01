@@ -189,7 +189,9 @@ function Get-Subnet
     Test-IPAddress -IPAddress $IPAddress
     Test-IPAddress -IPAddress $AddressMask
 
-    $return = ($Ipaddress.Address -band $AddressMask.Address)
+    $subnet = ([IPAddress](([IPAddress]$Ipaddress).Address -band ([IPAddress]$AddressMask).Address)).IPAddressToString
+    Write-Verbose -Message ($script:localizedData.FoundSubnetfromIPAddressandAddressMask -f $IPAddress, $AddressMask, $subnet)
+    return $subnet
 }
 
 <#
@@ -407,12 +409,11 @@ function Test-ClusterNetwork
     $clusterNetworks = Get-ClusterNetworkList
     Write-Verbose -Message ($script:localizedData.GetSubnetfromIPAddressandAddressMask -f $IPAddress, $AddressMask)
     $subnet = $(Get-Subnet -IPAddress $IPAddress -AddressMask $AddressMask -ErrorAction Stop)
-    Write-Verbose -Message ($script:localizedData.FoundSubnetfromIPAddressandAddressMask -f $IPAddress, $AddressMask, $Subnet)
 
     foreach ( $network in $clusterNetworks )
     {
-        if (( $network.Address -eq $subnet.IPAddressToString ) -and
-            ( $network.AddressMask -eq $AddressMask.IPAddressToString ))
+        if (( $network.Address -eq $subnet ) -and
+            ( $network.AddressMask -eq $AddressMask ))
         {
             Write-Verbose -Message ($script:localizedData.NetworkAlreadyInCluster -f $($network.address), $IPAddress, $subnet)
             return $True

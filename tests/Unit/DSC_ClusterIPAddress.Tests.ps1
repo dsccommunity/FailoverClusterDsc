@@ -40,7 +40,7 @@ try {
         Describe "$script:dscModuleName\Get-TargetResource" {
             Mock -CommandName Test-IPAddress
 
-            Context 'When the IP address is already added to the cluster' {
+            Context 'When the IP address is added to the cluster' {
 
                 Mock -CommandName Get-ClusterResource -MockWith {
                     return @{
@@ -92,7 +92,7 @@ try {
                 }
             }
 
-            Context 'When the IP address is not already added to the cluster' {
+            Context 'When the IP address is not added to the cluster' {
 
                 Mock -CommandName Get-ClusterResource -MockWith {
                     return @{}
@@ -154,7 +154,7 @@ try {
 
                     Mock -CommandName Test-ClusterNetwork -MockWith { $False }
 
-                    Set-TargetResource @$mockTestParameters | Should -Throw $errorRecord
+                    Set-TargetResource @mockTestParameters | Should -Throw $errorRecord
                 }
 
                 It "Should not throw" {
@@ -166,7 +166,7 @@ try {
 
                     Mock -CommandName Test-ClusterNetwork -MockWith { $True }
 
-                    Set-TargetResource @$mockTestParameters | Should -Not -Throw
+                    Set-TargetResource @mockTestParameters | Should -Not -Throw
                 }
             }
 
@@ -177,7 +177,7 @@ try {
                     AddressMask = '255.255.255.0'
                 }
 
-                Set-TargetResource @$mockTestParameters | Should -Not -Throw
+                Set-TargetResource @mockTestParameters | Should -Not -Throw
 
             }
 

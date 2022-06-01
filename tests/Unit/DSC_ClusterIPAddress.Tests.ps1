@@ -136,7 +136,7 @@ try {
 
         Describe "$script:dscModuleName\Set-TargetResource" {
             Mock -CommandName Test-IPAddress
-            Mock -CommandName Add-ClusterIPDependency
+            Mock -CommandName Add-ClusterIPAddressDependency
             Mock -CommandName Remove-ClusterIPAddressDependency
 
             # Present

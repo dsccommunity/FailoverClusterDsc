@@ -114,11 +114,7 @@ try {
 
                     Mock -CommandName Get-ClusterIPResource -MockWith {
                         return @{}
-                        } `
-                        -ParameterFilter {
-                            $IPAddressResource -and
-                            $IPAddressResource -eq 'Microsoft.FailoverClusters.PowerShell.ClusterResource'
-                        }
+                    }
 
                     It 'Should return an empty hashtable' {
                         Get-TargetResource @mockTestParameters | Should -Be @{}

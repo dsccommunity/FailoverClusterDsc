@@ -33,7 +33,7 @@
         'PSAvoidUsingConvertToSecureStringWithPlainText',
         'PSAvoidUsingPlainTextForPassword',
         'PSAvoidUsingUsernameAndPasswordParams',
-        #'PSDSCUseVerboseMessageInDSCResource',
+        'PSDSCUseVerboseMessageInDSCResource',
         'PSShouldProcess',
         'PSUseDeclaredVarsMoreThanAssignments',
         'PSUsePSCredentialType',

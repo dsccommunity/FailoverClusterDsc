@@ -138,8 +138,7 @@ function Test-TargetResource
     {
         if (-not ([System.String]::IsNullOrEmpty($ipResource.IPAddress)))
         {
-            if ( ($ipResource.IPAddress -eq $IPAddress) -and
-                ($ipResource.AddressMask -eq $AddressMask) )
+            if ($ipResource.AddressMask -eq $AddressMask)
             {
                 $result = $true
             }

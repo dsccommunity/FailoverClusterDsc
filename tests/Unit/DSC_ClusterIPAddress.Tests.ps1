@@ -141,12 +141,13 @@ try {
 
             Context "IP address should be present" {
 
+                $mockTestParameters = @{
+                    Ensure      = 'Present'
+                    IPAddress   = '192.168.1.41'
+                    AddressMask = '255.255.255.0'
+                }
+
                 It "Should throw if the network of the IP address and subnet mask combination is not added to the cluster" {
-                    $mockTestParameters = @{
-                        Ensure      = 'Present'
-                        IPAddress   = '192.168.1.41'
-                        AddressMask = '255.255.255.0'
-                    }
 
                     $errorRecord = Get-InvalidArgumentRecord `
                         -Message ($LocalizedData.NonExistantClusterNetwork -f $mockTestParameters.IPAddress, $mockTestParameters.AddressMask) `
@@ -160,11 +161,6 @@ try {
                 }
 
                 It "Should not throw" {
-                    $mockTestParameters = @{
-                        Ensure      = 'Present'
-                        IPAddress   = '192.168.1.41'
-                        AddressMask = '255.255.255.0'
-                    }
 
                     Mock -CommandName Test-ClusterNetwork -MockWith { $True }
                     {
@@ -174,37 +170,112 @@ try {
             }
 
             Context "IP address should be absent" {
-                # $mockTestParameters = @{
-                #     Ensure      = 'Absent'
-                #     IPAddress   = '192.168.1.41'
-                #     AddressMask = '255.255.255.0'
-                # }
 
+                It "Should not throw when Absent" {
 
+                    $mockTestParameters = @{
+                        Ensure      = 'Absent'
+                        IPAddress   = '192.168.1.41'
+                        AddressMask = '255.255.255.0'
+                    }
 
-                # Set-TargetResource @mockTestParameters | Should -Not -Throw
-
+                    {
+                        Set-TargetResource @mockTestParameters
+                    }  | Should -Not -Throw
+                }
             }
-
-            # Present
-            ## Should throw if Test-ClusterNetwork is false : New-InvalidArgumentException -Message ($script:localizedData.NonExistantClusterNetwork -f $IPAddress,$AddressMask)
-            ## Should Not throw
-            # Absent
-            ## Should not throw
         }
 
         Describe "$script:DSCResourceName\Test-TargetResource" {
             Mock -CommandName Test-IPAddress
-            # Present
-            ## Should throw if $ipResource.IPAddress is null or empty
-            ## False if $ipResource.ipaddress -ne $ipaddress
-            ## False if $ipResource.AddressMask -ne $AddressMask
-            ## True if $ipResource.ipaddress -e1 $ipaddress
-            ## True if $ipResource.AddressMask -eq $AddressMask
-            # Absent
-            ## Should throw if $ipResource.IPAddress is NOT null or empty
-            ## True if $ipResource.IPAddress -eq $null
-            ## False if -ne $null
+
+            Context "IP address should be Present" {
+
+                $mockTestParameters = @{
+                    Ensure      = 'Present'
+                    IPAddress   = '192.168.1.41'
+                    AddressMask = '255.255.255.0'
+                }
+
+                It "Should be false when IP address is not added but should be Present" {
+                    Mock -CommandName Get-TargetResource -MockWith {
+                        return @{
+                            Ensure      = 'Present'
+                            IPAddress   = $null
+                            AddressMask = $null
+                        }
+                    }
+
+                    {
+                        Test-TargetResource @mockTestParameters
+                    } | -Should -Be $false
+                }
+
+                It "Should be false when IP address is added but address mask does not match" {
+                    Mock -CommandName Get-TargetResource -MockWith {
+                        return @{
+                            Ensure      = 'Present'
+                            IPAddress   = '192.168.1.41'
+                            AddressMask = '255.255.240.0'
+                        }
+                    }
+
+                    {
+                        Test-TargetResource @mockTestParameters
+                    } | -Should -Be $false
+                }
+
+                It "Should be true when IP address is added and address masks match" {
+                    Mock -CommandName Get-TargetResource -MockWith {
+                        return @{
+                            Ensure      = 'Present'
+                            IPAddress   = '192.168.1.41'
+                            AddressMask = '255.255.255.0'
+                        }
+                    }
+
+                    {
+                        Test-TargetResource @mockTestParameters
+                    } | -Should -Be $true
+                }
+            }
+
+            Context "IP address should be Absent" {
+
+                $mockTestParameters = @{
+                    Ensure      = 'Absent'
+                    IPAddress   = '192.168.1.41'
+                    AddressMask = '255.255.255.0'
+                }
+
+                It "Should be false when IP address is added but should be Absent" {
+                    Mock -CommandName Get-TargetResource -MockWith {
+                        return @{
+                            Ensure      = 'Absent'
+                            IPAddress   = '192.168.1.41'
+                            AddressMask = '255.255.255.0'
+                        }
+                    }
+
+                    {
+                        Test-TargetResource @mockTestParameters
+                    } | -Should -Be $false
+                }
+
+                It "Should be true when IP address is not and should be Absent" {
+                    Mock -CommandName Get-TargetResource -MockWith {
+                        return @{
+                            Ensure      = 'Absent'
+                            IPAddress   = $null
+                            AddressMask = $null
+                        }
+                    }
+
+                    {
+                        Test-TargetResource @mockTestParameters
+                    } | -Should -Be $false
+                }
+            }
         }
     }
 }

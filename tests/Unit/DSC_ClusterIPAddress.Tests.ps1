@@ -139,6 +139,48 @@ try {
             Mock -CommandName Add-ClusterIPAddressDependency
             Mock -CommandName Remove-ClusterIPAddressDependency
 
+            Context "IP address should be present" {
+                It "Should throw if the network of the IP address and subnet mask combination is not added to the cluster" {
+
+                    $mockTestParameters = @{
+                        Ensure      = 'Present'
+                        IPAddress   = '192.168.1.41'
+                        AddressMask = '255.255.255.0'
+                    }
+
+                    $errorRecord = Get-InvalidArgumentRecord `
+                        -Message ($LocalizedData.NonExistantClusterNetwork -f $IPAddress, $SubnetMask) `
+                        -ArgumentName 'IPAddress', 'SubnetMask'
+
+                    Mock -CommandName Test-ClusterNetwork -MockWith { $False }
+
+                    Set-TargetResource @$mockTestParameters | Should -Throw $errorRecord
+                }
+
+                It "Should not throw" {
+                    $mockTestParameters = @{
+                        Ensure      = 'Present'
+                        IPAddress   = '192.168.1.41'
+                        AddressMask = '255.255.255.0'
+                    }
+
+                    Mock -CommandName Test-ClusterNetwork -MockWith { $True }
+
+                    Set-TargetResource @$mockTestParameters | Should -Not -Throw
+                }
+            }
+
+            Context "IP address should be absent" {
+                $mockTestParameters = @{
+                    Ensure      = 'Absent'
+                    IPAddress   = '192.168.1.41'
+                    AddressMask = '255.255.255.0'
+                }
+
+                Set-TargetResource @$mockTestParameters | Should -Not -Throw
+
+            }
+
             # Present
             ## Should throw if Test-ClusterNetwork is false : New-InvalidArgumentException -Message ($script:localizedData.NonExistantClusterNetwork -f $IPAddress,$AddressMask)
             ## Should Not throw

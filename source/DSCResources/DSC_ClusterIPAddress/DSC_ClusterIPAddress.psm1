@@ -80,7 +80,6 @@ function Set-TargetResource
         if ( -not $(Test-ClusterNetwork -IPAddress $IPAddress -AddressMask $AddressMask) )
         {
             New-InvalidArgumentException -Message ($script:localizedData.NonExistantClusterNetwork -f $IPAddress,$AddressMask)
-            break
         }
         else
         {
@@ -377,6 +376,7 @@ function Test-ClusterIPAddressDependency
 function Test-ClusterNetwork
 {
     [CmdletBinding()]
+    [OutputType([System.Boolean])]
     param
     (
         # IPAddress to add to Cluster

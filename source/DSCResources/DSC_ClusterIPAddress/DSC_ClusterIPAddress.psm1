@@ -172,21 +172,24 @@ function Test-TargetResource
 function Get-Subnet
 {
     [CmdletBinding()]
-    [OutputType([IPAddress])]
+    [OutputType([System.String])]
     param
     (
         # IPAddress to add to Cluster
         [Parameter(Mandatory = $true)]
-        [IPAddress]
+        [System.String]
         $IPAddress,
 
         # SubnetMask of IPAddress
         [Parameter(Mandatory = $true)]
-        [IPAddress]
+        [System.String]
         $AddressMask
     )
 
-    return [IPAddress]($Ipaddress.Address -band $AddressMask.Address)
+    Test-IPAddress -IPAddress $IPAddress
+    Test-IPAddress -IPAddress $AddressMask
+
+    $return = ($Ipaddress.Address -band $AddressMask.Address)
 }
 
 <#
@@ -210,13 +213,16 @@ function Add-ClusterIPAddressDependency
     param
     (
         [Parameter(Mandatory = $true)]
-        [IPAddress]
+        [System.String]
         $IPAddress,
 
         [Parameter(Mandatory = $true)]
-        [IPAddress]
+        [System.String]
         $AddressMask
     )
+
+    Test-IPAddress -IPAddress $IPAddress
+    Test-IPAddress -IPAddress $AddressMask
 
     #* Get Windows Cluster resource
     $cluster = Get-ClusterResource | Where-Object { $_.name -eq 'Cluster Name'}
@@ -269,13 +275,16 @@ function Remove-ClusterIPAddressDependency
     param
     (
         [Parameter(Mandatory = $true)]
-        [IPAddress]
+        [System.String]
         $IPAddress,
 
         [Parameter(Mandatory = $true)]
-        [IPAddress]
+        [System.String]
         $AddressMask
     )
+
+    Test-IPAddress -IPAddress $IPAddress
+    Test-IPAddress -IPAddress $AddressMask
 
     #* Get Windows Cluster resource
     $cluster = Get-ClusterResource | Where-Object { $_.name -eq 'Cluster Name'}
@@ -341,9 +350,11 @@ function Test-ClusterIPAddressDependency
     (
         # IPAddress to add to Cluster
         [Parameter(Mandatory = $true)]
-        [IPAddress]
+        [System.String]
         $IPAddress
     )
+
+    Test-IPAddress -IPAddress $IPAddress
 
     $dependencyExpression = Get-ClusterResourceDependencyExpression
 
@@ -381,14 +392,17 @@ function Test-ClusterNetwork
     (
         # IPAddress to add to Cluster
         [Parameter(Mandatory = $true)]
-        [IPAddress]
+        [System.String]
         $IPAddress,
 
         # SubnetMask of IPAddress
         [Parameter(Mandatory = $true)]
-        [IPAddress]
+        [System.String]
         $AddressMask
     )
+
+    Test-IPAddress -IPAddress $IPAddress
+    Test-IPAddress -IPAddress $AddressMask
 
     $clusterNetworks = Get-ClusterNetworkList
     Write-Verbose -Message ($script:localizedData.GetSubnetfromIPAddressandAddressMask -f $IPAddress, $AddressMask)
@@ -521,7 +535,7 @@ function Remove-ClusterIPResource
     (
         # IPAddress to add to Cluster
         [Parameter(Mandatory = $true)]
-        [IPAddress]
+        [System.String]
         $IPAddress,
 
         # Owner Group of the cluster
@@ -529,6 +543,8 @@ function Remove-ClusterIPResource
         [System.String]
         $OwnerGroup
     )
+
+    Test-IPAddress -IPAddress $IPAddress
 
     try
     {
@@ -654,11 +670,11 @@ function Remove-ClusterIPParameter
         $IPAddressResourceName,
 
         [Parameter(Mandatory = $true)]
-        [IPAddress]
+        [System.String]
         $IPAddress,
 
         [Parameter(Mandatory = $true)]
-        [IPAddress]
+        [System.String]
         $AddressMask
     )
 

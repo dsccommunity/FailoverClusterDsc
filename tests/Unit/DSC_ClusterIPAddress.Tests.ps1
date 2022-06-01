@@ -376,6 +376,12 @@ try {
             Mock -CommandName New-ClusterIPDependencyExpression
 
             It "Should not throw" {
+                Mock -CommandName Test-IPAddress
+                Mock -CommandName Get-ClusterObject
+                Mock -CommandName Get-ClusterResource
+                Mock -CommandName Remove-ClusterResource
+                Mock -CommandName Get-ClusterIPResource
+                Mock -CommandName New-ClusterIPDependencyExpression
                 Mock -CommandName Set-ClusterResourceDependency
 
                 Remove-ClusterIPAddressDependency @mockTestParameters | Should -Not -Throw
@@ -390,6 +396,12 @@ try {
 
             It "Should throw the expected InvalidOperationException" {
                 $errorRecord = "Exception thrown in Set-ClusterResourceDependency"
+                Mock -CommandName Test-IPAddress
+                Mock -CommandName Get-ClusterObject
+                Mock -CommandName Get-ClusterResource
+                Mock -CommandName Remove-ClusterResource
+                Mock -CommandName Get-ClusterIPResource
+                Mock -CommandName New-ClusterIPDependencyExpression
 
                 Mock -CommandName Set-ClusterResourceDependency { throw $errorRecord }
 

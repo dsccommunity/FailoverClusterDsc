@@ -16,7 +16,6 @@ ConvertFrom-StringData @'
     CreateNewIPResource = Created new IP resource with IP address {0} and owner group {1}.
     RemoveIPResource = Removing IP resource with IP address {0}.
     SetDependencyExpression = Set cluster resource dependency to {0}.
-    IPResourceNotFound = IP Resource named {0} not found.
     GetTargetResourceMessage = Getting target resource state for IP address {0} and address mask {1}.
     SetTargetResourceMessage = Setting target resource state for IP address {0} and address mask {1} and ensure {2}.
     TestTargetResourceMessage = Testing target resource state for IP address {0} and address mask {1} and ensure {2}.

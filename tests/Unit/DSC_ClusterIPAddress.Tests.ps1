@@ -149,7 +149,7 @@ try {
                     }
 
                     $errorRecord = Get-InvalidArgumentRecord `
-                        -Message ($LocalizedData.NonExistantClusterNetwork -f $IPAddress, $SubnetMask) `
+                        -Message ($LocalizedData.NonExistantClusterNetwork -f $mockTestParameters.IPAddress, $mockTestParameters.AddressMask) `
                         -ArgumentName 'IPAddress'
 
                     Mock -CommandName Test-ClusterNetwork -MockWith { $False }

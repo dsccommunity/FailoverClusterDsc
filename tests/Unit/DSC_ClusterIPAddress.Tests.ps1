@@ -548,7 +548,9 @@ try {
             It "Should return a cluster resource depedency string" {
                 Mock -CommandName Get-ClusterResource
                 Mock -CommandName Get-ClusterResourceDependency -MockWith {
-                    return $dependencyExpression
+                    return @{
+                        DependencyExpression = $dependencyExpression
+                    }
                 }
 
                 Get-ClusterResourceDependencyExpression | Should -Be $dependencyExpression
@@ -592,7 +594,7 @@ try {
                 $return = Get-ClusterIPResource -OwnerGroup $OwnerGroup
                 $return.Name         | Should -Be $mockData.Name
                 $return.State        | Should -Be $mockData.State
-                $return.OwnerGroup   | Should -Be $mockData.OnwerGroup
+                $return.OwnerGroup   | Should -Be $mockData.OwnerGroup
                 $return.ResourceType | Should -Be $mockData.ResourceType
             }
         }
@@ -609,11 +611,14 @@ try {
             }
 
             Mock -CommandName Test-IPAddress
+            Mock -CommandName Remove-ClusterResource
 
             It "Should not throw" {
-                Mock -CommandName Remove-ClusterResource
 
-                Remove-ClusterIPParameter | Should -Not -Throw
+                Remove-ClusterIPParameter @mockTestParameters | Should -Not -Throw
+                Assert-MockCalled -CommandName Test-IPAddress -Times 1
+                Assert-MockCalled -CommandName Remove-ClusterResource -Times 1
+
             }
 
         }
@@ -623,12 +628,16 @@ try {
             $badIP  = '19.420.250.1'
 
             It "Should not throw" {
-                Test-IPAddress -IPAddress $goodIP
-            } | Should -Not -Throw
+                {
+                    Test-IPAddress -IPAddress $goodIP
+                } | Should -Not -Throw
+            }
 
             It "Should throw" {
-                Test-IPAddress -IPAddress $badIP
-            } | Should -Throw
+                {
+                    Test-IPAddress -IPAddress $badIP
+                } | Should -Throw
+            }
 
         }
 
@@ -645,15 +654,11 @@ try {
             }
 
             It "Should return the correct dependency expression with two resources" {
-                {
-                    New-ClusterIPDependencyExpression -ClusterResource $twoClusterResource
-                } | Should -Be "[$($twoClusterResource[0])] or [$($twoClusterResource[1])]"
+                    New-ClusterIPDependencyExpression -ClusterResource $twoClusterResource | Should -Be "[$($twoClusterResource[0])] or [$($twoClusterResource[1])]"
             }
 
             It "Should return the correct dependency expression with three resources" {
-                {
-                    New-ClusterIPDependencyExpression -ClusterResource $twoClusterResource
-                } | Should -Be "[$($threeClusterResource[0])] or [$($threeClusterResource[1])] or [$($threeClusterResource[2])]"
+                    New-ClusterIPDependencyExpression -ClusterResource $twoClusterResource  | Should -Be "[$($threeClusterResource[0])] or [$($threeClusterResource[1])] or [$($threeClusterResource[2])]"
             }
 
         }
@@ -662,8 +667,27 @@ try {
 
         }
 
-        Describe "$script:DSCResourceName\Get-ClusterOwnerGroup" {
+        Describe "$script:DSCResourceName\Get-ClusterObject" {
+            $mockData = @{
+                Name         = 'Cluster Name'
+                State        = 'Online'
+                OwnerGroup   = 'Cluster Group'
+                ResourceType = 'Network Name'
+            }
 
+            Mock -CommandName Get-ClusterResource -MockWith {
+                return $mockData
+            }
+
+            It "Should return the expected data" {
+                $result = Get-ClusterObject
+                $result.Name         | Should -Be $mockData.Name
+                $result.State        | Should -Be $mockData.State
+                $result.OwnerGroup   | Should -Be $mockData.OwnerGroup
+                $result.ResourceType | Should -Be $mockData.ResourceType
+
+                Assert-MockCalled -CommandName Get-ClusterResource -Times 1
+            }
         }
     }
 }

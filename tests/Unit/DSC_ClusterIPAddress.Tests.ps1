@@ -37,7 +37,7 @@ try {
 
     InModuleScope $script:dscResourceName {
         $script:DSCResourceName = 'DSC_ClusterIPAddress'
-        Describe "$script:dscModuleName\Get-TargetResource" {
+        Describe "$script:DSCResourceName\Get-TargetResource" {
             Mock -CommandName Test-IPAddress
 
             Context 'When the IP address is added to the cluster' {
@@ -134,50 +134,53 @@ try {
             }
         }
 
-        Describe "$script:dscModuleName\Set-TargetResource" {
+        Describe "$script:DSCResourceName\Set-TargetResource" {
             Mock -CommandName Test-IPAddress
             Mock -CommandName Add-ClusterIPAddressDependency
             Mock -CommandName Remove-ClusterIPAddressDependency
 
             Context "IP address should be present" {
+                $mockTestParameters = @{
+                    Ensure      = 'Present'
+                    IPAddress   = '192.168.1.41'
+                    AddressMask = '255.255.255.0'
+                }
+
+                $errorRecord = Get-InvalidArgumentRecord `
+                    -Message ($LocalizedData.NonExistantClusterNetwork -f $IPAddress, $SubnetMask) `
+                    -ArgumentName 'IPAddress', 'SubnetMask'
+
+                Mock -CommandName Test-ClusterNetwork -MockWith { $False }
+
                 It "Should throw if the network of the IP address and subnet mask combination is not added to the cluster" {
-
-                    $mockTestParameters = @{
-                        Ensure      = 'Present'
-                        IPAddress   = '192.168.1.41'
-                        AddressMask = '255.255.255.0'
-                    }
-
-                    $errorRecord = Get-InvalidArgumentRecord `
-                        -Message ($LocalizedData.NonExistantClusterNetwork -f $IPAddress, $SubnetMask) `
-                        -ArgumentName 'IPAddress', 'SubnetMask'
-
-                    Mock -CommandName Test-ClusterNetwork -MockWith { $False }
 
                     Set-TargetResource @mockTestParameters | Should -Throw $errorRecord
                 }
 
-                It "Should not throw" {
-                    $mockTestParameters = @{
-                        Ensure      = 'Present'
-                        IPAddress   = '192.168.1.41'
-                        AddressMask = '255.255.255.0'
-                    }
+                $mockTestParameters = @{
+                    Ensure      = 'Present'
+                    IPAddress   = '192.168.1.41'
+                    AddressMask = '255.255.255.0'
+                }
 
-                    Mock -CommandName Test-ClusterNetwork -MockWith { $True }
+                Mock -CommandName Test-ClusterNetwork -MockWith { $True }
+
+                It "Should not throw" {
 
                     Set-TargetResource @mockTestParameters | Should -Not -Throw
                 }
             }
 
             Context "IP address should be absent" {
-                $mockTestParameters = @{
-                    Ensure      = 'Absent'
-                    IPAddress   = '192.168.1.41'
-                    AddressMask = '255.255.255.0'
-                }
+                # $mockTestParameters = @{
+                #     Ensure      = 'Absent'
+                #     IPAddress   = '192.168.1.41'
+                #     AddressMask = '255.255.255.0'
+                # }
 
-                Set-TargetResource @mockTestParameters | Should -Not -Throw
+
+
+                # Set-TargetResource @mockTestParameters | Should -Not -Throw
 
             }
 
@@ -188,7 +191,7 @@ try {
             ## Should not throw
         }
 
-        Describe "$script:dscModuleName\Test-TargetResource" {
+        Describe "$script:DSCResourceName\Test-TargetResource" {
             Mock -CommandName Test-IPAddress
             # Present
             ## Should throw if $ipResource.IPAddress is null or empty

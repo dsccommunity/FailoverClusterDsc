@@ -513,7 +513,7 @@ try {
                     return $networks
                 }
 
-                Get-ClusterNetworkList | Should -Be $oneNetwork
+                Get-ClusterNetworkList | Should -BeLike $oneNetwork
 
             }
 
@@ -525,7 +525,7 @@ try {
                     return $networks
                 }
 
-                Get-ClusterNetworkList | Should -Be $networks
+                Get-ClusterNetworkList | Should -BeLike $networks
             }
 
             It "Should return an empty list when there is one cluster network" {

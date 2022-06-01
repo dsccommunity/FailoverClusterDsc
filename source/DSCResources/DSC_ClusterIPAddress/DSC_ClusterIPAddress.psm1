@@ -421,7 +421,7 @@ function Get-ClusterNetworkList
     )
 
     Write-Verbose -Message ($script:localizedData.GetClusterNetworks)
-    $networks = New-Object "System.Collections.Generic.List[PSCustomObject]"
+    $networks = New-Object -TypeName "System.Collections.Generic.List[PSCustomObject]"
     foreach ( $network in Get-ClusterNetwork )
     {
         $networks.Add([PSCustomObject]@{

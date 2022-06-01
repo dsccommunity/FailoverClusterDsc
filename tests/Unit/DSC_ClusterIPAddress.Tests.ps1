@@ -541,7 +541,7 @@ try {
 
         }
 
-        Describe "$script:DSCResourceName\Get-ClusterDependencyExpression" {
+        Describe "$script:DSCResourceName\Get-ClusterResourceDependencyExpression" {
 
             $dependencyExpression = '[IP Address 192.168.1.41]'
 
@@ -551,7 +551,7 @@ try {
                     return $dependencyExpression
                 }
 
-                Get-ClusterDependencyExpression | Should -Be $dependencyExpression
+                Get-ClusterResourceDependencyExpression | Should -Be $dependencyExpression
             }
 
         }
@@ -589,7 +589,7 @@ try {
             }
 
             It "Should return the cluster's IP resources" {
-                $return = Get-ClusterIPResource
+                $return = Get-ClusterIPResource -OwnerGroup $OwnerGroup
                 $return.Name         | Should -Be $mockData.Name
                 $return.State        | Should -Be $mockData.State
                 $return.OwnerGroup   | Should -Be $mockData.OnwerGroup

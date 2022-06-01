@@ -82,6 +82,12 @@ try {
                 }
 
                 Context 'When Ensure is set to ''Absent'' and the IP Address is not added to the cluster' {
+                    $mockTestParameters = @{
+                        Ensure      = 'Absent'
+                        IPAddress   = '192.168.1.41'
+                        AddressMask = '255.255.255.0'
+                    }
+
                     Mock -CommandName Get-ClusterResource -MockWith {
                         return @{}
                     }

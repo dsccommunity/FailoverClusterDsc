@@ -51,7 +51,7 @@ try {
                     }
                 }
 
-                Mock -CommandName Get-ClusterIPResource -MockWith {
+                Mock -CommandName Get-ClusterIPResourceParameters -MockWith {
                     return @{
                         Address     = $mockTestParameters.IPAddress
                         AddressMask = $mockTestParameters.AddressMask
@@ -283,7 +283,7 @@ try {
         }
 
         Describe "$script:DSCResourceName\Add-ClusterIPAddressDependency" {
-
+            Mock -CommandName Test-IPAddress -MockWith {}
         }
 
         Describe "$script:DSCResourceName\Remove-ClusterIPAddressDependency" {
@@ -331,6 +331,14 @@ try {
         }
 
         Describe "$script:DSCResourceName\New-ClusterIPDependencyExpression" {
+
+        }
+
+        Describe "$script:DSCResourceName\Get-ClusterIPResource" {
+
+        }
+
+        Describe "$script:DSCResourceName\Get-ClusterOwnerGroup" {
 
         }
     }

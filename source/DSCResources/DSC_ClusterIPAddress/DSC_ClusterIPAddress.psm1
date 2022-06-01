@@ -36,7 +36,7 @@ function Get-TargetResource
 
     foreach ( $ipResource in $ipResources )
     {
-        $ipResourceDetails = Get-ClusterIPResource -IPAddressResourceName $ipResource.name
+        $ipResourceDetails = Get-ClusterIPResourceParameters -IPAddressResourceName $ipResource.name
 
         if ( $ipResourceDetails.Address -eq $IPAddress )
         {
@@ -228,16 +228,13 @@ function Add-ClusterIPAddressDependency
     Test-IPAddress -IPAddress $AddressMask
 
     #* Get Windows Cluster resource
-    $cluster = Get-ClusterResource | Where-Object { $_.name -eq 'Cluster Name'}
+    $ownerGroup = Get-ClusterOwnerGroup
 
-    $ipResourceName = Add-ClusterIPResource -IPAddress $IPAddress -OwnerGroup $cluster.OwnerGroup
+    $ipResourceName = Add-ClusterIPResource -IPAddress $IPAddress -OwnerGroup $ownerGroup
     $ipResource = Get-ClusterResource -Name $ipResourceName
     Add-ClusterIPParameter -IPAddressResourceName $ipResource.Name -IPAddress $IPAddress -AddressMask $AddressMask
 
-    $ipResources = Get-ClusterResource | Where-Object {
-        ( $_.OwnerGroup -eq $cluster.OwnerGroup ) -and
-        ( $_.ResourceType -eq 'IP Address' )
-    }
+    $ipResources = Get-ClusterIPResource -OwnerGroup $ownerGroup
 
     $dependencyExpression = New-ClusterIPDependencyExpression -ClusterResource $ipResources.Name
 
@@ -308,10 +305,7 @@ function Remove-ClusterIPAddressDependency
     #* I dont think below is necessary. Removing the resource will remove the IP
     #Remove-ClusterIPParameter -IPAddressResource $ipResource -IPAddress $IPAddress -AddressMask $AddressMask
 
-    $ipResources = Get-ClusterResource | Where-Object {
-        ( $_.OwnerGroup -eq $cluster.OwnerGroup ) -and
-        ( $_.ResourceType -eq 'IP Address' )
-    }
+    $ipResources = Get-ClusterIPResource
 
     $dependencyExpression = New-ClusterIPDependencyExpression -ClusterResource $ipResources.Name
 
@@ -524,6 +518,32 @@ function Add-ClusterIPResource
 
 <#
     .Synopsis
+        Gets all IP Resources added to the cluster
+    .PARAMETER OwnerGroup
+        OwnerGroup of the cluster to get the IP resources from
+#>
+function Get-ClusterIPResource
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        # Owner Group of the cluster
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $OwnerGroup
+    )
+
+    $ipResources = Get-ClusterResource | Where-Object {
+        ( $_.OwnerGroup -eq $OwnerGroup ) -and
+        ( $_.ResourceType -eq 'IP Address' )
+    }
+
+    return $resourceName
+}
+
+<#
+    .Synopsis
         Removes an IP Address Resource to a given Cluster Group and returns an IPAddress Resource
     .PARAMETER IPAddress
         IP address to remove from the cluster
@@ -573,7 +593,7 @@ function Remove-ClusterIPResource
     .PARAMETER IPAddressResource
         IP cddress resource to get to information from
 #>
-function Get-ClusterIPResource
+function Get-ClusterIPResourceParameters
 {
     [CmdletBinding()]
     param
@@ -776,4 +796,21 @@ function New-ClusterIPDependencyExpression
     }
     Write-Verbose -Message ($script:localizedData.NewDependencyExpression -f $dependencyExpression)
     return $dependencyExpression
+}
+
+<#
+    .Synopsis
+        Returns the cluster owner group
+#>
+function Get-ClusterOwnerGroup
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+    )
+
+    $cluster = Get-ClusterResource | Where-Object { $_.name -eq 'Cluster Name'}
+
+    return $cluster.OwnerGroup
 }

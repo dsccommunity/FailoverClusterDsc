@@ -289,17 +289,7 @@ function Remove-ClusterIPAddressDependency
     #* Get Windows Cluster resource
     $cluster = Get-ClusterObject
 
-    try
-    {
-        #! this probably does not stop, but returns null or empty
-        $ipResource = Get-ClusterResource -Name "IP Address $IPAddress" -ErrorAction Stop
-    }
-    catch
-    {
-        #! Here we need to check if IP Address is original IP Resource named: 'Cluster IP Address'
-        $errorMessage = $script:localizedData.IPResourceNotFound -f "IP Address $IPAddress"
-        New-InvalidDataException -Message $errorMessage -ErrorID 'IPResourceNotFound'
-    }
+    $ipResource = Get-ClusterResource -Name "IP Address $IPAddress"
 
     Remove-ClusterResource -InputObject $ipResource -Force
     #* I dont think below is necessary. Removing the resource will remove the IP

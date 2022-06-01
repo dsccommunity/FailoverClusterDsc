@@ -290,6 +290,7 @@ try {
 
             Mock -CommandName Test-IPAddress -MockWith {}
             Mock -CommandName Get-ClusterObject -MockWith {
+
                 return @{
                     Name         = "Cluster Name"
                     State        = "Online"
@@ -299,6 +300,7 @@ try {
             }
 
             Mock -CommandName Add-ClusterIPResource -MockWith { return 'IP Address 192.168.1.41' }
+
             Mock -CommandName Get-ClusterResource -MockWith {
                 return @{
                     Name         = 'IP Address 192.168.1.41'
@@ -307,6 +309,8 @@ try {
                     ResourceType = 'IP Address'
                 }
             }
+
+            Mock -CommandName Add-ClusterIPParameter
 
             Mock -CommandName Get-ClusterIPResource -MockWith {
                 return @{

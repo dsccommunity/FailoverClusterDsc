@@ -81,7 +81,7 @@ try {
 
                     Mock -CommandName Get-ClusterIPResource -MockWith {
                         return @{
-                            Address     = $mockTestParameters.Address
+                            Address     = $mockTestParameters.IPAddress
                             AddressMask = $mockTestParameters.AddressMask
                             Network     = '192.168.1.1'
                         }
@@ -95,21 +95,21 @@ try {
                     }
                 }
 
-                # Context 'When Ensure is set to ''Absent'' and the IP Address is not added to the cluster' {
-                #     Mock -CommandName Get-ClusterResource -MockWith {
-                #         return @{}
-                #     }
+                Context 'When Ensure is set to ''Absent'' and the IP Address is not added to the cluster' {
+                    Mock -CommandName Get-ClusterResource -MockWith {
+                        return @{}
+                    }
 
-                #     Mock -CommandName Get-ClusterIPResource -MockWith {
-                #         return @{}
-                #     }
+                    Mock -CommandName Get-ClusterIPResource -MockWith {
+                        return @{}
+                    }
 
-                #     Mock -CommandName Get-ClusterParameter -MockWith {}
+                    Mock -CommandName Get-ClusterParameter -MockWith {}
 
-                #     It 'Should return an empty hashtable' {
-                #         Get-TargetResource @mockTestParameters | Should -Be @{}
-                #     }
-                # }
+                    It 'Should return an empty hashtable' {
+                        Get-TargetResource @mockTestParameters | Should -Be @{}
+                    }
+                }
             }
 
             Context 'When the system is not in the desired state' {
@@ -141,7 +141,7 @@ try {
                 #     }
 
                 #     $correctResult = @{
-                #         IPAddress   = $mockTestParameters.Address
+                #         IPAddress   = $mockTestParameters.IPAddress
                 #         AddressMask = $mockTestParameters.AddressMask
                 #         Ensure      = 'Absent'
                 #     }
@@ -157,7 +157,7 @@ try {
 
                 #     Mock -CommandName Get-ClusterIPResource -MockWith {
                 #         return @{
-                #             Address     = $mockTestParameters.Address
+                #             Address     = $mockTestParameters.IPAddress
                 #             AddressMask = $mockTestParameters.AddressMask
                 #             Network     = '192.168.1.1'
                 #         }

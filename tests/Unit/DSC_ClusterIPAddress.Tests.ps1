@@ -603,6 +603,18 @@ try {
         }
 
         Describe "$script:DSCResourceName\Remove-ClusterIPResource" {
+            Mock -CommandName Test-IPAddress
+            Mock -CommandName Remove-ClusterResource
+
+            $mockTestParameters = @{
+                IPAddress  = '192.168.1.41'
+                OwnerGroup = 'Cluster Group'
+            }
+
+            It "Should not throw" {
+                { Remove-ClusterIPResource @mockTestParameters } | Should -Not -Throw
+            }
+
 
         }
 
@@ -740,7 +752,7 @@ try {
 
             $ownerGroup = 'Cluster Group'
             $mockData = @{
-                Name = "IP Address 192.168.1.41"
+                Name = 'IP Address 192.168.1.41'
                 State = 'Online'
                 OwnerGroup = 'Cluster Group'
                 ResourceType = 'IP Address'
@@ -781,6 +793,56 @@ try {
                 $result.ResourceType | Should -Be $mockData.ResourceType
 
                 Assert-MockCalled -CommandName Get-ClusterResource -Times 1
+            }
+        }
+
+        Describe "$script:DSCResourceName\Get-ClusterIPResourceParameters" {
+
+            $mockName = 'IP Address 192.168.1.41'
+
+            $mockData = @{
+                Name         = 'IP Address 192.168.1.41'
+                State        = 'Online'
+                OwnerGroup   = 'Cluster Group'
+                ResourceType = 'IP Address'
+            }
+
+            $correctAnswer = @{
+                Address     = '192.168.1.41'
+                AddressMask = '255.255.255.0'
+                Network     = '192.168.1.0'
+            }
+
+            Mock -CommandName Get-ClusterResource -MockWith {
+                return $mockData
+            }
+
+            Mock -CommandName Get-ClusterParameter -MockWith {
+                return $correctAnswer.Address
+                } `
+                -ParameterFilter {
+                    $name -eq 'Address'
+                }
+
+            Mock -CommandName Get-ClusterParameter -MockWith {
+                return $correctAnswer.AddressMask
+                } `
+                -ParameterFilter {
+                    $name -eq 'SubnetMask'
+                }
+
+            Mock -CommandName Get-ClusterParameter -MockWith {
+                return $correctAnswer.Network
+                } `
+                -ParameterFilter {
+                    $name -eq 'Network'
+                }
+
+            It "Should return the correct hashtable" {
+                $result = Get-ClusterIPResourceParameters -IPAddressResourceName $mockName
+                $result.Address     | Should -Be $correctAnswer.Address
+                $result.AddressMask | Should -Be $correctAnswer.AddressMask
+                $result.Network     | Should -Be $correctAnswer.Network
             }
         }
     }

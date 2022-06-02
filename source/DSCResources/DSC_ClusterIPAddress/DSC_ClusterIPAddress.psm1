@@ -561,12 +561,11 @@ function Get-ClusterIPResourceParameters
         $IPAddressResourceName
     )
 
-    $address = (Get-ClusterResource -Name $IPAddressResourceName | `
-        Get-ClusterParameter -Name Address).Value
-    $addressMask = (Get-ClusterResource -Name $IPAddressResourceName | `
-        Get-ClusterParameter -Name SubnetMask).Value
-    $network = (Get-ClusterResource -Name $IPAddressResourceName | `
-        Get-ClusterParameter -Name Network).Value
+    $ipObj = Get-ClusterResource -Name $IPAddressResourceName
+
+    $address = (Get-ClusterParameter -InputObject $ipObj -Name Address).Value
+    $addressMask = (Get-ClusterParameter -InputObject $ipObj -Name SubnetMask).Value
+    $network =  (Get-ClusterParameter -InputObject $ipObj -Name Network).Value
     Write-Verbose -Message ($script:localizedData.FoundIPAddressResource -f $address, $addressMask, $network)
     @{
         Address     = $address

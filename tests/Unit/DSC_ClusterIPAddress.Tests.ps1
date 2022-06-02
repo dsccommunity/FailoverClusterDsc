@@ -46,7 +46,7 @@ try {
                     return @{
                         Name = "IP Address $($mockTestParameters.Address)"
                         State = 'Online'
-                        OnwerGroup = 'Cluster Group'
+                        OwnerGroup = 'Cluster Group'
                         ResourceType = 'IP Address'
                     }
                 }
@@ -328,7 +328,7 @@ try {
             It "Should not throw" {
                 Mock -CommandName Set-ClusterResourceDependency
 
-                Add-ClusterIPAddressDependency @mockTestParameters | Should -Not -Throw
+                { Add-ClusterIPAddressDependency @mockTestParameters } | Should -Not -Throw
                 Assert-MockCalled -CommandName Test-IPAddress -Times 2
                 Assert-MockCalled -CommandName Get-ClusterObject -Times 1
                 Assert-MockCalled -CommandName Set-ClusterResourceDependency -Times 1
@@ -348,7 +348,7 @@ try {
                     throw $errorRecord
                 }
 
-                Add-ClusterIPAddressDependency @mockTestParameters | Should -Throw $errorRecord
+                { Add-ClusterIPAddressDependency @mockTestParameters } | Should -Throw $errorRecord
                 Assert-MockCalled -CommandName Test-IPAddress -Times 2
                 Assert-MockCalled -CommandName Get-ClusterObject -Times 1
                 Assert-MockCalled -CommandName Set-ClusterResourceDependency -Times 1
@@ -376,15 +376,10 @@ try {
             Mock -CommandName New-ClusterIPDependencyExpression
 
             It "Should not throw" {
-                Mock -CommandName Test-IPAddress
-                Mock -CommandName Get-ClusterObject
-                Mock -CommandName Get-ClusterResource
-                Mock -CommandName Remove-ClusterResource
-                Mock -CommandName Get-ClusterIPResource
-                Mock -CommandName New-ClusterIPDependencyExpression
+
                 Mock -CommandName Set-ClusterResourceDependency
 
-                Remove-ClusterIPAddressDependency @mockTestParameters | Should -Not -Throw
+                { Remove-ClusterIPAddressDependency @mockTestParameters } | Should -Not -Throw
                 Assert-MockCalled -CommandName Test-IPAddress -Times 2
                 Assert-MockCalled -CommandName Get-ClusterObject -Times 1
                 Assert-MockCalled -CommandName Remove-ClusterResource -Times 1
@@ -396,12 +391,6 @@ try {
 
             It "Should throw the expected InvalidOperationException" {
                 $errorRecord = "Exception thrown in Set-ClusterResourceDependency"
-                Mock -CommandName Test-IPAddress
-                Mock -CommandName Get-ClusterObject
-                Mock -CommandName Get-ClusterResource
-                Mock -CommandName Remove-ClusterResource
-                Mock -CommandName Get-ClusterIPResource
-                Mock -CommandName New-ClusterIPDependencyExpression
 
                 Mock -CommandName Set-ClusterResourceDependency { throw $errorRecord }
 
@@ -409,7 +398,7 @@ try {
                     throw $errorRecord
                 }
 
-                Remove-ClusterIPAddressDependency @mockTestParameters | Should -Throw $errorRecord
+                { Remove-ClusterIPAddressDependency @mockTestParameters }| Should -Throw $errorRecord
                 Assert-MockCalled -CommandName Test-IPAddress -Times 2
                 Assert-MockCalled -CommandName Get-ClusterObject -Times 1
                 Assert-MockCalled -CommandName Remove-ClusterResource -Times 1
@@ -625,7 +614,7 @@ try {
                 return @{
                     Name = "IP Address $($mockTestParameters.Address)"
                     State = 'Online'
-                    OnwerGroup = 'Cluster Group'
+                    OwnerGroup = 'Cluster Group'
                     ResourceType = 'IP Address'
                 }
             }
@@ -715,6 +704,27 @@ try {
         }
 
         Describe "$script:DSCResourceName\Get-ClusterIPResource" {
+
+            $ownerGroup = 'Cluster Group'
+            $mockData = @{
+                Name = "IP Address 192.168.1.41"
+                State = 'Online'
+                OwnerGroup = 'Cluster Group'
+                ResourceType = 'IP Address'
+            }
+
+            Mock -CommandName Get-ClusterResource -MockWith {
+                return $mockData
+            }
+
+            It "Should return the expected hashtable" {
+                $result = Get-ClusterIPResource -OwnerGroup $ownerGroup
+
+                $result.Name | Should -Be $mockData.Name
+                $result.State | Should -Be $mockData.State
+                $result.OwnerGroup | Should -Be $mockData.OwnerGroup
+                $result.ResourceType | Should -Be $mockData.ResourceType
+            }
 
         }
 

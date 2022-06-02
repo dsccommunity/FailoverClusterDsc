@@ -608,28 +608,73 @@ try {
         }
 
         Describe "$script:DSCResourceName\Add-ClusterIPParameter" {
-
-        }
-
-        Describe "$script:DSCResourceName\Remove-ClusterIPParameter" {
-
             $mockTestParameters = @{
-                IPAddress  = '192.168.1.41'
-                OwnerGroup = 'Cluster Group'
+                IPAddressResourceName = 'IP Address 192.168.1.41'
+                IPAddress             = '192.168.1.41'
+                AddressMask           = '255.255.255.0'
+            }
+
+            class fake_cluster_parameter {
+                [string] $IPAddressResourceName
+                [string] $ResourceType
+                [String] $Address
             }
 
             Mock -CommandName Test-IPAddress
-            Mock -CommandName Remove-ClusterResource
-
-            It "Should not throw" {
-
-                Remove-ClusterIPParameter @mockTestParameters | Should -Not -Throw
-                Assert-MockCalled -CommandName Test-IPAddress -Times 1
-                Assert-MockCalled -CommandName Remove-ClusterResource -Times 1
-
+            Mock -CommandName Get-ClusterResource -MockWith {
+                return @{
+                    Name = "IP Address $($mockTestParameters.Address)"
+                    State = 'Online'
+                    OnwerGroup = 'Cluster Group'
+                    ResourceType = 'IP Address'
+                }
             }
 
+            Mock -CommandName New-Object -MockWith {
+                New-Object -TypeName 'fake_cluster_parameter'
+                } `
+                -ParameterFilter {
+                    $TypeName -and
+                    $TypeName -eq 'Microsoft.FailoverClusters.PowerShell.ClusterParameter'
+                }
+
+            It "Should not throw" {
+                Mock -CommandName Set-ClusterParameter
+
+                Add-ClusterIPParameter @mockTestParameters | Should -Not -Throw
+            }
+
+            It "Should should throw the expected exception" {
+                $errorRecord = 'Exception setting cluster parameter'
+                Mock -CommandName Set-ClusterParameter -MockWith {
+                    throw $errorRecord
+                }
+
+                Add-ClusterIPParameter @mockTestParameters | Should -Throw $errorRecord
+            }
         }
+
+        #! This function is not used in the Resource
+        # Describe "$script:DSCResourceName\Remove-ClusterIPParameter" {
+
+        #     $mockTestParameters = @{
+        #         IPAddressResourceName = 'IP Address 192.168.1.41'
+        #         IPAddress             = '192.168.1.41'
+        #         AddressMask           = '255.255.255.0'
+        #     }
+
+        #     Mock -CommandName Test-IPAddress
+        #     Mock -CommandName Remove-ClusterResource
+
+        #     It "Should not throw" {
+
+        #         Remove-ClusterIPParameter @mockTestParameters | Should -Not -Throw
+        #         Assert-MockCalled -CommandName Test-IPAddress -Times 1
+        #         Assert-MockCalled -CommandName Remove-ClusterResource -Times 1
+
+        #     }
+
+        # }
 
         Describe "$script:DSCResourceName\Test-IPAddress" {
             $goodIP = '192.168.1.41'

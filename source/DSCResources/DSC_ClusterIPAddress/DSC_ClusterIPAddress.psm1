@@ -448,8 +448,7 @@ function Get-ClusterResourceDependencyExpression
 
     Write-Verbose -Message ($script:localizedData.GetClusterResourceExpression)
     $cluster = Get-ClusterResource | Where-Object {$_.name -eq 'Cluster Name'}
-    $dependency = Get-ClusterResourceDependency -Resource $cluster.Name
-    $dependencyExpression = $dependency.DependencyExpression
+    $dependencyExpression = (Get-ClusterResourceDependency -Resource $cluster.Name).DependencyExpression
     Write-Verbose -Message ($script:localizedData.EchoDependencyExpression -f $dependencyExpression)
     return $dependencyExpression
 }
@@ -628,19 +627,9 @@ function Add-ClusterIPParameter
     $parameter2 = New-Object Microsoft.FailoverClusters.PowerShell.ClusterParameter $iPAddressResource,SubnetMask,$AddressMask
     $parameterList = $parameter1,$parameter2
 
-    #* Add the IP Address resource to the cluster
-    try
-    {
-        Write-Verbose -Message ($script:localizedData.AddIPAddressResource -f $IPAddress,$AddressMask)
-        $parameterList | Set-ClusterParameter -ErrorAction Stop
-    }
-    catch
-    {
-        #TODO Add error handling here for failure. Most likely reasons are
-        #* IP Address already exists (does this check actually IP Address or just IP Address Name)
-        #* IP Address network has yet to be added to the Cluster
-        New-InvalidOperationException -Message $_.Exception.Message -ErrorRecord $_
-    }
+    Write-Verbose -Message ($script:localizedData.AddIPAddressResource -f $IPAddress,$AddressMask)
+    $parameterList | Set-ClusterParameter -ErrorAction Stop
+
 }
 
 <#

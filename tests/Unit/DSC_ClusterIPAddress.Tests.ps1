@@ -288,7 +288,7 @@ try {
                 AddressMask = '255.255.255.0'
             }
 
-            Mock -CommandName Test-IPAddress -MockWith {}
+            Mock -CommandName Test-IPAddress
             Mock -CommandName Get-ClusterObject -MockWith {
 
                 return @{
@@ -373,7 +373,9 @@ try {
             Mock -CommandName Get-ClusterResource
             Mock -CommandName Remove-ClusterResource
             Mock -CommandName Get-ClusterIPResource
-            Mock -CommandName New-ClusterIPDependencyExpression
+            Mock -CommandName New-ClusterIPDependencyExpression -MockWith {
+                return '[IP Address 192.168.1.41]'
+            }
 
             It "Should not throw" {
 

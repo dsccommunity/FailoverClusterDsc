@@ -239,21 +239,14 @@ function Add-ClusterIPAddressDependency
     $dependencyExpression = New-ClusterIPDependencyExpression -ClusterResource $ipResources.Name
 
     #Set cluster resources
-    try
-    {
-        $params = @{
-            Resource    = $($cluster.Name)
-            Dependency  = $dependencyExpression
-            ErrorAction = 'Stop'
-        }
-        Write-Verbose -Message ($script:localizedData.SetDependencyExpression -f $dependencyExpression)
-        Set-ClusterResourceDependency @params
+    $params = @{
+        Resource    = $($clusterObj.Name)
+        Dependency  = $dependencyExpression
+        ErrorAction = 'Stop'
     }
-    catch
-    {
-        #TODO error handling for when adding the depenencies list fails
-        New-InvalidOperationException -Message $_.Exception.Message -ErrorRecord $_
-    }
+    Write-Verbose -Message ($script:localizedData.SetDependencyExpression -f $dependencyExpression)
+    Set-ClusterResourceDependency @params
+
 }
 
 
@@ -287,7 +280,7 @@ function Remove-ClusterIPAddressDependency
     Test-IPAddress -IPAddress $AddressMask
 
     #* Get Windows Cluster resource
-    $cluster = Get-ClusterObject
+    $clusterObj = Get-ClusterObject
 
     $ipResource = Get-ClusterResource -Name "IP Address $IPAddress"
 
@@ -300,21 +293,14 @@ function Remove-ClusterIPAddressDependency
     $dependencyExpression = New-ClusterIPDependencyExpression -ClusterResource $ipResources.Name
 
     #Set cluster resources
-    try
-    {
-        $params = @{
-            Resource    = $($cluster.Name)
-            Dependency  = $dependencyExpression
-            ErrorAction = 'Stop'
-        }
-        Write-Verbose -Message ($script:localizedData.SetDependencyExpression -f $dependencyExpression)
-        Set-ClusterResourceDependency @params
+
+    $params = @{
+        Resource    = $($clusterObj.Name)
+        Dependency  = $dependencyExpression
+        ErrorAction = 'Stop'
     }
-    catch
-    {
-        #TODO error handling for when adding the depenencies list fails
-        New-InvalidOperationException -Message $_.Exception.Message -ErrorRecord $_
-    }
+    Write-Verbose -Message ($script:localizedData.SetDependencyExpression -f $dependencyExpression)
+    Set-ClusterResourceDependency @params
 }
 
 <#

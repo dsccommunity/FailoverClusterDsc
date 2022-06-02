@@ -857,24 +857,41 @@ try {
             }
 
             Mock -CommandName Get-ClusterParameter -MockWith {
-                return $correctAnswer.Address
+                    return @{
+                        Value = $correctAnswer.Address
+                    }
                 } `
                 -ParameterFilter {
+                    $name -and
                     $name -eq 'Address'
                 }
 
             Mock -CommandName Get-ClusterParameter -MockWith {
-                return $correctAnswer.AddressMask
+                    return @{
+                        Value = $correctAnswer.AddressMask
+                    }
                 } `
                 -ParameterFilter {
+                    $name -and
                     $name -eq 'SubnetMask'
                 }
 
             Mock -CommandName Get-ClusterParameter -MockWith {
-                return $correctAnswer.Network
+                    return @{
+                        Value = $correctAnswer.Network
+                    }
                 } `
                 -ParameterFilter {
+                    $name -and
                     $name -eq 'Network'
+                }
+
+            Mock -CommandName New-Object -MockWith {
+                    New-Object -TypeName 'fake_adsi_searcher'
+                } `
+                -ParameterFilter {
+                    $TypeName -and
+                    $TypeName -eq 'System.DirectoryServices.DirectorySearcher'
                 }
 
             It "Should return the correct hashtable" {

@@ -648,17 +648,15 @@ try {
             $threeClusterResource = @('IP Address 192.168.1.41', 'IP Address 172.19.114.98', 'IP Address 10.10.45.41')
 
             It "Should return the correct dependency expression with one resource" {
-                {
-                    New-ClusterIPDependencyExpression -ClusterResource $oneClusterResource
-                } | Should -Be "[$oneClusterResource]"
+                New-ClusterIPDependencyExpression -ClusterResource $oneClusterResource | Should -Be "[$oneClusterResource]"
             }
 
             It "Should return the correct dependency expression with two resources" {
-                    New-ClusterIPDependencyExpression -ClusterResource $twoClusterResource | Should -Be "[$($twoClusterResource[0])] or [$($twoClusterResource[1])]"
+                New-ClusterIPDependencyExpression -ClusterResource $twoClusterResource | Should -Be "[$($twoClusterResource[0])] or [$($twoClusterResource[1])]"
             }
 
             It "Should return the correct dependency expression with three resources" {
-                    New-ClusterIPDependencyExpression -ClusterResource $twoClusterResource  | Should -Be "[$($threeClusterResource[0])] or [$($threeClusterResource[1])] or [$($threeClusterResource[2])]"
+                New-ClusterIPDependencyExpression -ClusterResource $threelusterResource  | Should -Be "[$($threeClusterResource[0])] or [$($threeClusterResource[1])] or [$($threeClusterResource[2])]"
             }
 
         }

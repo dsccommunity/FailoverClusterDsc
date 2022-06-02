@@ -288,7 +288,7 @@ function Remove-ClusterIPAddressDependency
     #* I dont think below is necessary. Removing the resource will remove the IP
     #Remove-ClusterIPParameter -IPAddressResource $ipResource -IPAddress $IPAddress -AddressMask $AddressMask
 
-    $ipResources = Get-ClusterIPResource -Ownergroup $clusterObj.OwnerGroup
+    $ipResources = Get-ClusterIPResource -OwnerGroup $clusterObj.OwnerGroup
 
     $dependencyExpression = New-ClusterIPDependencyExpression -ClusterResource $ipResources.Name
 

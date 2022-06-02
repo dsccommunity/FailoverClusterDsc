@@ -365,18 +365,28 @@ try {
                 AddressMask = '255.255.255.0'
             }
 
-            $mockData = @{
+            $mockCluster = @{
                 Name         = 'Cluster Name'
                 State        = 'Online'
                 OwnerGroup   = 'Cluster Group'
                 ResourceType = 'Network Name'
             }
 
+            $mockIPResource = @{
+                Name         = 'IP Address 192.168.1.41'
+                State        = 'Offline'
+                OwnerGroup   = 'Cluster Group'
+                ResourceType = 'IP Address'
+            }
+
             Mock -CommandName Test-IPAddress
-            Mock -CommandName Get-ClusterObject
+
+            Mock -CommandName Get-ClusterObject  -MockWith {
+                return $mockCluster
+            }
 
             Mock -CommandName Get-ClusterResource -MockWith {
-                return $mockData
+                return $mockIPResource
             }
 
             Mock -CommandName Remove-ClusterResource

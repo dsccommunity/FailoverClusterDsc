@@ -534,14 +534,8 @@ function Remove-ClusterIPResource
 
     #* Create new IPAddress resource and add the IPAddress parameters to it
     Write-Verbose -Message ($script:localizedData.RemoveIPResource -f $IPAddress)
-    $params = @{
-        Name         = "IP Address $IPAddress"
-        ResourceType = 'IP Address'
-        Group        = $OwnerGroup
-        ErrorAction  = 'Stop'
-        Confirm      = $False
-    }
-    Remove-ClusterResource @params
+
+    Remove-ClusterResource -Name "IP Address $IPAddress" -Force
 }
 
 <#

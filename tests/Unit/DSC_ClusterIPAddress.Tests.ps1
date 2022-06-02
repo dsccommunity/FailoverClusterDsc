@@ -604,7 +604,7 @@ try {
 
         Describe "$script:DSCResourceName\Remove-ClusterIPResource" {
             Mock -CommandName Test-IPAddress
-            Mock -CommandName Remove-ClusterResource
+
 
             $mockTestParameters = @{
                 IPAddress  = '192.168.1.41'
@@ -612,10 +612,18 @@ try {
             }
 
             It "Should not throw" {
+                Mock -CommandName Remove-ClusterResource
                 { Remove-ClusterIPResource @mockTestParameters } | Should -Not -Throw
             }
 
+            It "Should throw the expected exception" {
+                $errorMessage = "Exception removing cluster resource"
+                Mock -CommandName Remove-ClusterResource -MockWith {
+                    throw $errorMessage
+                }
 
+                { Remove-ClusterIPResource @mockTestParameters } | Should -Throw $errorMessage
+            }
         }
 
         Describe "$script:DSCResourceName\Get-ClusterIPResource" {
@@ -831,8 +839,6 @@ try {
 
         Describe "$script:DSCResourceName\Get-ClusterIPResourceParameters" {
 
-            $mockName = 'IP Address 192.168.1.41'
-
             $mockData = @{
                 Name         = 'IP Address 192.168.1.41'
                 State        = 'Online'
@@ -872,7 +878,7 @@ try {
                 }
 
             It "Should return the correct hashtable" {
-                $result = Get-ClusterIPResourceParameters -IPAddressResourceName $mockName
+                $result = Get-ClusterIPResourceParameters -IPAddressResourceName $mockData.Name
                 $result.Address     | Should -Be $correctAnswer.Address
                 $result.AddressMask | Should -Be $correctAnswer.AddressMask
                 $result.Network     | Should -Be $correctAnswer.Network

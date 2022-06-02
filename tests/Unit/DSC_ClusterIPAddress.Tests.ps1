@@ -390,7 +390,15 @@ try {
             }
 
             Mock -CommandName Remove-ClusterResource
-            Mock -CommandName Get-ClusterIPResource
+
+            Mock -CommandName Get-ClusterIPResource -MockWith {
+                return @{
+                    Name         = 'IP Address 192.168.1.41'
+                    State        = 'Offline'
+                    OwnerGroup   = 'Cluster Group'
+                    ResourceType = 'IP Address'
+                }
+            }
 
             Mock -CommandName New-ClusterIPDependencyExpression -MockWith {
                 return '[IP Address 192.168.1.41]'

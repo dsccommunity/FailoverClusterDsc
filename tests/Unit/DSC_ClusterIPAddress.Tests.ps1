@@ -709,7 +709,7 @@ try {
             }
 
             It "Should return the correct dependency expression with three resources" {
-                New-ClusterIPDependencyExpression -ClusterResource $threelusterResource  | Should -Be "[$($threeClusterResource[0])] or [$($threeClusterResource[1])] or [$($threeClusterResource[2])]"
+                New-ClusterIPDependencyExpression -ClusterResource $threeClusterResource  | Should -Be "[$($threeClusterResource[0])] or [$($threeClusterResource[1])] or [$($threeClusterResource[2])]"
             }
 
         }

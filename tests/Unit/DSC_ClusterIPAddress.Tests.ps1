@@ -513,7 +513,9 @@ try {
                     return $networks
                 }
 
-                Get-ClusterNetworkList | Should -BeLike $oneNetwork
+                $result = Get-ClusterNetworkList
+                $result[0].Address     | Should -Be $networks[0].Address
+                $result[0].AddressMask | Should -Be $networks[0].AddressMask
 
             }
 
@@ -525,7 +527,13 @@ try {
                     return $networks
                 }
 
-                Get-ClusterNetworkList | Should -BeLike $networks
+                $result = Get-ClusterNetworkList
+                $result.Count          | Should -Be 2
+                $result[0].Address     | Should -Be $networks[0].Address
+                $result[0].AddressMask | Should -Be $networks[0].AddressMask
+                $result[1].Address     | Should -Be $networks[1].Address
+                $result[1].AddressMask | Should -Be $networks[1].AddressMask
+
             }
 
             It "Should return an empty list when there is one cluster network" {

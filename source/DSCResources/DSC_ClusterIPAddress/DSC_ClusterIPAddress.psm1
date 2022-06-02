@@ -448,7 +448,10 @@ function Get-ClusterResourceDependencyExpression
 
     Write-Verbose -Message ($script:localizedData.GetClusterResourceExpression)
     $cluster = Get-ClusterResource | Where-Object {$_.name -eq 'Cluster Name'}
-    return $(Get-ClusterResourceDependency -Resource $cluster.Name).DependencyExpression
+    $dependency = Get-ClusterResourceDependency -Resource $cluster.Name
+    $dependencyExpression = $dependency.DependencyExpression
+    Write-Verbose -Message ($script:localizedData.EchoDependencyExpression -f $dependencyExpression)
+    return $dependencyExpression
 }
 
 <#

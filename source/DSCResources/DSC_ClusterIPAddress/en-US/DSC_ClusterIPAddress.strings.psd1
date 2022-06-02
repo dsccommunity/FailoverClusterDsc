@@ -22,4 +22,5 @@ ConvertFrom-StringData @'
     FoundIPResource = Found IP address resource matching IP address {0}.
     FoundIPAddressResource = Found IP address resource with IP address {0}, address mask {1} in network ${2}.
     NewDependencyExpression = Created new dependency expression {0}.
+    EchoDependencyExpression = Cluster dependency expression is {0}.
 '@

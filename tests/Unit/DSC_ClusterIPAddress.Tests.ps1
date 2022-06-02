@@ -641,7 +641,7 @@ try {
             It "Should not throw" {
                 Mock -CommandName Set-ClusterParameter
 
-                Add-ClusterIPParameter @mockTestParameters | Should -Not -Throw
+                { Add-ClusterIPParameter @mockTestParameters } | Should -Not -Throw
             }
 
             It "Should should throw the expected exception" {
@@ -650,7 +650,7 @@ try {
                     throw $errorRecord
                 }
 
-                Add-ClusterIPParameter @mockTestParameters | Should -Throw $errorRecord
+                { Add-ClusterIPParameter @mockTestParameters } | Should -Throw $errorRecord
             }
         }
 

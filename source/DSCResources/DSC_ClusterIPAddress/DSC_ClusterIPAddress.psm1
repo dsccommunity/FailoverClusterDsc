@@ -656,18 +656,10 @@ function Remove-ClusterIPParameter
     $parameterList = $parameter1,$parameter2
 
     #* Add the IP Address resource to the cluster
-    try
-    {
-        Write-Verbose -Message ($script:localizedData.RemoveIPAddressResource -f $IPAddress,$AddressMask)
-        $parameterList | Set-ClusterParameter -Delete -ErrorAction Stop
-    }
-    catch
-    {
-        #TODO Add error handling here for failure. Most likely reasons are
-        #* IP Address already exists (does this check actually IP Address or just IP Address Name)
-        #* IP Address network has yet to be added to the Cluster
-        New-InvalidOperationException -Message $_.Exception.Message -ErrorRecord $_
-    }
+
+    Write-Verbose -Message ($script:localizedData.RemoveIPAddressResource -f $IPAddress,$AddressMask)
+    Set-ClusterParameter -InputObject $parameterList -Delete -ErrorAction Stop
+
 }
 
 <#

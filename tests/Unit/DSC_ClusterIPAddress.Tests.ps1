@@ -342,9 +342,7 @@ try {
             It "Should throw the expected InvalidOperationException" {
                 $errorRecord = "Exception thrown in Set-ClusterResourceDependency"
 
-                Mock -CommandName Set-ClusterResourceDependency { throw }
-
-                Mock -CommandName New-InvalidOperationException -MockWith {
+                Mock -CommandName Set-ClusterResourceDependency {
                     throw $errorRecord
                 }
 
@@ -357,7 +355,6 @@ try {
                 Assert-MockCalled -CommandName Add-ClusterIPParameter -Times 1
                 Assert-MockCalled -CommandName Get-ClusterIPResource -Times 1
                 Assert-MockCalled -CommandName New-ClusterIPDependencyExpression -Times 1
-                Assert-MockCalled -CommandName New-InvalidOperationException -Times 1
             }
         }
 
@@ -368,11 +365,23 @@ try {
                 AddressMask = '255.255.255.0'
             }
 
+            $mockData = @{
+                Name         = 'Cluster Name'
+                State        = 'Online'
+                OwnerGroup   = 'Cluster Group'
+                ResourceType = 'Network Name'
+            }
+
             Mock -CommandName Test-IPAddress
             Mock -CommandName Get-ClusterObject
-            Mock -CommandName Get-ClusterResource
+
+            Mock -CommandName Get-ClusterResource -MockWith {
+                return $mockData
+            }
+
             Mock -CommandName Remove-ClusterResource
             Mock -CommandName Get-ClusterIPResource
+
             Mock -CommandName New-ClusterIPDependencyExpression -MockWith {
                 return '[IP Address 192.168.1.41]'
             }
@@ -396,10 +405,6 @@ try {
 
                 Mock -CommandName Set-ClusterResourceDependency { throw $errorRecord }
 
-                Mock -CommandName New-InvalidOperationException -MockWith {
-                    throw $errorRecord
-                }
-
                 { Remove-ClusterIPAddressDependency @mockTestParameters }| Should -Throw $errorRecord
                 Assert-MockCalled -CommandName Test-IPAddress -Times 2
                 Assert-MockCalled -CommandName Get-ClusterObject -Times 1
@@ -407,7 +412,6 @@ try {
                 Assert-MockCalled -CommandName Get-ClusterIPResource -Times 1
                 Assert-MockCalled -CommandName New-ClusterIPDependencyExpression -Times 1
                 Assert-MockCalled -CommandName Set-ClusterResourceDependency -Times 1
-                Assert-MockCalled -CommandName New-InvalidOperationException -Times 1
             }
 
         }
@@ -545,7 +549,16 @@ try {
             $dependencyExpression = '[IP Address 192.168.1.41]'
 
             It "Should return a cluster resource depedency string" {
-                Mock -CommandName Get-ClusterResource
+                $mockData = @{
+                    Name         = 'Cluster Name'
+                    State        = 'Online'
+                    OwnerGroup   = 'Cluster Group'
+                    ResourceType = 'Network Name'
+                }
+
+                Mock -CommandName Get-ClusterResource -MockWith {
+                    return $mockData
+                }
                 Mock -CommandName Get-ClusterResourceDependency -MockWith {
                     return @{
                         DependencyExpression = $dependencyExpression

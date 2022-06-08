@@ -13,6 +13,10 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 - ClusterPreferredOwner
   - Minor fix to tests.
 
+### Changed
+  - Cluster
+    - Cluster nodes in a _Down_ state will not be evicted from the cluster - fixes [Issue #257](https://github.com/dsccommunity/FailoverClusterDsc/issues/257)
+
 ## [2.0.0] - 2022-05-25
 
 ### Changed

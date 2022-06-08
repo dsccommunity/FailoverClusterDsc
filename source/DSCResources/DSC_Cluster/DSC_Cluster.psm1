@@ -231,9 +231,7 @@ function Set-TargetResource
                 {
                     if ($node.State -eq 'Down')
                     {
-                        Write-Verbose -Message ($script:localizedData.RemoveOfflineNodeFromCluster -f $targetNodeName, $Name)
-
-                        Remove-ClusterNode -Name $targetNodeName -Cluster $Name -Force
+                        Write-Verbose -Message ($script:localizedData.ClusterNodeIsDown -f $targetNodeName, $Name)
                     }
                 }
             }

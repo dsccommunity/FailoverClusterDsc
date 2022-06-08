@@ -6,10 +6,9 @@ ConvertFrom-StringData @'
     ClusterAbsent = Cluster {0} is NOT present.
     ClusterCreated = Created cluster {0}.
     AddNodeToCluster = Adding node {0} to cluster {1}.
-    RemoveOfflineNodeFromCluster = Node {0} is down, need to remove it from the cluster {1}.
     AddNodeToClusterSuccessful = Added node {0} to cluster {1}.
     CheckClusterNodeIsUp = Checking if the node {0} is a member of the cluster {1}, and so that node status is 'Up'.
-    ClusterNodeIsDown = Node {0} is in the cluster {1} but the status is not 'Up'. Node will be treated as NOT being a member of the cluster {1}.
+    ClusterNodeIsDown = Node {0} is in the cluster {1} but the status is not 'Up'.
     ClusterNodePresent = Cluster node {0} is a member of cluster {1}.
     ClusterNodeAbsent = Cluster node {0} is NOT a member of cluster {1}.
     ClusterNodePaused = Cluster node {0} is a member of the cluster {1}. It is currently in a PAUSED state.

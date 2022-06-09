@@ -78,6 +78,8 @@ The resource examples are also available in the [FailoverClusterDsc Wiki](https:
     Full Control over the Cluster Name Object in Active Directory.
     * Otherwise the Computer Account must have been granted Full Control 
     over the Cluster Name Object in Active Directory.
+* **`[Boolean]` KeepDownedNodesInCluster** _(Write)_: Switch controlling whether or not
+  to evict cluster nodes in a down state from the cluster. Default value is 'false'.
 
 
 #### Examples for Cluster

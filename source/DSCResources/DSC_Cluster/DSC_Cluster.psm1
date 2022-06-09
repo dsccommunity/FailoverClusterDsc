@@ -45,7 +45,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $DomainAdministratorCredential
+        $DomainAdministratorCredential,
+
+        [Parameter()]
+        [System.Boolean]
+        $KeepDownedNodesInCluster = $false
     )
 
     Write-Verbose -Message ($script:localizedData.GetClusterInformation -f $Name)
@@ -142,7 +146,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $DomainAdministratorCredential
+        $DomainAdministratorCredential,
+
+        [Parameter()]
+        [System.Boolean]
+        $KeepDownedNodesInCluster = $false
     )
 
     $bCreate = $true
@@ -231,12 +239,20 @@ function Set-TargetResource
                 {
                     if ($node.State -eq 'Down')
                     {
-                        Write-Verbose -Message ($script:localizedData.RemoveOfflineNodeFromCluster -f $targetNodeName, $Name)
+                        if ($KeepDownedNodesInCluster)
+                        {
+                            Write-Verbose -Message ($script:localizedData.KeepDownedNodesInCluster -f $targetNodeName, $Name)
+                        }
+                        else
+                        {
+                            Write-Verbose -Message ($script:localizedData.RemoveOfflineNodeFromCluster -f $targetNodeName, $Name)
 
-                        Remove-ClusterNode -Name $targetNodeName -Cluster $Name -Force
+                            Remove-ClusterNode -Name $targetNodeName -Cluster $Name -Force
+                        }
                     }
                 }
             }
+
 
             Add-ClusterNode -Name $targetNodeName -Cluster $Name -NoStorage
 
@@ -312,7 +328,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $DomainAdministratorCredential
+        $DomainAdministratorCredential,
+
+        [Parameter()]
+        [System.Boolean]
+        $KeepDownedNodesInCluster = $false
     )
 
     $returnValue = $false

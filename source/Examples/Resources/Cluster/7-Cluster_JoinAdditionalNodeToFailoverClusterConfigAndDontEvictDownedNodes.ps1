@@ -38,7 +38,7 @@ First version.
         This example shows how to add an additional node to the failover cluster without evicting cluster nodes in a down state.
 #>
 
-Configuration Cluster_JoinAdditionalNodeToFailoverClusterConfig
+Configuration Cluster_JoinAdditionalNodeToFailoverClusterConfigAndDontEvictDownedNodes
 {
     param
     (

@@ -275,7 +275,6 @@ foreach ($moduleVersion in @('2012', '2016'))
                 Context 'When the system is not in the desired state' {
                     BeforeEach {
                         Mock -CommandName New-Cluster -Verifiable
-                        Mock -CommandName Remove-ClusterNode -Verifiable
                         Mock -CommandName Add-ClusterNode -Verifiable
                         Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
                     }
@@ -301,7 +300,6 @@ foreach ($moduleVersion in @('2012', '2016'))
                                         $StaticAddress -eq $mockStaticIpAddress
                                     } -Exactly -Times 1 -Scope It
 
-                                    Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
                                     Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
                                 }
                             }
@@ -317,7 +315,6 @@ foreach ($moduleVersion in @('2012', '2016'))
                                         $null -eq $StaticAddress
                                     } -Exactly -Times 1 -Scope It
 
-                                    Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
                                     Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
                                 }
                             }
@@ -333,7 +330,6 @@ foreach ($moduleVersion in @('2012', '2016'))
                                     Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It -ParameterFilter {
                                         $IgnoreNetwork -eq '10.0.2.0/24'
                                     }
-                                    Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
                                     Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
                                 }
                             }
@@ -347,7 +343,6 @@ foreach ($moduleVersion in @('2012', '2016'))
                                         $IgnoreNetwork -eq '10.0.2.0/24' -and
                                         $IgnoreNetwork -eq '192.168.4.0/24'
                                     }
-                                    Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
                                     Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
                                 }
                             }
@@ -359,7 +354,6 @@ foreach ($moduleVersion in @('2012', '2016'))
                                     Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It -ParameterFilter {
                                         $IgnoreNetwork -eq $null
                                     }
-                                    Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
                                     Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
                                 }
                             }
@@ -374,7 +368,6 @@ foreach ($moduleVersion in @('2012', '2016'))
 
                                     Assert-MockCalled -CommandName Set-ImpersonateAs -Exactly -Times 0 -Scope It
                                     Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It
-                                    Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
                                     Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
                                 }
                             }
@@ -393,7 +386,6 @@ foreach ($moduleVersion in @('2012', '2016'))
                                 { Set-TargetResource @mockDefaultParameters } | Should -Not -Throw
 
                                 Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It
-                                Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
                                 Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
                             }
                         }
@@ -407,7 +399,6 @@ foreach ($moduleVersion in @('2012', '2016'))
                             { Set-TargetResource @mockDefaultParameters } | Should -Throw $mockCorrectErrorRecord
 
                             Assert-MockCalled -CommandName New-Cluster -Exactly -Times 1 -Scope It
-                            Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
                             Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
                         }
                     }
@@ -421,7 +412,6 @@ foreach ($moduleVersion in @('2012', '2016'))
                             { Set-TargetResource @mockDefaultParameters } | Should -Not -Throw
 
                             Assert-MockCalled -CommandName New-Cluster -Exactly -Times 0 -Scope It
-                            Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
                             Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 1 -Scope It
                         }
 
@@ -435,27 +425,8 @@ foreach ($moduleVersion in @('2012', '2016'))
 
                                 Assert-MockCalled -CommandName Set-ImpersonateAs -Exactly -Times 0 -Scope It
                                 Assert-MockCalled -CommandName New-Cluster -Exactly -Times 0 -Scope It
-                                Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
                                 Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 1 -Scope It
                             }
-                        }
-                    }
-
-                    Context 'When the cluster exist and the node is down' {
-                        BeforeEach {
-                            Mock -CommandName Get-ClusterNode -MockWith $mockGetClusterNode
-                        }
-
-                        $mockDynamicClusterNodeState = 'Down'
-
-                        It 'Should call both Remove-ClusterNode and Add-ClusterNode cmdlet' {
-                            Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter
-
-                            { Set-TargetResource @mockDefaultParameters } | Should -Not -Throw
-
-                            Assert-MockCalled -CommandName New-Cluster -Exactly -Times 0 -Scope It
-                            Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 1 -Scope It
-                            Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 1 -Scope It
                         }
                     }
                 }
@@ -464,7 +435,6 @@ foreach ($moduleVersion in @('2012', '2016'))
                     BeforeEach {
                         Mock -CommandName Get-ClusterNode -Verifiable
                         Mock -CommandName New-Cluster -Verifiable
-                        Mock -CommandName Remove-ClusterNode -Verifiable
                         Mock -CommandName Add-ClusterNode -Verifiable
                         Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
                         Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter -Verifiable
@@ -491,7 +461,6 @@ foreach ($moduleVersion in @('2012', '2016'))
                             { Set-TargetResource @mockDefaultParameters } | Should -Not -Throw
 
                             Assert-MockCalled -CommandName New-Cluster -Exactly -Times 0 -Scope It
-                            Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
                             Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 0 -Scope It
                         }
 

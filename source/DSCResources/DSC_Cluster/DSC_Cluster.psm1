@@ -25,6 +25,10 @@ $script:localizedData = Get-LocalizedData -DefaultUICulture 'en-US'
 
     .PARAMETER DomainAdministratorCredential
         Credential used to create the failover cluster in Active Directory.
+
+    .PARAMETER KeepDownedNodesInCluster
+        Switch used to determine whether or not to evict cluster nodes in a
+        downed state. Defaults to $false
 #>
 function Get-TargetResource
 {
@@ -118,6 +122,10 @@ function Get-TargetResource
 
     .PARAMETER DomainAdministratorCredential
         Credential used to create the failover cluster in Active Directory.
+
+    .PARAMETER KeepDownedNodesInCluster
+        Switch used to determine whether or not to evict cluster nodes in a
+        downed state. Defaults to $false
 
     .NOTES
         If the cluster does not exist, it will be created in the domain and the
@@ -296,6 +304,10 @@ function Set-TargetResource
 
     .PARAMETER DomainAdministratorCredential
         Credential used to create the failover cluster in Active Directory.
+
+    .PARAMETER KeepDownedNodesInCluster
+        Switch used to determine whether or not to evict cluster nodes in a
+        downed state. Defaults to $false
 
     .NOTES
         The code will check the following in order:

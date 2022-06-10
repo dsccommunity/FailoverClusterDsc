@@ -718,7 +718,6 @@ function New-ClusterIPDependencyExpression
 function Get-ClusterObject
 {
     [CmdletBinding()]
-    [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterResource])]
     param
     (
     )
@@ -738,7 +737,6 @@ function Get-ClusterObject
 function Get-ClusterIPResourceFromIPAddress
 {
     [CmdletBinding()]
-    [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterResource])]
     param
     (
         [Parameter(Mandatory = $true)]

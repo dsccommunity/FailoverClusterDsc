@@ -316,14 +316,17 @@ function Remove-ClusterIPAddressDependency
     # Write new dependency expression
     $ipResources = Get-ClusterIPResource -OwnerGroup $clusterObj.OwnerGroup
 
-    $dependencyExpression = New-ClusterIPDependencyExpression -ClusterResource $ipResources.Name
-    $params = @{
-        Resource    = $($clusterObj.Name)
-        Dependency  = $dependencyExpression
-        ErrorAction = 'Stop'
+    if ( $ipResources.Count -ge 1 )
+    {
+        $dependencyExpression = New-ClusterIPDependencyExpression -ClusterResource $ipResources.Name
+        $params = @{
+            Resource    = $($clusterObj.Name)
+            Dependency  = $dependencyExpression
+            ErrorAction = 'Stop'
+        }
+        Write-Verbose -Message ($script:localizedData.SetDependencyExpression -f $dependencyExpression)
+        Set-ClusterResourceDependency @params
     }
-    Write-Verbose -Message ($script:localizedData.SetDependencyExpression -f $dependencyExpression)
-    Set-ClusterResourceDependency @params
 }
 
 <#

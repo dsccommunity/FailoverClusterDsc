@@ -758,7 +758,7 @@ function Get-ClusterIPResourceFromIPAddress
 
         if ($resource.Address -eq $IPAddress)
         {
-            $result = Get-ClusterResource $ipResource.name
+            $result = Get-ClusterResource -Name $ipResource.name
         }
     }
 

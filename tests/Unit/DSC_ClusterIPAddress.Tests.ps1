@@ -954,7 +954,7 @@ try {
                 Mock -CommandName Get-ClusterIPResourceParameters -MockWith {
                     return
                         @{
-                            Address     = '192.168.1.41'
+                            Address     = $IPAddress
                             AddressMask = '255.255.255.0'
                             Network     = '192.168.1.1'
                         }
@@ -966,9 +966,9 @@ try {
 
                 Mock -CommandName Get-ClusterResource -MockWith {
                     return @{
-                        Name = "IP Address $IPAddress"
-                        State = 'Online'
-                        OwnerGroup = 'Cluster Group'
+                        Name         = "IP Address $IPAddress"
+                        State        = 'Online'
+                        OwnerGroup   = 'Cluster Group'
                         ResourceType = 'IP Address'
                     }
                 }

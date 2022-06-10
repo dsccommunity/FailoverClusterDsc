@@ -385,7 +385,7 @@ try {
                 return $mockCluster
             }
 
-            Mock -CommandName Get-ClusterResource -MockWith {
+            Mock -CommandName Get-ClusterIPResourceFromIPAddress -MockWith {
                 return $mockIPResource
             }
 
@@ -411,6 +411,7 @@ try {
                 { Remove-ClusterIPAddressDependency @mockTestParameters } | Should -Not -Throw
                 Assert-MockCalled -CommandName Test-IPAddress -Times 2
                 Assert-MockCalled -CommandName Get-ClusterObject -Times 1
+                Assert-MockCalled -CommandName Get-ClusterIPResourceFromIPAddress -Times 1
                 Assert-MockCalled -CommandName Remove-ClusterResource -Times 1
                 Assert-MockCalled -CommandName Get-ClusterIPResource -Times 1
                 Assert-MockCalled -CommandName New-ClusterIPDependencyExpression -Times 1
@@ -426,6 +427,7 @@ try {
                 { Remove-ClusterIPAddressDependency @mockTestParameters }| Should -Throw $errorRecord
                 Assert-MockCalled -CommandName Test-IPAddress -Times 2
                 Assert-MockCalled -CommandName Get-ClusterObject -Times 1
+                Assert-MockCalled -CommandName Get-ClusterIPResourceFromIPAddress -Times 1
                 Assert-MockCalled -CommandName Remove-ClusterResource -Times 1
                 Assert-MockCalled -CommandName Get-ClusterIPResource -Times 1
                 Assert-MockCalled -CommandName New-ClusterIPDependencyExpression -Times 1
@@ -976,6 +978,7 @@ try {
                 $result.State        | Should -Be 'Online'
                 $result.OwnerGroup   | Should -Be 'Cluster Group'
                 $result.ResourceType | Should -Be 'IP Address'
+                Assert-MockCalled -CommandName Test-IPAddress -Times 1
                 Assert-MockCalled -CommandName Get-ClusterObject -Times 1
                 Assert-MockCalled -CommandName Get-ClusterIPResource -Times 1
                 Assert-MockCalled -CommandName Get-ClusterIPResourceParameters -Times 2

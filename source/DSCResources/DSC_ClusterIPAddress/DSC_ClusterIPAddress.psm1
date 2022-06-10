@@ -3,6 +3,16 @@ $script:resourceHelperModulePath = Join-Path -Path $PSScriptRoot -ChildPath '..\
 Import-Module -Name $script:resourceHelperModulePath
 
 $script:localizedData = Get-LocalizedData -DefaultUICulture 'en-US'
+<#
+    .SYNOPSIS
+        Returns the current state of the failover cluster IP address.
+
+    .PARAMETER IPAddress
+        IP address to check the state of.
+
+    .PARAMETER AddressMask
+        Address mask of the IP address.
+#>
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -29,7 +39,7 @@ function Get-TargetResource
     $result = @{
         IPAddress   = $null
         AddressMask = $null
-        Ensure      = $Ensure
+        Ensure      = 'Absent'
     }
 
     $ipResources = Get-ClusterResource | Where-Object {$_.ResourceType -eq 'IP Address'}
@@ -41,13 +51,24 @@ function Get-TargetResource
         if ( $ipResourceDetails.Address -eq $IPAddress )
         {
             Write-Verbose -Message ($script:localizedData.FoundIPResource -f $IPAddress)
-            $result.IPAddress = $ipResourceDetails.Address
+            $result.IPAddress   = $ipResourceDetails.Address
             $result.AddressMask = $ipResourceDetails.AddressMask
+            $result.Ensure      = 'Present'
         }
     }
     $result
 }
 
+<#
+    .SYNOPSIS
+        Sets the state of the failover cluster IP address.
+
+    .PARAMETER IPAddress
+        IP address to either add or remove from the Failover Cluster.
+
+    .PARAMETER AddressMask
+        Address mask of the IP address to either add or remove from the Failover Cluster.
+#>
 function Set-TargetResource
 {
     param
@@ -99,6 +120,16 @@ function Set-TargetResource
     }
 }
 
+<#
+    .SYNOPSIS
+        Tests the current state of the failover cluster IP address.
+
+    .PARAMETER IPAddress
+        IP address to check the state of.
+
+    .PARAMETER AddressMask
+        Address mask of the IP address.
+#>
 function Test-TargetResource
 {
     [CmdletBinding()]
@@ -126,10 +157,6 @@ function Test-TargetResource
     Test-IPAddress -IPAddress $AddressMask
 
     Write-Verbose -Message ($script:localizedData.TestTargetResourceMessage -f $IPAddress, $AddressMask, $Ensure)
-    # # If IPAddress is not in ClusterResource DependencyExpression #fail
-    # # If IPAddress' Subnet is not in ClusterNetworks #fail
-    # $testResult = Test-ClusterIPAddressDependency -IPAddress $IPAddress
-    # $testTargetResourceReturnValue = $false
 
     $ipResource = Get-TargetResource -IPAddress $IPAddress -AddressMask $AddressMask -Ensure $Ensure
     $result = $false
@@ -284,30 +311,12 @@ function Remove-ClusterIPAddressDependency
 
     $ipResource = Get-ClusterIPResourceFromIPAddress -IPAddress $IPAddress
 
-    $ipResources = Get-ClusterIPResource -OwnerGroup $clusterObj.ownerGroup
-
-    foreach ( $ipResource in $ipResources )
-    {
-        $resource = Get-ClusterIPResourceParameters -IPAddressResourceName $ipResource.name
-
-        if ($resource.Address -eq $IPAddress)
-        {
-
-        }
-    }
-
-    $ipResource = Get-ClusterResource -Name "IP Address $IPAddress"
-
     Remove-ClusterResource -InputObject $ipResource -Force
-    #* I dont think below is necessary. Removing the resource will remove the IP
-    #Remove-ClusterIPParameter -IPAddressResource $ipResource -IPAddress $IPAddress -AddressMask $AddressMask
 
+    # Write new dependency expression
     $ipResources = Get-ClusterIPResource -OwnerGroup $clusterObj.OwnerGroup
 
     $dependencyExpression = New-ClusterIPDependencyExpression -ClusterResource $ipResources.Name
-
-    #Set cluster resources
-
     $params = @{
         Resource    = $($clusterObj.Name)
         Dependency  = $dependencyExpression
@@ -522,38 +531,6 @@ function Get-ClusterIPResource
 
 <#
     .Synopsis
-        Removes an IP Address Resource to a given Cluster Group and returns an IPAddress Resource
-    .PARAMETER IPAddress
-        IP address to remove from the cluster
-    .PARAMETER OwnerGroup
-        OwnerGroup of the cluster to remove the IP resource from
-#>
-function Remove-ClusterIPResource
-{
-    [CmdletBinding()]
-    param
-    (
-        # IPAddress to add to Cluster
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $IPAddress,
-
-        # Owner Group of the cluster
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $OwnerGroup
-    )
-
-    Test-IPAddress -IPAddress $IPAddress
-
-    #* Create new IPAddress resource and add the IPAddress parameters to it
-    Write-Verbose -Message ($script:localizedData.RemoveIPResource -f $IPAddress)
-
-    Remove-ClusterResource -Name "IP Address $IPAddress" -Force
-}
-
-<#
-    .Synopsis
         Gets the IP resource information of a Given Cluster IP address Resource
     .PARAMETER IPAddressResource
         IP cddress resource to get to information from
@@ -751,7 +728,13 @@ function Get-ClusterObject
     return $cluster
 }
 
+<#
+    .Synopsis
+        Gets a Cluster Resource from a given IP address.
 
+    .Parameter IPAddress
+        IP address of the cluster resource object to find.
+#>
 function Get-ClusterIPResourceFromIPAddress
 {
     [CmdletBinding()]

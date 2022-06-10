@@ -434,30 +434,6 @@ try {
 
         }
 
-        Describe "$script:DSCResourceName\Test-ClusterIPAddressDependency" {
-            $IPAddress = '192.168.1.41'
-
-            Mock -CommandName Test-IPAddress
-
-            It "Should return true when IP address is in dependency expression" {
-                Mock -CommandName Get-ClusterResourceDependencyExpression -MockWith { return '[IP Address 192.168.1.41]' }
-                Test-ClusterIPAddressDependency -IPAddress $IPAddress | Should -Be $true
-                Assert-MockCalled -CommandName Test-IPAddress -Times 1
-            }
-
-            It "Should return false when IP address is not in dependency expression" {
-                Mock -CommandName Get-ClusterResourceDependencyExpression -MockWith { return '[IP Address 192.168.1.60]' }
-                Test-ClusterIPAddressDependency -IPAddress $IPAddress | Should -Be $false
-                Assert-MockCalled -CommandName Test-IPAddress -Times 1
-            }
-
-            It "Should return true when IP address is in dependency expression" {
-                Mock -CommandName Get-ClusterResourceDependencyExpression
-                Test-ClusterIPAddressDependency -IPAddress $IPAddress | Should -Be $false
-                Assert-MockCalled -CommandName Test-IPAddress -Times 1
-            }
-        }
-
         Describe "$script:DSCResourceName\Test-ClusterNetwork" {
 
             $mockTestParameters = @{
@@ -600,30 +576,6 @@ try {
                 Add-ClusterIPResource @mockTestParameters | Should -Be "IP Address $($mockTestParameters.IPAddress)"
             }
 
-        }
-
-        Describe "$script:DSCResourceName\Remove-ClusterIPResource" {
-            Mock -CommandName Test-IPAddress
-
-
-            $mockTestParameters = @{
-                IPAddress  = '192.168.1.41'
-                OwnerGroup = 'Cluster Group'
-            }
-
-            It "Should not throw" {
-                Mock -CommandName Remove-ClusterResource
-                { Remove-ClusterIPResource @mockTestParameters } | Should -Not -Throw
-            }
-
-            It "Should throw the expected exception" {
-                $errorMessage = "Exception removing cluster resource"
-                Mock -CommandName Remove-ClusterResource -MockWith {
-                    throw $errorMessage
-                }
-
-                { Remove-ClusterIPResource @mockTestParameters } | Should -Throw $errorMessage
-            }
         }
 
         Describe "$script:DSCResourceName\Get-ClusterIPResource" {

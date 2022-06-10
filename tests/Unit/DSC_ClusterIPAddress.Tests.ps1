@@ -1033,6 +1033,7 @@ try {
                 Mock -CommandName Get-ClusterResource
 
                 Get-ClusterIPResourceFromIPAddress -IPAddress $IPAddress | Should -Be -BeNullOrEmpty
+                Assert-MockCalled -CommandName Test-IPAddress -Times 1
                 Assert-MockCalled -CommandName Get-ClusterObject -Times 1
                 Assert-MockCalled -CommandName Get-ClusterIPResource -Times 1
                 Assert-MockCalled -CommandName Get-ClusterIPResourceParameters -Times 2

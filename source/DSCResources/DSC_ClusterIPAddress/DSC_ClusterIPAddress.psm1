@@ -282,6 +282,20 @@ function Remove-ClusterIPAddressDependency
     #* Get Windows Cluster resource
     $clusterObj = Get-ClusterObject
 
+    $ipResource = Get-ClusterIPResourceFromIPAddress -IPAddress $IPAddress
+
+    $ipResources = Get-ClusterIPResource -OwnerGroup $clusterObj.ownerGroup
+
+    foreach ( $ipResource in $ipResources )
+    {
+        $resource = Get-ClusterIPResourceParameters -IPAddressResourceName $ipResource.name
+
+        if ($resource.Address -eq $IPAddress)
+        {
+
+        }
+    }
+
     $ipResource = Get-ClusterResource -Name "IP Address $IPAddress"
 
     Remove-ClusterResource -InputObject $ipResource -Force
@@ -735,4 +749,36 @@ function Get-ClusterObject
     $cluster = Get-ClusterResource | Where-Object { $_.name -eq 'Cluster Name'}
 
     return $cluster
+}
+
+
+function Get-ClusterIPResourceFromIPAddress
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String[]]
+        $IPAddress
+    )
+
+    $result = $null
+
+    Test-IPAddress -IPAddress $IPAddress
+
+    $clusterObj = Get-ClusterObject
+
+    $ipResources = Get-ClusterIPResource -OwnerGroup $clusterObj.ownerGroup
+
+    foreach ( $ipResource in $ipResources )
+    {
+        $resource = Get-ClusterIPResourceParameters -IPAddressResourceName $ipResource.name
+
+        if ($resource.Address -eq $IPAddress)
+        {
+            $result = Get-ClusterResource $resource.name
+        }
+    }
+
+    return $result
 }

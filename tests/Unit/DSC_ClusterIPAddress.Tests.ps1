@@ -85,7 +85,7 @@ try {
                     It 'Should return the correct hashtable' {
                         $result = Get-TargetResource @mockTestParameters
 
-                        $result.Ensure      | Should -Be $mockTestParameters.Ensure
+                        $result.Ensure      | Should -Be 'Present'
                         $result.IPAddress   | Should -Be $mockTestParameters.IPAddress
                         $result.AddressMask | Should -Be $mockTestParameters.AddressMask
                     }
@@ -111,7 +111,7 @@ try {
 
                     It 'Should return an empty hashtable' {
                         $result = Get-TargetResource @mockTestParameters
-                        $result.Ensure      | Should -Be $mockTestParameters.Ensure
+                        $result.Ensure      | Should -Be 'Absent'
                         $result.IPAddress   | Should -BeNullOrEmpty
                         $result.AddressMask | Should -BeNullOrEmpty
                     }

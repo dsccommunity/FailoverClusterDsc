@@ -7,15 +7,11 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 
 ## [Unreleased]
 ### Added
+
 - New Resource
   - ClusterIPAddress
     - Adds an IP address to the cluster 
 ### Changed
-- BREAKING CHANGE
-  - Renamed _xFailOverCluster_ to _FailoverClusterDsc_ - fixes [Issue #69](https://github.com/PowerShell/xFailOverCluster/issues/69).
-  - Changed all MSFT_xResourceName to DSC_ResourceName.
-  - Updated DSCResources, Examples, Modules and Tests for new naming.
-  - Updated README.md from _xFailOverCluster_ to _FailoverClusterDsc_
 
 - FailoverClusterDsc
   - Update pipeline files to the latest from the Sampler project.

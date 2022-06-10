@@ -853,6 +853,185 @@ try {
                 $result.Network     | Should -Be $correctAnswer.Network
             }
         }
+
+        Describe "$script:DSCResourceName\Get-ClusterIPResourceFromIPAddress" {
+            Mock -CommandName Test-IPAddress
+
+            Mock -CommandName Get-ClusterObject -MockWith {
+
+                return @{
+                    Name         = 'Cluster Name'
+                    State        = 'Online'
+                    OwnerGroup   = 'Cluster Group'
+                    ResourceType = 'Network Name'
+                }
+            }
+
+            Mock -CommandName Get-ClusterIPResource -MockWith {
+                return @{
+                    Name         = 'IP Address 192.168.1.41'
+                    State        = 'Offline'
+                    OwnerGroup   = 'Cluster Group'
+                    ResourceType = 'IP Address'
+                }
+            }
+
+            $IPAddress = '192.168.1.41'
+
+            It "Should return the correct Cluster Resource Object with one IP Resource" {
+
+                Mock -CommandName Get-ClusterIPResource -MockWith {
+                    return @{
+                        Name         = "IP Address $IPAddress"
+                        State        = 'Online'
+                        OwnerGroup   = 'Cluster Group'
+                        ResourceType = 'IP Address'
+                    }
+                }
+
+                Mock -CommandName Get-ClusterIPResourceParameters -MockWith {
+                    return @{
+                        Address     = $IPaddress
+                        AddressMask = '255.255.255.0'
+                        Network     = '192.168.1.1'
+                    }
+                }
+
+                Mock -CommandName Get-ClusterResource -MockWith {
+                    return @{
+                        Name = "IP Address $IPAddress"
+                        State = 'Online'
+                        OwnerGroup = 'Cluster Group'
+                        ResourceType = 'IP Address'
+                    }
+                }
+
+                $result = Get-ClusterIPResourceFromIPAddress -IPAddress $IPAddress
+                $result.Name         | Should -Be "IP Address $IPAddress"
+                $result.State        | Should -Be 'Online'
+                $result.OwnerGroup   | Should -Be 'Cluster Group'
+                $result.ResourceType | Should -Be 'IP Address'
+                Assert-MockCalled -CommandName Get-ClusterObject -Times 1
+                Assert-MockCalled -CommandName Get-ClusterIPResource -Times 1
+                Assert-MockCalled -CommandName Get-ClusterIPResourceParameters -Times 1
+                Assert-MockCalled -CommandName Get-ClusterResource -Times 1
+            }
+
+            It "Should return the correct Cluster Resource Object with multiple IP Resources" {
+
+                Mock -CommandName Get-ClusterIPResource -MockWith {
+                    return @(
+                        @{
+                            Name         = "IP Address $IPAddress"
+                            State        = 'Online'
+                            OwnerGroup   = 'Cluster Group'
+                            ResourceType = 'IP Address'
+                        },
+                        @{
+                            Name         = 'Cluster IP Address'
+                            State        = 'Online'
+                            OwnerGroup   = 'Cluster Group'
+                            ResourceType = 'IP Address'
+                        }
+                    )
+                }
+
+                Mock -CommandName Get-ClusterIPResourceParameters -MockWith {
+                    return
+                        @{
+                            Address     = '192.168.1.14'
+                            AddressMask = '255.255.255.0'
+                            Network     = '192.168.1.1'
+                        }
+                } `
+                -ParameterFilter {
+                    $IPAddressResourceName -eq 'Cluster IP Address'
+                }
+
+                Mock -CommandName Get-ClusterIPResourceParameters -MockWith {
+                    return
+                        @{
+                            Address     = '192.168.1.41'
+                            AddressMask = '255.255.255.0'
+                            Network     = '192.168.1.1'
+                        }
+                } `
+                -ParameterFilter {
+                    $IPAddressResourceName -eq "IP Address $IPAddress"
+                }
+
+                Mock -CommandName Get-ClusterResource -MockWith {
+                    return @{
+                        Name = "IP Address $IPAddress"
+                        State = 'Online'
+                        OwnerGroup = 'Cluster Group'
+                        ResourceType = 'IP Address'
+                    }
+                }
+
+                $result = Get-ClusterIPResourceFromIPAddress -IPAddress $IPAddress
+                $result.Name         | Should -Be "IP Address $IPAddress"
+                $result.State        | Should -Be 'Online'
+                $result.OwnerGroup   | Should -Be 'Cluster Group'
+                $result.ResourceType | Should -Be 'IP Address'
+                Assert-MockCalled -CommandName Get-ClusterObject -Times 1
+                Assert-MockCalled -CommandName Get-ClusterIPResource -Times 1
+                Assert-MockCalled -CommandName Get-ClusterIPResourceParameters -Times 2
+                Assert-MockCalled -CommandName Get-ClusterResource -Times 1
+            }
+
+            It "Should return null when the IP address is not joined to the cluster" {
+
+                Mock -CommandName Get-ClusterIPResource -MockWith {
+                    return @(
+                        @{
+                            Name         = "Cluster IP Address One"
+                            State        = 'Online'
+                            OwnerGroup   = 'Cluster Group'
+                            ResourceType = 'IP Address'
+                        },
+                        @{
+                            Name         = "Cluster IP Address Two"
+                            State        = 'Online'
+                            OwnerGroup   = 'Cluster Group'
+                            ResourceType = 'IP Address'
+                        }
+                    )
+                }
+
+                Mock -CommandName Get-ClusterIPResourceParameters -MockWith {
+                    return
+                        @{
+                            Address     = '192.168.1.14'
+                            AddressMask = '255.255.255.0'
+                            Network     = '192.168.1.1'
+                        }
+                } `
+                -ParameterFilter {
+                    $IPAddressResourceName -eq 'Cluster IP Address One'
+                }
+
+                Mock -CommandName Get-ClusterIPResourceParameters -MockWith {
+                    return
+                        @{
+                            Address     = '192.168.1.15'
+                            AddressMask = '255.255.255.0'
+                            Network     = '192.168.1.1'
+                        }
+                } `
+                -ParameterFilter {
+                    $IPAddressResourceName -eq 'Cluster IP Address Two'
+                }
+
+                Mock -CommandName Get-ClusterResource
+
+                Get-ClusterIPResourceFromIPAddress -IPAddress $IPAddress | Should -Be -BeNullOrEmpty
+                Assert-MockCalled -CommandName Get-ClusterObject -Times 1
+                Assert-MockCalled -CommandName Get-ClusterIPResource -Times 1
+                Assert-MockCalled -CommandName Get-ClusterIPResourceParameters -Times 2
+                Assert-MockCalled -CommandName Get-ClusterResource -Times 0
+            }
+        }
     }
 }
 finally {

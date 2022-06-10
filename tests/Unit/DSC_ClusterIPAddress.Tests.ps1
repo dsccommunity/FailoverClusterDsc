@@ -945,6 +945,7 @@ try {
                         }
                 } `
                 -ParameterFilter {
+                    $IPAddressResourceName -and
                     $IPAddressResourceName -eq 'Cluster IP Address'
                 }
 
@@ -957,6 +958,7 @@ try {
                         }
                 } `
                 -ParameterFilter {
+                    $IPAddressResourceName -and
                     $IPAddressResourceName -eq "IP Address $IPAddress"
                 }
 
@@ -985,13 +987,13 @@ try {
                 Mock -CommandName Get-ClusterIPResource -MockWith {
                     return @(
                         @{
-                            Name         = "Cluster IP Address One"
+                            Name         = 'Cluster IP Address One'
                             State        = 'Online'
                             OwnerGroup   = 'Cluster Group'
                             ResourceType = 'IP Address'
                         },
                         @{
-                            Name         = "Cluster IP Address Two"
+                            Name         = 'Cluster IP Address Two'
                             State        = 'Online'
                             OwnerGroup   = 'Cluster Group'
                             ResourceType = 'IP Address'
@@ -1008,6 +1010,7 @@ try {
                         }
                 } `
                 -ParameterFilter {
+                    $IPAddressResourceName -and
                     $IPAddressResourceName -eq 'Cluster IP Address One'
                 }
 
@@ -1020,6 +1023,7 @@ try {
                         }
                 } `
                 -ParameterFilter {
+                    $IPAddressResourceName -and
                     $IPAddressResourceName -eq 'Cluster IP Address Two'
                 }
 

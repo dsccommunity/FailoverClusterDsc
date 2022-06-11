@@ -25,6 +25,10 @@ $script:localizedData = Get-LocalizedData -DefaultUICulture 'en-US'
 
     .PARAMETER DomainAdministratorCredential
         Credential used to create the failover cluster in Active Directory.
+
+    .PARAMETER KeepDownedNodesInCluster
+        Switch used to determine whether or not to evict cluster nodes in a
+        downed state. Defaults to $false
 #>
 function Get-TargetResource
 {
@@ -45,7 +49,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $DomainAdministratorCredential
+        $DomainAdministratorCredential,
+
+        [Parameter()]
+        [System.Boolean]
+        $KeepDownedNodesInCluster = $false
     )
 
     Write-Verbose -Message ($script:localizedData.GetClusterInformation -f $Name)
@@ -115,6 +123,10 @@ function Get-TargetResource
     .PARAMETER DomainAdministratorCredential
         Credential used to create the failover cluster in Active Directory.
 
+    .PARAMETER KeepDownedNodesInCluster
+        Switch used to determine whether or not to evict cluster nodes in a
+        downed state. Defaults to $false
+
     .NOTES
         If the cluster does not exist, it will be created in the domain and the
         static IP address will be assigned to the cluster.
@@ -142,7 +154,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $DomainAdministratorCredential
+        $DomainAdministratorCredential,
+
+        [Parameter()]
+        [System.Boolean]
+        $KeepDownedNodesInCluster = $false
     )
 
     $bCreate = $true
@@ -231,12 +247,20 @@ function Set-TargetResource
                 {
                     if ($node.State -eq 'Down')
                     {
-                        Write-Verbose -Message ($script:localizedData.RemoveOfflineNodeFromCluster -f $targetNodeName, $Name)
+                        if ($KeepDownedNodesInCluster)
+                        {
+                            Write-Verbose -Message ($script:localizedData.KeepDownedNodesInCluster -f $targetNodeName, $Name)
+                        }
+                        else
+                        {
+                            Write-Verbose -Message ($script:localizedData.RemoveOfflineNodeFromCluster -f $targetNodeName, $Name)
 
-                        Remove-ClusterNode -Name $targetNodeName -Cluster $Name -Force
+                            Remove-ClusterNode -Name $targetNodeName -Cluster $Name -Force
+                        }
                     }
                 }
             }
+
 
             Add-ClusterNode -Name $targetNodeName -Cluster $Name -NoStorage
 
@@ -281,6 +305,10 @@ function Set-TargetResource
     .PARAMETER DomainAdministratorCredential
         Credential used to create the failover cluster in Active Directory.
 
+    .PARAMETER KeepDownedNodesInCluster
+        Switch used to determine whether or not to evict cluster nodes in a
+        downed state. Defaults to $false
+
     .NOTES
         The code will check the following in order:
 
@@ -312,7 +340,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $DomainAdministratorCredential
+        $DomainAdministratorCredential,
+
+        [Parameter()]
+        [System.Boolean]
+        $KeepDownedNodesInCluster = $false
     )
 
     $returnValue = $false

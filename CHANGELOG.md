@@ -7,6 +7,9 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 
 ## [Unreleased]
 
+### Changed
+- Cluster
+  - New parameter KeepDownedNodesInCluster controls whether or not to evict nodes in a down state from the cluster.
 - FailoverClusterDsc
   - Update pipeline files to the latest from the Sampler project.
   - Move somme documentation from README-md to the GitHub repository Wiki.

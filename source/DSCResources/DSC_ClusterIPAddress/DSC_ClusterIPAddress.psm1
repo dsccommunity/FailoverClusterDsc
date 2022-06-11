@@ -25,12 +25,7 @@ function Get-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        $AddressMask,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet('Present', 'Absent')]
-        $Ensure = 'Present'
+        $AddressMask
     )
     Test-IPAddress -IPAddress $IPAddress
     Test-IPAddress -IPAddress $AddressMask
@@ -68,6 +63,9 @@ function Get-TargetResource
 
     .PARAMETER AddressMask
         Address mask of the IP address to either add or remove from the Failover Cluster.
+
+    .PARAMETER Ensure
+        Ensure whether the IP address is added or removed from the Failover Cluster
 #>
 function Set-TargetResource
 {
@@ -129,6 +127,9 @@ function Set-TargetResource
 
     .PARAMETER AddressMask
         Address mask of the IP address.
+
+    .PARAMETER Ensure
+        Ensure whether the IP address is added or removed from the Failover Cluster
 #>
 function Test-TargetResource
 {
@@ -666,7 +667,7 @@ function Test-IPAddress
         $IPAddress
     )
 
-    $ipObject = [System.Net.IPAddress]::Parse($IPAddress)
+    $null = [System.Net.IPAddress]::Parse($IPAddress)
 }
 
 

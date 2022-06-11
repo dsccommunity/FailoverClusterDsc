@@ -459,9 +459,10 @@ foreach ($moduleVersion in @('2012', '2016'))
                         }
 
                         It 'Should not call Remove-ClusterNode when KeepDownedNodesInCluster is True' {
-
                             Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter
+
                             $mockDefaultParametersKeepDownedNodes = $mockDefaultParameters + @{'KeepDownedNodesInCluster' = $True}
+
                             { Set-TargetResource @mockDefaultParametersKeepDownedNodes } | Should -Not -Throw
 
                             Assert-MockCalled -CommandName New-Cluster -Exactly -Times 0 -Scope It

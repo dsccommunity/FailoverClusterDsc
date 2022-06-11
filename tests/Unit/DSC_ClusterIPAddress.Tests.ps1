@@ -62,7 +62,6 @@ try
 
                 Context 'When Ensure is set to ''Present'' and the IP Address is added to the cluster' {
                     $mockTestParameters = @{
-                        Ensure      = 'Present'
                         IPAddress   = '192.168.1.41'
                         AddressMask = '255.255.255.0'
                     }
@@ -78,7 +77,6 @@ try
 
                 Context 'When Ensure is set to ''Absent'' and the IP Address is added to the cluster' {
                     $mockTestParameters = @{
-                        Ensure      = 'Absent'
                         IPAddress   = '192.168.1.41'
                         AddressMask = '255.255.255.0'
                     }
@@ -105,7 +103,6 @@ try
 
                 Context 'When Ensure is set to ''Present'' but the IP Address is not added to the cluster' {
                     $mockTestParameters = @{
-                        Ensure      = 'Present'
                         IPAddress   = '192.168.1.41'
                         AddressMask = '255.255.255.0'
                     }
@@ -120,7 +117,6 @@ try
 
                 Context 'When Ensure is set to ''Absent'' and the IP Address is not added to the cluster' {
                     $mockTestParameters = @{
-                        Ensure      = 'Absent'
                         IPAddress   = '192.168.1.41'
                         AddressMask = '255.255.255.0'
                     }

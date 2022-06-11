@@ -159,7 +159,7 @@ function Test-TargetResource
 
     Write-Verbose -Message ($script:localizedData.TestTargetResourceMessage -f $IPAddress, $AddressMask, $Ensure)
 
-    $ipResource = Get-TargetResource -IPAddress $IPAddress -AddressMask $AddressMask -Ensure $Ensure
+    $ipResource = Get-TargetResource -IPAddress $IPAddress -AddressMask $AddressMask
     $result = $false
 
     if ($Ensure -eq 'Present')

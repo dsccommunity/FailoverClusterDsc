@@ -3,8 +3,9 @@
 [ClassVersion("1.0.0"), FriendlyName("Cluster")]
 class DSC_Cluster : OMI_BaseResource
 {
-    [Key, Description("Name of the Cluster")] String Name;
-    [Write, Description("StaticIPAddress of the Cluster")] String StaticIPAddress;
-    [Write, EmbeddedInstance("MSFT_Credential"), Description("Credential to create the cluster")] String DomainAdministratorCredential;
+    [Key, Description("Name of the failover cluster.")] String Name;
+    [Write, Description("The static IP address of the failover cluster. If this is not specified then the IP address will be assigned from a DHCP.")] String StaticIPAddress;
+    [Write, EmbeddedInstance("MSFT_Credential"), Description("Credential used to create the failover cluster in Active Directory. If this is not specified then the cluster computer object must have been prestaged as per the [documentation](https://docs.microsoft.com/en-us/windows-server/failover-clustering/prestage-cluster-adds). If `PsDscRunAsCredential` is used, then that account must have been granted Full Control over the Cluster Name Object in Active Directory. Otherwise the Computer Account must have been granted Full Control over the Cluster Name Object in Active Directory.")] String DomainAdministratorCredential;
     [Write, Description("One or more networks to ignore when creating the cluster. Only networks using Static IP can be ignored, networks that are assigned an IP address through DHCP cannot be ignored, and are added for cluster communication. To remove networks assigned an IP address through DHCP use the resource ClusterNetwork to change the role of the network. This parameter is only used during the creation of the cluster and is not monitored after.")] String IgnoreNetwork[];
+    [Write, Description("Switch controlling whether or not to evict cluster nodes in a down state from the cluster. Default value is `$false`.")] Boolean KeepDownedNodesInCluster;
 };

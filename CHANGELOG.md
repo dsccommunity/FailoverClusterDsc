@@ -13,9 +13,16 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
     - Adds an IP address to the cluster 
 ### Changed
 
+### Changed
+
+- Cluster
+  - New parameter KeepDownedNodesInCluster controls whether or not to evict
+    nodes in a down state from the cluster.
 - FailoverClusterDsc
   - Update pipeline files to the latest from the Sampler project.
-  - Move somme documentation from README-md to the GitHub repository Wiki.
+  - Moved all documentation from the README.md to the GitHub repository Wiki.
+    All the DSC resource's schema MOF files was updated with descriptions from
+    the README.md where they were more descriptive.
 - ClusterPreferredOwner
   - Minor fix to tests.
 

@@ -20,4 +20,5 @@ ConvertFrom-StringData @'
     UnableToImpersonateUser = Can't logon as user {0}.
     UnableToCloseToken = Can't close impersonation token {0}.
     GetClusterInformation = Retrieving information for cluster {0}.
+    KeepDownedNodesInCluster = Cluster node {0} is in a down state and will not be removed from the cluster {1}.
 '@

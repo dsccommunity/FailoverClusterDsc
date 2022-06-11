@@ -538,7 +538,6 @@ try
                 (Get-ClusterNetworkList).Count | Should -BeExactly 0
 
             }
-
         }
 
         Describe "$script:DSCResourceName\Get-ClusterResourceDependencyExpression" {

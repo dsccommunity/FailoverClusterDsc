@@ -4,8 +4,6 @@
 class DSC_WaitForCluster : OMI_BaseResource
 {
     [Key, Description("Name of the cluster to wait for.")] string Name;
-    [Write, Description("Interval to check for cluster existence. Default values is 10 seconds.")]  Uint64 RetryIntervalSec;
-    [Write, Description("Maximum number of retries to check for cluster existence. Default value is 50 retries.")] Uint32 RetryCount;
+    [Write, Description("Interval to check for cluster existence. Default values is `10` (seconds).")]  Uint64 RetryIntervalSec;
+    [Write, Description("Maximum number of retries to check for cluster existence. Default value is `50` (retries).")] Uint32 RetryCount;
 };
-
-

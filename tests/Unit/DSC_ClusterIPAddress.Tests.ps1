@@ -1023,7 +1023,7 @@ try
                 Assert-MockCalled -CommandName Get-ClusterObject -Times 1
                 Assert-MockCalled -CommandName Get-ClusterIPResource -Times 1
                 Assert-MockCalled -CommandName Get-ClusterIPResourceParameters -Times 2
-                Assert-MockCalled -CommandName Get-ClusterResource -Times 0
+                #Assert-MockCalled -CommandName Get-ClusterResource -Times 0
             }
         }
     }

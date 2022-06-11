@@ -468,8 +468,6 @@ foreach ($moduleVersion in @('2012', '2016'))
                             Assert-MockCalled -CommandName Remove-ClusterNode -Exactly -Times 0 -Scope It
                             Assert-MockCalled -CommandName Add-ClusterNode -Exactly -Times 1 -Scope It
                         }
-
-                        }
                     }
                 }
 

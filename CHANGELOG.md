@@ -17,6 +17,7 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
   - Moved all documentation from the README.md to the GitHub repository Wiki.
     All the DSC resource's schema MOF files was updated with descriptions from
     the README.md where they were more descriptive.
+  - Update GitHub pull request template after documentation was moved.
 - ClusterPreferredOwner
   - Minor fix to tests.
 

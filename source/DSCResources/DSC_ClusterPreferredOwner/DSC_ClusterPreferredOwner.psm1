@@ -1,6 +1,8 @@
 $script:resourceHelperModulePath = Join-Path -Path $PSScriptRoot -ChildPath '..\..\Modules\DscResource.Common'
+$script:failoverClusterHelperModulePath = Join-Path -Path $PSScriptRoot -ChildPath '..\..\Modules\FailoverClusterDsc.Common'
 
 Import-Module -Name $script:resourceHelperModulePath
+Import-Module -Name $script:failoverClusterHelperModulePath
 
 $script:localizedData = Get-LocalizedData -DefaultUICulture 'en-US'
 
@@ -56,7 +58,7 @@ function Get-TargetResource
 
     $ownerNodes = @(
         Write-Verbose -Message ($script:localizedData.GetOwnerInformationForClusterGroup -f $ClusterGroup)
-        ((Get-ClusterGroup -Cluster $ClusterName | Where-Object -FilterScript {
+        ((Get-ClusterGroup -Cluster (Convert-DistinguishedNameToSimpleName -DistinguishedName $ClusterName) | Where-Object -FilterScript {
                     $_.Name -like $ClusterGroup
                 } | Get-ClusterOwnerNode).OwnerNodes).Name
 
@@ -65,7 +67,7 @@ function Get-TargetResource
             foreach ($resource in $ClusterResources)
             {
                 Write-Verbose -Message ($script:localizedData.GetOwnerInformationForClusterResource -f $resource)
-                ((Get-ClusterResource -Cluster $ClusterName | Where-Object -FilterScript {
+                ((Get-ClusterResource -Cluster (Convert-DistinguishedNameToSimpleName -DistinguishedName $ClusterName) | Where-Object -FilterScript {
                             $_.Name -like $resource
                         } | Get-ClusterOwnerNode).OwnerNodes).Name
             }
@@ -76,7 +78,7 @@ function Get-TargetResource
 
     @{
         ClusterGroup     = $ClusterGroup
-        ClusterName      = $ClusterName
+        ClusterName      = (Convert-DistinguishedNameToSimpleName -DistinguishedName $ClusterName)
         Nodes            = $ownerNodes
         ClusterResources = $ClusterResources
         Ensure           = $Ensure
@@ -131,12 +133,12 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message ($script:localizedData.GetAllNodesOfCluster -f $ClusterName)
-    $allNodes = (Get-ClusterNode -Cluster $ClusterName).Name
+    $allNodes = (Get-ClusterNode -Cluster (Convert-DistinguishedNameToSimpleName -DistinguishedName $ClusterName)).Name
 
     if ($Ensure -eq 'Present')
     {
         Write-Verbose -Message ($script:localizedData.SetOwnerForClusterGroup -f $ClusterGroup, $Nodes)
-        $null = Get-ClusterGroup -Cluster $ClusterName | Where-Object -FilterScript {
+        $null = Get-ClusterGroup -Cluster (Convert-DistinguishedNameToSimpleName -DistinguishedName $ClusterName) | Where-Object -FilterScript {
             $_.Name -like $ClusterGroup
         } | Set-ClusterOwnerNode -Owners $Nodes
 
@@ -145,14 +147,14 @@ function Set-TargetResource
         } | Set-ClusterOwnerNode -Owners $allNodes
 
         Write-Verbose -Message ($script:localizedData.MoveClusterGroup -f $ClusterGroup, $Nodes[0])
-        $null = Get-ClusterGroup -Cluster $ClusterName | Where-Object -FilterScript {
+        $null = Get-ClusterGroup -Cluster (Convert-DistinguishedNameToSimpleName -DistinguishedName $ClusterName) | Where-Object -FilterScript {
             $_.name -like $ClusterGroup
         } | Move-ClusterGroup -Node $Nodes[0]
 
         foreach ($resource in $ClusterResources)
         {
             Write-Verbose -Message ($script:localizedData.SetOwnerForClusterResource -f $resource, $Nodes)
-            $null = Get-ClusterResource -Cluster $ClusterName | Where-Object -FilterScript {
+            $null = Get-ClusterResource -Cluster (Convert-DistinguishedNameToSimpleName -DistinguishedName $ClusterName) | Where-Object -FilterScript {
                 $_.Name -like $resource
             } | Set-ClusterOwnerNode -Owners $Nodes
         }
@@ -161,7 +163,7 @@ function Set-TargetResource
     if ($Ensure -eq 'Absent')
     {
         Write-Verbose -Message ($script:localizedData.GetOwnerInformationForClusterGroup -f $ClusterGroup)
-        $currentOwners = ((Get-ClusterGroup -Cluster $ClusterName | Where-Object -FilterScript {
+        $currentOwners = ((Get-ClusterGroup -Cluster (Convert-DistinguishedNameToSimpleName -DistinguishedName $ClusterName) | Where-Object -FilterScript {
                     $_.Name -like $ClusterGroup
                 } | Get-ClusterOwnerNode).OwnerNodes).Name | Sort-Object -Unique
 
@@ -176,7 +178,7 @@ function Set-TargetResource
         )
 
         Write-Verbose -Message ($script:localizedData.RemoveOwnerFromClusterGroup -f $ClusterGroup, $Nodes)
-        $null = Get-ClusterGroup -Cluster $ClusterName | Where-Object -FilterScript {
+        $null = Get-ClusterGroup -Cluster (Convert-DistinguishedNameToSimpleName -DistinguishedName $ClusterName) | Where-Object -FilterScript {
             $_.Name -like $ClusterGroup
         } | Set-ClusterOwnerNode $newOwners
 
@@ -186,14 +188,14 @@ function Set-TargetResource
         } | Set-ClusterOwnerNode $allNodes
 
         Write-Verbose -Message ($script:localizedData.MoveClusterGroup -f $ClusterGroup, $newOwners[0])
-        $null = Get-ClusterGroup -Cluster $ClusterName | Where-Object -FilterScript {
+        $null = Get-ClusterGroup -Cluster (Convert-DistinguishedNameToSimpleName -DistinguishedName $ClusterName) | Where-Object -FilterScript {
             $_.Name -like $ClusterGroup
         } | Move-ClusterGroup -Node $newOwners[0]
 
         foreach ($resource in $ClusterResources)
         {
             Write-Verbose -Message ($script:localizedData.GetOwnerInformationForClusterResource -f $resource)
-            $currentOwners = ((Get-ClusterResource -Cluster $ClusterName | Where-Object -FilterScript {
+            $currentOwners = ((Get-ClusterResource -Cluster (Convert-DistinguishedNameToSimpleName -DistinguishedName $ClusterName) | Where-Object -FilterScript {
                         $_.Name -like $resource
                     } | Get-ClusterOwnerNode).OwnerNodes).Name | Sort-Object -Unique
 
@@ -208,7 +210,7 @@ function Set-TargetResource
             )
 
             Write-Verbose -Message ($script:localizedData.SetOwnerForClusterResource -f $resource, $newOwners)
-            $null = Get-ClusterResource -Cluster $ClusterName | Where-Object -FilterScript {
+            $null = Get-ClusterResource -Cluster (Convert-DistinguishedNameToSimpleName -DistinguishedName $ClusterName) | Where-Object -FilterScript {
                 $_.Name -like $resource
             } | Set-ClusterOwnerNode -Owners $newOwners
         }
@@ -313,3 +315,5 @@ function Test-TargetResource
 
     $result
 }
+
+Export-ModuleMember -Function *-TargetResource

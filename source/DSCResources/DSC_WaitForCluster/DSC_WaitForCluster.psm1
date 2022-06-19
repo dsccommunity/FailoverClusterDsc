@@ -1,6 +1,8 @@
 $script:resourceHelperModulePath = Join-Path -Path $PSScriptRoot -ChildPath '..\..\Modules\DscResource.Common'
+$script:failoverClusterHelperModulePath = Join-Path -Path $PSScriptRoot -ChildPath '..\..\Modules\FailoverClusterDsc.Common'
 
 Import-Module -Name $script:resourceHelperModulePath
+Import-Module -Name $script:failoverClusterHelperModulePath
 
 $script:localizedData = Get-LocalizedData -DefaultUICulture 'en-US'
 
@@ -40,7 +42,7 @@ function Get-TargetResource
     Write-Verbose -Message $script:localizedData.ReturnParameterValues
 
     @{
-        Name             = $Name
+        Name             = (Convert-DistinguishedNameToSimpleName -DistinguishedName $Name)
         RetryIntervalSec = $RetryIntervalSec
         RetryCount       = $RetryCount
     }
@@ -92,7 +94,7 @@ function Set-TargetResource
                 break
             }
 
-            $cluster = Get-Cluster -Name $Name -Domain $computerObject.Domain
+            $cluster = Get-Cluster -Name (Convert-DistinguishedNameToSimpleName -DistinguishedName $Name) -Domain $computerObject.Domain
 
             if ($null -ne $cluster)
             {
@@ -162,7 +164,7 @@ function Test-TargetResource
         }
         else
         {
-            $cluster = Get-Cluster -Name $Name -Domain $computerObject.Domain
+            $cluster = Get-Cluster -Name (Convert-DistinguishedNameToSimpleName -DistinguishedName $Name) -Domain $computerObject.Domain
             if ($null -eq $cluster)
             {
                 Write-Verbose -Message ($script:localizedData.ClusterAbsentWithDomain -f $Name, $computerObject.Domain)
@@ -182,3 +184,4 @@ function Test-TargetResource
     $testTargetResourceReturnValue
 }
 
+Export-ModuleMember -Function *-TargetResource

@@ -11,6 +11,9 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 
 - FailoverClusterDsc
   - URLs in module manifest now points to the renamed repository.
+  - Now you can use distinguished naming of cluster to place it in an
+    organizational unit of your choice, e.g parameter `Name` can be se to
+    `'CN=CLUSTER,OU=BUSINESS,DC=RANDOM,DC=LOCAL'`.
 
 ## [2.1.0] - 2022-06-19
 
@@ -31,9 +34,6 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
     All the DSC resource's schema MOF files was updated with descriptions from
     the README.md where they were more descriptive.
   - Update GitHub pull request template after documentation was moved.
-  - Now you can use distinguished naming of cluster to place it in an
-    organizational unit of your choice, e.g parameter `Name` can be se to
-    `'CN=CLUSTER,OU=BUSINESS,DC=RANDOM,DC=LOCAL'`.
 - ClusterPreferredOwner
   - Minor fix to tests.
 

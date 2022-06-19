@@ -332,47 +332,6 @@ function Remove-ClusterIPAddressDependency
 
 <#
     .Synopsis
-        Tests whether a given IPAddress is part of the Cluster's DependencyExpression
-    .PARAMETER IPAddress
-        IP address to check whether it's in the Cluster's DependencyExpression
-    .EXAMPLE
-        Example using complete IPAddress and AddressMask default ParameterSet
-        Test-ClusterIPAddressDependency -IPAddress 10.235.0.141 -AddressMask 255.255.255.128 -verbose
-    .EXAMPLE
-        Example using IPAddress from default ParameterSet
-        Test-ClusterIPAddressDependency -IPAddress 10.235.0.141 -verbose
-#>
-function Test-ClusterIPAddressDependency
-{
-    [CmdletBinding()]
-    [OutputType([System.Boolean])]
-    param
-    (
-        # IPAddress to add to Cluster
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $IPAddress
-    )
-
-    Test-IPAddress -IPAddress $IPAddress
-
-    $dependencyExpression = Get-ClusterResourceDependencyExpression
-
-    Write-Verbose -Message ($script:localizedData.TestDependencyExpression -f $IPAddress, $dependencyExpression)
-    if ( $dependencyExpression -match $IPAddress )
-    {
-        Write-Verbose -Message ($script:localizedData.SuccessfulTestDependencyExpression -f $IPAddress, $dependencyExpression)
-        return $True
-    }
-    else
-    {
-        Write-Verbose -Message ($script:localizedData.FailedTestDependencyExpression -f $IPAddress, $dependencyExpression)
-        return $False
-    }
-}
-
-<#
-    .Synopsis
         Checks whether the ClusterNetwork for a given IPAddress has been added to a Cluster
     .DESCRIPTION
         Given an IPAddress and AddressMask this cmdlet will check if the correct ClusterNetwork has
@@ -445,25 +404,6 @@ function Get-ClusterNetworkList
     }
 
     return $networks
-}
-
-<#
-    .SYNOPSIS
-        Returns the cluster Dependency expression for a given cluster.
-#>
-function Get-ClusterResourceDependencyExpression
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param
-    (
-    )
-
-    Write-Verbose -Message ($script:localizedData.GetClusterResourceExpression)
-    $cluster = Get-ClusterResource | Where-Object {$_.name -eq 'Cluster Name'}
-    $dependencyExpression = (Get-ClusterResourceDependency -Resource $cluster.Name).DependencyExpression
-    Write-Verbose -Message ($script:localizedData.EchoDependencyExpression -f $dependencyExpression)
-    return $dependencyExpression
 }
 
 <#
@@ -603,51 +543,6 @@ function Add-ClusterIPParameter
 
     Write-Verbose -Message ($script:localizedData.AddIPAddressResource -f $IPAddress,$AddressMask)
     $parameterList | Set-ClusterParameter -ErrorAction Stop
-
-}
-
-<#
-    .Synopsis
-        Removes an IP address to the cluster parameter
-    .PARAMETER IPAddressResource
-        IP cddress resource to remove to the cluster parameter
-    .PARAMETER IPAddress
-        IP address to remove to the cluster parameter
-    .PARAMETER AddressMask
-        Address mask of the IP address
-#>
-function Remove-ClusterIPParameter
-{
-    [CmdletBinding()]
-    param
-    (
-        # IPAddress to add to Cluster
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $IPAddressResourceName,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $IPAddress,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $AddressMask
-    )
-
-    Test-IPAddress -IPAddress $IPAddress
-    Test-IPAddress -IPAddress $AddressMask
-
-    $ipAddressResource = Get-ClusterResource -Name $IPAddressResourceName
-
-    $parameter1 = New-Object Microsoft.FailoverClusters.PowerShell.ClusterParameter $iPAddressResource,Address,$IPAddress
-    $parameter2 = New-Object Microsoft.FailoverClusters.PowerShell.ClusterParameter $iPAddressResource,SubnetMask,$AddressMask
-    $parameterList = $parameter1,$parameter2
-
-    #* Add the IP Address resource to the cluster
-
-    Write-Verbose -Message ($script:localizedData.RemoveIPAddressResource -f $IPAddress,$AddressMask)
-    Set-ClusterParameter -InputObject $parameterList -Delete -ErrorAction Stop
 
 }
 

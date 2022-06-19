@@ -13,7 +13,7 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 
 - New Resource
   - ClusterIPAddress
-    - Adds an IP address to the cluster. 
+    - Adds an IP address to the cluster.
 
 ### Changed
 
@@ -26,6 +26,7 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
     All the DSC resource's schema MOF files was updated with descriptions from
     the README.md where they were more descriptive.
   - Update GitHub pull request template after documentation was moved.
+  - URLs in module manifest now points to the renamed repository.
 - ClusterPreferredOwner
   - Minor fix to tests.
 

@@ -11,7 +11,6 @@ $script:localizedData = Get-LocalizedData -DefaultUICulture 'en-US'
     .PARAMETER CurrentValues
         Distinguished Name to be converted to a Simple Name
 #>
-
 function Convert-DistinguishedNameToSimpleName
 {
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', 'returnValue')]
@@ -20,7 +19,7 @@ function Convert-DistinguishedNameToSimpleName
     param
     (
         [Parameter(Mandatory = $true)]
-        [string]
+        [System.String]
         $DistinguishedName
     )
 

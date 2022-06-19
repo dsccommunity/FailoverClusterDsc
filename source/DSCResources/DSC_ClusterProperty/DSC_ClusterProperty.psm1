@@ -26,9 +26,9 @@ function Get-TargetResource
 
     Write-Verbose -Message ($script:localizedData.GettingClusterProperties -f $Name)
 
-    $cluster = Get-Cluster -Name (Convert-DistinguishedNameToSimpleName $Name)
+    $cluster = Get-Cluster -Name (Convert-DistinguishedNameToSimpleName -DistinguishedName $Name)
     $returnValue = @{
-        Name                     = (Convert-DistinguishedNameToSimpleName $Name)
+        Name                     = (Convert-DistinguishedNameToSimpleName -DistinguishedName $Name)
         AddEvictDelay            = $cluster.AddEvictDelay
         BlockCacheSize           = $cluster.BlockCacheSize
         ClusterLogLevel          = $cluster.ClusterLogLevel
@@ -216,7 +216,7 @@ function Set-TargetResource
     $boundParameters.Remove('Name') | Out-Null
     $boundParameters.Remove('Verbose') | Out-Null
 
-    $cluster = Get-Cluster -Name (Convert-DistinguishedNameToSimpleName $Name)
+    $cluster = Get-Cluster -Name (Convert-DistinguishedNameToSimpleName -DistinguishedName $Name)
     foreach ($boundParameter in $boundParameters.GetEnumerator())
     {
         Write-Verbose -Message ($script:localizedData.SettingClusterProperty -f $($boundParameter.Key), $boundParameter.Value)
@@ -389,7 +389,7 @@ function Test-TargetResource
     $boundParameters.Remove('Verbose') | Out-Null
     $boundParameters.Remove('Debug') | Out-Null
 
-    $cluster = Get-Cluster -Name (Convert-DistinguishedNameToSimpleName $Name)
+    $cluster = Get-Cluster -Name (Convert-DistinguishedNameToSimpleName -DistinguishedName $Name)
 
     $output = $true
 

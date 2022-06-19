@@ -7,9 +7,6 @@ ConvertFrom-StringData @'
     FoundSubnetfromIPAddressandAddressMask = IP address {0} with subnet mask {1} is in subnet {2}.
     NetworkAlreadyInCluster = Subnet {0} for IPAddress {1} network {2} is added to the cluster
     GetClusterResourceExpression =  Getting Cluster DependencyExpression.
-    TestDependencyExpression = Testing if {0} is in DependencyExpression {1}.
-    SuccessfulTestDependencyExpression = IP address {0} is in DependencyExpression {1}.
-    FailedTestDependencyExpression = IP address {0} is not in DependencyExpression {1}.
     RemoveIPAddressResource = Removing IP address {0} with address mask {1} to the cluster parameters
     AddIPAddressResource = Adding IP address {0} with address mask {1} to the cluster parameters
     NonExistantClusterNetwork =  Cluster Network for IP address {0} and address mask {1} is not part of this cluster"

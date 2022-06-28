@@ -7,6 +7,9 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 
 ## [Unreleased]
 
+- ClusterQuorum
+  - New parameter Endpoint to support Azure Government cloud. Default value now is only for the commercial one.
+
 ### Changed
 
 - FailoverClusterDsc

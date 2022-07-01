@@ -175,7 +175,6 @@ foreach ($moduleVersion in @('2012', '2016'))
                     Mock -CommandName 'Get-ClusterQuorum' -MockWith $mockGetClusterQuorum
                     Mock -CommandName 'Get-ClusterParameter' -MockWith $mockGetClusterParameter_SharePath -ParameterFilter $mockGetClusterParameter_SharePath_ParameterFilter
                     Mock -CommandName 'Get-ClusterParameter' -MockWith $mockGetClusterParameter_AccountName -ParameterFilter $mockGetClusterParameter_AccountName_ParameterFilter
-                    Mock -CommandName 'Get-ClusterParameter' -MockWith $mockGetClusterParameter_AccountName -ParameterFilter $mockGetClusterParameter_AccountName_ParameterFilter
 
                     $mockTestParameters = $mockDefaultParameters.Clone()
                 }

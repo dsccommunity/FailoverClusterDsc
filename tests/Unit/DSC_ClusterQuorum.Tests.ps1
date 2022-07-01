@@ -56,6 +56,7 @@ foreach ($moduleVersion in @('2012', '2016'))
             $mockQuorumFileShareWitnessPath = '\\FILE01\CLUSTER01'
             $mockQuorumAccountName = 'AccountName'
             $mockQuorumAccessKey = 'USRuD354YbOHkPI35SUVyMj2W3odWekMIEdj3n2qAbc0yzqwpMwH-+M+GHJ27OuA5FkTxsbBF9qGc6r6UM3ipg=='
+            $mockQuorumAccountName = 'endpoint.azure.dummy'
 
             $mockGetClusterQuorum = {
                 $getClusterQuorumReturnValue = [PSCustomObject] @{
@@ -162,6 +163,7 @@ foreach ($moduleVersion in @('2012', '2016'))
                 $CloudWitness -eq $true `
                     -and $AccountName -eq $mockQuorumAccountName `
                     -and $AccessKey -eq $mockQuorumAccessKey
+                    -and $AccountEndpoint -eq $mockQuorumAccountEndpoint
             }
 
             $mockDefaultParameters = @{
@@ -315,6 +317,7 @@ foreach ($moduleVersion in @('2012', '2016'))
                                 $getTargetResourceResult = Get-TargetResource @mockTestParameters
                                 $getTargetResourceResult.Type | Should -Be $mockQuorumType_NodeAndCloudMajority
                                 $getTargetResourceResult.Resource | Should -Be $mockQuorumAccountName
+                                $getTargetResourceResult.Endpoint | Should -Be $mockQuorumAccountEndpoint
                             }
                         }
                     }

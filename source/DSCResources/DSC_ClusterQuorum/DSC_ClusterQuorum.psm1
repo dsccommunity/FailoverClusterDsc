@@ -157,7 +157,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $Endpoint = 'core.windows.net',
+        $Endpoint,
 
         [Parameter()]
         [System.String]
@@ -242,7 +242,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $Endpoint = 'core.windows.net',
+        $Endpoint,
 
         [Parameter()]
         [System.String]
@@ -255,7 +255,7 @@ function Test-TargetResource
 
     $testTargetResourceReturnValue = $false
 
-    if ($getGetTargetResourceResult.Type -eq $Type -and $getGetTargetResourceResult.Resource -eq $Resource)
+    if ($getGetTargetResourceResult.Type -eq $Type -and $getGetTargetResourceResult.Resource -eq $Resource -and $getGetTargetResourceResult.Endpoint -eq $Endpoint)
     {
         $testTargetResourceReturnValue = $true
     }

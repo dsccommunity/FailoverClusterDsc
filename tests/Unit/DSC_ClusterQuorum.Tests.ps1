@@ -649,7 +649,7 @@ foreach ($moduleVersion in @('2012', '2016'))
                             $mockTestParameters['Type'] = $mockQuorumType_NodeAndCloudMajority
                             $mockTestParameters['Resource'] = $mockQuorumAccountName
                             $mockTestParameters['StorageAccountAccessKey'] = $mockQuorumAccessKey
-
+                            $mockTestParameters['Endpoint'] = $mockQuorumAccountEndpoint
                             $mockDynamicQuorumResourceName = $mockQuorumAccountName
                         }
 

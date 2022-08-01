@@ -253,11 +253,21 @@ function Test-TargetResource
 
     $getGetTargetResourceResult = Get-TargetResource -IsSingleInstance $IsSingleInstance
 
-    $testTargetResourceReturnValue = $false
+    $testTargetResourceReturnValue = $true
 
-    if ($getGetTargetResourceResult.Type -eq $Type -and $getGetTargetResourceResult.Resource -eq $Resource -and $getGetTargetResourceResult.Endpoint -eq $Endpoint)
+    if ($getGetTargetResourceResult.Type -ne $Type)
     {
-        $testTargetResourceReturnValue = $true
+        $testTargetResourceReturnValue = $false
+    }
+
+    if ($PSBoundParameters.ContainsKey('Resource') -and $getGetTargetResourceResult.Resource -ne $Resource)
+    {
+        $testTargetResourceReturnValue = $false
+    }
+
+    if ($PSBoundParameters.ContainsKey('Endpoint') -and $getGetTargetResourceResult.Endpoint -ne $Endpoint)
+    {
+        $testTargetResourceReturnValue = $false
     }
 
     $testTargetResourceReturnValue

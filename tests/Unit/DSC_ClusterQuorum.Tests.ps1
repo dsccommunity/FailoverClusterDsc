@@ -163,7 +163,7 @@ foreach ($moduleVersion in @('2012', '2016'))
                 $CloudWitness -eq $true `
                     -and $AccountName -eq $mockQuorumAccountName `
                     -and $AccessKey -eq $mockQuorumAccessKey
-                    -and $Endpoint -eq $mockQuorumAccountEndpoint
+                    # -and $Endpoint -eq $mockQuorumAccountEndpoint
             }
 
             $mockDefaultParameters = @{

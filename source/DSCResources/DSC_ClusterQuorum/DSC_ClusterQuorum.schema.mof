@@ -4,5 +4,6 @@ class DSC_ClusterQuorum : OMI_BaseResource
     [Key, Description("Specifies the resource is a single instance, the value must be `'Yes'`."), ValueMap{"Yes"}, Values{"Yes"}] string IsSingleInstance;
     [Write, Description("Quorum type to use."), ValueMap{"NodeMajority", "NodeAndDiskMajority", "NodeAndFileShareMajority", "NodeAndCloudMajority", "DiskOnly"}, Values{"NodeMajority", "NodeAndDiskMajority", "NodeAndFileShareMajority", "NodeAndCloudMajority", "DiskOnly"}] string Type;
     [Write, Description("The name of the disk, file share or Azure storage account resource to use as witness. This parameter is optional if the quorum type is set to `'NodeMajority'`.")] String Resource;
+    [Write, Description("Azure service endpoint. This parameter is required if the quorum type is set to `'NodeAndCloudMajority'`.")] String Endpoint;
     [Write, Description("The access key of the Azure storage account to use as witness. This parameter is required if the quorum type is set to `'NodeAndCloudMajority'`. **NOTE!** The key is currently not updated if the resource is already set.")] String StorageAccountAccessKey;
 };

@@ -94,6 +94,9 @@ function Get-TargetResource
         $clusterQuorumResource = $getClusterQuorumResult.QuorumResource |
             Get-ClusterParameter -Name AccountName |
             Select-Object -ExpandProperty Value
+        $clusterQuorumEndpoint = $getClusterQuorumResult.QuorumResource |
+            Get-ClusterParameter -Name EndpointInfo |
+            Select-Object -ExpandProperty Value
     }
     else
     {
@@ -104,6 +107,7 @@ function Get-TargetResource
         IsSingleInstance        = $IsSingleInstance
         Type                    = $clusterQuorumType
         Resource                = $clusterQuorumResource
+        Endpoint                = $clusterQuorumEndpoint
         StorageAccountAccessKey = ""    # Return an empty value since we cannot retrieve the current Access Key
     }
 }
@@ -122,6 +126,10 @@ function Get-TargetResource
     .PARAMETER Resource
         The name of the disk, file share or Azure storage account resource to use
         as witness. This parameter is optional if the quorum type is set to NodeMajority.
+
+    .PARAMETER Endpoint
+        Azure service endpoint. This paramter is required if the quorum type is set to NodeAndCloudMajority.
+        The default value is core.windows.net and only need to override when using Azure Government Cloud (eg: core.usgovcloudapi.net)
 
     .PARAMETER StorageAccountAccessKey
         The access key of the Azure storage account to use as witness.
@@ -146,6 +154,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Resource,
+
+        [Parameter()]
+        [System.String]
+        $Endpoint,
 
         [Parameter()]
         [System.String]
@@ -178,7 +190,7 @@ function Set-TargetResource
 
         'NodeAndCloudMajority'
         {
-            Set-ClusterQuorum -CloudWitness -AccountName $Resource -AccessKey $StorageAccountAccessKey
+            Set-ClusterQuorum -CloudWitness -AccountName $Resource -AccessKey $StorageAccountAccessKey -Endpoint $Endpoint
         }
     }
 }
@@ -197,6 +209,10 @@ function Set-TargetResource
     .PARAMETER Resource
         The name of the disk, file share or Azure storage account resource to use
         as witness. This parameter is optional if the quorum type is set to NodeMajority.
+
+    .PARAMETER Endpoint
+        Azure service endpoint. This paramter is required if the quorum type is set to NodeAndCloudMajority.
+        The default value is core.windows.net and only need to override when using Azure Government Cloud (eg: core.usgovcloudapi.net)
 
     .PARAMETER StorageAccountAccessKey
         The access key of the Azure storage account to use as witness.
@@ -226,6 +242,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
+        $Endpoint,
+
+        [Parameter()]
+        [System.String]
         $StorageAccountAccessKey
     )
 
@@ -233,11 +253,21 @@ function Test-TargetResource
 
     $getGetTargetResourceResult = Get-TargetResource -IsSingleInstance $IsSingleInstance
 
-    $testTargetResourceReturnValue = $false
+    $testTargetResourceReturnValue = $true
 
-    if ($getGetTargetResourceResult.Type -eq $Type -and $getGetTargetResourceResult.Resource -eq $Resource)
+    if ($getGetTargetResourceResult.Type -ne $Type)
     {
-        $testTargetResourceReturnValue = $true
+        $testTargetResourceReturnValue = $false
+    }
+
+    if ($PSBoundParameters.ContainsKey('Resource') -and $getGetTargetResourceResult.Resource -ne $Resource)
+    {
+        $testTargetResourceReturnValue = $false
+    }
+
+    if ($PSBoundParameters.ContainsKey('Endpoint') -and $getGetTargetResourceResult.Endpoint -ne $Endpoint)
+    {
+        $testTargetResourceReturnValue = $false
     }
 
     $testTargetResourceReturnValue

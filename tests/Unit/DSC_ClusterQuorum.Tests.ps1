@@ -56,6 +56,7 @@ foreach ($moduleVersion in @('2012', '2016'))
             $mockQuorumFileShareWitnessPath = '\\FILE01\CLUSTER01'
             $mockQuorumAccountName = 'AccountName'
             $mockQuorumAccessKey = 'USRuD354YbOHkPI35SUVyMj2W3odWekMIEdj3n2qAbc0yzqwpMwH-+M+GHJ27OuA5FkTxsbBF9qGc6r6UM3ipg=='
+            $mockQuorumAccountEndpoint = 'endpoint.azure.dummy'
 
             $mockGetClusterQuorum = {
                 $getClusterQuorumReturnValue = [PSCustomObject] @{
@@ -162,6 +163,7 @@ foreach ($moduleVersion in @('2012', '2016'))
                 $CloudWitness -eq $true `
                     -and $AccountName -eq $mockQuorumAccountName `
                     -and $AccessKey -eq $mockQuorumAccessKey
+                    # -and $Endpoint -eq $mockQuorumAccountEndpoint
             }
 
             $mockDefaultParameters = @{
@@ -173,7 +175,18 @@ foreach ($moduleVersion in @('2012', '2016'))
                     Mock -CommandName 'Get-ClusterQuorum' -MockWith $mockGetClusterQuorum
                     Mock -CommandName 'Get-ClusterParameter' -MockWith $mockGetClusterParameter_SharePath -ParameterFilter $mockGetClusterParameter_SharePath_ParameterFilter
                     Mock -CommandName 'Get-ClusterParameter' -MockWith $mockGetClusterParameter_AccountName -ParameterFilter $mockGetClusterParameter_AccountName_ParameterFilter
-
+                    Mock -CommandName 'Get-ClusterParameter' -MockWith {
+                        return @(
+                            [PSCustomObject] @{
+                                Object = 'Cloud Witness'
+                                Name   = 'EndpointInfo'
+                                Type   = 'String'
+                                Value  = 'endpoint.azure.dummy'
+                            }
+                        )
+                    } -ParameterFilter {
+                        $Name -eq 'EndpointInfo'
+                    }
                     $mockTestParameters = $mockDefaultParameters.Clone()
                 }
 
@@ -315,6 +328,7 @@ foreach ($moduleVersion in @('2012', '2016'))
                                 $getTargetResourceResult = Get-TargetResource @mockTestParameters
                                 $getTargetResourceResult.Type | Should -Be $mockQuorumType_NodeAndCloudMajority
                                 $getTargetResourceResult.Resource | Should -Be $mockQuorumAccountName
+                                $getTargetResourceResult.Endpoint | Should -Be $mockQuorumAccountEndpoint
                             }
                         }
                     }
@@ -366,7 +380,19 @@ foreach ($moduleVersion in @('2012', '2016'))
                     Mock -CommandName 'Get-ClusterQuorum' -MockWith $mockGetClusterQuorum
                     Mock -CommandName 'Get-ClusterParameter' -MockWith $mockGetClusterParameter_SharePath -ParameterFilter $mockGetClusterParameter_SharePath_ParameterFilter
                     Mock -CommandName 'Get-ClusterParameter' -MockWith $mockGetClusterParameter_AccountName -ParameterFilter $mockGetClusterParameter_AccountName_ParameterFilter
-
+                    Mock -CommandName 'Get-ClusterParameter' -MockWith {
+                        return @(
+                            [PSCustomObject] @{
+                                Object = 'Cloud Witness'
+                                Name   = 'EndpointInfo'
+                                Type   = 'String'
+                                Value  = 'endpoint.azure.dummy'
+                            }
+                        )
+                    } -ParameterFilter {
+                        $Name -eq 'EndpointInfo'
+                    }
+                    
                     $mockTestParameters = $mockDefaultParameters.Clone()
                 }
 
@@ -495,6 +521,7 @@ foreach ($moduleVersion in @('2012', '2016'))
 
                                 $mockTestParameters['Type'] = $mockQuorumType_NodeAndCloudMajority
                                 $mockTestParameters['Resource'] = $mockQuorumAccountName
+                                $mockTestParameters['Endpoint'] = $mockQuorumAccountEndpoint
                                 $mockTestParameters['StorageAccountAccessKey'] = $mockQuorumAccessKey
                             }
 
@@ -634,7 +661,7 @@ foreach ($moduleVersion in @('2012', '2016'))
                             $mockTestParameters['Type'] = $mockQuorumType_NodeAndCloudMajority
                             $mockTestParameters['Resource'] = $mockQuorumAccountName
                             $mockTestParameters['StorageAccountAccessKey'] = $mockQuorumAccessKey
-
+                            $mockTestParameters['Endpoint'] = $mockQuorumAccountEndpoint
                             $mockDynamicQuorumResourceName = $mockQuorumAccountName
                         }
 

@@ -7,6 +7,11 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 
 ## [Unreleased]
 
+### Fixed
+
+- Cluster
+  - Fixed Get-TargetResource is reporting error when cluster is not found ([issue #283](https://github.com/dsccommunity/FailOverClusterDsc/issues/283)).
+
 ### Changed
 
 - FailoverClusterDsc

@@ -75,12 +75,15 @@ function Get-TargetResource
         $cluster = Get-Cluster -Name $Name -Domain $computerInformation.Domain
         if ($null -eq $cluster)
         {
-            $errorMessage = $script:localizedData.ClusterNameNotFound -f $Name
-            New-ObjectNotFoundException -Message $errorMessage
+            Write-Verbose -Message ($script:localizedData.ClusterNameNotFound -f $Name)
+            # Set name to null, so that the resource is not in desired state (as resource doesn't support ensure parameter).
+            $Name = $null
         }
-
-        # This will return the IP address regardless if using Static IP or DHCP.
-        $address = Get-ClusterResource -Cluster $Name -Name 'Cluster IP Address' | Get-ClusterParameter -Name 'Address'
+        else
+        {
+            # This will return the IP address regardless if using Static IP or DHCP.
+            $address = Get-ClusterResource -Cluster $Name -Name 'Cluster IP Address' | Get-ClusterParameter -Name 'Address'
+        }
     }
     finally
     {

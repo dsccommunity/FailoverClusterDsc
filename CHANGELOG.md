@@ -11,6 +11,7 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 
 - FailoverClusterDsc
   - URLs in module manifest now points to the renamed repository.
+  - Fixed build pipeline to use GitVersion v5.
 
 ## [2.1.0] - 2022-06-19
 

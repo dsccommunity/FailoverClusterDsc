@@ -76,11 +76,13 @@ function Get-TargetResource
         if ($null -eq $cluster)
         {
             Write-Verbose -Message ($script:localizedData.ClusterNameNotFound -f $Name)
-            # Set name to null, so that the resource is not in desired state (as resource doesn't support ensure parameter).
-            $Name = $null
+            # Set ensure to absent.
+            $Ensure = 'Absent'
         }
         else
         {
+            # Set ensure to present.
+            $Ensure = 'Present'
             # This will return the IP address regardless if using Static IP or DHCP.
             $address = Get-ClusterResource -Cluster $Name -Name 'Cluster IP Address' | Get-ClusterParameter -Name 'Address'
         }
@@ -97,6 +99,7 @@ function Get-TargetResource
 
     @{
         Name                          = $Name
+        Ensure                        = $Ensure
         StaticIPAddress               = $address.Value
         IgnoreNetwork                 = $IgnoreNetwork
         DomainAdministratorCredential = $DomainAdministratorCredential
@@ -146,6 +149,11 @@ function Set-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Name,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.String]
@@ -332,6 +340,11 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Name,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.String]

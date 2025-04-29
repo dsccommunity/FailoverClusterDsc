@@ -182,7 +182,7 @@ foreach ($moduleVersion in @('2012', '2016'))
                 }
 
                 Context 'When the cluster cannot be found' {
-                    It 'Should returns empty Name' {
+                    It 'Should returns the cluster as absent' {
                         $mockDynamicDomainName = $mockDomainName
                         $mockDynamicServerName = $mockServerName
 
@@ -191,7 +191,8 @@ foreach ($moduleVersion in @('2012', '2016'))
 
                         $getTargetResourceResult = Get-TargetResource @mockGetTargetResourceParameters
 
-                        $getTargetResourceResult.Name | Should -BeNullOrEmpty
+                        $getTargetResourceResult.Name | Should -Be $mockDefaultParameters.Name
+                        $getTargetResourceResult.Ensure | Should -Be 'Absent'
                     }
                 }
 

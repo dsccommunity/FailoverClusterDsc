@@ -7,6 +7,12 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 
 ## [Unreleased]
 
+### Added
+
+- Cluster
+  - New parameter Ensure controls whether to create
+    or destroy the cluster.
+
 ### Fixed
 
 - Cluster

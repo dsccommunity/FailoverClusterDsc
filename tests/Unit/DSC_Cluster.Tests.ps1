@@ -182,15 +182,16 @@ foreach ($moduleVersion in @('2012', '2016'))
                 }
 
                 Context 'When the cluster cannot be found' {
-                    It 'Should throw the correct error message' {
+                    It 'Should returns the cluster name' {
                         $mockDynamicDomainName = $mockDomainName
                         $mockDynamicServerName = $mockServerName
 
                         Mock -CommandName Get-Cluster -Verifiable
                         Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockGetCimInstance_ParameterFilter -Verifiable
 
-                        $mockCorrectErrorRecord = Get-ObjectNotFoundException -Message ($script:localizedData.ClusterNameNotFound -f $mockClusterName)
-                        { Get-TargetResource @mockGetTargetResourceParameters } | Should -Throw $mockCorrectErrorRecord
+                        $getTargetResourceResult = Get-TargetResource @mockGetTargetResourceParameters
+
+                        $getTargetResourceResult.Name | Should -Be $mockDefaultParameters.Name
                     }
                 }
 

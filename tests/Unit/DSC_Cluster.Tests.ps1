@@ -182,7 +182,7 @@ foreach ($moduleVersion in @('2012', '2016'))
                 }
 
                 Context 'When the cluster cannot be found' {
-                    It 'Should returns the cluster as absent' {
+                    It 'Should returns the cluster name' {
                         $mockDynamicDomainName = $mockDomainName
                         $mockDynamicServerName = $mockServerName
 

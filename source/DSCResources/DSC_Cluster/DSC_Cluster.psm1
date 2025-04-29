@@ -114,6 +114,10 @@ function Get-TargetResource
     .PARAMETER Name
         Name of the failover cluster.
 
+    .PARAMETER Ensure
+        Define if the cluster should be created (Present) or destroyed (Absent).
+        Default value is 'Present'.
+
     .PARAMETER StaticIPAddress
         Static IP Address of the failover cluster.
 
@@ -296,6 +300,10 @@ function Set-TargetResource
 
     .PARAMETER Name
         Name of the failover cluster.
+
+    .PARAMETER Ensure
+        Define if the cluster should be created (Present) or destroyed (Absent).
+        Default value is 'Present'.
 
     .PARAMETER StaticIPAddress
         Static IP Address of the failover cluster.

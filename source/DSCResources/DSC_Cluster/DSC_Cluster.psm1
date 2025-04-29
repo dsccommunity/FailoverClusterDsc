@@ -76,13 +76,10 @@ function Get-TargetResource
         if ($null -eq $cluster)
         {
             Write-Verbose -Message ($script:localizedData.ClusterNameNotFound -f $Name)
-            # Set ensure to absent.
-            $Ensure = 'Absent'
+            # Future improvement: Manage Ensure state.
         }
         else
         {
-            # Set ensure to present.
-            $Ensure = 'Present'
             # This will return the IP address regardless if using Static IP or DHCP.
             $address = Get-ClusterResource -Cluster $Name -Name 'Cluster IP Address' | Get-ClusterParameter -Name 'Address'
         }
@@ -99,7 +96,6 @@ function Get-TargetResource
 
     @{
         Name                          = $Name
-        Ensure                        = $Ensure
         StaticIPAddress               = $address.Value
         IgnoreNetwork                 = $IgnoreNetwork
         DomainAdministratorCredential = $DomainAdministratorCredential
@@ -113,10 +109,6 @@ function Get-TargetResource
 
     .PARAMETER Name
         Name of the failover cluster.
-
-    .PARAMETER Ensure
-        Define if the cluster should be created (Present) or destroyed (Absent).
-        Default value is 'Present'.
 
     .PARAMETER StaticIPAddress
         Static IP Address of the failover cluster.
@@ -153,11 +145,6 @@ function Set-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Name,
-
-        [Parameter()]
-        [ValidateSet('Present', 'Absent')]
-        [System.String]
-        $Ensure = 'Present',
 
         [Parameter()]
         [System.String]
@@ -301,10 +288,6 @@ function Set-TargetResource
     .PARAMETER Name
         Name of the failover cluster.
 
-    .PARAMETER Ensure
-        Define if the cluster should be created (Present) or destroyed (Absent).
-        Default value is 'Present'.
-
     .PARAMETER StaticIPAddress
         Static IP Address of the failover cluster.
         Not used in Test-TargetResource.
@@ -348,11 +331,6 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Name,
-
-        [Parameter()]
-        [ValidateSet('Present', 'Absent')]
-        [System.String]
-        $Ensure = 'Present',
 
         [Parameter()]
         [System.String]

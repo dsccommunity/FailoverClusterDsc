@@ -192,7 +192,6 @@ foreach ($moduleVersion in @('2012', '2016'))
                         $getTargetResourceResult = Get-TargetResource @mockGetTargetResourceParameters
 
                         $getTargetResourceResult.Name | Should -Be $mockDefaultParameters.Name
-                        $getTargetResourceResult.Ensure | Should -Be 'Absent'
                     }
                 }
 

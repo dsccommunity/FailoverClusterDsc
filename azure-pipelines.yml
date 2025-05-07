@@ -155,7 +155,7 @@ stages:
             displayName: 'Publish Code Coverage to Codecov.io'
             condition: succeededOrFailed()
 
-  - stage: Integration Test
+  - stage: Integration_Test
     displayName: 'Integration Test'
     dependsOn: 'Quality_Test_and_Unit_Test'
     jobs:

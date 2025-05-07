@@ -53,14 +53,15 @@ stages:
               publishLocation: 'pipeline'
               parallel: true
 
-  - stage: Test
+  - stage: Quality_Test_and_Unit_Test
+    displayName: 'Quality Test and Unit Test'
     dependsOn: Build
     jobs:
       - job: Test_HQRM
         displayName: 'HQRM'
         pool:
           vmImage: 'windows-latest'
-        timeoutInMinutes: 0
+        timeoutInMinutes: '0'
         steps:
           - task: DownloadPipelineArtifact@2
             displayName: 'Download Build Artifact'
@@ -85,9 +86,17 @@ stages:
 
       - job: Test_Unit
         displayName: 'Unit'
+        strategy:
+          matrix:
+            Windows Server 2019:
+              vmImage: windows-2019
+            Windows Server 2022:
+              vmImage: windows-2022
+            Windows Server 2025:
+              vmImage: windows-2025
         pool:
-          vmImage: 'windows-latest'
-        timeoutInMinutes: 0
+          vmImage: $(vmImage)
+        timeoutInMinutes: '0'
         steps:
           - task: DownloadPipelineArtifact@2
             displayName: 'Download Build Artifact'
@@ -108,19 +117,61 @@ stages:
             inputs:
               testResultsFormat: 'NUnit'
               testResultsFiles: '$(buildFolderName)/$(testResultFolderName)/NUnit*.xml'
-              testRunTitle: 'Unit'
+              testRunTitle: 'Unit $(vmImage)'
           - task: PublishPipelineArtifact@1
             displayName: 'Publish Test Artifact'
             inputs:
               targetPath: '$(buildFolderName)/$(testResultFolderName)/'
-              artifactName: $(testArtifactName)
-              parallel: true
+              artifactName: '$(testArtifactName)_$(vmImage)'
 
+      - job: Code_Coverage
+        displayName: 'Publish Code Coverage'
+        dependsOn: Test_Unit
+        pool:
+          vmImage: 'ubuntu-latest'
+        timeoutInMinutes: '0'
+        steps:
+          - task: DownloadPipelineArtifact@2
+            displayName: 'Download Build Artifact'
+            inputs:
+              buildType: 'current'
+              artifactName: $(buildArtifactName)
+              targetPath: '$(Build.SourcesDirectory)/$(buildFolderName)'
+          - task: DownloadPipelineArtifact@2
+            displayName: 'Download Test Artifact'
+            inputs:
+              buildType: 'current'
+              artifactName: $(testArtifactName)
+              targetPath: '$(Build.SourcesDirectory)/$(buildFolderName)/$(testResultFolderName)'
+          - task: PublishCodeCoverageResults@1
+            displayName: 'Publish Code Coverage to Azure DevOps'
+            condition: succeededOrFailed()
+            inputs:
+              codeCoverageTool: 'JaCoCo'
+              summaryFileLocation: '$(Build.SourcesDirectory)/$(buildFolderName)/$(testResultFolderName)/JaCoCo_coverage.xml'
+              pathToSources: '$(Build.SourcesDirectory)/$(sourceFolderName)/'
+          - script: |
+              bash <(curl -s https://codecov.io/bash) -f "./$(buildFolderName)/$(testResultFolderName)/JaCoCo_coverage.xml"
+            displayName: 'Publish Code Coverage to Codecov.io'
+            condition: succeededOrFailed()
+
+  - stage: Integration Test
+    displayName: 'Integration Test'
+    dependsOn: 'Quality_Test_and_Unit_Test'
+    jobs:
       - job: Test_Integration
         displayName: 'Integration'
+        strategy:
+          matrix:
+            Windows Server 2019:
+              vmImage: windows-2019
+            Windows Server 2022:
+              vmImage: windows-2022
+            Windows Server 2025:
+              vmImage: windows-2025
         pool:
-          vmImage: 'windows-latest'
-        timeoutInMinutes: 0
+          vmImage: $(vmImage)
+        timeoutInMinutes: '0'
         steps:
           - task: DownloadPipelineArtifact@2
             displayName: 'Download Build Artifact'
@@ -148,41 +199,12 @@ stages:
             inputs:
               testResultsFormat: 'NUnit'
               testResultsFiles: '$(buildFolderName)/$(testResultFolderName)/NUnit*.xml'
-              testRunTitle: 'Integration'
-
-      - job: Code_Coverage
-        displayName: 'Publish Code Coverage'
-        dependsOn: Test_Unit
-        pool:
-          vmImage: 'ubuntu-latest'
-        timeoutInMinutes: 0
-        steps:
-          - task: DownloadPipelineArtifact@2
-            displayName: 'Download Build Artifact'
-            inputs:
-              buildType: 'current'
-              artifactName: $(buildArtifactName)
-              targetPath: '$(Build.SourcesDirectory)/$(buildFolderName)'
-          - task: DownloadPipelineArtifact@2
-            displayName: 'Download Test Artifact'
-            inputs:
-              buildType: 'current'
-              artifactName: $(testArtifactName)
-              targetPath: '$(Build.SourcesDirectory)/$(buildFolderName)/$(testResultFolderName)'
-          - task: PublishCodeCoverageResults@1
-            displayName: 'Publish Code Coverage to Azure DevOps'
-            condition: succeededOrFailed()
-            inputs:
-              codeCoverageTool: 'JaCoCo'
-              summaryFileLocation: '$(Build.SourcesDirectory)/$(buildFolderName)/$(testResultFolderName)/JaCoCo_coverage.xml'
-              pathToSources: '$(Build.SourcesDirectory)/$(sourceFolderName)/'
-          - script: |
-              bash <(curl -s https://codecov.io/bash) -f "./$(buildFolderName)/$(testResultFolderName)/JaCoCo_coverage.xml"
-            displayName: 'Publish Code Coverage to Codecov.io'
-            condition: succeededOrFailed()
+              testRunTitle: 'Integration $(testRunTitle)'
 
   - stage: Deploy
-    dependsOn: Test
+    dependsOn:
+      - Quality_Test_and_Unit_Test
+      - Integration_Test
     condition: |
       and(
         succeeded(),

@@ -7,7 +7,7 @@
     "powershell.codeFormatting.whitespaceAroundOperator": true,
     "powershell.codeFormatting.whitespaceAfterSeparator": true,
     "powershell.codeFormatting.ignoreOneLineBlock": false,
-    "powershell.codeFormatting.pipelineIndentationStyle": "IncreaseIndentationForFirstPipeline",
+    "powershell.codeFormatting.pipelineIndentationStyle": "IncreaseIndentationAfterEveryPipeline",
     "powershell.codeFormatting.preset": "Custom",
     "powershell.codeFormatting.alignPropertyValuePairs": true,
     "powershell.developer.bundledModulesPath": "${cwd}/output/RequiredModules",
@@ -19,6 +19,9 @@
     "files.associations": {
         "*.ps1xml": "xml"
     },
+    "cSpell.dictionaries": [
+        "powershell"
+    ],
     "cSpell.words": [
         "COMPANYNAME",
         "ICONURI",
@@ -33,6 +36,9 @@
         "notin",
         "pscmdlet",
         "steppable"
+    ],
+    "cSpell.ignorePaths": [
+        ".git"
     ],
     "[markdown]": {
         "files.trimTrailingWhitespace": false,

@@ -20,6 +20,7 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
   - Switch build pipeline to use `windows-latest` as the build agent.
   - Update latest module files from Sampler.
   - Use matrix pipeline strategy.
+  - Try using CodeCov CLI
 
 ## [2.1.0] - 2022-06-19
 

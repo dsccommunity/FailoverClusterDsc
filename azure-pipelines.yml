@@ -165,7 +165,7 @@ stages:
 
               shasum -a 256 -c codecov.SHA256SUM
               chmod +x codecov
-              ./codecov -f "./$(buildFolderName)/$(testResultFolderName)/JaCoCo_coverage.xml"
+              ./codecov do-upload -f "./$(buildFolderName)/$(testResultFolderName)/JaCoCo_coverage.xml"
             displayName: 'Publish Code Coverage to Codecov.io'
             condition: succeededOrFailed()
 

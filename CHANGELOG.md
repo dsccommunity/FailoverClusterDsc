@@ -18,6 +18,8 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
   - URLs in module manifest now points to the renamed repository.
   - Fixed build pipeline to use GitVersion v5.
   - Switch build pipeline to use `windows-latest` as the build agent.
+  - Update latest module files from Sampler.
+  - Use matrix pipeline strategy.
 
 ## [2.1.0] - 2022-06-19
 

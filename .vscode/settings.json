@@ -19,6 +19,9 @@
     "files.associations": {
         "*.ps1xml": "xml"
     },
+    "cSpell.dictionaries": [
+        "powershell"
+    ],
     "cSpell.words": [
         "COMPANYNAME",
         "ICONURI",
@@ -33,6 +36,9 @@
         "notin",
         "pscmdlet",
         "steppable"
+    ],
+    "cSpell.ignorePaths": [
+        ".git"
     ],
     "[markdown]": {
         "files.trimTrailingWhitespace": false,

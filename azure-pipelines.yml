@@ -157,15 +157,14 @@ stages:
               summaryFileLocation: '$(Build.SourcesDirectory)/$(buildFolderName)/$(testResultFolderName)/JaCoCo_coverage.xml'
               pathToSources: '$(Build.SourcesDirectory)/$(sourceFolderName)/'
           - script: |
-              curl https://keybase.io/codecovsecurity/pgp_keys.asc | gpg --no-default-keyring --keyring trustedkeys.gpg --import # One-time step
+              curl https://keybase.io/codecovsecurity/pgp_keys.asc | gpg --no-default-keyring --import
               curl -Os https://cli.codecov.io/latest/linux/codecov
               curl -Os https://cli.codecov.io/latest/linux/codecov.SHA256SUM
               curl -Os https://cli.codecov.io/latest/linux/codecov.SHA256SUM.sig
               gpg --verify codecov.SHA256SUM.sig codecov.SHA256SUM
-
               shasum -a 256 -c codecov.SHA256SUM
               chmod +x codecov
-              ./codecov do-upload -f "./$(buildFolderName)/$(testResultFolderName)/JaCoCo_coverage.xml"
+              ./codecov do-upload -v -f "./$(buildFolderName)/$(testResultFolderName)/JaCoCo_coverage.xml" -t $(CODECOV_TOKEN)
             displayName: 'Publish Code Coverage to Codecov.io'
             condition: succeededOrFailed()
 

@@ -21,6 +21,7 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
   - Update latest module files from Sampler.
   - Use matrix pipeline strategy.
   - Try using CodeCov CLI
+  - Update CodeCov CLI command
 
 ## [2.1.0] - 2022-06-19
 

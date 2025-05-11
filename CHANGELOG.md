@@ -22,6 +22,7 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
   - Use matrix pipeline strategy.
   - Try using CodeCov CLI
   - Update CodeCov CLI command
+  - Use CodeCov upload-process
 
 ## [2.1.0] - 2022-06-19
 

@@ -7,6 +7,8 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 
 ## [Unreleased]
 
+## [2.2.0] - 2025-05-22
+
 ### Fixed
 
 - Cluster

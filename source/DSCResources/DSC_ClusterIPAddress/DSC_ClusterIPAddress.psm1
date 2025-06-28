@@ -37,7 +37,7 @@ function Get-TargetResource
         Ensure      = 'Absent'
     }
 
-    $ipResources = Get-ClusterResource | Where-Object {$_.ResourceType -eq 'IP Address'}
+    $ipResources = Get-ClusterResource | Where-Object { $_.ResourceType -eq 'IP Address' }
 
     foreach ( $ipResource in $ipResources )
     {
@@ -46,9 +46,9 @@ function Get-TargetResource
         if ( $ipResourceDetails.Address -eq $IPAddress )
         {
             Write-Verbose -Message ($script:localizedData.FoundIPResource -f $IPAddress)
-            $result.IPAddress   = $ipResourceDetails.Address
+            $result.IPAddress = $ipResourceDetails.Address
             $result.AddressMask = $ipResourceDetails.AddressMask
-            $result.Ensure      = 'Present'
+            $result.Ensure = 'Present'
         }
     }
     $result
@@ -98,15 +98,15 @@ function Set-TargetResource
         # We need to Check if the network is added to the cluster. If not, we fail. If it is, we can append the IPAddress
         if ( -not $(Test-ClusterNetwork -IPAddress $IPAddress -AddressMask $AddressMask) )
         {
-            New-InvalidArgumentException `
-                -Message ($script:localizedData.NonExistantClusterNetwork -f $IPAddress,$AddressMask) `
+            New-ArgumentException `
+                -Message ($script:localizedData.NonExistantClusterNetwork -f $IPAddress, $AddressMask) `
                 -ArgumentName 'IPAddress'
         }
         else
         {
             $params = @{
                 IPAddress   = $IPAddress
-                AddressMask  = $AddressMask
+                AddressMask = $AddressMask
                 ErrorAction = 'Stop'
             }
             Add-ClusterIPAddressDependency @params
@@ -227,7 +227,7 @@ function Get-Subnet
     .Synopsis
         Adds an IPAddress as a Dependency to a Windows Cluster
     .DESCRIPTION
-        Adds an IP Address resource to a Windows Cluster's Dependecy Expression
+        Adds an IP Address resource to a Windows Cluster's Dependency Expression
     .PARAMETER IPAddress
         IP address to add to the Cluster's DependencyExpression
     .PARAMETER AddressMask
@@ -274,9 +274,7 @@ function Add-ClusterIPAddressDependency
     }
     Write-Verbose -Message ($script:localizedData.SetDependencyExpression -f $dependencyExpression)
     Set-ClusterResourceDependency @params
-
 }
-
 
 <#
     .Synopsis
@@ -394,12 +392,15 @@ function Get-ClusterNetworkList
 
     Write-Verbose -Message ($script:localizedData.GetClusterNetworks)
     $networks = New-Object -TypeName "System.Collections.Generic.List[PSCustomObject]"
-    foreach ( $network in Get-ClusterNetwork )
+    foreach ($network in Get-ClusterNetwork)
     {
-        $networks.Add([PSCustomObject]@{
-            Address     = $network.Address
-            AddressMask = $network.AddressMask
-        })
+        $networks.Add(
+            [PSCustomObject]@{
+                Address     = $network.Address
+                AddressMask = $network.AddressMask
+            }
+        )
+
         Write-Verbose -Message ($script:localizedData.FoundClusterNetwork -f $($network.Address), $($network.AddressMask))
     }
 
@@ -442,7 +443,8 @@ function Add-ClusterIPResource
         Group        = $OwnerGroup
         ErrorAction  = 'Stop'
     }
-    $resource = Add-ClusterResource @params
+
+    $null = Add-ClusterResource @params
 
     return $resourceName
 }
@@ -477,11 +479,12 @@ function Get-ClusterIPResource
     .Synopsis
         Gets the IP resource information of a Given Cluster IP address Resource
     .PARAMETER IPAddressResource
-        IP cddress resource to get to information from
+        IP address resource to get to information from
 #>
 function Get-ClusterIPResourceParameters
 {
     [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
     param
     (
         # IPAddress to add to Cluster
@@ -494,9 +497,10 @@ function Get-ClusterIPResourceParameters
 
     $address = (Get-ClusterParameter -InputObject $ipObj -Name Address).Value
     $addressMask = (Get-ClusterParameter -InputObject $ipObj -Name SubnetMask).Value
-    $network =  (Get-ClusterParameter -InputObject $ipObj -Name Network).Value
+    $network = (Get-ClusterParameter -InputObject $ipObj -Name Network).Value
     Write-Verbose -Message ($script:localizedData.FoundIPAddressResource -f $address, $addressMask, $network)
-    @{
+
+    return @{
         Address     = $address
         AddressMask = $addressMask
         Network     = $network
@@ -537,13 +541,12 @@ function Add-ClusterIPParameter
 
     $ipAddressResource = Get-ClusterResource -Name $IPAddressResourceName
 
-    $parameter1 = New-Object Microsoft.FailoverClusters.PowerShell.ClusterParameter $iPAddressResource,Address,$IPAddress
-    $parameter2 = New-Object Microsoft.FailoverClusters.PowerShell.ClusterParameter $iPAddressResource,SubnetMask,$AddressMask
-    $parameterList = $parameter1,$parameter2
+    $parameter1 = New-Object Microsoft.FailoverClusters.PowerShell.ClusterParameter $iPAddressResource, Address, $IPAddress
+    $parameter2 = New-Object Microsoft.FailoverClusters.PowerShell.ClusterParameter $iPAddressResource, SubnetMask, $AddressMask
+    $parameterList = $parameter1, $parameter2
 
-    Write-Verbose -Message ($script:localizedData.AddIPAddressResource -f $IPAddress,$AddressMask)
+    Write-Verbose -Message ($script:localizedData.AddIPAddressResource -f $IPAddress, $AddressMask)
     $parameterList | Set-ClusterParameter -ErrorAction Stop
-
 }
 
 <#
@@ -596,14 +599,14 @@ function New-ClusterIPDependencyExpression
         while ( $i -le $clusterResourceCount )
         {
             if ( $i -eq $clusterResourceCount )
-        {
-            $dependencyExpression += "[$($ClusterResource[$i])]"
-        }
-        else
-        {
-            $dependencyExpression += "[$($ClusterResource[$i])] or "
-        }
-        $i++
+            {
+                $dependencyExpression += "[$($ClusterResource[$i])]"
+            }
+            else
+            {
+                $dependencyExpression += "[$($ClusterResource[$i])] or "
+            }
+            $i++
         }
     }
     Write-Verbose -Message ($script:localizedData.NewDependencyExpression -f $dependencyExpression)
@@ -621,7 +624,7 @@ function Get-ClusterObject
     (
     )
 
-    $cluster = Get-ClusterResource | Where-Object { $_.name -eq 'Cluster Name'}
+    $cluster = Get-ClusterResource | Where-Object { $_.name -eq 'Cluster Name' }
 
     return $cluster
 }

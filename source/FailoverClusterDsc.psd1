@@ -1,4 +1,7 @@
 @{
+    # Script module or binary module file associated with this manifest.
+    RootModule           = 'FailoverClusterDsc.psm1'
+
     moduleVersion        = '0.0.1'
 
     GUID                 = '026e7fd8-06dd-41bc-b373-59366ab18679'

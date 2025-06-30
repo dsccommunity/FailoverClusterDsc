@@ -11,6 +11,7 @@ For older change log history see the [historic changelog](HISTORIC_CHANGELOG.md)
 
 - `azure-pipelines.yml`
   - Remove windows 2019 image fixes [#294](https://github.com/dsccommunity/FailoverClusterDsc/issues/294).
+- Migrate tests to Pester 5.
 
 ## [2.2.0] - 2025-05-22
 

@@ -99,7 +99,7 @@ function Set-TargetResource
         if ( -not $(Test-ClusterNetwork -IPAddress $IPAddress -AddressMask $AddressMask) )
         {
             New-ArgumentException `
-                -Message ($script:localizedData.NonExistantClusterNetwork -f $IPAddress, $AddressMask) `
+                -Message ($script:localizedData.NonExistentClusterNetwork -f $IPAddress, $AddressMask) `
                 -ArgumentName 'IPAddress'
         }
         else
@@ -219,7 +219,7 @@ function Get-Subnet
     Test-IPAddress -IPAddress $AddressMask
 
     $subnet = ([IPAddress](([IPAddress]$Ipaddress).Address -band ([IPAddress]$AddressMask).Address)).IPAddressToString
-    Write-Verbose -Message ($script:localizedData.FoundSubnetfromIPAddressandAddressMask -f $IPAddress, $AddressMask, $subnet)
+    Write-Verbose -Message ($script:localizedData.FoundSubnetFromIPAddressAndAddressMask -f $IPAddress, $AddressMask, $subnet)
     return $subnet
 }
 
@@ -280,7 +280,7 @@ function Add-ClusterIPAddressDependency
     .Synopsis
         Removes an IPAddress as a Dependency to a Windows Cluster
     .DESCRIPTION
-        Removes an IP Address resource to a Windows Cluster's Dependecy Expression
+        Removes an IP Address resource to a Windows Cluster's Dependency Expression
     .PARAMETER IPAddress
         IP address to remove to the Cluster's DependencyExpression
     .PARAMETER AddressMask
@@ -362,7 +362,7 @@ function Test-ClusterNetwork
     Test-IPAddress -IPAddress $AddressMask
 
     $clusterNetworks = Get-ClusterNetworkList
-    Write-Verbose -Message ($script:localizedData.GetSubnetfromIPAddressandAddressMask -f $IPAddress, $AddressMask)
+    Write-Verbose -Message ($script:localizedData.GetSubnetFromIPAddressAndAddressMask -f $IPAddress, $AddressMask)
     $subnet = $(Get-Subnet -IPAddress $IPAddress -AddressMask $AddressMask -ErrorAction Stop)
 
     foreach ( $network in $clusterNetworks )
@@ -511,7 +511,7 @@ function Get-ClusterIPResourceParameters
     .Synopsis
         Adds an IP address resource to cluster parameter
     .PARAMETER IPAddressResource
-        IP cddress resource to add to the cluster parameter
+        IP address resource to add to the cluster parameter
     .PARAMETER IPAddress
         IP address to add to the cluster parameter
     .PARAMETER AddressMask

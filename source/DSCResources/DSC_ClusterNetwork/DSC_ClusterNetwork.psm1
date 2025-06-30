@@ -29,7 +29,7 @@ function Get-TargetResource
         $AddressMask
     )
 
-    Write-Verbose -Message ($script:localizedData.GetClusterNetworkInformation -f $Name)
+    Write-Verbose -Message ($script:localizedData.GetClusterNetworkInformation -f $Address)
 
     $NetworkResource = Get-ClusterNetwork | Where-Object -FilterScript {
         $_.Address -eq $Address -and $_.AddressMask -eq $AddressMask
@@ -227,7 +227,7 @@ function Test-TargetResource
         $Metric
     )
 
-    Write-Verbose -Message ($script:localizedData.EvaluatingClusterNetworkInformation -f $Name)
+    Write-Verbose -Message ($script:localizedData.EvaluatingClusterNetworkInformation -f $Address)
 
     $getTargetResourceResult = Get-TargetResource -Address $Address -AddressMask $AddressMask
 

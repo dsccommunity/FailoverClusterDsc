@@ -1,23 +1,32 @@
-$script:DSCModuleName = 'FailoverClusterDsc'
-$script:DSCResourceName = 'DSC_WaitForCluster'
+# Suppressing this rule because Script Analyzer does not understand Pester's syntax.
+[System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', '')]
+param ()
 
-function Invoke-TestSetup
-{
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [string]
-        $ModuleVersion
-    )
-
+BeforeDiscovery {
     try
     {
-        Import-Module -Name DscResource.Test -Force -ErrorAction 'Stop'
+        if (-not (Get-Module -Name 'DscResource.Test'))
+        {
+            # Assumes dependencies has been resolved, so if this module is not available, run 'noop' task.
+            if (-not (Get-Module -Name 'DscResource.Test' -ListAvailable))
+            {
+                # Redirect all streams to $null, except the error stream (stream 2)
+                & "$PSScriptRoot/../../build.ps1" -Tasks 'noop' 3>&1 4>&1 5>&1 6>&1 > $null
+            }
+
+            # If the dependencies has not been resolved, this will throw an error.
+            Import-Module -Name 'DscResource.Test' -Force -ErrorAction 'Stop'
+        }
     }
     catch [System.IO.FileNotFoundException]
     {
-        throw 'DscResource.Test module dependency not found. Please run ".\build.ps1 -Tasks build" first.'
+        throw 'DscResource.Test module dependency not found. Please run ".\build.ps1 -ResolveDependency -Tasks build" first.'
     }
+}
+
+BeforeAll {
+    $script:DSCModuleName = 'FailoverClusterDsc'
+    $script:DSCResourceName = 'DSC_WaitForCluster'
 
     $script:testEnvironment = Initialize-TestEnvironment `
         -DSCModuleName $script:dscModuleName `
@@ -25,204 +34,280 @@ function Invoke-TestSetup
         -ResourceType 'Mof' `
         -TestType 'Unit'
 
-    Import-Module -Name (Join-Path -Path $PSScriptRoot -ChildPath "Stubs\FailoverClusters$ModuleVersion.stubs.psm1") -Global -Force
-    $global:moduleVersion = $ModuleVersion
+    # Load stub cmdlets and classes.
+    Import-Module (Join-Path -Path $PSScriptRoot -ChildPath 'Stubs\FailoverClusters.stubs.psm1')
+
+    $PSDefaultParameterValues['InModuleScope:ModuleName'] = $script:dscResourceName
+    $PSDefaultParameterValues['Mock:ModuleName'] = $script:dscResourceName
+    $PSDefaultParameterValues['Should:ModuleName'] = $script:dscResourceName
 }
 
-function Invoke-TestCleanup
-{
+AfterAll {
+    $PSDefaultParameterValues.Remove('InModuleScope:ModuleName')
+    $PSDefaultParameterValues.Remove('Mock:ModuleName')
+    $PSDefaultParameterValues.Remove('Should:ModuleName')
+
     Restore-TestEnvironment -TestEnvironment $script:testEnvironment
-    Remove-Variable -Name moduleVersion -Scope Global -ErrorAction SilentlyContinue
+
+    # Unload stub module
+    Remove-Module -Name FailoverClusters.stubs -Force
+
+    # Unload the module being tested so that it doesn't impact any other tests.
+    Get-Module -Name $script:dscResourceName -All | Remove-Module -Force
 }
 
-foreach ($moduleVersion in @('2012', '2016'))
-{
-    Invoke-TestSetup -ModuleVersion $moduleVersion
+Describe 'Cluster\Get-TargetResource' -Tag 'Get' {
+    Context 'When the system is either in the desired state or not in the desired state' {
+        It 'Should return the correct result' {
+            InModuleScope -ScriptBlock {
+                Set-StrictMode -Version 1.0
 
-    try
-    {
-        InModuleScope $script:DSCResourceName {
-            $mockDomainName = 'domain.local'
-            $mockClusterName = 'CLUSTER001'
-            $mockRetryIntervalSec = '1'
-            $mockRetryCount = '1'
+                $mockParameters = @{
+                    Name             = 'CLUSTER001'
+                    RetryIntervalSec = 1
+                    RetryCount       = 1
+                }
 
-            $mockGetCimInstance = {
-                return [PSCustomObject] @{
-                    Domain = $mockDynamicDomainName
+                $result = Get-TargetResource @mockParameters
+
+                $result | Should -BeOfType [System.Collections.Hashtable]
+                $result.Name | Should -Be $mockParameters.Name
+                $result.RetryIntervalSec | Should -Be $mockParameters.RetryIntervalSec
+                $result.RetryCount | Should -Be $mockParameters.RetryCount
+            }
+        }
+    }
+}
+
+Describe 'Cluster\Set-TargetResource' -Tag 'Set' {
+    Context 'When computers domain name cannot be evaluated' {
+        BeforeAll {
+            Mock -CommandName Get-CimInstance -MockWith {
+                [PSCustomObject] @{
+                    Domain = $null
                 }
             }
+        }
 
-            $mockCimInstance_ParameterFilter = {
-                $ClassName -eq 'Win32_ComputerSystem'
+        It 'Should throw the correct error message' {
+            InModuleScope -ScriptBlock {
+                Set-StrictMode -Version 1.0
+
+                $mockParameters = @{
+                    Name             = 'CLUSTER001'
+                    RetryIntervalSec = 1
+                    RetryCount       = 1
+                }
+
+                $errorRecord = Get-InvalidOperationRecord -Message ($script:localizedData.ClusterAbsentAfterTimeOut -f
+                    $mockParameters.Name,
+                    $($mockParameters.RetryCount - 1),
+                    $mockParameters.RetryIntervalSec
+                )
+
+                { Set-TargetResource @mockParameters } | Should -Throw $errorRecord
             }
 
-            $mockGetCluster = {
-                return [PSCustomObject] @{
-                    Domain = $mockDomainName
-                    Name   = $mockClusterName
-                }
-            }
+            Should -Invoke -CommandName Get-CimInstance -Exactly -Times 1 -Scope It
+        }
+    }
 
-            $mockGetCluster_ParameterFilter = {
-                $Name -eq $mockClusterName -and $Domain -eq $mockDomainName
-            }
-
-            $mockDefaultParameters = @{
-                Name             = $mockClusterName
-                RetryIntervalSec = $mockRetryIntervalSec
-                RetryCount       = $mockRetryCount
-            }
-
-            Describe "Cluster_$moduleVersion\Get-TargetResource" -Tag Get {
-                Context 'When the system is either in the desired state or not in the desired state' {
-                    It 'Returns a [System.Collection.Hashtable] type' {
-                        $getTargetResourceResult = Get-TargetResource @mockDefaultParameters
-                        $getTargetResourceResult | Should -BeOfType [System.Collections.Hashtable]
-                    }
-
-                    It 'Returns the same values passed as parameters' {
-                        $getTargetResourceResult = Get-TargetResource @mockDefaultParameters
-                        $getTargetResourceResult.Name | Should -Be $mockDefaultParameters.Name
-                        $getTargetResourceResult.RetryIntervalSec | Should -Be $mockDefaultParameters.RetryIntervalSec
-                        $getTargetResourceResult.RetryCount | Should -Be $mockDefaultParameters.RetryCount
-                    }
-
-                    Assert-VerifiableMock
-                }
-            }
-
-            Describe "Cluster_$moduleVersion\Set-TargetResource" -Tag Set {
-                Context 'When computers domain name cannot be evaluated' {
-                    $mockDynamicDomainName = $null
-
-                    It 'Should throw the correct error message' {
-                        Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockCimInstance_ParameterFilter -Verifiable
-
-                        $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message ($script:localizedData.ClusterAbsentAfterTimeOut -f $mockClusterName, ($mockRetryCount - 1), $mockRetryIntervalSec)
-                        { Set-TargetResource @mockDefaultParameters } | Should -Throw $mockCorrectErrorRecord
-                    }
-                }
-
-                Context 'When the system is not in the desired state' {
-                    BeforeEach {
-                        Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockCimInstance_ParameterFilter -Verifiable
-                    }
-
-                    Context 'When the cluster does not exist' {
-                        Context 'When Get-Cluster throws an error' {
-                            BeforeEach {
-                                # This is used for the evaluation of a cluster that does not exist
-                                Mock -CommandName Get-Cluster -MockWith {
-                                    throw 'Mock Get-Cluster throw error'
-                                } -ParameterFilter $mockGetCluster_ParameterFilter
-                            }
-
-                            $mockDynamicDomainName = $mockDomainName
-
-                            It 'Should throw the correct error message' {
-                                $mockCorrectErrorRecord = Get-InvalidOperationRecord -Message ($script:localizedData.ClusterAbsentAfterTimeOut -f $mockClusterName, $mockRetryCount, $mockRetryIntervalSec)
-                                { Set-TargetResource @mockDefaultParameters } | Should -Throw $mockCorrectErrorRecord
-                            }
-
-                            Assert-VerifiableMock
+    Context 'When the system is not in the desired state' {
+        Context 'When the cluster does not exist' {
+            Context 'When Get-Cluster throws an error' {
+                BeforeAll {
+                    Mock -CommandName Get-CimInstance -MockWith {
+                        [PSCustomObject] @{
+                            Domain = 'domain.local'
                         }
                     }
+
+                    # This is used for the evaluation of a cluster that does not exist
+                    Mock -CommandName Get-Cluster -MockWith { throw 'Mock Get-Cluster throw error' }
                 }
 
-                Context 'When the system is in the desired state' {
-                    Context 'When the cluster exist' {
-                        BeforeEach {
-                            Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockCimInstance_ParameterFilter -Verifiable
-                            Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter -Verifiable
+                It 'Should throw the correct error message' {
+                    InModuleScope -ScriptBlock {
+                        Set-StrictMode -Version 1.0
+
+                        $mockParameters = @{
+                            Name             = 'CLUSTER001'
+                            RetryIntervalSec = 1
+                            RetryCount       = 1
                         }
 
-                        $mockDynamicDomainName = $mockDomainName
+                        $errorRecord = Get-InvalidOperationRecord -Message ($script:localizedData.ClusterAbsentAfterTimeOut -f
+                            $mockParameters.Name,
+                            $mockParameters.RetryCount,
+                            $mockParameters.RetryIntervalSec)
 
-                        It 'Should not throw any error' {
-                            { Set-TargetResource @mockDefaultParameters } | Should -Not -Throw
-                        }
-
-                        Assert-VerifiableMock
+                        { Set-TargetResource @mockParameters } | Should -Throw $errorRecord
                     }
-                }
-            }
 
-            Describe "Cluster_$moduleVersion\Test-TargetResource" -Tag Test {
-                BeforeEach {
-                    Mock -CommandName Get-CimInstance -MockWith $mockGetCimInstance -ParameterFilter $mockCimInstance_ParameterFilter -Verifiable
-                }
-
-                Context 'When computers domain name cannot be evaluated' {
-                    $mockDynamicDomainName = $null
-
-                    It 'Should return the value $false' {
-                        $testTargetResourceResult = Test-TargetResource @mockDefaultParameters
-                        $testTargetResourceResult | Should -Be $false
-                    }
-                }
-
-                Context 'When the system is not in the desired state' {
-                    Context 'When the cluster does not exist' {
-                        Context 'When Get-Cluster throws an error' {
-                            BeforeEach {
-                                # This is used for the evaluation of a cluster that does not exist.
-                                Mock -CommandName Get-Cluster -MockWith {
-                                    throw 'Mock Get-Cluster throw error'
-                                } -ParameterFilter $mockGetCluster_ParameterFilter
-                            }
-
-                            $mockDynamicDomainName = $mockDomainName
-
-                            It 'Should return the value $false' {
-                                $testTargetResourceResult = Test-TargetResource @mockDefaultParameters
-                                $testTargetResourceResult | Should -Be $false
-                            }
-
-                            Assert-VerifiableMock
-                        }
-
-                        Context 'When Get-Cluster returns nothing' {
-                            BeforeEach {
-                                # This is used for the evaluation of a cluster that does not exist.
-                                Mock -CommandName Get-Cluster -MockWith {
-                                    $null
-                                } -ParameterFilter $mockGetCluster_ParameterFilter
-                            }
-
-                            $mockDynamicDomainName = $mockDomainName
-
-                            It 'Should return the value $false' {
-                                $testTargetResourceResult = Test-TargetResource @mockDefaultParameters
-                                $testTargetResourceResult | Should -Be $false
-                            }
-
-                            Assert-VerifiableMock
-                        }
-                    }
-                }
-
-                Context 'When the system is in the desired state' {
-                    Context 'When the cluster exist' {
-                        BeforeEach {
-                            Mock -CommandName Get-Cluster -MockWith $mockGetCluster -ParameterFilter $mockGetCluster_ParameterFilter -Verifiable
-                        }
-
-                        $mockDynamicDomainName = $mockDomainName
-
-                        It 'Should return the value $true' {
-                            $testTargetResourceResult = Test-TargetResource @mockDefaultParameters
-                            $testTargetResourceResult | Should -Be $true
-                        }
-
-                        Assert-VerifiableMock
-                    }
+                    Should -Invoke -CommandName Get-CimInstance -Exactly -Times 1 -Scope It
+                    Should -Invoke -CommandName Get-Cluster -Exactly -Times 1 -Scope It
                 }
             }
         }
     }
-    finally
-    {
-        Invoke-TestCleanup
+
+    Context 'When the system is in the desired state' {
+        Context 'When the cluster exist' {
+            BeforeAll {
+                Mock -CommandName Get-CimInstance -MockWith {
+                    [PSCustomObject] @{
+                        Domain = 'domain.local'
+                    }
+                }
+
+                Mock -CommandName Get-Cluster -MockWith {
+                    [PSCustomObject] @{
+                        Domain = 'domain.local'
+                        Name   = 'CLUSTER001'
+                    }
+                }
+            }
+
+            It 'Should not throw any error' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $mockParameters = @{
+                        Name             = 'CLUSTER001'
+                        RetryIntervalSec = 1
+                        RetryCount       = 1
+                    }
+
+                    { Set-TargetResource @mockParameters } | Should -Not -Throw
+                }
+
+                Should -Invoke -CommandName Get-CimInstance -Exactly -Times 1 -Scope It
+                Should -Invoke -CommandName Get-Cluster -Exactly -Times 1 -Scope It
+            }
+        }
+    }
+}
+
+Describe 'Cluster\Test-TargetResource' -Tag 'Test' {
+    Context 'When computers domain name cannot be evaluated' {
+        BeforeAll {
+            Mock -CommandName Get-CimInstance -MockWith {
+                [PSCustomObject] @{
+                    Domain = $null
+                }
+            }
+        }
+
+        It 'Should return the value $false' {
+            InModuleScope -ScriptBlock {
+                Set-StrictMode -Version 1.0
+
+                $mockParameters = @{
+                    Name             = 'CLUSTER001'
+                    RetryIntervalSec = 1
+                    RetryCount       = 1
+                }
+
+                Test-TargetResource @mockParameters | Should -BeFalse
+            }
+
+            Should -Invoke -CommandName Get-CimInstance -Exactly -Times 1 -Scope It
+        }
+    }
+
+    Context 'When the system is not in the desired state' {
+        Context 'When the cluster does not exist' {
+            BeforeAll {
+                Mock -CommandName Get-CimInstance -MockWith {
+                    [PSCustomObject] @{
+                        Domain = 'domain.local'
+                    }
+                }
+            }
+
+            Context 'When Get-Cluster throws an error' {
+                BeforeAll {
+                    # This is used for the evaluation of a cluster that does not exist.
+                    Mock -CommandName Get-Cluster -MockWith { throw 'Mock Get-Cluster throw error' }
+                }
+
+                It 'Should return the value $false' {
+                    InModuleScope -ScriptBlock {
+                        Set-StrictMode -Version 1.0
+
+                        $mockParameters = @{
+                            Name             = 'CLUSTER001'
+                            RetryIntervalSec = 1
+                            RetryCount       = 1
+                        }
+
+                        Test-TargetResource @mockParameters | Should -BeFalse
+                    }
+
+                    Should -Invoke -CommandName Get-CimInstance -Exactly -Times 1 -Scope It
+                    Should -Invoke -CommandName Get-Cluster -Exactly -Times 1 -Scope It
+                }
+            }
+
+            Context 'When Get-Cluster returns nothing' {
+                BeforeAll {
+                    # This is used for the evaluation of a cluster that does not exist.
+                    Mock -CommandName Get-Cluster
+                }
+
+                It 'Should return the value $false' {
+                    InModuleScope -ScriptBlock {
+                        Set-StrictMode -Version 1.0
+
+                        $mockParameters = @{
+                            Name             = 'CLUSTER001'
+                            RetryIntervalSec = 1
+                            RetryCount       = 1
+                        }
+
+                        Test-TargetResource @mockParameters | Should -BeFalse
+                    }
+
+                    Should -Invoke -CommandName Get-CimInstance -Exactly -Times 1 -Scope It
+                    Should -Invoke -CommandName Get-Cluster -Exactly -Times 1 -Scope It
+                }
+            }
+        }
+    }
+
+    Context 'When the system is in the desired state' {
+        Context 'When the cluster exist' {
+            BeforeAll {
+                Mock -CommandName Get-CimInstance -MockWith {
+                    [PSCustomObject] @{
+                        Domain = 'domain.local'
+                    }
+                }
+
+                Mock -CommandName Get-Cluster -MockWith {
+                    [PSCustomObject] @{
+                        Domain = 'domain.local'
+                        Name   = 'CLUSTER001'
+                    }
+                }
+            }
+
+            It 'Should return the value $true' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $mockParameters = @{
+                        Name             = 'CLUSTER001'
+                        RetryIntervalSec = 1
+                        RetryCount       = 1
+                    }
+
+                    Test-TargetResource @mockParameters | Should -BeTrue
+                }
+
+                Should -Invoke -CommandName Get-CimInstance -Exactly -Times 1 -Scope It
+                Should -Invoke -CommandName Get-Cluster -Exactly -Times 1 -Scope It
+            }
+        }
     }
 }

@@ -1,23 +1,32 @@
-$script:DSCModuleName = 'FailoverClusterDsc'
-$script:DSCResourceName = 'DSC_ClusterNetwork'
+# Suppressing this rule because Script Analyzer does not understand Pester's syntax.
+[System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', '')]
+param ()
 
-function Invoke-TestSetup
-{
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [string]
-        $ModuleVersion
-    )
-
+BeforeDiscovery {
     try
     {
-        Import-Module -Name DscResource.Test -Force -ErrorAction 'Stop'
+        if (-not (Get-Module -Name 'DscResource.Test'))
+        {
+            # Assumes dependencies has been resolved, so if this module is not available, run 'noop' task.
+            if (-not (Get-Module -Name 'DscResource.Test' -ListAvailable))
+            {
+                # Redirect all streams to $null, except the error stream (stream 2)
+                & "$PSScriptRoot/../../build.ps1" -Tasks 'noop' 3>&1 4>&1 5>&1 6>&1 > $null
+            }
+
+            # If the dependencies has not been resolved, this will throw an error.
+            Import-Module -Name 'DscResource.Test' -Force -ErrorAction 'Stop'
+        }
     }
     catch [System.IO.FileNotFoundException]
     {
-        throw 'DscResource.Test module dependency not found. Please run ".\build.ps1 -Tasks build" first.'
+        throw 'DscResource.Test module dependency not found. Please run ".\build.ps1 -ResolveDependency -Tasks build" first.'
     }
+}
+
+BeforeAll {
+    $script:DSCModuleName = 'FailoverClusterDsc'
+    $script:DSCResourceName = 'DSC_ClusterNetwork'
 
     $script:testEnvironment = Initialize-TestEnvironment `
         -DSCModuleName $script:dscModuleName `
@@ -25,363 +34,397 @@ function Invoke-TestSetup
         -ResourceType 'Mof' `
         -TestType 'Unit'
 
-    Import-Module -Name (Join-Path -Path $PSScriptRoot -ChildPath "Stubs\FailoverClusters$ModuleVersion.stubs.psm1") -Global -Force
-    $global:moduleVersion = $ModuleVersion
+    # Load stub cmdlets and classes.
+    Import-Module (Join-Path -Path $PSScriptRoot -ChildPath 'Stubs\FailoverClusters.stubs.psm1')
+
+    $PSDefaultParameterValues['InModuleScope:ModuleName'] = $script:dscResourceName
+    $PSDefaultParameterValues['Mock:ModuleName'] = $script:dscResourceName
+    $PSDefaultParameterValues['Should:ModuleName'] = $script:dscResourceName
 }
 
-function Invoke-TestCleanup
-{
+AfterAll {
+    $PSDefaultParameterValues.Remove('InModuleScope:ModuleName')
+    $PSDefaultParameterValues.Remove('Mock:ModuleName')
+    $PSDefaultParameterValues.Remove('Should:ModuleName')
+
     Restore-TestEnvironment -TestEnvironment $script:testEnvironment
-    Remove-Variable -Name moduleVersion -Scope Global -ErrorAction SilentlyContinue
+
+    # Unload stub module
+    Remove-Module -Name FailoverClusters.stubs -Force
+
+    # Unload the module being tested so that it doesn't impact any other tests.
+    Get-Module -Name $script:dscResourceName -All | Remove-Module -Force
 }
 
-foreach ($moduleVersion in @('2012', '2016'))
-{
-    Invoke-TestSetup -ModuleVersion $moduleVersion
+Describe 'ClusterNetwork\Get-TargetResource' -Tag 'Get' {
+    BeforeAll {
+        Mock -CommandName Get-ClusterNetwork -MockWith {
+            [PSCustomObject] @{
+                Cluster     = 'CLUSTER01'
+                Name        = 'Client1'
+                Address     = '10.0.0.0'
+                AddressMask = '255.255.255.0'
+                Role        = [System.UInt32] 1
+                Metric      = '70240'
+            }
+        }
+    }
 
-    try
-    {
-        InModuleScope $script:DSCResourceName {
-            $mockPresentClusterNetworkName = 'Client1'
-            $mockPresentClusterNetworkAddress = '10.0.0.0'
-            $mockPresentClusterNetworkAddressMask = '255.255.255.0'
-            $mockPresentClusterNetworkRole = [System.UInt32] 1
-            $mockPresentClusterNetworkRole2 = [PSCustomObject] @{ value__ = 1 }
-            $mockPresentClusterNetworkMetric = '70240'
+    Context 'When the system is not in the desired state' {
+        It 'Should return the correct type' {
+            InModuleScope -ScriptBlock {
+                Set-StrictMode -Version 1.0
 
-            $mockAbsentClusterNetworkName = 'Client2'
-            $mockAbsentClusterNetworkAddress = '10.0.0.0'
-            $mockAbsentClusterNetworkAddressMask = '255.255.255.0'
-            $mockAbsentClusterNetworkRole = [System.UInt32] 3
-            $mockAbsentClusterNetworkMetric = '10'
+                $mockParameters = @{
+                    Address     = '10.0.0.0'
+                    AddressMask = '255.255.255.0'
+                }
 
-            if ($moduleVersion -eq '2012')
-            {
-                $mockGetClusterNetwork = {
+                $result = Get-TargetResource @mockParameters
+                $result | Should -BeOfType [System.Collections.Hashtable]
+                $result.Address | Should -Be $mockParameters.Address
+                $result.AddressMask | Should -Be $mockParameters.AddressMask
+
+                $result.Name | Should -Not -Be 'Client2'
+                $result.Role | Should -Not -Be ([System.UInt32] 3)
+                $result.Metric | Should -Not -Be '10'
+            }
+
+            Should -Invoke -CommandName Get-ClusterNetwork -Exactly -Times 1 -Scope It
+        }
+
+        Context 'When testing against WS2016 and later' {
+            BeforeAll {
+                Mock -CommandName Get-ClusterNetwork -MockWith {
                     [PSCustomObject] @{
                         Cluster     = 'CLUSTER01'
-                        Name        = $mockPresentClusterNetworkName
-                        Address     = $mockPresentClusterNetworkAddress
-                        AddressMask = $mockPresentClusterNetworkAddressMask
-                        Role        = $mockPresentClusterNetworkRole
-                        Metric      = $mockPresentClusterNetworkMetric
+                        Name        = 'Client1'
+                        Address     = '10.0.0.0'
+                        AddressMask = '255.255.255.0'
+                        Role        = [PSCustomObject] @{ value__ = 1 }
+                        Metric      = '70240'
                     }
                 }
+            }
 
-                $mockGetClusterNetwork2 = {
+            It 'Should not return the the correct values for the cluster network role on WS2016' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $mockParameters = @{
+                        Address     = '10.0.0.0'
+                        AddressMask = '255.255.255.0'
+                    }
+
+                    $result = Get-TargetResource @mockParameters
+                    $result | Should -BeOfType [System.Collections.Hashtable]
+                    $result.Address | Should -Be $mockParameters.Address
+                    $result.AddressMask | Should -Be $mockParameters.AddressMask
+
+                    $result.Name | Should -Not -Be 'Client2'
+                    $result.Role | Should -Not -Be ([System.UInt32] 3)
+                    $result.Metric | Should -Not -Be '10'
+                }
+
+                Should -Invoke -CommandName Get-ClusterNetwork -Exactly -Times 1 -Scope It
+            }
+        }
+    }
+
+    Context 'When the system is in the desired state' {
+        It 'Should return the correct result' {
+            InModuleScope -ScriptBlock {
+                Set-StrictMode -Version 1.0
+
+                $mockParameters = @{
+                    Address     = '10.0.0.0'
+                    AddressMask = '255.255.255.0'
+                }
+
+                $result = Get-TargetResource @mockParameters
+
+                $result | Should -BeOfType [System.Collections.Hashtable]
+                $result.Address | Should -Be $mockParameters.Address
+                $result.AddressMask | Should -Be $mockParameters.AddressMask
+                $result.Name | Should -Be 'Client1'
+                $result.Role | Should -Be ([System.UInt32] 1)
+                $result.Metric | Should -Be '70240'
+            }
+
+            Should -Invoke -CommandName Get-ClusterNetwork -Exactly -Times 1 -Scope It
+        }
+
+        Context 'When testing against WS2016 and later' {
+            BeforeAll {
+                Mock -CommandName Get-ClusterNetwork -MockWith {
                     [PSCustomObject] @{
                         Cluster     = 'CLUSTER01'
-                        Name        = $mockPresentClusterNetworkName
-                        Address     = $mockPresentClusterNetworkAddress
-                        AddressMask = $mockPresentClusterNetworkAddressMask
-                        Role        = $mockPresentClusterNetworkRole2
-                        Metric      = $mockPresentClusterNetworkMetric
-                    }
-                }
-            }
-            else
-            {
-                $mockGetClusterNetwork = {
-                    [PSCustomObject] @{
-                        Cluster     = 'CLUSTER01'
-                        Name        = $mockPresentClusterNetworkName
-                        Address     = $mockPresentClusterNetworkAddress
-                        AddressMask = $mockPresentClusterNetworkAddressMask
-                        Role        = $mockPresentClusterNetworkRole
-                        Metric      = $mockPresentClusterNetworkMetric
-                    } | Add-Member -MemberType ScriptMethod -Name Update -Value {
-                        $script:mockNumberOfTimesMockedMethodUpdateWasCalled += 1
-                    } -PassThru
-                }
-
-                $mockGetClusterNetwork2 = {
-                    [PSCustomObject] @{
-                        Cluster     = 'CLUSTER01'
-                        Name        = $mockPresentClusterNetworkName
-                        Address     = $mockPresentClusterNetworkAddress
-                        AddressMask = $mockPresentClusterNetworkAddressMask
-                        Role        = $mockPresentClusterNetworkRole2
-                        Metric      = $mockPresentClusterNetworkMetric
-                    } | Add-Member -MemberType ScriptMethod -Name Update -Value {
-                        $script:mockNumberOfTimesMockedMethodUpdateWasCalled += 1
-                    } -PassThru
-                }
-            }
-
-            $mockTestParameters_PresentNetwork = @{
-                Address     = $mockPresentClusterNetworkAddress
-                AddressMask = $mockPresentClusterNetworkAddressMask
-                Name        = $mockPresentClusterNetworkName
-                Role        = $mockPresentClusterNetworkRole
-                Metric      = $mockPresentClusterNetworkMetric
-            }
-
-            $mockTestParameters_PresentNetwork_WrongValues = @{
-                Address     = $mockPresentClusterNetworkAddress
-                AddressMask = $mockPresentClusterNetworkAddressMask
-                Name        = $mockAbsentClusterNetworkName
-                Role        = $mockAbsentClusterNetworkRole
-                Metric      = $mockAbsentClusterNetworkMetric
-            }
-
-            Describe "ClusterNetwork_$moduleVersion\Get-TargetResource" {
-                Mock -CommandName 'Get-ClusterNetwork' -MockWith $mockGetClusterNetwork
-
-                Context 'When the system is not in the desired state' {
-                    BeforeAll {
-                        $mockTestParameters = $mockTestParameters_PresentNetwork_WrongValues.Clone()
-                        $mockTestParameters.Remove('Name')
-                        $mockTestParameters.Remove('Role')
-                        $mockTestParameters.Remove('Metric')
-                    }
-
-                    It 'Should return the correct type' {
-                        $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                        $getTargetResourceResult | Should -BeOfType [System.Collections.Hashtable]
-                    }
-
-                    It 'Should return the same values passed as parameters' {
-                        $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                        $getTargetResourceResult.Address | Should -Be $mockTestParameters.Address
-                        $getTargetResourceResult.AddressMask | Should -Be $mockTestParameters.AddressMask
-                    }
-
-                    It 'Should not return the the correct values for the cluster network' {
-                        $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                        $getTargetResourceResult.Name | Should -Not -Be $mockAbsentClusterNetworkName
-                        $getTargetResourceResult.Role | Should -Not -Be $mockAbsentClusterNetworkRole
-                        $getTargetResourceResult.Metric | Should -Not -Be $mockAbsentClusterNetworkMetric
-
-                        Assert-MockCalled -CommandName Get-ClusterNetwork -Exactly -Times 1 -Scope It
-                    }
-
-                    It 'Should not return the the correct values for the cluster network role on WS2016' {
-                        Mock -CommandName 'Get-ClusterNetwork' -MockWith $mockGetClusterNetwork2
-
-                        $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                        $getTargetResourceResult.Name | Should -Not -Be $mockAbsentClusterNetworkName
-                        $getTargetResourceResult.Role | Should -Not -Be $mockAbsentClusterNetworkRole
-                        $getTargetResourceResult.Metric | Should -Not -Be $mockAbsentClusterNetworkMetric
-
-                        Assert-MockCalled -CommandName Get-ClusterNetwork -Exactly -Times 1 -Scope It
-                    }
-                }
-
-                Context 'When the system is in the desired state' {
-                    BeforeAll {
-                        $mockTestParameters = $mockTestParameters_PresentNetwork.Clone()
-                        $mockTestParameters.Remove('Name')
-                        $mockTestParameters.Remove('Role')
-                        $mockTestParameters.Remove('Metric')
-                    }
-
-                    It 'Should return the correct type' {
-                        $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                        $getTargetResourceResult | Should -BeOfType [System.Collections.Hashtable]
-                    }
-
-                    It 'Should return the same values passed as parameters' {
-                        $Result = Get-TargetResource @mockTestParameters
-                        $Result.Address | Should -Be $mockTestParameters.Address
-                        $Result.AddressMask | Should -Be $mockTestParameters.AddressMask
-                    }
-
-                    It 'Should return the the correct values for the cluster network' {
-                        $Result = Get-TargetResource @mockTestParameters
-                        $Result.Name | Should -Be $mockPresentClusterNetworkName
-                        $Result.Role | Should -Be $mockPresentClusterNetworkRole
-                        $Result.Metric | Should -Be $mockPresentClusterNetworkMetric
-
-                        Assert-MockCalled -CommandName Get-ClusterNetwork -Exactly -Times 1 -Scope It
-                    }
-
-                    It 'Should return the the correct values for the cluster network role on WS2016' {
-                        Mock -CommandName 'Get-ClusterNetwork' -MockWith $mockGetClusterNetwork2
-
-                        $Result = Get-TargetResource @mockTestParameters
-                        $Result.Name | Should -Be $mockPresentClusterNetworkName
-                        $Result.Role | Should -Be $mockPresentClusterNetworkRole
-                        $Result.Metric | Should -Be $mockPresentClusterNetworkMetric
-
-                        Assert-MockCalled -CommandName Get-ClusterNetwork -Exactly -Times 1 -Scope It
-                    }
-                }
-            }
-            Describe "ClusterNetwork_$moduleVersion\Test-TargetResource" {
-                Mock -CommandName 'Get-ClusterNetwork' -MockWith $mockGetClusterNetwork
-
-                Context 'When the system is not in the desired state' {
-                    Context 'When all supported properties is not in desired state' {
-                        BeforeAll {
-                            $mockTestParameters = $mockTestParameters_PresentNetwork_WrongValues
-                        }
-
-                        It 'Should return result as $false' {
-                            $testTargetResourceResult = Test-TargetResource @mockTestParameters
-                            $testTargetResourceResult | Should -Be $false
-                        }
-                    }
-
-                    Context 'When all Name property is not in desired state' {
-                        BeforeAll {
-                            $mockTestParameters = $mockTestParameters_PresentNetwork.Clone()
-                            $mockTestParameters.Name = $mockAbsentClusterNetworkName
-                        }
-
-                        It 'Should return result as $false' {
-                            $testTargetResourceResult = Test-TargetResource @mockTestParameters
-                            $testTargetResourceResult | Should -Be $false
-                        }
-                    }
-
-                    Context 'When all Role property is not in desired state' {
-                        BeforeAll {
-                            $mockTestParameters = $mockTestParameters_PresentNetwork.Clone()
-                            $mockTestParameters.Role = $mockAbsentClusterNetworkRole
-                        }
-
-                        It 'Should return result as $false' {
-                            $testTargetResourceResult = Test-TargetResource @mockTestParameters
-                            $testTargetResourceResult | Should -Be $false
-                        }
-                    }
-
-                    Context 'When all Metric property is not in desired state' {
-                        BeforeAll {
-                            $mockTestParameters = $mockTestParameters_PresentNetwork.Clone()
-                            $mockTestParameters.Metric = $mockAbsentClusterNetworkMetric
-                        }
-
-                        It 'Should return result as $false' {
-                            $testTargetResourceResult = Test-TargetResource @mockTestParameters
-                            $testTargetResourceResult | Should -Be $false
-                        }
-                    }
-                }
-
-                Context 'When the system is in the desired state' {
-                    BeforeAll {
-                        $mockTestParameters = $mockTestParameters_PresentNetwork
-                    }
-
-                    It 'Should return result as $true' {
-                        $testTargetResourceResult = Test-TargetResource @mockTestParameters
-                        $testTargetResourceResult | Should -Be $true
+                        Name        = 'Client1'
+                        Address     = '10.0.0.0'
+                        AddressMask = '255.255.255.0'
+                        Role        = [PSCustomObject] @{ value__ = 1 }
+                        Metric      = '70240'
                     }
                 }
             }
 
-            Describe "ClusterNetwork_$moduleVersion\Set-TargetResource" {
-                Mock -CommandName 'Get-ClusterNetwork' -MockWith $mockGetClusterNetwork
+            It 'Should return the the correct values' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
 
-                Context 'When the system is not in the desired state' {
-                    BeforeEach {
-                        $script:mockNumberOfTimesMockedMethodUpdateWasCalled = 0
+                    $mockParameters = @{
+                        Address     = '10.0.0.0'
+                        AddressMask = '255.255.255.0'
                     }
 
-                    Context 'When all supported properties is not in desired state' {
-                        BeforeAll {
-                            $mockTestParameters = $mockTestParameters_PresentNetwork_WrongValues
-                        }
+                    $result = Get-TargetResource @mockParameters
 
-                        It 'Should call Update method correct number of times' {
-                            if ($moduleVersion -eq '2012')
-                            {
-                                $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled = 0
-                            }
-                            else
-                            {
-                                $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled = 3
-                            }
-
-                            { Set-TargetResource @mockTestParameters } | Should -Not -Throw
-                            $script:mockNumberOfTimesMockedMethodUpdateWasCalled | Should -BeExactly $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled
-                        }
-                    }
-
-                    Context 'When all Name property is not in desired state' {
-                        BeforeAll {
-                            $mockTestParameters = $mockTestParameters_PresentNetwork.Clone()
-                            $mockTestParameters.Name = $mockAbsentClusterNetworkName
-                        }
-
-                        It 'Should call Update method correct number of times' {
-                            if ($moduleVersion -eq '2012')
-                            {
-                                $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled = 0
-                            }
-                            else
-                            {
-                                $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled = 1
-                            }
-
-                            { Set-TargetResource @mockTestParameters } | Should -Not -Throw
-                            $script:mockNumberOfTimesMockedMethodUpdateWasCalled | Should -BeExactly $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled
-                        }
-                    }
-
-                    Context 'When all Role property is not in desired state' {
-                        BeforeAll {
-                            $mockTestParameters = $mockTestParameters_PresentNetwork.Clone()
-                            $mockTestParameters.Role = $mockAbsentClusterNetworkRole
-                        }
-
-                        It 'Should call Update method correct number of times' {
-                            if ($moduleVersion -eq '2012')
-                            {
-                                $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled = 0
-                            }
-                            else
-                            {
-                                $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled = 1
-                            }
-
-                            { Set-TargetResource @mockTestParameters } | Should -Not -Throw
-                            $script:mockNumberOfTimesMockedMethodUpdateWasCalled | Should -BeExactly $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled
-                        }
-                    }
-
-                    Context 'When all Metric property is not in desired state' {
-                        BeforeAll {
-                            $mockTestParameters = $mockTestParameters_PresentNetwork.Clone()
-                            $mockTestParameters.Metric = $mockAbsentClusterNetworkMetric
-                        }
-
-                        It 'Should call Update method correct number of times' {
-                            if ($moduleVersion -eq '2012')
-                            {
-                                $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled = 0
-                            }
-                            else
-                            {
-                                $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled = 1
-                            }
-
-                            { Set-TargetResource @mockTestParameters } | Should -Not -Throw
-                            $script:mockNumberOfTimesMockedMethodUpdateWasCalled | Should -BeExactly $expectedNumberOfTimesMockedMethodUpdateShouldBeCalled
-                        }
-                    }
+                    $result | Should -BeOfType [System.Collections.Hashtable]
+                    $result.Address | Should -Be $mockParameters.Address
+                    $result.AddressMask | Should -Be $mockParameters.AddressMask
+                    $result.Name | Should -Be 'Client1'
+                    $result.Role | Should -Be ([System.UInt32] 1)
+                    $result.Metric | Should -Be '70240'
                 }
 
-                Context 'When the system is in the desired state' {
-                    BeforeAll {
-                        $mockTestParameters = $mockTestParameters_PresentNetwork
+                Should -Invoke -CommandName Get-ClusterNetwork -Exactly -Times 1 -Scope It
+            }
+        }
+    }
+}
+
+Describe 'ClusterNetwork\Test-TargetResource' -Tag 'Test' {
+    BeforeAll {
+        Mock -CommandName Get-TargetResource -MockWith {
+            [PSCustomObject] @{
+                Address     = '10.0.0.0'
+                AddressMask = '255.255.255.0'
+                Name        = 'Client1'
+                Role        = [System.UInt32] 1
+                Metric      = '70240'
+            }
+        }
+    }
+
+    Context 'When the system is not in the desired state' {
+        Context 'When all supported properties is not in desired state' {
+            It 'Should return result as $false' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $mockParameters = @{
+                        Address     = '10.0.0.0'
+                        AddressMask = '255.255.255.0'
+                        Name        = 'Client2'
+                        Role        = [System.UInt32] 3
+                        Metric      = '10'
                     }
 
-                    BeforeEach {
-                        $script:mockNumberOfTimesMockedMethodUpdateWasCalled = 0
+                    Test-TargetResource @mockParameters | Should -BeFalse
+                }
+            }
+        }
+
+        Context 'When all Name property is not in desired state' {
+            It 'Should return result as $false' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $mockParameters = @{
+                        Address     = '10.0.0.0'
+                        AddressMask = '255.255.255.0'
+                        Name        = 'Client2'
+                        Role        = [System.UInt32] 1
+                        Metric      = '70240'
                     }
 
-                    It 'Should call Update method correct number of times' {
-                        { Set-TargetResource @mockTestParameters } | Should -Not -Throw
-                        $script:mockNumberOfTimesMockedMethodUpdateWasCalled | Should -BeExactly 0
+                    Test-TargetResource @mockParameters | Should -BeFalse
+                }
+            }
+        }
+
+        Context 'When all Role property is not in desired state' {
+            It 'Should return result as $false' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $mockParameters = @{
+                        Address     = '10.0.0.0'
+                        AddressMask = '255.255.255.0'
+                        Name        = 'Client1'
+                        Role        = [System.UInt32] 3
+                        Metric      = '70240'
                     }
+
+                    Test-TargetResource @mockParameters | Should -BeFalse
+                }
+            }
+        }
+
+        Context 'When all Metric property is not in desired state' {
+            It 'Should return result as $false' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $mockParameters = @{
+                        Address     = '10.0.0.0'
+                        AddressMask = '255.255.255.0'
+                        Name        = 'Client1'
+                        Role        = [System.UInt32] 1
+                        Metric      = '10'
+                    }
+
+                    Test-TargetResource @mockParameters | Should -BeFalse
                 }
             }
         }
     }
-    finally
-    {
-        Invoke-TestCleanup
+
+    Context 'When the system is in the desired state' {
+        It 'Should return result as $true' {
+            InModuleScope -ScriptBlock {
+                Set-StrictMode -Version 1.0
+
+                $mockParameters = @{
+                    Address     = '10.0.0.0'
+                    AddressMask = '255.255.255.0'
+                    Name        = 'Client1'
+                    Role        = [System.UInt32] 1
+                    Metric      = '70240'
+                }
+
+                Test-TargetResource @mockParameters | Should -BeTrue
+            }
+        }
+    }
+}
+
+Describe 'ClusterNetwork\Set-TargetResource' -Tag 'Set' {
+    BeforeAll {
+        InModuleScope -ScriptBlock {
+            Mock -CommandName Get-ClusterNetwork -MockWith {
+                [PSCustomObject] @{
+                    Cluster     = 'CLUSTER01'
+                    Name        = 'Client1'
+                    Address     = '10.0.0.0'
+                    AddressMask = '255.255.255.0'
+                    Role        = [System.UInt32] 1
+                    Metric      = '70240'
+                } | Add-Member -MemberType ScriptMethod -Name Update -Value {
+                    $script:mockNumberOfTimesMockedMethodUpdateWasCalled += 1
+                } -PassThru
+            }
+        }
+    }
+
+    Context 'When the system is not in the desired state' {
+        BeforeEach {
+            InModuleScope -ScriptBlock {
+                $script:mockNumberOfTimesMockedMethodUpdateWasCalled = 0
+            }
+        }
+
+        Context 'When all supported properties is not in desired state' {
+            It 'Should call Update method correct number of times' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $mockParameters = @{
+                        Address     = '10.0.0.0'
+                        AddressMask = '255.255.255.0'
+                        Name        = 'Client2'
+                        Role        = [System.UInt32] 3
+                        Metric      = '10'
+                    }
+
+                    { Set-TargetResource @mockParameters } | Should -Not -Throw
+
+                    $script:mockNumberOfTimesMockedMethodUpdateWasCalled | Should -BeExactly 3
+                }
+            }
+        }
+
+        Context 'When all Name property are not in desired state' {
+            It 'Should call Update method correct number of times' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $mockParameters = @{
+                        Address     = '10.0.0.0'
+                        AddressMask = '255.255.255.0'
+                        Name        = 'Client2'
+                        Role        = [System.UInt32] 1
+                        Metric      = '70240'
+                    }
+
+                    { Set-TargetResource @mockParameters } | Should -Not -Throw
+
+                    $script:mockNumberOfTimesMockedMethodUpdateWasCalled | Should -BeExactly 1
+                }
+            }
+        }
+
+        Context 'When all Role property are not in desired state' {
+            It 'Should call Update method correct number of times' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $mockParameters = @{
+                        Address     = '10.0.0.0'
+                        AddressMask = '255.255.255.0'
+                        Name        = 'Client1'
+                        Role        = [System.UInt32] 3
+                        Metric      = '70240'
+                    }
+
+                    { Set-TargetResource @mockParameters } | Should -Not -Throw
+
+                    $script:mockNumberOfTimesMockedMethodUpdateWasCalled | Should -BeExactly 1
+                }
+            }
+        }
+
+        Context 'When all Metric property is not in desired state' {
+            It 'Should call Update method correct number of times' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $mockProperties = @{
+                        Address     = '10.0.0.0'
+                        AddressMask = '255.255.255.0'
+                        Name        = 'Client1'
+                        Role        = [System.UInt32] 1
+                        Metric      = '10'
+                    }
+
+                    { Set-TargetResource @mockProperties } | Should -Not -Throw
+
+                    $script:mockNumberOfTimesMockedMethodUpdateWasCalled | Should -BeExactly 1
+                }
+            }
+        }
+    }
+
+    Context 'When the system is in the desired state' {
+        It 'Should call Update method correct number of times' {
+            InModuleScope -ScriptBlock {
+                Set-StrictMode -Version 1.0
+
+                $script:mockNumberOfTimesMockedMethodUpdateWasCalled = 0
+
+                $mockParameters = @{
+                    Address     = '10.0.0.0'
+                    AddressMask = '255.255.255.0'
+                    Name        = 'Client1'
+                    Role        = [System.UInt32] 1
+                    Metric      = '70240'
+                }
+
+
+                { Set-TargetResource @mockParameters } | Should -Not -Throw
+
+                $script:mockNumberOfTimesMockedMethodUpdateWasCalled | Should -BeExactly 0
+            }
+        }
     }
 }

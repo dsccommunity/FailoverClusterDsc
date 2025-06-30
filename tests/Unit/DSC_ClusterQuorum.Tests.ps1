@@ -58,7 +58,7 @@ AfterAll {
 
 Describe 'ClusterQuorum\Get-TargetResource' -Tag 'Get' {
     BeforeEach {
-        Mock -CommandName 'Get-ClusterQuorum' -MockWith {
+        Mock -CommandName Get-ClusterQuorum -MockWith {
             $getClusterQuorumReturnValue = [PSCustomObject] @{
                 Cluster        = 'CLUSTER01'
                 QuorumType     = $mockDynamicQuorumType
@@ -102,7 +102,7 @@ Describe 'ClusterQuorum\Get-TargetResource' -Tag 'Get' {
             $getClusterQuorumReturnValue
         }
 
-        Mock -CommandName 'Get-ClusterParameter' -MockWith {
+        Mock -CommandName Get-ClusterParameter -MockWith {
             @(
                 [PSCustomObject] @{
                     ClusterObject = $mockDynamicQuorumTypeDisplayName
@@ -116,7 +116,7 @@ Describe 'ClusterQuorum\Get-TargetResource' -Tag 'Get' {
             $Name -eq 'SharePath'
         }
 
-        Mock -CommandName 'Get-ClusterParameter' -MockWith {
+        Mock -CommandName Get-ClusterParameter -MockWith {
             @(
                 [PSCustomObject] @{
                     ClusterObject = 'File Share Witness'
@@ -137,109 +137,101 @@ Describe 'ClusterQuorum\Get-TargetResource' -Tag 'Get' {
         }
 
         Context 'When quorum type should be NodeMajority' {
-            Context 'When target node is Windows Server 2016 and newer' {
-                BeforeAll {
-                    $mockDynamicQuorumType = 'Majority'
-                    $mockDynamicExpectedQuorumType = 'NodeMajority'
-                }
+            BeforeAll {
+                $mockDynamicQuorumType = 'Majority'
+                $mockDynamicExpectedQuorumType = 'NodeMajority'
+            }
 
-                It 'Should return the correct values' {
-                    InModuleScope -ScriptBlock {
-                        Set-StrictMode -Version 1.0
+            It 'Should return the correct values' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
 
-                        $mockParameters = @{
-                            IsSingleInstance = 'Yes'
-                        }
-
-                        $result = Get-TargetResource @mockParameters
-
-                        $result.IsSingleInstance | Should -Be $mockParameters.IsSingleInstance
-                        $result.Type | Should -Be 'NodeMajority'
-                        $result.Resource | Should -BeNullOrEmpty
+                    $mockParameters = @{
+                        IsSingleInstance = 'Yes'
                     }
+
+                    $result = Get-TargetResource @mockParameters
+
+                    $result.IsSingleInstance | Should -Be $mockParameters.IsSingleInstance
+                    $result.Type | Should -Be 'NodeMajority'
+                    $result.Resource | Should -BeNullOrEmpty
                 }
             }
         }
 
         Context 'When desired state should be NodeAndDiskMajority' {
-            Context 'When target node is Windows Server 2016 and newer' {
-                BeforeAll {
-                    $mockDynamicQuorumType = 'Majority'
-                    $mockDynamicExpectedQuorumType = 'NodeAndDiskMajority'
-                }
+            BeforeAll {
+                $mockDynamicQuorumType = 'Majority'
+                $mockDynamicExpectedQuorumType = 'NodeAndDiskMajority'
+            }
 
-                It 'Should return the correct values' {
-                    InModuleScope -ScriptBlock {
-                        Set-StrictMode -Version 1.0
+            It 'Should return the correct values' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
 
-                        $mockParameters = @{
-                            IsSingleInstance = 'Yes'
-                        }
-
-                        $result = Get-TargetResource @mockParameters
-
-                        $result.IsSingleInstance | Should -Be $mockParameters.IsSingleInstance
-                        $result.Type | Should -Be 'NodeAndDiskMajority'
-                        $result.Resource | Should -Be 'Witness'
+                    $mockParameters = @{
+                        IsSingleInstance = 'Yes'
                     }
+
+                    $result = Get-TargetResource @mockParameters
+
+                    $result.IsSingleInstance | Should -Be $mockParameters.IsSingleInstance
+                    $result.Type | Should -Be 'NodeAndDiskMajority'
+                    $result.Resource | Should -Be 'Witness'
                 }
             }
         }
 
         Context 'When desired state should be NodeAndFileShareMajority' {
-            Context 'When target node is Windows Server 2016 and newer' {
-                BeforeAll {
-                    $mockDynamicQuorumType = 'Majority'
-                    $mockDynamicExpectedQuorumType = 'NodeAndFileShareMajority'
-                    $mockDynamicQuorumTypeDisplayName = 'File Share Quorum Witness'
-                }
+            BeforeAll {
+                $mockDynamicQuorumType = 'Majority'
+                $mockDynamicExpectedQuorumType = 'NodeAndFileShareMajority'
+                $mockDynamicQuorumTypeDisplayName = 'File Share Quorum Witness'
+            }
 
 
-                It 'Should return the correct values' {
-                    InModuleScope -ScriptBlock {
-                        Set-StrictMode -Version 1.0
+            It 'Should return the correct values' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
 
-                        $mockParameters = @{
-                            IsSingleInstance = 'Yes'
-                        }
-
-                        $result = Get-TargetResource @mockParameters
-
-                        $result.IsSingleInstance | Should -Be $mockParameters.IsSingleInstance
-                        $result.Type | Should -Be 'NodeAndFileShareMajority'
-                        $result.Resource | Should -Be '\\FILE01\CLUSTER01'
+                    $mockParameters = @{
+                        IsSingleInstance = 'Yes'
                     }
+
+                    $result = Get-TargetResource @mockParameters
+
+                    $result.IsSingleInstance | Should -Be $mockParameters.IsSingleInstance
+                    $result.Type | Should -Be 'NodeAndFileShareMajority'
+                    $result.Resource | Should -Be '\\FILE01\CLUSTER01'
                 }
             }
         }
 
         Context 'When desired state should be NodeAndCloudMajority' {
-            Context 'When target node is Windows Server 2016 and newer' {
-                BeforeAll {
-                    $mockDynamicQuorumType = 'Majority'
-                    $mockDynamicExpectedQuorumType = 'NodeAndCloudMajority'
-                }
+            BeforeAll {
+                $mockDynamicQuorumType = 'Majority'
+                $mockDynamicExpectedQuorumType = 'NodeAndCloudMajority'
+            }
 
-                It 'Should return the correct values' {
-                    InModuleScope -ScriptBlock {
-                        Set-StrictMode -Version 1.0
+            It 'Should return the correct values' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
 
-                        $mockParameters = @{
-                            IsSingleInstance = 'Yes'
-                        }
-
-                        $result = Get-TargetResource @mockParameters
-
-                        $result.IsSingleInstance | Should -Be $mockParameters.IsSingleInstance
-                        $result.Type | Should -Be 'NodeAndCloudMajority'
-                        $result.Resource | Should -Be 'AccountName'
+                    $mockParameters = @{
+                        IsSingleInstance = 'Yes'
                     }
+
+                    $result = Get-TargetResource @mockParameters
+
+                    $result.IsSingleInstance | Should -Be $mockParameters.IsSingleInstance
+                    $result.Type | Should -Be 'NodeAndCloudMajority'
+                    $result.Resource | Should -Be 'AccountName'
                 }
             }
         }
 
         Context 'When desired state should be DiskOnly' {
-            BeforeEach {
+            BeforeAll {
                 $mockDynamicQuorumType = 'DiskOnly'
             }
 
@@ -261,22 +253,20 @@ Describe 'ClusterQuorum\Get-TargetResource' -Tag 'Get' {
         }
 
         Context 'When quorum type is unknown' {
-            Context 'When target node is Windows Server 2016 and newer' {
-                BeforeEach {
-                    $mockDynamicQuorumType = 'Majority'
-                    $mockDynamicExpectedQuorumType = 'Unknown'
-                }
+            BeforeAll {
+                $mockDynamicQuorumType = 'Majority'
+                $mockDynamicExpectedQuorumType = 'Unknown'
+            }
 
-                It 'Should throw the correct error message' {
-                    InModuleScope -ScriptBlock {
-                        Set-StrictMode -Version 1.0
+            It 'Should throw the correct error message' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
 
-                        $mockParameters = @{
-                            IsSingleInstance = 'Yes'
-                        }
-
-                        { Get-TargetResource @mockParameters } | Should -Throw ('Unknown quorum resource: {0}' -f '@{Name=Witness; OwnerGroup=Cluster Group; ResourceType=}')
+                    $mockParameters = @{
+                        IsSingleInstance = 'Yes'
                     }
+
+                    { Get-TargetResource @mockParameters } | Should -Throw ('Unknown quorum resource: {0}' -f '@{Name=Witness; OwnerGroup=Cluster Group; ResourceType=}')
                 }
             }
         }
@@ -573,6 +563,33 @@ Describe 'ClusterQuorum\Set-TargetResource' -Tag 'Set' {
 
             Should -Invoke -CommandName Set-ClusterQuorum -ParameterFilter {
                 $FileShareWitness -eq 'Witness'
+            } -Exactly -Times 1 -Scope It
+        }
+    }
+
+    Context 'When quorum type should be NodeAndCloudMajority' {
+        BeforeAll {
+            $mockDynamicQuorumResourceName = 'AccountName'
+        }
+
+        It 'Should set the quorum in the cluster without throwing an error' {
+            InModuleScope -ScriptBlock {
+                Set-StrictMode -Version 1.0
+
+                $mockParameters = @{
+                    IsSingleInstance        = 'Yes'
+                    Type                    = 'NodeAndCloudMajority'
+                    Resource                = 'AccountName'
+                    StorageAccountAccessKey = 'USRuD354YbOHkPI35SUVyMj2W3odWekMIEdj3n2qAbc0yzqwpMwH-+M+GHJ27OuA5FkTxsbBF9qGc6r6UM3ipg=='
+                }
+
+                { Set-TargetResource @mockParameters } | Should -Not -Throw
+            }
+
+            Should -Invoke -CommandName Set-ClusterQuorum -ParameterFilter {
+                $CloudWitness -eq $true -and
+                $null -ne $AccountName -and
+                $null -ne $AccessKey
             } -Exactly -Times 1 -Scope It
         }
     }

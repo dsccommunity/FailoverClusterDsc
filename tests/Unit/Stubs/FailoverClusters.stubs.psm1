@@ -28,11 +28,11 @@ namespace ClusterLogParserLib
     {
         // Constructor
         public ClusterLogParser(ClusterLogParserLib.IParserLogger logger, System.String workingDirectory, System.String[] nodeLogs) { }
-        
+
         // Property
         public System.String WorkingDirectory { get; set; }
         public System.Collections.Generic.List<ClusterLogParserLib.ClusterNodeLogParser> Nodes { get; set; }
-        
+
         // Fabricated constructor
         private ClusterLogParser() { }
         public static ClusterLogParser CreateTypeInstance()
@@ -40,12 +40,12 @@ namespace ClusterLogParserLib
             return new ClusterLogParser();
         }
     }
-    
+
     public class ClusterNodeLogParser
     {
         // Constructor
         public ClusterNodeLogParser(ClusterLogParserLib.IParserLogger logger, System.String workingDirectory, System.String pathToLog) { }
-        
+
         // Property
         public System.String WorkingDirectory { get; set; }
         public System.String CurrentNode { get; set; }
@@ -70,7 +70,7 @@ namespace ClusterLogParserLib
         public ClusterLogParserLib.LogClusterAwareUpdatingManagement ClusterAwareUpdatingManagement { get; set; }
         public ClusterLogParserLib.LogClusterAwareUpdatingObject ClusterAwareUpdating { get; set; }
         public ClusterLogParserLib.LogClusApiOperationalLogsObject ClusApiOperationalLogs { get; set; }
-        
+
         // Fabricated constructor
         private ClusterNodeLogParser() { }
         public static ClusterNodeLogParser CreateTypeInstance()
@@ -78,140 +78,140 @@ namespace ClusterLogParserLib
             return new ClusterNodeLogParser();
         }
     }
-    
+
     public class IParserLogger
     {
         public bool IsSecondaryStubType = true;
-        
+
         public IParserLogger() { }
     }
-    
+
     public class LogCertificateObject
     {
         public bool IsSecondaryStubType = true;
-        
+
         public LogCertificateObject() { }
     }
-    
+
     public class LogClusApiOperationalLogsObject
     {
         public bool IsSecondaryStubType = true;
-        
+
         public LogClusApiOperationalLogsObject() { }
     }
-    
+
     public class LogClusterAwareUpdatingManagement
     {
         public bool IsSecondaryStubType = true;
-        
+
         public LogClusterAwareUpdatingManagement() { }
     }
-    
+
     public class LogClusterAwareUpdatingObject
     {
         public bool IsSecondaryStubType = true;
-        
+
         public LogClusterAwareUpdatingObject() { }
     }
-    
+
     public class LogDiagnosticVerboseObject
     {
         public bool IsSecondaryStubType = true;
-        
+
         public LogDiagnosticVerboseObject() { }
     }
-    
+
     public class LogFaultDomainObject
     {
         public bool IsSecondaryStubType = true;
-        
+
         public LogFaultDomainObject() { }
     }
-    
+
     public class LogGroupObject
     {
         public bool IsSecondaryStubType = true;
-        
+
         public LogGroupObject() { }
     }
-    
+
     public class LogHCSVirtualMachineObject
     {
         public bool IsSecondaryStubType = true;
-        
+
         public LogHCSVirtualMachineObject() { }
     }
-    
+
     public class LogNetworkInterfaceObject
     {
         public bool IsSecondaryStubType = true;
-        
+
         public LogNetworkInterfaceObject() { }
     }
-    
+
     public class LogNetworkObject
     {
         public bool IsSecondaryStubType = true;
-        
+
         public LogNetworkObject() { }
     }
-    
+
     public class LogNodeObject
     {
         public bool IsSecondaryStubType = true;
-        
+
         public LogNodeObject() { }
     }
-    
+
     public class LogOperationalLogsObject
     {
         public bool IsSecondaryStubType = true;
-        
+
         public LogOperationalLogsObject() { }
     }
-    
+
     public class LogResourceObject
     {
         public bool IsSecondaryStubType = true;
-        
+
         public LogResourceObject() { }
     }
-    
+
     public class LogResourceTypeObject
     {
         public bool IsSecondaryStubType = true;
-        
+
         public LogResourceTypeObject() { }
     }
-    
+
     public class LogSBLDiskObject
     {
         public bool IsSecondaryStubType = true;
-        
+
         public LogSBLDiskObject() { }
     }
-    
+
     public class LogSessionObject
     {
         public bool IsSecondaryStubType = true;
-        
+
         public LogSessionObject() { }
     }
-    
+
     public class LogVirtualMachineObject
     {
         public bool IsSecondaryStubType = true;
-        
+
         public LogVirtualMachineObject() { }
     }
-    
+
     public class LogVolumeObject
     {
         public bool IsSecondaryStubType = true;
-        
+
         public LogVolumeObject() { }
     }
-    
+
 }
 
 namespace Microsoft.FailoverClusters.NativeHelp
@@ -222,10 +222,10 @@ namespace Microsoft.FailoverClusters.NativeHelp
         {
             // Constructor
             public NativeGroupHelp() { }
-            
+
         }
-        
-        
+
+
         public enum VmMigrationType : int
         {
             TurnOff = 0,
@@ -235,7 +235,7 @@ namespace Microsoft.FailoverClusters.NativeHelp
             Live = 4,
         }
     }
-    
+
 }
 
 namespace Microsoft.FailoverClusters.PowerShell
@@ -247,14 +247,14 @@ namespace Microsoft.FailoverClusters.PowerShell
         Dns = 2,
         ActiveDirectory = 3,
     }
-    
+
     public enum AdminAccessPointResType : int
     {
         Automatic = 0,
         Singleton = 1,
         Distributed = 2,
     }
-    
+
     public class Cluster
     {
         // Property
@@ -351,7 +351,7 @@ namespace Microsoft.FailoverClusters.PowerShell
         public System.UInt32 RdmaConnectionsPerInterfaceForStorage { get; set; }
         public System.UInt32 AcceleratedNetworkingNodeReserve { get; set; }
         public System.UInt32 AcceleratedNetworkingEnabled { get; set; }
-        
+
         // Fabricated constructor
         private Cluster() { }
         public static Cluster CreateTypeInstance()
@@ -359,18 +359,18 @@ namespace Microsoft.FailoverClusters.PowerShell
             return new Cluster();
         }
     }
-    
+
     public class ClusterAccessRule
     {
         // Constructor
         public ClusterAccessRule(Microsoft.FailoverClusters.PowerShell.Cluster cluster, MS.Internal.ServerClusters.ClusterAccessRule rule) { }
-        
+
         // Property
         public Microsoft.FailoverClusters.PowerShell.Cluster Cluster { get; set; }
         public System.Security.AccessControl.AccessControlType AccessControlType { get; set; }
         public Microsoft.FailoverClusters.PowerShell.ClusterRights ClusterRights { get; set; }
         public System.Security.Principal.IdentityReference IdentityReference { get; set; }
-        
+
         // Fabricated constructor
         private ClusterAccessRule() { }
         public static ClusterAccessRule CreateTypeInstance()
@@ -378,7 +378,7 @@ namespace Microsoft.FailoverClusters.PowerShell
             return new ClusterAccessRule();
         }
     }
-    
+
     [System.Flags]
     public enum ClusterApplicationStatusInformation : ulong
     {
@@ -393,7 +393,7 @@ namespace Microsoft.FailoverClusters.PowerShell
         Unmonitored = 256,
         WaitingForDependencies = 4096,
     }
-    
+
     public enum ClusterCloudType : int
     {
         None = 0,
@@ -401,7 +401,7 @@ namespace Microsoft.FailoverClusters.PowerShell
         Mixed = 128,
         Unknown = -1,
     }
-    
+
     public class ClusterCryptoCheckpoint
     {
         // Property
@@ -409,7 +409,7 @@ namespace Microsoft.FailoverClusters.PowerShell
         public System.String Key { get; set; }
         public System.String CryptoType { get; set; }
         public System.String Name { get; set; }
-        
+
         // Fabricated constructor
         private ClusterCryptoCheckpoint() { }
         public static ClusterCryptoCheckpoint CreateTypeInstance()
@@ -417,7 +417,7 @@ namespace Microsoft.FailoverClusters.PowerShell
             return new ClusterCryptoCheckpoint();
         }
     }
-    
+
     public class ClusterDiskInfo
     {
         // Property
@@ -427,7 +427,7 @@ namespace Microsoft.FailoverClusters.PowerShell
         public System.UInt32 Number { get; set; }
         public System.UInt64 Size { get; set; }
         public Microsoft.FailoverClusters.PowerShell.ClusterDiskPartitionInfo[] Partitions { get; set; }
-        
+
         // Fabricated constructor
         private ClusterDiskInfo() { }
         public static ClusterDiskInfo CreateTypeInstance()
@@ -435,14 +435,14 @@ namespace Microsoft.FailoverClusters.PowerShell
             return new ClusterDiskInfo();
         }
     }
-    
+
     public class ClusterDiskPartitionInfo
     {
         public bool IsSecondaryStubType = true;
-        
+
         public ClusterDiskPartitionInfo() { }
     }
-    
+
     public class ClusterGroup
     {
         // Property
@@ -471,7 +471,7 @@ namespace Microsoft.FailoverClusters.PowerShell
         public Microsoft.FailoverClusters.PowerShell.ClusterApplicationStatusInformation StatusInformation { get; set; }
         public System.UInt32 UpdateDomain { get; set; }
         public System.String Id { get; set; }
-        
+
         // Fabricated constructor
         private ClusterGroup() { }
         public static ClusterGroup CreateTypeInstance()
@@ -479,7 +479,7 @@ namespace Microsoft.FailoverClusters.PowerShell
             return new ClusterGroup();
         }
     }
-    
+
     public enum ClusterGroupState : int
     {
         Online = 0,
@@ -489,7 +489,7 @@ namespace Microsoft.FailoverClusters.PowerShell
         Pending = 4,
         Unknown = -1,
     }
-    
+
     public class ClusterNetwork
     {
         // Property
@@ -507,7 +507,7 @@ namespace Microsoft.FailoverClusters.PowerShell
         public System.String Name { get; set; }
         public Microsoft.FailoverClusters.PowerShell.ClusterNetworkRole Role { get; set; }
         public Microsoft.FailoverClusters.PowerShell.ClusterNetworkState State { get; set; }
-        
+
         // Fabricated constructor
         private ClusterNetwork() { }
         public static ClusterNetwork CreateTypeInstance()
@@ -515,7 +515,7 @@ namespace Microsoft.FailoverClusters.PowerShell
             return new ClusterNetwork();
         }
     }
-    
+
     public class ClusterNetworkInterface
     {
         // Property
@@ -532,7 +532,7 @@ namespace Microsoft.FailoverClusters.PowerShell
         public Microsoft.FailoverClusters.PowerShell.ClusterNetwork Network { get; set; }
         public System.String Node { get; set; }
         public Microsoft.FailoverClusters.PowerShell.ClusterNetworkInterfaceState State { get; set; }
-        
+
         // Fabricated constructor
         private ClusterNetworkInterface() { }
         public static ClusterNetworkInterface CreateTypeInstance()
@@ -540,7 +540,7 @@ namespace Microsoft.FailoverClusters.PowerShell
             return new ClusterNetworkInterface();
         }
     }
-    
+
     public enum ClusterNetworkInterfaceState : int
     {
         Unavailable = 0,
@@ -549,7 +549,7 @@ namespace Microsoft.FailoverClusters.PowerShell
         Up = 3,
         Unknown = -1,
     }
-    
+
     public enum ClusterNetworkRole : int
     {
         None = 0,
@@ -557,7 +557,7 @@ namespace Microsoft.FailoverClusters.PowerShell
         Client = 2,
         ClusterAndClient = 3,
     }
-    
+
     public enum ClusterNetworkState : int
     {
         Unavailable = 0,
@@ -566,7 +566,7 @@ namespace Microsoft.FailoverClusters.PowerShell
         Up = 3,
         Unknown = -1,
     }
-    
+
     public class ClusterNode
     {
         // Property
@@ -599,7 +599,7 @@ namespace Microsoft.FailoverClusters.PowerShell
         public System.String UniqueID { get; set; }
         public Microsoft.FailoverClusters.PowerShell.NodeCloudType DetectedCloudPlatform { get; set; }
         public System.UInt32 HyperthreadingEnabled { get; set; }
-        
+
         // Fabricated constructor
         private ClusterNode() { }
         public static ClusterNode CreateTypeInstance()
@@ -607,7 +607,7 @@ namespace Microsoft.FailoverClusters.PowerShell
             return new ClusterNode();
         }
     }
-    
+
     public enum ClusterNodeDrainStatus : int
     {
         NotInitiated = 0,
@@ -615,7 +615,7 @@ namespace Microsoft.FailoverClusters.PowerShell
         Completed = 2,
         Failed = 3,
     }
-    
+
     public enum ClusterNodeFailbackStatus : int
     {
         NotInitiated = 0,
@@ -623,7 +623,7 @@ namespace Microsoft.FailoverClusters.PowerShell
         Completed = 2,
         Failed = 3,
     }
-    
+
     public enum ClusterNodeState : int
     {
         Up = 0,
@@ -632,7 +632,7 @@ namespace Microsoft.FailoverClusters.PowerShell
         Joining = 3,
         Unknown = -1,
     }
-    
+
     [System.Flags]
     public enum ClusterNodeStatusInformation : int
     {
@@ -645,20 +645,20 @@ namespace Microsoft.FailoverClusters.PowerShell
         AvoidPlacement = 32,
         Unknown = -2147483648,
     }
-    
+
     public class ClusterObject
     {
         public bool IsSecondaryStubType = true;
-        
+
         public ClusterObject() { }
     }
-    
+
     public class ClusterOwnerNodeList
     {
         // Property
         public Microsoft.FailoverClusters.PowerShell.ClusterObject ClusterObject { get; set; }
         public System.Collections.Generic.ICollection<Microsoft.FailoverClusters.PowerShell.ClusterNode> OwnerNodes { get; set; }
-        
+
         // Fabricated constructor
         private ClusterOwnerNodeList() { }
         public static ClusterOwnerNodeList CreateTypeInstance()
@@ -666,21 +666,21 @@ namespace Microsoft.FailoverClusters.PowerShell
             return new ClusterOwnerNodeList();
         }
     }
-    
+
     public class ClusterParameter
     {
         // Constructor
         public ClusterParameter(Microsoft.FailoverClusters.PowerShell.ClusterObject clusterObject, System.String name, System.Object value) { }
         public ClusterParameter(Microsoft.FailoverClusters.PowerShell.ClusterObject clusterObject, System.String name, System.Object value, Microsoft.FailoverClusters.PowerShell.ClusterParameterType type) { }
         public ClusterParameter(Microsoft.FailoverClusters.PowerShell.ClusterObject clusterObject, System.String name, System.Object value, System.Boolean isReadOnly, Microsoft.FailoverClusters.PowerShell.ClusterParameterType type) { }
-        
+
         // Property
         public Microsoft.FailoverClusters.PowerShell.ClusterObject ClusterObject { get; set; }
         public System.String Name { get; set; }
         public System.Boolean IsReadOnly { get; set; }
         public Microsoft.FailoverClusters.PowerShell.ClusterParameterType ParameterType { get; set; }
         public System.Object Value { get; set; }
-        
+
         // Fabricated constructor
         private ClusterParameter() { }
         public static ClusterParameter CreateTypeInstance()
@@ -688,7 +688,7 @@ namespace Microsoft.FailoverClusters.PowerShell
             return new ClusterParameter();
         }
     }
-    
+
     public enum ClusterParameterType : int
     {
         Unknown = 0,
@@ -704,14 +704,14 @@ namespace Microsoft.FailoverClusters.PowerShell
         UInt16 = 11,
         DateTime = 12,
     }
-    
+
     public class ClusterQuorumSettings
     {
         // Property
         public Microsoft.FailoverClusters.PowerShell.Cluster Cluster { get; set; }
         public Microsoft.FailoverClusters.PowerShell.ClusterResource QuorumResource { get; set; }
         public Microsoft.FailoverClusters.PowerShell.ClusterQuorumType QuorumType { get; set; }
-        
+
         // Fabricated constructor
         private ClusterQuorumSettings() { }
         public static ClusterQuorumSettings CreateTypeInstance()
@@ -719,20 +719,20 @@ namespace Microsoft.FailoverClusters.PowerShell
             return new ClusterQuorumSettings();
         }
     }
-    
+
     public enum ClusterQuorumType : int
     {
         Unknown = 0,
         Majority = 1,
         DiskOnly = 2,
     }
-    
+
     public class ClusterRegistryCheckpoint
     {
         // Property
         public Microsoft.FailoverClusters.PowerShell.ClusterResource Resource { get; set; }
         public System.String Name { get; set; }
-        
+
         // Fabricated constructor
         private ClusterRegistryCheckpoint() { }
         public static ClusterRegistryCheckpoint CreateTypeInstance()
@@ -740,13 +740,13 @@ namespace Microsoft.FailoverClusters.PowerShell
             return new ClusterRegistryCheckpoint();
         }
     }
-    
+
     public enum ClusterResiliencyLevel : int
     {
         IsolateOnSpecialHeartbeat = 1,
         AlwaysIsolate = 2,
     }
-    
+
     public class ClusterResource
     {
         // Property
@@ -781,7 +781,7 @@ namespace Microsoft.FailoverClusters.PowerShell
         public System.Boolean SeparateMonitor { get; set; }
         public Microsoft.FailoverClusters.PowerShell.ClusterResourceState State { get; set; }
         public Microsoft.FailoverClusters.PowerShell.ClusterResourceStatusInformation StatusInformation { get; set; }
-        
+
         // Fabricated constructor
         private ClusterResource() { }
         public static ClusterResource CreateTypeInstance()
@@ -789,7 +789,7 @@ namespace Microsoft.FailoverClusters.PowerShell
             return new ClusterResource();
         }
     }
-    
+
     [System.Flags]
     public enum ClusterResourceAndResourceTypeCharacteristics : int
     {
@@ -814,13 +814,13 @@ namespace Microsoft.FailoverClusters.PowerShell
         CheckDrainVeto = 262144,
         DrainLocalOffline = 524288,
     }
-    
+
     public class ClusterResourceDependency
     {
         // Property
         public Microsoft.FailoverClusters.PowerShell.ClusterResource Resource { get; set; }
         public System.String DependencyExpression { get; set; }
-        
+
         // Fabricated constructor
         private ClusterResourceDependency() { }
         public static ClusterResourceDependency CreateTypeInstance()
@@ -828,7 +828,7 @@ namespace Microsoft.FailoverClusters.PowerShell
             return new ClusterResourceDependency();
         }
     }
-    
+
     public enum ClusterResourceState : int
     {
         Inherited = 0,
@@ -841,7 +841,7 @@ namespace Microsoft.FailoverClusters.PowerShell
         OfflinePending = 130,
         Unknown = -1,
     }
-    
+
     [System.Flags]
     public enum ClusterResourceStatusInformation : ulong
     {
@@ -853,7 +853,7 @@ namespace Microsoft.FailoverClusters.PowerShell
         NetworkFailure = 32,
         Unmonitored = 64,
     }
-    
+
     public class ClusterResourceType
     {
         // Property
@@ -876,7 +876,7 @@ namespace Microsoft.FailoverClusters.PowerShell
         public System.UInt32 MaximumMonitors { get; set; }
         public System.String Name { get; set; }
         public System.UInt32 PendingTimeout { get; set; }
-        
+
         // Fabricated constructor
         private ClusterResourceType() { }
         public static ClusterResourceType CreateTypeInstance()
@@ -884,14 +884,14 @@ namespace Microsoft.FailoverClusters.PowerShell
             return new ClusterResourceType();
         }
     }
-    
+
     public enum ClusterRights : int
     {
         None = 0,
         Read = 1,
         Full = 2,
     }
-    
+
     public class ClusterSharedVolume
     {
         // Property
@@ -900,7 +900,7 @@ namespace Microsoft.FailoverClusters.PowerShell
         public Microsoft.FailoverClusters.PowerShell.ClusterNode OwnerNode { get; set; }
         public System.Collections.Generic.ICollection<Microsoft.FailoverClusters.PowerShell.ClusterSharedVolumeInfo> SharedVolumeInfo { get; set; }
         public Microsoft.FailoverClusters.PowerShell.ClusterResourceState State { get; set; }
-        
+
         // Fabricated constructor
         private ClusterSharedVolume() { }
         public static ClusterSharedVolume CreateTypeInstance()
@@ -908,7 +908,7 @@ namespace Microsoft.FailoverClusters.PowerShell
             return new ClusterSharedVolume();
         }
     }
-    
+
     [System.Flags]
     public enum ClusterSharedVolumeBlockRedirectedIOReason : int
     {
@@ -917,7 +917,7 @@ namespace Microsoft.FailoverClusters.PowerShell
         StorageSpaceNotAttached = 2,
         VolumeReplicationEnabled = 4,
     }
-    
+
     [System.Flags]
     public enum ClusterSharedVolumeFileSystemRedirectedIOReasons : int
     {
@@ -929,20 +929,20 @@ namespace Microsoft.FailoverClusters.PowerShell
         BitLockerInitializing = 16,
         FileSystemReFs = 32,
     }
-    
+
     public class ClusterSharedVolumeInfo
     {
         public bool IsSecondaryStubType = true;
-        
+
         public ClusterSharedVolumeInfo() { }
     }
-    
+
     public enum ClusterSharedVolumesSetting : int
     {
         Disabled = 0,
         Enabled = 1,
     }
-    
+
     public enum ClusterSharedVolumeState : int
     {
         Unavailable = 0,
@@ -951,12 +951,12 @@ namespace Microsoft.FailoverClusters.PowerShell
         FileSystemRedirected = 3,
         BlockRedirected = 4,
     }
-    
+
     public class ClusterSharedVolumeStateInfo
     {
         // Constructor
         public ClusterSharedVolumeStateInfo() { }
-        
+
         // Property
         public Microsoft.FailoverClusters.PowerShell.ClusterSharedVolumeBlockRedirectedIOReason BlockRedirectedIOReason { get; set; }
         public Microsoft.FailoverClusters.PowerShell.ClusterSharedVolumeFileSystemRedirectedIOReasons FileSystemRedirectedIOReason { get; set; }
@@ -965,16 +965,16 @@ namespace Microsoft.FailoverClusters.PowerShell
         public Microsoft.FailoverClusters.PowerShell.ClusterSharedVolumeState StateInfo { get; set; }
         public System.String VolumeFriendlyName { get; set; }
         public System.String VolumeName { get; set; }
-        
+
     }
-    
+
     public class ClusterTestInfo
     {
         // Property
         public System.String Category { get; set; }
         public System.String DisplayName { get; set; }
         public System.String Description { get; set; }
-        
+
         // Fabricated constructor
         private ClusterTestInfo() { }
         public static ClusterTestInfo CreateTypeInstance()
@@ -982,13 +982,13 @@ namespace Microsoft.FailoverClusters.PowerShell
             return new ClusterTestInfo();
         }
     }
-    
+
     public class ClusterVMMonitoredItem
     {
         // Property
         public System.String VMName { get; set; }
         public System.String Name { get; set; }
-        
+
         // Fabricated constructor
         private ClusterVMMonitoredItem() { }
         public static ClusterVMMonitoredItem CreateTypeInstance()
@@ -996,7 +996,7 @@ namespace Microsoft.FailoverClusters.PowerShell
             return new ClusterVMMonitoredItem();
         }
     }
-    
+
     public enum GroupType : uint
     {
         Cluster = 1,
@@ -1034,27 +1034,27 @@ namespace Microsoft.FailoverClusters.PowerShell
         MetaVirtualMachine = 127,
         Unknown = 9999,
     }
-    
+
     public enum NodeCloudType : int
     {
         None = 0,
         Azure = 1,
         Unknown = -1,
     }
-    
+
     public enum NodeType : int
     {
         Node = 0,
         StorageNode = 1,
     }
-    
+
     public enum ResumeClusterNodeFailbackType : int
     {
         NoFailback = 0,
         Immediate = 1,
         Policy = 2,
     }
-    
+
     [System.Flags]
     public enum S2DCacheBehavior : ulong
     {
@@ -1068,7 +1068,7 @@ namespace Microsoft.FailoverClusters.PowerShell
         Default = 88,
         UseScmForCapacity = 128,
     }
-    
+
     public enum S2DCacheState : int
     {
         Disabled = 0,
@@ -1084,7 +1084,7 @@ namespace Microsoft.FailoverClusters.PowerShell
         IneligibleNoFlash = 1002,
         IneligibleNotMixedMedia = 1003,
     }
-    
+
 }
 
 namespace Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_AffinityRule
@@ -1096,7 +1096,7 @@ namespace Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_
         DifferentFaultDomain = 3,
         DifferentNode = 4,
     }
-    
+
 }
 
 namespace Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_ClusterService
@@ -1107,7 +1107,7 @@ namespace Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_
         Description = 1,
         FriendlyName = 2,
     }
-    
+
 }
 
 namespace Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_FaultDomain
@@ -1121,7 +1121,7 @@ namespace Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_
         Node = 4000,
         StorageNode = 5000,
     }
-    
+
 }
 
 namespace Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_GroupSet
@@ -1131,7 +1131,7 @@ namespace Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_
         Delay = 1,
         Online = 2,
     }
-    
+
 }
 
 namespace Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_KeyValueStore
@@ -1141,7 +1141,7 @@ namespace Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_
         InMemory = 1,
         Esent = 2,
     }
-    
+
 }
 
 namespace Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_KeyValueStoreManager
@@ -1150,13 +1150,13 @@ namespace Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_
     {
         Force = 1,
     }
-    
+
     public enum StoreType : uint
     {
         InMemory = 1,
         Esent = 2,
     }
-    
+
 }
 
 namespace Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_StorageSpacesDirect
@@ -1167,13 +1167,13 @@ namespace Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_
         WriteOnly = 8,
         ReadWrite = 12,
     }
-    
+
     public enum CacheStateType : uint
     {
         Disabled = 0,
         Enabled = 2,
     }
-    
+
     public enum S2DBusType : ushort
     {
         Sas = 10,
@@ -1181,20 +1181,20 @@ namespace Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_
         Nvme = 17,
         SCM = 18,
     }
-    
+
     public enum ScmUse : uint
     {
         Cache = 0,
         Capacity = 1,
     }
-    
+
     public enum SedProtectionStateType : uint
     {
         Disabled = 0,
         Provisioned = 1,
         Protected = 2,
     }
-    
+
 }
 
 namespace MS.Internal.ServerClusters
@@ -1202,13 +1202,13 @@ namespace MS.Internal.ServerClusters
     public class ClusterAccessRule
     {
         public bool IsSecondaryStubType = true;
-        
+
         public ClusterAccessRule() { }
     }
-    
+
 }
 
-namespace Set-ClusterStorageSpacesDirectDisk
+namespace ClusterStorageSpacesDirectDisk
 {
     [System.Flags]
     public enum S2DDiskUsage : int
@@ -1218,7 +1218,7 @@ namespace Set-ClusterStorageSpacesDirectDisk
         Cache = 2,
         Auto = 3,
     }
-    
+
 }
 
 '@
@@ -1228,31 +1228,31 @@ function Add-VMToCluster {
     .SYNOPSIS
         Add-ClusterVirtualMachineRole [[-VMName] <string>] [-Name <string>] [-VirtualMachine <string>] [-VMId <guid>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(HelpUri='https://go.microsoft.com/fwlink/?LinkId=216198')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterGroup])]
     param (
         [ValidateNotNullOrEmpty()]
         [string]
         ${Name},
-        
+
         [Parameter(Position=0, ValueFromPipelineByPropertyName=$true)]
         [string]
         ${VMName},
-        
+
         [Alias('VM')]
         [string]
         ${VirtualMachine},
-        
+
         [Parameter(ValueFromPipelineByPropertyName=$true)]
         [guid]
         ${VMId},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -1267,23 +1267,23 @@ function Disable-ClusterS2D {
     .SYNOPSIS
         Disable-ClusterStorageSpacesDirect [-CleanupCache <bool>] [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [-WhatIf] [-Confirm] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High', PositionalBinding=$false, HelpUri='https://go.microsoft.com/fwlink/?LinkId=615933')]
     param (
         [Parameter(ParameterSetName='DefaultParameterSet')]
         [bool]
         ${CleanupCache},
-        
+
         [Parameter(ParameterSetName='DefaultParameterSet')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='DefaultParameterSet')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='DefaultParameterSet')]
         [switch]
         ${AsJob}
@@ -1302,7 +1302,7 @@ Enable-ClusterStorageSpacesDirect -XML <string> [-PoolFriendlyName <string>] [-A
 
 Enable-ClusterStorageSpacesDirect -CacheDeviceModel <string[]> [-PoolFriendlyName <string>] [-Autoconfig <bool>] [-CacheState <CacheStateType>] [-CacheMetadataReserveBytes <uint64>] [-CachePageSizeKBytes <uint32>] [-SkipEligibilityChecks] [-CollectPerformanceHistory <bool>] [-BusTypesToUse <S2DBusType[]>] [-SedProtectionState <SedProtectionStateType>] [-UseSedExclusively <bool>] [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [-WhatIf] [-Confirm] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High', PositionalBinding=$false, HelpUri='https://go.microsoft.com/fwlink/?LinkId=615932')]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCluster/MSCluster_StorageSpacesDirectEnable')]
@@ -1317,48 +1317,48 @@ Enable-ClusterStorageSpacesDirect -CacheDeviceModel <string[]> [-PoolFriendlyNam
         [ValidateNotNullOrEmpty()]
         [string]
         ${PoolFriendlyName},
-        
+
         [Parameter(ParameterSetName='Auto')]
         [Parameter(ParameterSetName='WithXML')]
         [Parameter(ParameterSetName='WithCacheDeviceModel')]
         [bool]
         ${Autoconfig},
-        
+
         [Parameter(ParameterSetName='Auto')]
         [Parameter(ParameterSetName='WithXML')]
         [Parameter(ParameterSetName='WithCacheDeviceModel')]
         [Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_StorageSpacesDirect.CacheStateType]
         ${CacheState},
-        
+
         [Parameter(ParameterSetName='Auto')]
         [Parameter(ParameterSetName='WithXML')]
         [Parameter(ParameterSetName='WithCacheDeviceModel')]
         [uint64]
         ${CacheMetadataReserveBytes},
-        
+
         [Parameter(ParameterSetName='Auto')]
         [Parameter(ParameterSetName='WithXML')]
         [Parameter(ParameterSetName='WithCacheDeviceModel')]
         [ValidateSet('8','16','32','64')]
         [uint32]
         ${CachePageSizeKBytes},
-        
+
         [Parameter(ParameterSetName='Auto')]
         [Parameter(ParameterSetName='WithXML')]
         [Parameter(ParameterSetName='WithCacheDeviceModel')]
         [switch]
         ${SkipEligibilityChecks},
-        
+
         [Parameter(ParameterSetName='WithCacheDeviceModel', Mandatory=$true)]
         [string[]]
         ${CacheDeviceModel},
-        
+
         [Parameter(ParameterSetName='Auto')]
         [Parameter(ParameterSetName='WithXML')]
         [Parameter(ParameterSetName='WithCacheDeviceModel')]
         [bool]
         ${CollectPerformanceHistory},
-        
+
         [Parameter(ParameterSetName='Auto')]
         [Parameter(ParameterSetName='WithXML')]
         [Parameter(ParameterSetName='WithCacheDeviceModel')]
@@ -1366,24 +1366,24 @@ Enable-ClusterStorageSpacesDirect -CacheDeviceModel <string[]> [-PoolFriendlyNam
         [ValidateNotNull()]
         [Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_StorageSpacesDirect.S2DBusType[]]
         ${BusTypesToUse},
-        
+
         [Parameter(ParameterSetName='Auto')]
         [Parameter(ParameterSetName='WithXML')]
         [Parameter(ParameterSetName='WithCacheDeviceModel')]
         [Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_StorageSpacesDirect.SedProtectionStateType]
         ${SedProtectionState},
-        
+
         [Parameter(ParameterSetName='Auto')]
         [Parameter(ParameterSetName='WithXML')]
         [Parameter(ParameterSetName='WithCacheDeviceModel')]
         [bool]
         ${UseSedExclusively},
-        
+
         [Parameter(ParameterSetName='WithXML', Mandatory=$true)]
         [ValidateNotNullOrEmpty()]
         [string]
         ${XML},
-        
+
         [Parameter(ParameterSetName='Auto')]
         [Parameter(ParameterSetName='WithXML')]
         [Parameter(ParameterSetName='WithCacheDeviceModel')]
@@ -1391,13 +1391,13 @@ Enable-ClusterStorageSpacesDirect -CacheDeviceModel <string[]> [-PoolFriendlyNam
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='Auto')]
         [Parameter(ParameterSetName='WithXML')]
         [Parameter(ParameterSetName='WithCacheDeviceModel')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='Auto')]
         [Parameter(ParameterSetName='WithXML')]
         [Parameter(ParameterSetName='WithCacheDeviceModel')]
@@ -1428,51 +1428,51 @@ Get-ClusterPerformanceHistory [[-VolumeSeriesName] <Object>] [[-TimeFrame] <stri
 
 Get-ClusterPerformanceHistory [[-NetAdapterSeriesName] <Object>] [[-TimeFrame] <string>] [-NetworkAdapter] <CimInstance#MSFT_NetAdapter[]> [-CimSession <CimSession>] [-WhatIf] [-Confirm] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='ByCluster', SupportsShouldProcess=$true, ConfirmImpact='Medium')]
     param (
         [Parameter(ParameterSetName='Api', Mandatory=$true)]
         [ValidateNotNullOrEmpty()]
         [string]
         ${SeriesKeyName},
-        
+
         [Parameter(ParameterSetName='Api', Mandatory=$true)]
         [ValidateNotNullOrEmpty()]
         [string]
         ${Stream},
-        
+
         [Parameter(ParameterSetName='Api')]
         [switch]
         ${UsePattern},
-        
+
         [Parameter(ParameterSetName='ByCluster', Position=0)]
         [System.Object]
         ${ClusterSeriesName},
-        
+
         [Parameter(ParameterSetName='ByClusterNode', Position=0)]
         [System.Object]
         ${ClusterNodeSeriesName},
-        
+
         [Parameter(ParameterSetName='ByVM', Position=0)]
         [System.Object]
         ${VMSeriesName},
-        
+
         [Parameter(ParameterSetName='ByVHD', Position=0)]
         [System.Object]
         ${VHDSeriesName},
-        
+
         [Parameter(ParameterSetName='ByPhysicalDisk', Position=0)]
         [System.Object]
         ${PhysicalDiskSeriesName},
-        
+
         [Parameter(ParameterSetName='ByVolume', Position=0)]
         [System.Object]
         ${VolumeSeriesName},
-        
+
         [Parameter(ParameterSetName='ByNetAdapter', Position=0)]
         [System.Object]
         ${NetAdapterSeriesName},
-        
+
         [Parameter(ParameterSetName='ByNetAdapter', Position=1)]
         [Parameter(ParameterSetName='ByVolume', Position=1)]
         [Parameter(ParameterSetName='ByPhysicalDisk', Position=1)]
@@ -1484,40 +1484,40 @@ Get-ClusterPerformanceHistory [[-NetAdapterSeriesName] <Object>] [[-TimeFrame] <
         [ValidateSet('MostRecent','LastHour','LastDay','LastWeek','LastMonth','LastYear')]
         [string]
         ${TimeFrame},
-        
+
         [Parameter(ParameterSetName='ByCluster', Position=2, ValueFromPipeline=$true)]
         [Microsoft.FailoverClusters.PowerShell.Cluster]
         ${Cluster},
-        
+
         [Parameter(ParameterSetName='ByClusterNode', Mandatory=$true, Position=2, ValueFromPipeline=$true)]
         [Microsoft.FailoverClusters.PowerShell.ClusterNode[]]
         ${ClusterNode},
-        
+
         [Parameter(ParameterSetName='ByVM', Mandatory=$true, Position=2, ValueFromPipeline=$true)]
         [PSTypeName('Microsoft.HyperV.PowerShell.VirtualMachine')]
         [psobject[]]
         ${VM},
-        
+
         [Parameter(ParameterSetName='ByVHD', Mandatory=$true, Position=2, ValueFromPipeline=$true)]
         [PSTypeName('Microsoft.Vhd.PowerShell.VirtualHardDisk')]
         [psobject[]]
         ${VHD},
-        
+
         [Parameter(ParameterSetName='ByPhysicalDisk', Mandatory=$true, Position=2, ValueFromPipeline=$true)]
         [PSTypeName('Microsoft.Management.Infrastructure.CimInstance#root/microsoft/windows/storage/MSFT_PhysicalDisk')]
         [ciminstance[]]
         ${PhysicalDisk},
-        
+
         [Parameter(ParameterSetName='ByVolume', Mandatory=$true, Position=2, ValueFromPipeline=$true)]
         [PSTypeName('Microsoft.Management.Infrastructure.CimInstance#root/microsoft/windows/storage/MSFT_Volume')]
         [ciminstance[]]
         ${Volume},
-        
+
         [Parameter(ParameterSetName='ByNetAdapter', Mandatory=$true, Position=2, ValueFromPipeline=$true)]
         [PSTypeName('Microsoft.Management.Infrastructure.CimInstance#ROOT/StandardCimv2/MSFT_NetAdapter')]
         [ciminstance[]]
         ${NetworkAdapter},
-        
+
         [CimSession]
         ${CimSession}
     )
@@ -1531,7 +1531,7 @@ function Get-ClusterS2D {
     .SYNOPSIS
         Get-ClusterStorageSpacesDirect [-Node <string>] [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(PositionalBinding=$false, HelpUri='https://go.microsoft.com/fwlink/?LinkId=691107')]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCluster/MSCluster_StorageSpacesDirect')]
@@ -1539,17 +1539,17 @@ function Get-ClusterS2D {
         [Parameter(ParameterSetName='DefaultParameterSet')]
         [string]
         ${Node},
-        
+
         [Parameter(ParameterSetName='DefaultParameterSet')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='DefaultParameterSet')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='DefaultParameterSet')]
         [switch]
         ${AsJob}
@@ -1564,32 +1564,32 @@ function Remove-VMFromCluster {
     .SYNOPSIS
         Remove-ClusterGroup [[-Name] <StringCollection>] [-VMId <guid>] [-Force] [-RemoveResources] [-Reason <string>] [-InputObject <psobject>] [-Cluster <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', SupportsShouldProcess=$true, ConfirmImpact='Medium', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216234')]
     param (
         [Parameter(ValueFromPipelineByPropertyName=$true)]
         [guid]
         ${VMId},
-        
+
         [Parameter(Position=0)]
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${Name},
-        
+
         [switch]
         ${Force},
-        
+
         [switch]
         ${RemoveResources},
-        
+
         [string]
         ${Reason},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -1606,39 +1606,39 @@ function Repair-ClusterS2D {
 
 Repair-ClusterStorageSpacesDirect [-DisableStorageMaintenanceMode] [-Node <string>] [-SkipDiskRecovery] [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [-WhatIf] [-Confirm] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='DefaultParameterSet', SupportsShouldProcess=$true, ConfirmImpact='High', PositionalBinding=$false)]
     param (
         [Parameter(ParameterSetName='SkipDiskRecoverySet')]
         [Parameter(ParameterSetName='DefaultParameterSet')]
         [switch]
         ${DisableStorageMaintenanceMode},
-        
+
         [Parameter(ParameterSetName='DefaultParameterSet')]
         [switch]
         ${RecoverUnboundDrives},
-        
+
         [Parameter(ParameterSetName='SkipDiskRecoverySet')]
         [Parameter(ParameterSetName='DefaultParameterSet')]
         [string]
         ${Node},
-        
+
         [Parameter(ParameterSetName='SkipDiskRecoverySet')]
         [switch]
         ${SkipDiskRecovery},
-        
+
         [Parameter(ParameterSetName='SkipDiskRecoverySet')]
         [Parameter(ParameterSetName='DefaultParameterSet')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='SkipDiskRecoverySet')]
         [Parameter(ParameterSetName='DefaultParameterSet')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='SkipDiskRecoverySet')]
         [Parameter(ParameterSetName='DefaultParameterSet')]
         [switch]
@@ -1654,51 +1654,51 @@ function Set-ClusterS2D {
     .SYNOPSIS
         Set-ClusterStorageSpacesDirect [-CacheState <CacheStateType>] [-CacheModeHDD <CacheModeType>] [-CacheModeSSD <CacheModeType>] [-Nodes <string[]>] [-ScmUse <ScmUse>] [-SkipEligibilityChecks] [-SedProtectionState <SedProtectionStateType>] [-UseSedExclusively <bool>] [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(PositionalBinding=$false, HelpUri='https://go.microsoft.com/fwlink/?LinkId=691106')]
     param (
         [Parameter(ParameterSetName='SetStorageSpacesDirect0')]
         [Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_StorageSpacesDirect.CacheStateType]
         ${CacheState},
-        
+
         [Parameter(ParameterSetName='SetStorageSpacesDirect0')]
         [Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_StorageSpacesDirect.CacheModeType]
         ${CacheModeHDD},
-        
+
         [Parameter(ParameterSetName='SetStorageSpacesDirect0')]
         [Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_StorageSpacesDirect.CacheModeType]
         ${CacheModeSSD},
-        
+
         [Parameter(ParameterSetName='SetStorageSpacesDirect0')]
         [string[]]
         ${Nodes},
-        
+
         [Parameter(ParameterSetName='SetStorageSpacesDirect0')]
         [Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_StorageSpacesDirect.ScmUse]
         ${ScmUse},
-        
+
         [Parameter(ParameterSetName='SetStorageSpacesDirect0')]
         [switch]
         ${SkipEligibilityChecks},
-        
+
         [Parameter(ParameterSetName='SetStorageSpacesDirect0')]
         [Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_StorageSpacesDirect.SedProtectionStateType]
         ${SedProtectionState},
-        
+
         [Parameter(ParameterSetName='SetStorageSpacesDirect0')]
         [bool]
         ${UseSedExclusively},
-        
+
         [Parameter(ParameterSetName='SetStorageSpacesDirect0')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='SetStorageSpacesDirect0')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='SetStorageSpacesDirect0')]
         [switch]
         ${AsJob}
@@ -1715,41 +1715,41 @@ function Set-ClusterS2DDisk {
 
 Set-ClusterStorageSpacesDirectDisk -PhysicalDisk <CimInstance#MSFT_PhysicalDisk[]> [-CanBeClaimed <bool>] [-Reset] [-CacheUsage <S2DDiskUsage>] [-CimSession <CimSession>] [-ThrottleLimit <int>] [-AsJob] [-WhatIf] [-Confirm] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='ByPhysicalDiskGuid', SupportsShouldProcess=$true, ConfirmImpact='High')]
     param (
         [Parameter(ParameterSetName='ByPhysicalDiskGuid', Mandatory=$true)]
         [ValidateNotNullOrEmpty()]
         [string[]]
         ${PhysicalDiskGuid},
-        
+
         [Parameter(ParameterSetName='ByPhysicalDisk', Mandatory=$true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [PSTypeName('Microsoft.Management.Infrastructure.CimInstance#ROOT/Microsoft/Windows/Storage/MSFT_PhysicalDisk')]
         [ciminstance[]]
         ${PhysicalDisk},
-        
+
         [Parameter(ParameterSetName='ByPhysicalDisk')]
         [Parameter(ParameterSetName='ByPhysicalDiskGuid')]
         [bool]
         ${CanBeClaimed},
-        
+
         [Parameter(ParameterSetName='ByPhysicalDisk')]
         [Parameter(ParameterSetName='ByPhysicalDiskGuid')]
         [switch]
         ${Reset},
-        
+
         [Parameter(ParameterSetName='ByPhysicalDisk')]
         [Parameter(ParameterSetName='ByPhysicalDiskGuid')]
-        [Set-ClusterStorageSpacesDirectDisk.S2DDiskUsage]
+        [ClusterStorageSpacesDirectDisk.S2DDiskUsage]
         ${CacheUsage},
-        
+
         [CimSession]
         ${CimSession},
-        
+
         [int]
         ${ThrottleLimit},
-        
+
         [switch]
         ${AsJob}
     )
@@ -1763,7 +1763,7 @@ function Start-ClusterPerf {
     .SYNOPSIS
         Start-ClusterPerformanceHistory [[-CimSession] <CimSession>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding()]
     param (
         [Parameter(Position=0)]
@@ -1780,12 +1780,12 @@ function Stop-ClusterPerf {
     .SYNOPSIS
         Stop-ClusterPerformanceHistory [[-CimSession] <CimSession>] [-DeleteHistory] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding()]
     param (
         [switch]
         ${DeleteHistory},
-        
+
         [Parameter(Position=0)]
         [CimSession]
         ${CimSession}
@@ -1800,27 +1800,27 @@ function Add-ClusterExcludedAdapter {
     .SYNOPSIS
         Add-ClusterExcludedAdapter -ExclusionType <AdapterExclusionType> -ExclusionValue <string[]> [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(PositionalBinding=$false)]
     param (
         [Parameter(ParameterSetName='AddClusterExcludedAdapter1', Mandatory=$true)]
         [Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_ClusterService.AdapterExclusionType]
         ${ExclusionType},
-        
+
         [Parameter(ParameterSetName='AddClusterExcludedAdapter1', Mandatory=$true)]
         [string[]]
         ${ExclusionValue},
-        
+
         [Parameter(ParameterSetName='AddClusterExcludedAdapter1')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='AddClusterExcludedAdapter1')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='AddClusterExcludedAdapter1')]
         [switch]
         ${AsJob}
@@ -1837,7 +1837,7 @@ function Add-ClusterGroupSetDependency {
 
 Add-ClusterGroupSetDependency [-Provider] <string> -InputObject <CimInstance#MSCluster_GroupSet[]> [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [-PassThru] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='Query (cdxml)', PositionalBinding=$false)]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCLUSTER/MSCluster_GroupSet')]
@@ -1846,37 +1846,37 @@ Add-ClusterGroupSetDependency [-Provider] <string> -InputObject <CimInstance#MSC
         [ValidateNotNull()]
         [string[]]
         ${Name},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)', Mandatory=$true, ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [PSTypeName('Microsoft.Management.Infrastructure.CimInstance#MSCluster_GroupSet')]
         [ciminstance[]]
         ${InputObject},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)', Mandatory=$true, Position=1)]
         [Parameter(ParameterSetName='Query (cdxml)', Mandatory=$true, Position=1)]
         [ValidateNotNullOrEmpty()]
         [ValidateNotNull()]
         [string]
         ${Provider},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
         ${AsJob},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
@@ -1894,7 +1894,7 @@ function Add-ClusterGroupToAffinityRule {
 
 Add-ClusterGroupToAffinityRule [-Groups] <string[]> -InputObject <CimInstance#MSCluster_AffinityRule[]> [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [-PassThru] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='Query (cdxml)', PositionalBinding=$false)]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCLUSTER/MSCluster_AffinityRule')]
@@ -1903,37 +1903,37 @@ Add-ClusterGroupToAffinityRule [-Groups] <string[]> -InputObject <CimInstance#MS
         [ValidateNotNull()]
         [string[]]
         ${Name},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)', Mandatory=$true, ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [PSTypeName('Microsoft.Management.Infrastructure.CimInstance#MSCluster_AffinityRule')]
         [ciminstance[]]
         ${InputObject},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)', Mandatory=$true, Position=1)]
         [Parameter(ParameterSetName='Query (cdxml)', Mandatory=$true, Position=1)]
         [ValidateNotNullOrEmpty()]
         [ValidateNotNull()]
         [string[]]
         ${Groups},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
         ${AsJob},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
@@ -1951,7 +1951,7 @@ function Add-ClusterGroupToSet {
 
 Add-ClusterGroupToSet [-Group] <string> -InputObject <CimInstance#MSCluster_GroupSet[]> [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [-PassThru] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='Query (cdxml)', PositionalBinding=$false)]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCLUSTER/MSCluster_GroupSet')]
@@ -1960,37 +1960,37 @@ Add-ClusterGroupToSet [-Group] <string> -InputObject <CimInstance#MSCluster_Grou
         [ValidateNotNull()]
         [string[]]
         ${Name},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)', Mandatory=$true, ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [PSTypeName('Microsoft.Management.Infrastructure.CimInstance#MSCluster_GroupSet')]
         [ciminstance[]]
         ${InputObject},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)', Mandatory=$true, Position=1)]
         [Parameter(ParameterSetName='Query (cdxml)', Mandatory=$true, Position=1)]
         [ValidateNotNullOrEmpty()]
         [ValidateNotNull()]
         [string]
         ${Group},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
         ${AsJob},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
@@ -2008,7 +2008,7 @@ function Add-ClusterSharedVolumeToAffinityRule {
 
 Add-ClusterSharedVolumeToAffinityRule [-ClusterSharedVolumes] <string[]> -InputObject <CimInstance#MSCluster_AffinityRule[]> [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [-PassThru] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='Query (cdxml)', PositionalBinding=$false)]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCLUSTER/MSCluster_AffinityRule')]
@@ -2017,37 +2017,37 @@ Add-ClusterSharedVolumeToAffinityRule [-ClusterSharedVolumes] <string[]> -InputO
         [ValidateNotNull()]
         [string[]]
         ${Name},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)', Mandatory=$true, ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [PSTypeName('Microsoft.Management.Infrastructure.CimInstance#MSCluster_AffinityRule')]
         [ciminstance[]]
         ${InputObject},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)', Mandatory=$true, Position=1)]
         [Parameter(ParameterSetName='Query (cdxml)', Mandatory=$true, Position=1)]
         [ValidateNotNullOrEmpty()]
         [ValidateNotNull()]
         [string[]]
         ${ClusterSharedVolumes},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
         ${AsJob},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
@@ -2063,7 +2063,7 @@ function Add-ClusterStorageNode {
     .SYNOPSIS
         Add-ClusterStorageNode -Name <string> [-Description <string>] [-Location <string>] [-Flags <uint32>] [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(PositionalBinding=$false)]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCluster/MSCluster_StorageNode')]
@@ -2073,29 +2073,29 @@ function Add-ClusterStorageNode {
         [ValidateNotNull()]
         [string]
         ${Name},
-        
+
         [Parameter(ParameterSetName='AddStorageNode0')]
         [string]
         ${Description},
-        
+
         [Parameter(ParameterSetName='AddStorageNode0')]
         [string]
         ${Location},
-        
+
         [Parameter(ParameterSetName='AddStorageNode0')]
         [uint32]
         ${Flags},
-        
+
         [Parameter(ParameterSetName='AddStorageNode0')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='AddStorageNode0')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='AddStorageNode0')]
         [switch]
         ${AsJob}
@@ -2118,39 +2118,39 @@ function Add-WorkgroupClusterNode {
     .PARAMETER Credential
         The credential for the node to be added.
     #>
-    
+
     [CmdletBinding()]
     param (
         [Parameter(Mandatory=$true, Position=0)]
         [ValidateNotNullOrEmpty()]
         [string[]]
         ${Node},
-        
+
         [Parameter(Mandatory=$true, Position=1)]
         [ValidateNotNullOrEmpty()]
         [pscredential[]]
         ${Credentials},
-        
+
         [Parameter(Mandatory=$true, Position=2)]
         [ValidateNotNullOrEmpty()]
         [string]
         ${Name},
-        
+
         [Parameter(Mandatory=$true, Position=3)]
         [ValidateNotNullOrEmpty()]
         [pscredential]
         [System.Management.Automation.CredentialAttribute()]
         ${Credential},
-        
+
         [switch]
         ${NoStorage},
-        
+
         [switch]
         ${Confirm},
-        
+
         [switch]
         ${WhatIf},
-        
+
         [Parameter(Mandatory=$true, Position=4)]
         [WorkgroupClusterAuthenticationMethod]
         ${AuthenticationMethod}
@@ -2167,7 +2167,7 @@ function Backup-ClusterKeyValueStore {
 
 Backup-ClusterKeyValueStore -InputObject <CimInstance#MSCluster_KeyValueStoreManager[]> -StoreName <string> -BackupPath <string> [-Flags <uint32>] [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='Query (cdxml)', SupportsShouldProcess=$true, ConfirmImpact='High', PositionalBinding=$false)]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCLUSTER/MSCluster_KeyValueStoreManager')]
@@ -2176,45 +2176,45 @@ Backup-ClusterKeyValueStore -InputObject <CimInstance#MSCluster_KeyValueStoreMan
         [ValidateNotNull()]
         [string[]]
         ${ManagerName},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)', Mandatory=$true, ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [PSTypeName('Microsoft.Management.Infrastructure.CimInstance#MSCluster_KeyValueStoreManager')]
         [ciminstance[]]
         ${InputObject},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)', Mandatory=$true)]
         [Parameter(ParameterSetName='Query (cdxml)', Mandatory=$true)]
         [string]
         ${StoreName},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)', Mandatory=$true)]
         [Parameter(ParameterSetName='Query (cdxml)', Mandatory=$true)]
         [string]
         ${BackupPath},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [uint32]
         ${Flags},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
         ${AsJob},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
@@ -2230,23 +2230,23 @@ function Disable-ClusterStorageSpacesDirect {
     .SYNOPSIS
         Disable-ClusterStorageSpacesDirect [-CleanupCache <bool>] [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [-WhatIf] [-Confirm] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High', PositionalBinding=$false, HelpUri='https://go.microsoft.com/fwlink/?LinkId=615933')]
     param (
         [Parameter(ParameterSetName='DefaultParameterSet')]
         [bool]
         ${CleanupCache},
-        
+
         [Parameter(ParameterSetName='DefaultParameterSet')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='DefaultParameterSet')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='DefaultParameterSet')]
         [switch]
         ${AsJob}
@@ -2265,7 +2265,7 @@ Enable-ClusterStorageSpacesDirect -XML <string> [-PoolFriendlyName <string>] [-A
 
 Enable-ClusterStorageSpacesDirect -CacheDeviceModel <string[]> [-PoolFriendlyName <string>] [-Autoconfig <bool>] [-CacheState <CacheStateType>] [-CacheMetadataReserveBytes <uint64>] [-CachePageSizeKBytes <uint32>] [-SkipEligibilityChecks] [-CollectPerformanceHistory <bool>] [-BusTypesToUse <S2DBusType[]>] [-SedProtectionState <SedProtectionStateType>] [-UseSedExclusively <bool>] [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [-WhatIf] [-Confirm] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High', PositionalBinding=$false, HelpUri='https://go.microsoft.com/fwlink/?LinkId=615932')]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCluster/MSCluster_StorageSpacesDirectEnable')]
@@ -2280,48 +2280,48 @@ Enable-ClusterStorageSpacesDirect -CacheDeviceModel <string[]> [-PoolFriendlyNam
         [ValidateNotNullOrEmpty()]
         [string]
         ${PoolFriendlyName},
-        
+
         [Parameter(ParameterSetName='Auto')]
         [Parameter(ParameterSetName='WithXML')]
         [Parameter(ParameterSetName='WithCacheDeviceModel')]
         [bool]
         ${Autoconfig},
-        
+
         [Parameter(ParameterSetName='Auto')]
         [Parameter(ParameterSetName='WithXML')]
         [Parameter(ParameterSetName='WithCacheDeviceModel')]
         [Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_StorageSpacesDirect.CacheStateType]
         ${CacheState},
-        
+
         [Parameter(ParameterSetName='Auto')]
         [Parameter(ParameterSetName='WithXML')]
         [Parameter(ParameterSetName='WithCacheDeviceModel')]
         [uint64]
         ${CacheMetadataReserveBytes},
-        
+
         [Parameter(ParameterSetName='Auto')]
         [Parameter(ParameterSetName='WithXML')]
         [Parameter(ParameterSetName='WithCacheDeviceModel')]
         [ValidateSet('8','16','32','64')]
         [uint32]
         ${CachePageSizeKBytes},
-        
+
         [Parameter(ParameterSetName='Auto')]
         [Parameter(ParameterSetName='WithXML')]
         [Parameter(ParameterSetName='WithCacheDeviceModel')]
         [switch]
         ${SkipEligibilityChecks},
-        
+
         [Parameter(ParameterSetName='WithCacheDeviceModel', Mandatory=$true)]
         [string[]]
         ${CacheDeviceModel},
-        
+
         [Parameter(ParameterSetName='Auto')]
         [Parameter(ParameterSetName='WithXML')]
         [Parameter(ParameterSetName='WithCacheDeviceModel')]
         [bool]
         ${CollectPerformanceHistory},
-        
+
         [Parameter(ParameterSetName='Auto')]
         [Parameter(ParameterSetName='WithXML')]
         [Parameter(ParameterSetName='WithCacheDeviceModel')]
@@ -2329,24 +2329,24 @@ Enable-ClusterStorageSpacesDirect -CacheDeviceModel <string[]> [-PoolFriendlyNam
         [ValidateNotNull()]
         [Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_StorageSpacesDirect.S2DBusType[]]
         ${BusTypesToUse},
-        
+
         [Parameter(ParameterSetName='Auto')]
         [Parameter(ParameterSetName='WithXML')]
         [Parameter(ParameterSetName='WithCacheDeviceModel')]
         [Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_StorageSpacesDirect.SedProtectionStateType]
         ${SedProtectionState},
-        
+
         [Parameter(ParameterSetName='Auto')]
         [Parameter(ParameterSetName='WithXML')]
         [Parameter(ParameterSetName='WithCacheDeviceModel')]
         [bool]
         ${UseSedExclusively},
-        
+
         [Parameter(ParameterSetName='WithXML', Mandatory=$true)]
         [ValidateNotNullOrEmpty()]
         [string]
         ${XML},
-        
+
         [Parameter(ParameterSetName='Auto')]
         [Parameter(ParameterSetName='WithXML')]
         [Parameter(ParameterSetName='WithCacheDeviceModel')]
@@ -2354,13 +2354,13 @@ Enable-ClusterStorageSpacesDirect -CacheDeviceModel <string[]> [-PoolFriendlyNam
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='Auto')]
         [Parameter(ParameterSetName='WithXML')]
         [Parameter(ParameterSetName='WithCacheDeviceModel')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='Auto')]
         [Parameter(ParameterSetName='WithXML')]
         [Parameter(ParameterSetName='WithCacheDeviceModel')]
@@ -2377,18 +2377,18 @@ function Export-HealthAgentConfig {
     .SYNOPSIS
         Export-HealthAgentConfig [-Type] <string> [-FilePath] <string> [[-CimSession] <CimSession>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding()]
     param (
         [Parameter(Mandatory=$true, Position=0, HelpMessage='Valid values are: MAConfig, HADefinition')]
         [ValidateSet('MAConfig','HADefinition')]
         [string]
         ${Type},
-        
+
         [Parameter(Mandatory=$true, Position=1, HelpMessage='Output file path for the configuration file')]
         [string]
         ${FilePath},
-        
+
         [Parameter(Position=2, HelpMessage='CimSession')]
         [CimSession]
         ${CimSession}
@@ -2403,7 +2403,7 @@ function Get-ClusterAffinityRule {
     .SYNOPSIS
         Get-ClusterAffinityRule [[-Name] <string[]>] [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='Query (cdxml)', PositionalBinding=$false)]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCLUSTER/MSCluster_AffinityRule')]
@@ -2412,17 +2412,17 @@ function Get-ClusterAffinityRule {
         [ValidateNotNull()]
         [string[]]
         ${Name},
-        
+
         [Parameter(ParameterSetName='Query (cdxml)')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='Query (cdxml)')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
         ${AsJob}
@@ -2439,34 +2439,34 @@ function Get-ClusterDiagnosticInfo {
 
 Get-ClusterDiagnosticInfo -ReadFromPath <string> [<CommonParameters>]
     #>
-    
+
     [CmdletBinding()]
     param (
         [Parameter(ParameterSetName='Write', Position=0)]
         [ValidateNotNullOrEmpty()]
         [string]
         ${WriteToPath},
-        
+
         [Parameter(ParameterSetName='Write', Position=1)]
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster},
-        
+
         [Parameter(ParameterSetName='Write', Position=2)]
         [ValidateNotNullOrEmpty()]
         [string]
         ${ZipPrefix},
-        
+
         [Parameter(ParameterSetName='Write')]
         [ValidateNotNullOrEmpty()]
         [int]
         ${HoursOfEvents},
-        
+
         [Parameter(ParameterSetName='Write')]
         [ValidateNotNullOrEmpty()]
         [switch]
         ${IncludeEvents},
-        
+
         [Parameter(ParameterSetName='Read', Mandatory=$true)]
         [ValidateNotNullOrEmpty()]
         [string]
@@ -2482,24 +2482,24 @@ function Get-ClusterExcludedAdapter {
     .SYNOPSIS
         Get-ClusterExcludedAdapter -ExclusionType <AdapterExclusionType> [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(PositionalBinding=$false)]
     [OutputType([System.String[]])]
     param (
         [Parameter(ParameterSetName='GetClusterExcludedAdapter3', Mandatory=$true)]
         [Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_ClusterService.AdapterExclusionType]
         ${ExclusionType},
-        
+
         [Parameter(ParameterSetName='GetClusterExcludedAdapter3')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='GetClusterExcludedAdapter3')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='GetClusterExcludedAdapter3')]
         [switch]
         ${AsJob}
@@ -2514,7 +2514,7 @@ function Get-ClusterFaultDomain {
     .SYNOPSIS
         Get-ClusterFaultDomain [[-Name] <string[]>] [-Type <FaultDomainType[]>] [-Id <string[]>] [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='Query (cdxml)', PositionalBinding=$false)]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCLUSTER/MSCluster_FaultDomain')]
@@ -2523,28 +2523,28 @@ function Get-ClusterFaultDomain {
         [ValidateNotNull()]
         [string[]]
         ${Name},
-        
+
         [Parameter(ParameterSetName='Query (cdxml)')]
         [Alias('FaultDomainType')]
         [ValidateNotNull()]
         [Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_FaultDomain.FaultDomainType[]]
         ${Type},
-        
+
         [Parameter(ParameterSetName='Query (cdxml)')]
         [ValidateNotNull()]
         [string[]]
         ${Id},
-        
+
         [Parameter(ParameterSetName='Query (cdxml)')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='Query (cdxml)')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
         ${AsJob}
@@ -2559,24 +2559,24 @@ function Get-ClusterFaultDomainXML {
     .SYNOPSIS
         Get-ClusterFaultDomainXML [-Flags <uint32>] [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(PositionalBinding=$false)]
     [OutputType([System.String])]
     param (
         [Parameter(ParameterSetName='GetFaultDomainXML2')]
         [uint32]
         ${Flags},
-        
+
         [Parameter(ParameterSetName='GetFaultDomainXML2')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='GetFaultDomainXML2')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='GetFaultDomainXML2')]
         [switch]
         ${AsJob}
@@ -2591,7 +2591,7 @@ function Get-ClusterGroupSet {
     .SYNOPSIS
         Get-ClusterGroupSet [[-Name] <string[]>] [-IsGlobal <bool[]>] [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='Query (cdxml)', PositionalBinding=$false)]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCLUSTER/MSCluster_GroupSet')]
@@ -2600,22 +2600,22 @@ function Get-ClusterGroupSet {
         [ValidateNotNull()]
         [string[]]
         ${Name},
-        
+
         [Parameter(ParameterSetName='Query (cdxml)')]
         [ValidateNotNull()]
         [bool[]]
         ${IsGlobal},
-        
+
         [Parameter(ParameterSetName='Query (cdxml)')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='Query (cdxml)')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
         ${AsJob}
@@ -2630,7 +2630,7 @@ function Get-ClusterGroupSetDependency {
     .SYNOPSIS
         Get-ClusterGroupSetDependency [-ContainedGroup <string>] [-Name <string>] [-Provider <string>] [-DependentGroup <string>] [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(PositionalBinding=$false)]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance[]])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCluster/MSCluster_GroupSet')]
@@ -2638,29 +2638,29 @@ function Get-ClusterGroupSetDependency {
         [Parameter(ParameterSetName='GetSetFrom3')]
         [string]
         ${ContainedGroup},
-        
+
         [Parameter(ParameterSetName='GetSetFrom3')]
         [string]
         ${Name},
-        
+
         [Parameter(ParameterSetName='GetSetFrom3')]
         [string]
         ${Provider},
-        
+
         [Parameter(ParameterSetName='GetSetFrom3')]
         [string]
         ${DependentGroup},
-        
+
         [Parameter(ParameterSetName='GetSetFrom3')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='GetSetFrom3')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='GetSetFrom3')]
         [switch]
         ${AsJob}
@@ -2675,7 +2675,7 @@ function Get-ClusterHCSVM {
     .SYNOPSIS
         Get-ClusterHCSVM [[-Name] <string[]>] [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='Query (cdxml)', PositionalBinding=$false)]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCLUSTER/MSCluster_HCSVM')]
@@ -2684,17 +2684,17 @@ function Get-ClusterHCSVM {
         [ValidateNotNull()]
         [string[]]
         ${Name},
-        
+
         [Parameter(ParameterSetName='Query (cdxml)')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='Query (cdxml)')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
         ${AsJob}
@@ -2709,7 +2709,7 @@ function Get-ClusterKeyValueStore {
     .SYNOPSIS
         Get-ClusterKeyValueStore [[-StoreName] <string[]>] [-Type <Type[]>] [-ManagerName <string[]>] [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='Query (cdxml)', PositionalBinding=$false)]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCLUSTER/MSCluster_KeyValueStore')]
@@ -2718,27 +2718,27 @@ function Get-ClusterKeyValueStore {
         [ValidateNotNull()]
         [string[]]
         ${StoreName},
-        
+
         [Parameter(ParameterSetName='Query (cdxml)')]
         [ValidateNotNull()]
         [Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_KeyValueStore.Type[]]
         ${Type},
-        
+
         [Parameter(ParameterSetName='Query (cdxml)')]
         [ValidateNotNull()]
         [string[]]
         ${ManagerName},
-        
+
         [Parameter(ParameterSetName='Query (cdxml)')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='Query (cdxml)')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
         ${AsJob}
@@ -2753,7 +2753,7 @@ function Get-ClusterKeyValueStoreManager {
     .SYNOPSIS
         Get-ClusterKeyValueStoreManager [[-ManagerName] <string[]>] [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='ByName', PositionalBinding=$false)]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCLUSTER/MSCluster_KeyValueStoreManager')]
@@ -2762,17 +2762,17 @@ function Get-ClusterKeyValueStoreManager {
         [ValidateNotNull()]
         [string[]]
         ${ManagerName},
-        
+
         [Parameter(ParameterSetName='ByName')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='ByName')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='ByName')]
         [switch]
         ${AsJob}
@@ -2787,7 +2787,7 @@ function Get-ClusterNodeSupportedVersion {
     .SYNOPSIS
         Get-ClusterNodeSupportedVersion [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(PositionalBinding=$false)]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance[]])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCluster/MSCluster_NodeSupportedVersion')]
@@ -2797,11 +2797,11 @@ function Get-ClusterNodeSupportedVersion {
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='GetNodeSupportedVersions0')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='GetNodeSupportedVersions0')]
         [switch]
         ${AsJob}
@@ -2830,51 +2830,51 @@ Get-ClusterPerformanceHistory [[-VolumeSeriesName] <Object>] [[-TimeFrame] <stri
 
 Get-ClusterPerformanceHistory [[-NetAdapterSeriesName] <Object>] [[-TimeFrame] <string>] [-NetworkAdapter] <CimInstance#MSFT_NetAdapter[]> [-CimSession <CimSession>] [-WhatIf] [-Confirm] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='ByCluster', SupportsShouldProcess=$true, ConfirmImpact='Medium')]
     param (
         [Parameter(ParameterSetName='Api', Mandatory=$true)]
         [ValidateNotNullOrEmpty()]
         [string]
         ${SeriesKeyName},
-        
+
         [Parameter(ParameterSetName='Api', Mandatory=$true)]
         [ValidateNotNullOrEmpty()]
         [string]
         ${Stream},
-        
+
         [Parameter(ParameterSetName='Api')]
         [switch]
         ${UsePattern},
-        
+
         [Parameter(ParameterSetName='ByCluster', Position=0)]
         [System.Object]
         ${ClusterSeriesName},
-        
+
         [Parameter(ParameterSetName='ByClusterNode', Position=0)]
         [System.Object]
         ${ClusterNodeSeriesName},
-        
+
         [Parameter(ParameterSetName='ByVM', Position=0)]
         [System.Object]
         ${VMSeriesName},
-        
+
         [Parameter(ParameterSetName='ByVHD', Position=0)]
         [System.Object]
         ${VHDSeriesName},
-        
+
         [Parameter(ParameterSetName='ByPhysicalDisk', Position=0)]
         [System.Object]
         ${PhysicalDiskSeriesName},
-        
+
         [Parameter(ParameterSetName='ByVolume', Position=0)]
         [System.Object]
         ${VolumeSeriesName},
-        
+
         [Parameter(ParameterSetName='ByNetAdapter', Position=0)]
         [System.Object]
         ${NetAdapterSeriesName},
-        
+
         [Parameter(ParameterSetName='ByNetAdapter', Position=1)]
         [Parameter(ParameterSetName='ByVolume', Position=1)]
         [Parameter(ParameterSetName='ByPhysicalDisk', Position=1)]
@@ -2886,40 +2886,40 @@ Get-ClusterPerformanceHistory [[-NetAdapterSeriesName] <Object>] [[-TimeFrame] <
         [ValidateSet('MostRecent','LastHour','LastDay','LastWeek','LastMonth','LastYear')]
         [string]
         ${TimeFrame},
-        
+
         [Parameter(ParameterSetName='ByCluster', Position=2, ValueFromPipeline=$true)]
         [Microsoft.FailoverClusters.PowerShell.Cluster]
         ${Cluster},
-        
+
         [Parameter(ParameterSetName='ByClusterNode', Mandatory=$true, Position=2, ValueFromPipeline=$true)]
         [Microsoft.FailoverClusters.PowerShell.ClusterNode[]]
         ${ClusterNode},
-        
+
         [Parameter(ParameterSetName='ByVM', Mandatory=$true, Position=2, ValueFromPipeline=$true)]
         [PSTypeName('Microsoft.HyperV.PowerShell.VirtualMachine')]
         [psobject[]]
         ${VM},
-        
+
         [Parameter(ParameterSetName='ByVHD', Mandatory=$true, Position=2, ValueFromPipeline=$true)]
         [PSTypeName('Microsoft.Vhd.PowerShell.VirtualHardDisk')]
         [psobject[]]
         ${VHD},
-        
+
         [Parameter(ParameterSetName='ByPhysicalDisk', Mandatory=$true, Position=2, ValueFromPipeline=$true)]
         [PSTypeName('Microsoft.Management.Infrastructure.CimInstance#root/microsoft/windows/storage/MSFT_PhysicalDisk')]
         [ciminstance[]]
         ${PhysicalDisk},
-        
+
         [Parameter(ParameterSetName='ByVolume', Mandatory=$true, Position=2, ValueFromPipeline=$true)]
         [PSTypeName('Microsoft.Management.Infrastructure.CimInstance#root/microsoft/windows/storage/MSFT_Volume')]
         [ciminstance[]]
         ${Volume},
-        
+
         [Parameter(ParameterSetName='ByNetAdapter', Mandatory=$true, Position=2, ValueFromPipeline=$true)]
         [PSTypeName('Microsoft.Management.Infrastructure.CimInstance#ROOT/StandardCimv2/MSFT_NetAdapter')]
         [ciminstance[]]
         ${NetworkAdapter},
-        
+
         [CimSession]
         ${CimSession}
     )
@@ -2933,7 +2933,7 @@ function Get-ClusterStorageNode {
     .SYNOPSIS
         Get-ClusterStorageNode [[-Name] <string[]>] [-Id <string[]>] [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='Query (cdxml)', PositionalBinding=$false)]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCLUSTER/MSCluster_StorageNode')]
@@ -2942,22 +2942,22 @@ function Get-ClusterStorageNode {
         [ValidateNotNull()]
         [string[]]
         ${Id},
-        
+
         [Parameter(ParameterSetName='Query (cdxml)', Position=0)]
         [ValidateNotNull()]
         [string[]]
         ${Name},
-        
+
         [Parameter(ParameterSetName='Query (cdxml)')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='Query (cdxml)')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
         ${AsJob}
@@ -2972,7 +2972,7 @@ function Get-ClusterStorageSpacesDirect {
     .SYNOPSIS
         Get-ClusterStorageSpacesDirect [-Node <string>] [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(PositionalBinding=$false, HelpUri='https://go.microsoft.com/fwlink/?LinkId=691107')]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCluster/MSCluster_StorageSpacesDirect')]
@@ -2980,17 +2980,17 @@ function Get-ClusterStorageSpacesDirect {
         [Parameter(ParameterSetName='DefaultParameterSet')]
         [string]
         ${Node},
-        
+
         [Parameter(ParameterSetName='DefaultParameterSet')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='DefaultParameterSet')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='DefaultParameterSet')]
         [switch]
         ${AsJob}
@@ -3007,21 +3007,21 @@ function Get-HealthFault {
 
 Get-HealthFault [-ReportingType] <Object> [-ReportingKey] <Object> [-CimSession <CimSession>] [-WhatIf] [-Confirm] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='ByCluster', SupportsShouldProcess=$true, ConfirmImpact='None')]
     param (
         [Parameter(ParameterSetName='ByCluster', Position=0, ValueFromPipeline=$true)]
         [Microsoft.FailoverClusters.PowerShell.Cluster]
         ${Cluster},
-        
+
         [Parameter(ParameterSetName='ByApi', Mandatory=$true, Position=0)]
         [System.Object]
         ${ReportingType},
-        
+
         [Parameter(ParameterSetName='ByApi', Mandatory=$true, Position=1)]
         [System.Object]
         ${ReportingKey},
-        
+
         [CimSession]
         ${CimSession}
     )
@@ -3035,18 +3035,18 @@ function Import-HealthAgentConfig {
     .SYNOPSIS
         Import-HealthAgentConfig [-Type] <string> [-FilePath] <string> [[-CimSession] <CimSession>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding()]
     param (
         [Parameter(Mandatory=$true, Position=0, HelpMessage='Valid values are: MAConfig, HADefinition')]
         [ValidateSet('MAConfig','HADefinition')]
         [string]
         ${Type},
-        
+
         [Parameter(Mandatory=$true, Position=1, HelpMessage='Input file path for the configuration file')]
         [string]
         ${FilePath},
-        
+
         [Parameter(Position=2, HelpMessage='CimSession')]
         [CimSession]
         ${CimSession}
@@ -3061,26 +3061,26 @@ function Invoke-HealthCommand {
     .SYNOPSIS
         Invoke-HealthCommand [-Name] <string> [[-Flags] <uint32>] [[-Parameters] <string[]>] [[-Timeout] <uint32>] [[-CimSession] <CimSession>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding()]
     param (
         [Parameter(Mandatory=$true, Position=0)]
         [ValidateNotNullOrEmpty()]
         [string]
         ${Name},
-        
+
         [Parameter(Position=1)]
         [uint32]
         ${Flags},
-        
+
         [Parameter(Position=2)]
         [string[]]
         ${Parameters},
-        
+
         [Parameter(Position=3)]
         [uint32]
         ${Timeout},
-        
+
         [Parameter(Position=4)]
         [CimSession]
         ${CimSession}
@@ -3095,7 +3095,7 @@ function New-ClusterAffinityRule {
     .SYNOPSIS
         New-ClusterAffinityRule [-Name] <string> [-RuleType <RuleType>] [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(PositionalBinding=$false)]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCluster/MSCluster_AffinityRule')]
@@ -3105,21 +3105,21 @@ function New-ClusterAffinityRule {
         [ValidateNotNull()]
         [string]
         ${Name},
-        
+
         [Parameter(ParameterSetName='CreateAffinityRule0')]
         [Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_AffinityRule.RuleType]
         ${RuleType},
-        
+
         [Parameter(ParameterSetName='CreateAffinityRule0')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='CreateAffinityRule0')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='CreateAffinityRule0')]
         [switch]
         ${AsJob}
@@ -3134,7 +3134,7 @@ function New-ClusterAvailabilitySet {
     .SYNOPSIS
         New-ClusterAvailabilitySet [-Name] <string> -UpdateDomains <uint32> -FaultDomains <uint32> [-Group <string[]>] [-ReserveSpareNode <bool>] [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(PositionalBinding=$false)]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCluster/MSCluster_GroupSet')]
@@ -3144,33 +3144,33 @@ function New-ClusterAvailabilitySet {
         [ValidateNotNull()]
         [string]
         ${Name},
-        
+
         [Parameter(ParameterSetName='CreateAvailabilitySet1')]
         [string[]]
         ${Group},
-        
+
         [Parameter(ParameterSetName='CreateAvailabilitySet1', Mandatory=$true)]
         [uint32]
         ${UpdateDomains},
-        
+
         [Parameter(ParameterSetName='CreateAvailabilitySet1', Mandatory=$true)]
         [uint32]
         ${FaultDomains},
-        
+
         [Parameter(ParameterSetName='CreateAvailabilitySet1')]
         [bool]
         ${ReserveSpareNode},
-        
+
         [Parameter(ParameterSetName='CreateAvailabilitySet1')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='CreateAvailabilitySet1')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='CreateAvailabilitySet1')]
         [switch]
         ${AsJob}
@@ -3185,7 +3185,7 @@ function New-ClusterFaultDomain {
     .SYNOPSIS
         New-ClusterFaultDomain -Name <string> -FaultDomainType <FaultDomainType> [-FaultDomain <string>] [-Description <string>] [-Location <string>] [-Flags <uint32>] [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(PositionalBinding=$false)]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCluster/MSCluster_FaultDomain')]
@@ -3195,43 +3195,43 @@ function New-ClusterFaultDomain {
         [ValidateNotNull()]
         [string]
         ${Name},
-        
+
         [Parameter(ParameterSetName='CreateFaultDomain0')]
         [Alias('Parent')]
         [string]
         ${FaultDomain},
-        
+
         [Parameter(ParameterSetName='CreateFaultDomain0', Mandatory=$true)]
         [Alias('Type')]
         [ValidateNotNullOrEmpty()]
         [ValidateNotNull()]
         [Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_FaultDomain.FaultDomainType]
         ${FaultDomainType},
-        
+
         [Parameter(ParameterSetName='CreateFaultDomain0')]
         [string]
         ${Description},
-        
+
         [Parameter(ParameterSetName='CreateFaultDomain0')]
         [ValidateNotNullOrEmpty()]
         [ValidateNotNull()]
         [string]
         ${Location},
-        
+
         [Parameter(ParameterSetName='CreateFaultDomain0')]
         [uint32]
         ${Flags},
-        
+
         [Parameter(ParameterSetName='CreateFaultDomain0')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='CreateFaultDomain0')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='CreateFaultDomain0')]
         [switch]
         ${AsJob}
@@ -3246,7 +3246,7 @@ function New-ClusterGroupSet {
     .SYNOPSIS
         New-ClusterGroupSet [-Name] <string> [-Group <string[]>] [-Providers <string[]>] [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(PositionalBinding=$false)]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCluster/MSCluster_GroupSet')]
@@ -3256,25 +3256,25 @@ function New-ClusterGroupSet {
         [ValidateNotNull()]
         [string]
         ${Name},
-        
+
         [Parameter(ParameterSetName='CreateSet0')]
         [string[]]
         ${Group},
-        
+
         [Parameter(ParameterSetName='CreateSet0')]
         [string[]]
         ${Providers},
-        
+
         [Parameter(ParameterSetName='CreateSet0')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='CreateSet0')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='CreateSet0')]
         [switch]
         ${AsJob}
@@ -3289,7 +3289,7 @@ function New-ClusterHCSVM {
     .SYNOPSIS
         New-ClusterHCSVM [-Name] <string> [-SwitchName <string>] [-ExtendedVmConfiguration <string>] [-MemorySizeInMb <uint32>] [-CpuCount <uint32>] [-VhdPath <string>] [-VmName <string>] [-OfflineAction <uint32>] [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(PositionalBinding=$false)]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCluster/MSCluster_HCSVM')]
@@ -3299,45 +3299,45 @@ function New-ClusterHCSVM {
         [ValidateNotNull()]
         [string]
         ${Name},
-        
+
         [Parameter(ParameterSetName='NewClusterHCSVM0')]
         [string]
         ${SwitchName},
-        
+
         [Parameter(ParameterSetName='NewClusterHCSVM0')]
         [string]
         ${ExtendedVmConfiguration},
-        
+
         [Parameter(ParameterSetName='NewClusterHCSVM0')]
         [uint32]
         ${MemorySizeInMb},
-        
+
         [Parameter(ParameterSetName='NewClusterHCSVM0')]
         [uint32]
         ${CpuCount},
-        
+
         [Parameter(ParameterSetName='NewClusterHCSVM0')]
         [string]
         ${VhdPath},
-        
+
         [Parameter(ParameterSetName='NewClusterHCSVM0')]
         [string]
         ${VmName},
-        
+
         [Parameter(ParameterSetName='NewClusterHCSVM0')]
         [uint32]
         ${OfflineAction},
-        
+
         [Parameter(ParameterSetName='NewClusterHCSVM0')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='NewClusterHCSVM0')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='NewClusterHCSVM0')]
         [switch]
         ${AsJob}
@@ -3354,7 +3354,7 @@ function New-ClusterKeyValueStore {
 
 New-ClusterKeyValueStore -InputObject <CimInstance#MSCluster_KeyValueStoreManager[]> -StoreName <string> -Type <StoreType> [-Flags <uint32>] [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='Query (cdxml)', SupportsShouldProcess=$true, ConfirmImpact='High', PositionalBinding=$false)]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCLUSTER/MSCluster_KeyValueStoreManager')]
@@ -3363,45 +3363,45 @@ New-ClusterKeyValueStore -InputObject <CimInstance#MSCluster_KeyValueStoreManage
         [ValidateNotNull()]
         [string[]]
         ${ManagerName},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)', Mandatory=$true, ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [PSTypeName('Microsoft.Management.Infrastructure.CimInstance#MSCluster_KeyValueStoreManager')]
         [ciminstance[]]
         ${InputObject},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)', Mandatory=$true)]
         [Parameter(ParameterSetName='Query (cdxml)', Mandatory=$true)]
         [string]
         ${StoreName},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)', Mandatory=$true)]
         [Parameter(ParameterSetName='Query (cdxml)', Mandatory=$true)]
         [Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_KeyValueStoreManager.StoreType]
         ${Type},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [uint32]
         ${Flags},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
         ${AsJob},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
@@ -3417,7 +3417,7 @@ function New-ClusterKeyValueStoreManager {
     .SYNOPSIS
         New-ClusterKeyValueStoreManager -ManagerName <string> -Path <string> [-Flags <uint32>] [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(PositionalBinding=$false)]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCluster/MSCluster_KeyValueStoreManager')]
@@ -3427,27 +3427,27 @@ function New-ClusterKeyValueStoreManager {
         [ValidateNotNull()]
         [string]
         ${ManagerName},
-        
+
         [Parameter(ParameterSetName='CreateKeyValueStoreManager0', Mandatory=$true)]
         [ValidateNotNullOrEmpty()]
         [ValidateNotNull()]
         [string]
         ${Path},
-        
+
         [Parameter(ParameterSetName='CreateKeyValueStoreManager0')]
         [uint32]
         ${Flags},
-        
+
         [Parameter(ParameterSetName='CreateKeyValueStoreManager0')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='CreateKeyValueStoreManager0')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='CreateKeyValueStoreManager0')]
         [switch]
         ${AsJob}
@@ -3468,54 +3468,54 @@ function New-WorkgroupCluster {
     .PARAMETER Name
         The name of the cluster.
     #>
-    
+
     [CmdletBinding()]
     param (
         [Parameter(Position=0)]
         [ValidateNotNullOrEmpty()]
         [string[]]
         ${Node},
-        
+
         [Parameter(Position=1)]
         [ValidateNotNullOrEmpty()]
         [pscredential[]]
         ${Credentials},
-        
+
         [Parameter(Position=2)]
         [string]
         ${Name},
-        
+
         [Parameter(Position=3)]
         [string[]]
         ${StaticAddress},
-        
+
         [Parameter(Position=4)]
         [string[]]
         ${IgnoreNetwork},
-        
+
         [Parameter(Position=5)]
         [AdminAccessPointResType]
         ${ManagementPointNetworkType},
-        
+
         [Parameter(Position=6)]
         [AdminAccessPoint]
         ${AdministrativeAccessPoint},
-        
+
         [switch]
         ${NoStorage},
-        
+
         [switch]
         ${S2D},
-        
+
         [switch]
         ${Force},
-        
+
         [switch]
         ${Confirm},
-        
+
         [switch]
         ${WhatIf},
-        
+
         [Parameter(Mandatory=$true, Position=7)]
         [WorkgroupClusterAuthenticationMethod]
         ${AuthenticationMethod}
@@ -3542,32 +3542,32 @@ function New-WorkgroupClusterAdminUser {
     .PARAMETER Authority
         Specifies an optional string that represents the authority for PKU2U authentication. The default value is "PKU2UAuthority".
     #>
-    
+
     [CmdletBinding()]
     param (
         [Parameter(Mandatory=$true, Position=1)]
         [ValidateNotNullOrEmpty()]
         [string[]]
         ${Node},
-        
+
         [Parameter(Mandatory=$true, Position=2)]
         [ValidateNotNullOrEmpty()]
         [pscredential[]]
         ${Credentials},
-        
+
         [Parameter(Mandatory=$true, Position=3)]
         [string]
         ${Username},
-        
+
         [Parameter(Mandatory=$true, Position=4)]
         [ValidateNotNullOrEmpty()]
         [securestring[]]
         ${UserPasswords},
-        
+
         [Parameter(Position=5)]
         [int]
         ${Expiration},
-        
+
         [string]
         ${Authority}
     )
@@ -3583,7 +3583,7 @@ function Remove-ClusterAffinityRule {
 
 Remove-ClusterAffinityRule -InputObject <CimInstance#MSCluster_AffinityRule[]> [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='Query (cdxml)', SupportsShouldProcess=$true, ConfirmImpact='High', PositionalBinding=$false)]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCLUSTER/MSCluster_AffinityRule')]
@@ -3592,30 +3592,30 @@ Remove-ClusterAffinityRule -InputObject <CimInstance#MSCluster_AffinityRule[]> [
         [ValidateNotNull()]
         [string[]]
         ${Name},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)', Mandatory=$true, ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [PSTypeName('Microsoft.Management.Infrastructure.CimInstance#MSCluster_AffinityRule')]
         [ciminstance[]]
         ${InputObject},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
         ${AsJob},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
@@ -3631,27 +3631,27 @@ function Remove-ClusterExcludedAdapter {
     .SYNOPSIS
         Remove-ClusterExcludedAdapter -ExclusionType <AdapterExclusionType> -ExclusionValue <string[]> [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(PositionalBinding=$false)]
     param (
         [Parameter(ParameterSetName='RemoveClusterExcludedAdapter2', Mandatory=$true)]
         [Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_ClusterService.AdapterExclusionType]
         ${ExclusionType},
-        
+
         [Parameter(ParameterSetName='RemoveClusterExcludedAdapter2', Mandatory=$true)]
         [string[]]
         ${ExclusionValue},
-        
+
         [Parameter(ParameterSetName='RemoveClusterExcludedAdapter2')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='RemoveClusterExcludedAdapter2')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='RemoveClusterExcludedAdapter2')]
         [switch]
         ${AsJob}
@@ -3668,7 +3668,7 @@ function Remove-ClusterFaultDomain {
 
 Remove-ClusterFaultDomain -InputObject <CimInstance#MSCluster_FaultDomain[]> [-Flags <uint32>] [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='Query (cdxml)', SupportsShouldProcess=$true, ConfirmImpact='High', PositionalBinding=$false)]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCLUSTER/MSCluster_FaultDomain')]
@@ -3677,40 +3677,40 @@ Remove-ClusterFaultDomain -InputObject <CimInstance#MSCluster_FaultDomain[]> [-F
         [ValidateNotNull()]
         [string[]]
         ${Name},
-        
+
         [Parameter(ParameterSetName='Query (cdxml)')]
         [ValidateNotNull()]
         [string[]]
         ${Id},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)', Mandatory=$true, ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [PSTypeName('Microsoft.Management.Infrastructure.CimInstance#MSCluster_FaultDomain')]
         [ciminstance[]]
         ${InputObject},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [uint32]
         ${Flags},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
         ${AsJob},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
@@ -3728,7 +3728,7 @@ function Remove-ClusterGroupFromAffinityRule {
 
 Remove-ClusterGroupFromAffinityRule [-Groups] <string[]> -InputObject <CimInstance#MSCluster_AffinityRule[]> [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [-PassThru] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='Query (cdxml)', PositionalBinding=$false)]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCLUSTER/MSCluster_AffinityRule')]
@@ -3738,37 +3738,37 @@ Remove-ClusterGroupFromAffinityRule [-Groups] <string[]> -InputObject <CimInstan
         [ValidateNotNull()]
         [string[]]
         ${Name},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)', Mandatory=$true, ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [PSTypeName('Microsoft.Management.Infrastructure.CimInstance#MSCluster_AffinityRule')]
         [ciminstance[]]
         ${InputObject},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)', Mandatory=$true, Position=1)]
         [Parameter(ParameterSetName='Query (cdxml)', Mandatory=$true, Position=1)]
         [ValidateNotNullOrEmpty()]
         [ValidateNotNull()]
         [string[]]
         ${Groups},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
         ${AsJob},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
@@ -3786,7 +3786,7 @@ function Remove-ClusterGroupFromSet {
 
 Remove-ClusterGroupFromSet [-Group] <string> -InputObject <CimInstance#MSCluster_GroupSet[]> [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [-PassThru] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='Query (cdxml)', PositionalBinding=$false)]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCLUSTER/MSCluster_GroupSet')]
@@ -3796,37 +3796,37 @@ Remove-ClusterGroupFromSet [-Group] <string> -InputObject <CimInstance#MSCluster
         [ValidateNotNull()]
         [string[]]
         ${Name},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)', Mandatory=$true, ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [PSTypeName('Microsoft.Management.Infrastructure.CimInstance#MSCluster_GroupSet')]
         [ciminstance[]]
         ${InputObject},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)', Mandatory=$true, Position=1)]
         [Parameter(ParameterSetName='Query (cdxml)', Mandatory=$true, Position=1)]
         [ValidateNotNullOrEmpty()]
         [ValidateNotNull()]
         [string]
         ${Group},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
         ${AsJob},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
@@ -3844,7 +3844,7 @@ function Remove-ClusterGroupSet {
 
 Remove-ClusterGroupSet -InputObject <CimInstance#MSCluster_GroupSet[]> [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='Query (cdxml)', SupportsShouldProcess=$true, ConfirmImpact='High', PositionalBinding=$false)]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCLUSTER/MSCluster_GroupSet')]
@@ -3853,30 +3853,30 @@ Remove-ClusterGroupSet -InputObject <CimInstance#MSCluster_GroupSet[]> [-CimSess
         [ValidateNotNull()]
         [string[]]
         ${Name},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)', Mandatory=$true, ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [PSTypeName('Microsoft.Management.Infrastructure.CimInstance#MSCluster_GroupSet')]
         [ciminstance[]]
         ${InputObject},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
         ${AsJob},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
@@ -3894,7 +3894,7 @@ function Remove-ClusterGroupSetDependency {
 
 Remove-ClusterGroupSetDependency [-Provider] <string> -InputObject <CimInstance#MSCluster_GroupSet[]> [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [-PassThru] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='Query (cdxml)', PositionalBinding=$false)]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCLUSTER/MSCluster_GroupSet')]
@@ -3903,37 +3903,37 @@ Remove-ClusterGroupSetDependency [-Provider] <string> -InputObject <CimInstance#
         [ValidateNotNull()]
         [string[]]
         ${Name},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)', Mandatory=$true, ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [PSTypeName('Microsoft.Management.Infrastructure.CimInstance#MSCluster_GroupSet')]
         [ciminstance[]]
         ${InputObject},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)', Mandatory=$true, Position=1)]
         [Parameter(ParameterSetName='Query (cdxml)', Mandatory=$true, Position=1)]
         [ValidateNotNullOrEmpty()]
         [ValidateNotNull()]
         [string]
         ${Provider},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
         ${AsJob},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
@@ -3951,7 +3951,7 @@ function Remove-ClusterHCSVM {
 
 Remove-ClusterHCSVM -InputObject <CimInstance#MSCluster_HCSVM[]> [-Force <bool>] [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='Query (cdxml)', SupportsShouldProcess=$true, ConfirmImpact='High', PositionalBinding=$false)]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCLUSTER/MSCluster_HCSVM')]
@@ -3960,35 +3960,35 @@ Remove-ClusterHCSVM -InputObject <CimInstance#MSCluster_HCSVM[]> [-Force <bool>]
         [ValidateNotNull()]
         [string[]]
         ${Name},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)', Mandatory=$true, ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [PSTypeName('Microsoft.Management.Infrastructure.CimInstance#MSCluster_HCSVM')]
         [ciminstance[]]
         ${InputObject},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [bool]
         ${Force},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
         ${AsJob},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
@@ -4006,7 +4006,7 @@ function Remove-ClusterKeyValueStore {
 
 Remove-ClusterKeyValueStore -InputObject <CimInstance#MSCluster_KeyValueStoreManager[]> -StoreName <string> [-Flags <RemoveFlags>] [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='Query (cdxml)', SupportsShouldProcess=$true, ConfirmImpact='High', PositionalBinding=$false)]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCLUSTER/MSCluster_KeyValueStoreManager')]
@@ -4015,40 +4015,40 @@ Remove-ClusterKeyValueStore -InputObject <CimInstance#MSCluster_KeyValueStoreMan
         [ValidateNotNull()]
         [string[]]
         ${ManagerName},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)', Mandatory=$true, ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [PSTypeName('Microsoft.Management.Infrastructure.CimInstance#MSCluster_KeyValueStoreManager')]
         [ciminstance[]]
         ${InputObject},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)', Mandatory=$true)]
         [Parameter(ParameterSetName='Query (cdxml)', Mandatory=$true)]
         [string]
         ${StoreName},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_KeyValueStoreManager.RemoveFlags]
         ${Flags},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
         ${AsJob},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
@@ -4064,7 +4064,7 @@ function Remove-ClusterKeyValueStoreManager {
     .SYNOPSIS
         Remove-ClusterKeyValueStoreManager -ManagerName <string> [-Flags <RemoveFlags>] [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(PositionalBinding=$false)]
     param (
         [Parameter(ParameterSetName='DeleteKeyValueStoreManager1', Mandatory=$true)]
@@ -4072,21 +4072,21 @@ function Remove-ClusterKeyValueStoreManager {
         [ValidateNotNull()]
         [string]
         ${ManagerName},
-        
+
         [Parameter(ParameterSetName='DeleteKeyValueStoreManager1')]
         [Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_KeyValueStoreManager.RemoveFlags]
         ${Flags},
-        
+
         [Parameter(ParameterSetName='DeleteKeyValueStoreManager1')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='DeleteKeyValueStoreManager1')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='DeleteKeyValueStoreManager1')]
         [switch]
         ${AsJob}
@@ -4103,7 +4103,7 @@ function Remove-ClusterSharedVolumeFromAffinityRule {
 
 Remove-ClusterSharedVolumeFromAffinityRule [-ClusterSharedVolumes] <string[]> -InputObject <CimInstance#MSCluster_AffinityRule[]> [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [-PassThru] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='Query (cdxml)', PositionalBinding=$false)]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCLUSTER/MSCluster_AffinityRule')]
@@ -4113,37 +4113,37 @@ Remove-ClusterSharedVolumeFromAffinityRule [-ClusterSharedVolumes] <string[]> -I
         [ValidateNotNull()]
         [string[]]
         ${Name},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)', Mandatory=$true, ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [PSTypeName('Microsoft.Management.Infrastructure.CimInstance#MSCluster_AffinityRule')]
         [ciminstance[]]
         ${InputObject},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)', Mandatory=$true, Position=1)]
         [Parameter(ParameterSetName='Query (cdxml)', Mandatory=$true, Position=1)]
         [ValidateNotNullOrEmpty()]
         [ValidateNotNull()]
         [string[]]
         ${ClusterSharedVolumes},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
         ${AsJob},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
@@ -4161,7 +4161,7 @@ function Remove-ClusterStorageNode {
 
 Remove-ClusterStorageNode -InputObject <CimInstance#MSCluster_StorageNode[]> [-Flags <uint32>] [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='Query (cdxml)', SupportsShouldProcess=$true, ConfirmImpact='High', PositionalBinding=$false)]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCLUSTER/MSCluster_StorageNode')]
@@ -4170,40 +4170,40 @@ Remove-ClusterStorageNode -InputObject <CimInstance#MSCluster_StorageNode[]> [-F
         [ValidateNotNull()]
         [string[]]
         ${Id},
-        
+
         [Parameter(ParameterSetName='Query (cdxml)', Position=0)]
         [ValidateNotNull()]
         [string[]]
         ${Name},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)', Mandatory=$true, ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [PSTypeName('Microsoft.Management.Infrastructure.CimInstance#MSCluster_StorageNode')]
         [ciminstance[]]
         ${InputObject},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [uint32]
         ${Flags},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
         ${AsJob},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
@@ -4223,28 +4223,28 @@ function Remove-WorkgroupCluster {
     .PARAMETER Credentials
         An array of credentials for the nodes.
     #>
-    
+
     [CmdletBinding()]
     param (
         [Parameter(Position=0)]
         [ValidateNotNullOrEmpty()]
         [string[]]
         ${Node},
-        
+
         [Parameter(Position=1)]
         [ValidateNotNullOrEmpty()]
         [pscredential[]]
         ${Credentials},
-        
+
         [switch]
         ${Force},
-        
+
         [switch]
         ${Confirm},
-        
+
         [switch]
         ${WhatIf},
-        
+
         [Parameter(Mandatory=$true, Position=2)]
         [WorkgroupClusterAuthenticationMethod]
         ${AuthenticationMethod}
@@ -4262,7 +4262,7 @@ function Remove-WorkgroupClusterAdminUsers {
         Indicates whether to force the removal of users without prompting for confirmation.
         By default, the value is $false.
     #>
-    
+
     [CmdletBinding()]
     param (
         [switch]
@@ -4280,13 +4280,13 @@ function Remove-WorkgroupClusterCertificates {
     .PARAMETER Force
         Indicates whether to force the removal of certificates without prompting for confirmation. By default, the value is $false.
     #>
-    
+
     [CmdletBinding()]
     param (
         [Parameter(Position=0)]
         [string]
         ${Authority},
-        
+
         [switch]
         ${Force}
     )
@@ -4308,43 +4308,43 @@ function Remove-WorkgroupClusterNode {
         parameter will be used to remove the node.
         Additional cleanup will be required to clear the node state.
     #>
-    
+
     [CmdletBinding()]
     param (
         [Parameter(Mandatory=$true, Position=0)]
         [ValidateNotNullOrEmpty()]
         [string[]]
         ${Node},
-        
+
         [Parameter(Mandatory=$true, Position=1)]
         [ValidateNotNullOrEmpty()]
         [pscredential[]]
         ${Credentials},
-        
+
         [Parameter(Mandatory=$true, Position=2)]
         [ValidateNotNullOrEmpty()]
         [string]
         ${Name},
-        
+
         [Parameter(Position=3)]
         [int]
         ${Wait},
-        
+
         [switch]
         ${IgnoreStorageConnectivityLoss},
-        
+
         [switch]
         ${CleanupDisks},
-        
+
         [switch]
         ${Force},
-        
+
         [switch]
         ${Confirm},
-        
+
         [switch]
         ${WhatIf},
-        
+
         [Parameter(Mandatory=$true, Position=4)]
         [WorkgroupClusterAuthenticationMethod]
         ${AuthenticationMethod}
@@ -4361,39 +4361,39 @@ function Repair-ClusterStorageSpacesDirect {
 
 Repair-ClusterStorageSpacesDirect [-DisableStorageMaintenanceMode] [-Node <string>] [-SkipDiskRecovery] [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [-WhatIf] [-Confirm] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='DefaultParameterSet', SupportsShouldProcess=$true, ConfirmImpact='High', PositionalBinding=$false)]
     param (
         [Parameter(ParameterSetName='SkipDiskRecoverySet')]
         [Parameter(ParameterSetName='DefaultParameterSet')]
         [switch]
         ${DisableStorageMaintenanceMode},
-        
+
         [Parameter(ParameterSetName='DefaultParameterSet')]
         [switch]
         ${RecoverUnboundDrives},
-        
+
         [Parameter(ParameterSetName='SkipDiskRecoverySet')]
         [Parameter(ParameterSetName='DefaultParameterSet')]
         [string]
         ${Node},
-        
+
         [Parameter(ParameterSetName='SkipDiskRecoverySet')]
         [switch]
         ${SkipDiskRecovery},
-        
+
         [Parameter(ParameterSetName='SkipDiskRecoverySet')]
         [Parameter(ParameterSetName='DefaultParameterSet')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='SkipDiskRecoverySet')]
         [Parameter(ParameterSetName='DefaultParameterSet')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='SkipDiskRecoverySet')]
         [Parameter(ParameterSetName='DefaultParameterSet')]
         [switch]
@@ -4411,7 +4411,7 @@ function Restore-ClusterKeyValueStore {
 
 Restore-ClusterKeyValueStore -InputObject <CimInstance#MSCluster_KeyValueStoreManager[]> -StoreName <string> -BackupPath <string> [-Flags <uint32>] [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [-PassThru] [-WhatIf] [-Confirm] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='Query (cdxml)', SupportsShouldProcess=$true, ConfirmImpact='High', PositionalBinding=$false)]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCLUSTER/MSCluster_KeyValueStoreManager')]
@@ -4420,45 +4420,45 @@ Restore-ClusterKeyValueStore -InputObject <CimInstance#MSCluster_KeyValueStoreMa
         [ValidateNotNull()]
         [string[]]
         ${ManagerName},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)', Mandatory=$true, ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [PSTypeName('Microsoft.Management.Infrastructure.CimInstance#MSCluster_KeyValueStoreManager')]
         [ciminstance[]]
         ${InputObject},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)', Mandatory=$true)]
         [Parameter(ParameterSetName='Query (cdxml)', Mandatory=$true)]
         [string]
         ${StoreName},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)', Mandatory=$true)]
         [Parameter(ParameterSetName='Query (cdxml)', Mandatory=$true)]
         [string]
         ${BackupPath},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [uint32]
         ${Flags},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
         ${AsJob},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
@@ -4476,7 +4476,7 @@ function Set-ClusterAffinityRule {
 
 Set-ClusterAffinityRule -InputObject <CimInstance#MSCluster_AffinityRule[]> [-RuleType <RuleType>] [-Enabled <uint32>] [-SoftAntiAffinity <uint32>] [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [-PassThru] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='Query (cdxml)', PositionalBinding=$false)]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCLUSTER/MSCluster_AffinityRule')]
@@ -4485,45 +4485,45 @@ Set-ClusterAffinityRule -InputObject <CimInstance#MSCluster_AffinityRule[]> [-Ru
         [ValidateNotNull()]
         [string[]]
         ${Name},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)', Mandatory=$true, ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [PSTypeName('Microsoft.Management.Infrastructure.CimInstance#MSCluster_AffinityRule')]
         [ciminstance[]]
         ${InputObject},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_AffinityRule.RuleType]
         ${RuleType},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [uint32]
         ${Enabled},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [uint32]
         ${SoftAntiAffinity},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
         ${AsJob},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
@@ -4539,27 +4539,27 @@ function Set-ClusterExcludedAdapter {
     .SYNOPSIS
         Set-ClusterExcludedAdapter -ExclusionType <AdapterExclusionType> -ExclusionValue <string[]> [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(PositionalBinding=$false)]
     param (
         [Parameter(ParameterSetName='SetClusterExcludedAdapter0', Mandatory=$true)]
         [Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_ClusterService.AdapterExclusionType]
         ${ExclusionType},
-        
+
         [Parameter(ParameterSetName='SetClusterExcludedAdapter0', Mandatory=$true)]
         [string[]]
         ${ExclusionValue},
-        
+
         [Parameter(ParameterSetName='SetClusterExcludedAdapter0')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='SetClusterExcludedAdapter0')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='SetClusterExcludedAdapter0')]
         [switch]
         ${AsJob}
@@ -4576,7 +4576,7 @@ function Set-ClusterFaultDomain {
 
 Set-ClusterFaultDomain -InputObject <CimInstance#MSCluster_FaultDomain[]> [-NewName <string>] [-Location <string>] [-Description <string>] [-FaultDomain <string>] [-Flags <uint32>] [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [-PassThru] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='Query (cdxml)', PositionalBinding=$false)]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCLUSTER/MSCluster_FaultDomain')]
@@ -4585,61 +4585,61 @@ Set-ClusterFaultDomain -InputObject <CimInstance#MSCluster_FaultDomain[]> [-NewN
         [ValidateNotNull()]
         [string[]]
         ${Name},
-        
+
         [Parameter(ParameterSetName='Query (cdxml)')]
         [ValidateNotNull()]
         [string[]]
         ${Id},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)', Mandatory=$true, ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [PSTypeName('Microsoft.Management.Infrastructure.CimInstance#MSCluster_FaultDomain')]
         [ciminstance[]]
         ${InputObject},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [string]
         ${NewName},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [string]
         ${Location},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [string]
         ${Description},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [Alias('Parent')]
         [string]
         ${FaultDomain},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [uint32]
         ${Flags},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
         ${AsJob},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
@@ -4655,7 +4655,7 @@ function Set-ClusterFaultDomainXML {
     .SYNOPSIS
         Set-ClusterFaultDomainXML [-XML] <string> [-Flags <uint32>] [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(PositionalBinding=$false)]
     param (
         [Parameter(ParameterSetName='SetFaultDomainXML1', Mandatory=$true, Position=0, ValueFromPipeline=$true)]
@@ -4663,21 +4663,21 @@ function Set-ClusterFaultDomainXML {
         [ValidateNotNull()]
         [string]
         ${XML},
-        
+
         [Parameter(ParameterSetName='SetFaultDomainXML1')]
         [uint32]
         ${Flags},
-        
+
         [Parameter(ParameterSetName='SetFaultDomainXML1')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='SetFaultDomainXML1')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='SetFaultDomainXML1')]
         [switch]
         ${AsJob}
@@ -4694,7 +4694,7 @@ function Set-ClusterGroupSet {
 
 Set-ClusterGroupSet -InputObject <CimInstance#MSCluster_GroupSet[]> [-StartupDelayTrigger <StartupSettingType>] [-StartupCount <uint32>] [-IsGlobal <bool>] [-StartupDelay <uint32>] [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [-PassThru] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='Query (cdxml)', PositionalBinding=$false)]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCLUSTER/MSCluster_GroupSet')]
@@ -4703,52 +4703,52 @@ Set-ClusterGroupSet -InputObject <CimInstance#MSCluster_GroupSet[]> [-StartupDel
         [ValidateNotNull()]
         [string[]]
         ${Name},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)', Mandatory=$true, ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [PSTypeName('Microsoft.Management.Infrastructure.CimInstance#MSCluster_GroupSet')]
         [ciminstance[]]
         ${InputObject},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_GroupSet.StartupSettingType]
         ${StartupDelayTrigger},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [Alias('Count')]
         [uint32]
         ${StartupCount},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [bool]
         ${IsGlobal},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [Alias('Delay')]
         [uint32]
         ${StartupDelay},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
         ${AsJob},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
@@ -4766,7 +4766,7 @@ function Set-ClusterHCSVM {
 
 Set-ClusterHCSVM -InputObject <CimInstance#MSCluster_HCSVM[]> [-NewName <string>] [-ExtendedVmConfiguration <string>] [-OfflineAction <uint32>] [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [-PassThru] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='Query (cdxml)', PositionalBinding=$false)]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCLUSTER/MSCluster_HCSVM')]
@@ -4775,45 +4775,45 @@ Set-ClusterHCSVM -InputObject <CimInstance#MSCluster_HCSVM[]> [-NewName <string>
         [ValidateNotNull()]
         [string[]]
         ${Name},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)', Mandatory=$true, ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [PSTypeName('Microsoft.Management.Infrastructure.CimInstance#MSCluster_HCSVM')]
         [ciminstance[]]
         ${InputObject},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [string]
         ${NewName},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [string]
         ${ExtendedVmConfiguration},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [uint32]
         ${OfflineAction},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
         ${AsJob},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
@@ -4831,7 +4831,7 @@ function Set-ClusterStorageNode {
 
 Set-ClusterStorageNode -InputObject <CimInstance#MSCluster_StorageNode[]> [-NewName <string>] [-Description <string>] [-Location <string>] [-Flags <uint32>] [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [-PassThru] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='Query (cdxml)', PositionalBinding=$false)]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCLUSTER/MSCluster_StorageNode')]
@@ -4840,55 +4840,55 @@ Set-ClusterStorageNode -InputObject <CimInstance#MSCluster_StorageNode[]> [-NewN
         [ValidateNotNull()]
         [string[]]
         ${Name},
-        
+
         [Parameter(ParameterSetName='Query (cdxml)')]
         [ValidateNotNull()]
         [string[]]
         ${Id},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)', Mandatory=$true, ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [PSTypeName('Microsoft.Management.Infrastructure.CimInstance#MSCluster_StorageNode')]
         [ciminstance[]]
         ${InputObject},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [string]
         ${NewName},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [string]
         ${Description},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [string]
         ${Location},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [uint32]
         ${Flags},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
         ${AsJob},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
@@ -4904,51 +4904,51 @@ function Set-ClusterStorageSpacesDirect {
     .SYNOPSIS
         Set-ClusterStorageSpacesDirect [-CacheState <CacheStateType>] [-CacheModeHDD <CacheModeType>] [-CacheModeSSD <CacheModeType>] [-Nodes <string[]>] [-ScmUse <ScmUse>] [-SkipEligibilityChecks] [-SedProtectionState <SedProtectionStateType>] [-UseSedExclusively <bool>] [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(PositionalBinding=$false, HelpUri='https://go.microsoft.com/fwlink/?LinkId=691106')]
     param (
         [Parameter(ParameterSetName='SetStorageSpacesDirect0')]
         [Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_StorageSpacesDirect.CacheStateType]
         ${CacheState},
-        
+
         [Parameter(ParameterSetName='SetStorageSpacesDirect0')]
         [Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_StorageSpacesDirect.CacheModeType]
         ${CacheModeHDD},
-        
+
         [Parameter(ParameterSetName='SetStorageSpacesDirect0')]
         [Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_StorageSpacesDirect.CacheModeType]
         ${CacheModeSSD},
-        
+
         [Parameter(ParameterSetName='SetStorageSpacesDirect0')]
         [string[]]
         ${Nodes},
-        
+
         [Parameter(ParameterSetName='SetStorageSpacesDirect0')]
         [Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_StorageSpacesDirect.ScmUse]
         ${ScmUse},
-        
+
         [Parameter(ParameterSetName='SetStorageSpacesDirect0')]
         [switch]
         ${SkipEligibilityChecks},
-        
+
         [Parameter(ParameterSetName='SetStorageSpacesDirect0')]
         [Microsoft.PowerShell.Cmdletization.GeneratedTypes.MSCLUSTER.MSCluster_StorageSpacesDirect.SedProtectionStateType]
         ${SedProtectionState},
-        
+
         [Parameter(ParameterSetName='SetStorageSpacesDirect0')]
         [bool]
         ${UseSedExclusively},
-        
+
         [Parameter(ParameterSetName='SetStorageSpacesDirect0')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='SetStorageSpacesDirect0')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='SetStorageSpacesDirect0')]
         [switch]
         ${AsJob}
@@ -4965,41 +4965,41 @@ function Set-ClusterStorageSpacesDirectDisk {
 
 Set-ClusterStorageSpacesDirectDisk -PhysicalDisk <CimInstance#MSFT_PhysicalDisk[]> [-CanBeClaimed <bool>] [-Reset] [-CacheUsage <S2DDiskUsage>] [-CimSession <CimSession>] [-ThrottleLimit <int>] [-AsJob] [-WhatIf] [-Confirm] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='ByPhysicalDiskGuid', SupportsShouldProcess=$true, ConfirmImpact='High')]
     param (
         [Parameter(ParameterSetName='ByPhysicalDiskGuid', Mandatory=$true)]
         [ValidateNotNullOrEmpty()]
         [string[]]
         ${PhysicalDiskGuid},
-        
+
         [Parameter(ParameterSetName='ByPhysicalDisk', Mandatory=$true, ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [PSTypeName('Microsoft.Management.Infrastructure.CimInstance#ROOT/Microsoft/Windows/Storage/MSFT_PhysicalDisk')]
         [ciminstance[]]
         ${PhysicalDisk},
-        
+
         [Parameter(ParameterSetName='ByPhysicalDisk')]
         [Parameter(ParameterSetName='ByPhysicalDiskGuid')]
         [bool]
         ${CanBeClaimed},
-        
+
         [Parameter(ParameterSetName='ByPhysicalDisk')]
         [Parameter(ParameterSetName='ByPhysicalDiskGuid')]
         [switch]
         ${Reset},
-        
+
         [Parameter(ParameterSetName='ByPhysicalDisk')]
         [Parameter(ParameterSetName='ByPhysicalDiskGuid')]
-        [Set-ClusterStorageSpacesDirectDisk.S2DDiskUsage]
+        [ClusterStorageSpacesDirectDisk.S2DDiskUsage]
         ${CacheUsage},
-        
+
         [CimSession]
         ${CimSession},
-        
+
         [int]
         ${ThrottleLimit},
-        
+
         [switch]
         ${AsJob}
     )
@@ -5013,7 +5013,7 @@ function Set-WorkgroupClusterRemotingConfiguration {
     .SYNOPSIS
         Configures the remoting configuration for a workgroup cluster.
     #>
-    
+
     [CmdletBinding()]
     param ( )
     end {
@@ -5028,7 +5028,7 @@ function Start-ClusterHCSVM {
 
 Start-ClusterHCSVM -InputObject <CimInstance#MSCluster_HCSVM[]> [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [-PassThru] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='Query (cdxml)', PositionalBinding=$false)]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCLUSTER/MSCluster_HCSVM')]
@@ -5037,30 +5037,30 @@ Start-ClusterHCSVM -InputObject <CimInstance#MSCluster_HCSVM[]> [-CimSession <Ci
         [ValidateNotNull()]
         [string[]]
         ${Name},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)', Mandatory=$true, ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [PSTypeName('Microsoft.Management.Infrastructure.CimInstance#MSCluster_HCSVM')]
         [ciminstance[]]
         ${InputObject},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
         ${AsJob},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
@@ -5076,7 +5076,7 @@ function Start-ClusterPerformanceHistory {
     .SYNOPSIS
         Start-ClusterPerformanceHistory [[-CimSession] <CimSession>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding()]
     param (
         [Parameter(Position=0)]
@@ -5097,22 +5097,22 @@ function Start-WorkgroupCluster {
     .PARAMETER Credentials
         An array of credentials for the nodes.
     #>
-    
+
     [CmdletBinding()]
     param (
         [Parameter(Position=0)]
         [ValidateNotNullOrEmpty()]
         [string[]]
         ${Node},
-        
+
         [Parameter(Position=1)]
         [ValidateNotNullOrEmpty()]
         [pscredential[]]
         ${Credentials},
-        
+
         [switch]
         ${IgnorePersistentState},
-        
+
         [Parameter(Mandatory=$true, Position=2)]
         [WorkgroupClusterAuthenticationMethod]
         ${AuthenticationMethod}
@@ -5129,7 +5129,7 @@ function Stop-ClusterHCSVM {
 
 Stop-ClusterHCSVM -InputObject <CimInstance#MSCluster_HCSVM[]> [-CimSession <CimSession[]>] [-ThrottleLimit <int>] [-AsJob] [-PassThru] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='Query (cdxml)', PositionalBinding=$false)]
     [OutputType([Microsoft.Management.Infrastructure.CimInstance])]
     [OutputType('Microsoft.Management.Infrastructure.CimInstance#root/MSCLUSTER/MSCluster_HCSVM')]
@@ -5138,30 +5138,30 @@ Stop-ClusterHCSVM -InputObject <CimInstance#MSCluster_HCSVM[]> [-CimSession <Cim
         [ValidateNotNull()]
         [string[]]
         ${Name},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)', Mandatory=$true, ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [PSTypeName('Microsoft.Management.Infrastructure.CimInstance#MSCluster_HCSVM')]
         [ciminstance[]]
         ${InputObject},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [Alias('Session')]
         [ValidateNotNullOrEmpty()]
         [CimSession[]]
         ${CimSession},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [int]
         ${ThrottleLimit},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
         ${AsJob},
-        
+
         [Parameter(ParameterSetName='InputObject (cdxml)')]
         [Parameter(ParameterSetName='Query (cdxml)')]
         [switch]
@@ -5177,12 +5177,12 @@ function Stop-ClusterPerformanceHistory {
     .SYNOPSIS
         Stop-ClusterPerformanceHistory [[-CimSession] <CimSession>] [-DeleteHistory] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding()]
     param (
         [switch]
         ${DeleteHistory},
-        
+
         [Parameter(Position=0)]
         [CimSession]
         ${CimSession}
@@ -5201,22 +5201,22 @@ function Stop-WorkgroupCluster {
     .PARAMETER Credentials
         An array of credentials for the nodes.
     #>
-    
+
     [CmdletBinding()]
     param (
         [Parameter(Position=0)]
         [ValidateNotNullOrEmpty()]
         [string[]]
         ${Node},
-        
+
         [Parameter(Position=1)]
         [ValidateNotNullOrEmpty()]
         [pscredential[]]
         ${Credentials},
-        
+
         [switch]
         ${Confirm},
-        
+
         [Parameter(Mandatory=$true, Position=2)]
         [WorkgroupClusterAuthenticationMethod]
         ${AuthenticationMethod}
@@ -5235,52 +5235,52 @@ function Test-WorkgroupCluster {
     .PARAMETER Credentials
         An array of credentials for the nodes.
     #>
-    
+
     [CmdletBinding()]
     param (
         [Parameter(Position=0)]
         [ValidateNotNullOrEmpty()]
         [string[]]
         ${Node},
-        
+
         [Parameter(Position=1)]
         [ValidateNotNullOrEmpty()]
         [pscredential[]]
         ${Credentials},
-        
+
         [Parameter(Position=2)]
         [System.Object[]]
         ${Disk},
-        
+
         [Parameter(Position=3)]
         [System.Object[]]
         ${Pool},
-        
+
         [Parameter(Position=4)]
         [string]
         ${ReportName},
-        
+
         [Parameter(Position=5)]
         [string[]]
         ${Include},
-        
+
         [Parameter(Position=6)]
         [string[]]
         ${Ignore},
-        
+
         [switch]
         ${Force},
-        
+
         [Parameter(Position=7)]
         [string]
         ${Cluster},
-        
+
         [switch]
         ${Confirm},
-        
+
         [switch]
         ${WhatIf},
-        
+
         [Parameter(Mandatory=$true, Position=8)]
         [ValidateScript({
             if ($_ -match '^[a-zA-Z]:\\(?:[^<>:"/\\|?*\n]+\\)*[^<>:"/\\|?*\n]*$') {
@@ -5291,7 +5291,7 @@ function Test-WorkgroupCluster {
             })]
             [string]
             ${Destination},
-            
+
             [Parameter(Mandatory=$true, Position=9)]
             [WorkgroupClusterAuthenticationMethod]
             ${AuthenticationMethod}
@@ -5310,14 +5310,14 @@ function Test-WorkgroupClusterRemoting {
     .PARAMETER Credentials
         An array of credentials for the nodes.
     #>
-    
+
     [CmdletBinding()]
     param (
         [Parameter(Position=1)]
         [ValidateNotNullOrEmpty()]
         [string[]]
         ${Node},
-        
+
         [Parameter(Position=2)]
         [ValidateNotNullOrEmpty()]
         [pscredential[]]
@@ -5333,7 +5333,7 @@ function Add-ClusterCheckpoint {
     .SYNOPSIS
         Add-ClusterCheckpoint [[-ResourceName] <string>] [-CryptoCheckpointName <string>] [-CryptoCheckpointType <string>] [-CryptoCheckpointKey <string>] [-RegistryCheckpoint <string>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216179')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterRegistryCheckpoint])]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterCryptoCheckpoint])]
@@ -5342,28 +5342,28 @@ function Add-ClusterCheckpoint {
         [ValidateNotNullOrEmpty()]
         [string]
         ${ResourceName},
-        
+
         [Parameter(HelpMessage='Name of crypto checkpoint to add.')]
         [string]
         ${CryptoCheckpointName},
-        
+
         [Parameter(HelpMessage='Type of crypto checkpoint to add.')]
         [string]
         ${CryptoCheckpointType},
-        
+
         [Parameter(HelpMessage='Key of crypto checkpoint to add.')]
         [string]
         ${CryptoCheckpointKey},
-        
+
         [Parameter(HelpMessage='Name of registry checkpoint to add.')]
         [string]
         ${RegistryCheckpoint},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -5378,7 +5378,7 @@ function Add-ClusterDisk {
     .SYNOPSIS
         Add-ClusterDisk [-InputObject] <psobject[]> [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(HelpUri='https://go.microsoft.com/fwlink/?LinkId=216180')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterResource])]
     param (
@@ -5386,7 +5386,7 @@ function Add-ClusterDisk {
         [ValidateNotNull()]
         [psobject[]]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -5401,14 +5401,14 @@ function Add-ClusterFabricControllerManagerRole {
     .SYNOPSIS
         Add-ClusterFabricControllerManagerRole [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject')]
     param (
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -5423,7 +5423,7 @@ function Add-ClusterFileServerRole {
     .SYNOPSIS
         Add-ClusterFileServerRole [[-Name] <string>] -Storage <StringCollection> [-StaticAddress <StringCollection>] [-IgnoreNetwork <StringCollection>] [-Wait <int>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216183')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterGroup])]
     param (
@@ -5431,27 +5431,27 @@ function Add-ClusterFileServerRole {
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${Storage},
-        
+
         [ValidateNotNull()]
         [System.Collections.Specialized.StringCollection]
         ${StaticAddress},
-        
+
         [ValidateNotNull()]
         [System.Collections.Specialized.StringCollection]
         ${IgnoreNetwork},
-        
+
         [Parameter(Position=0)]
         [string]
         ${Name},
-        
+
         [int]
         ${Wait},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -5466,7 +5466,7 @@ function Add-ClusterGenericApplicationRole {
     .SYNOPSIS
         Add-ClusterGenericApplicationRole [[-Name] <string>] -CommandLine <string> [-Parameters <string>] [-CheckpointKey <StringCollection>] [-Storage <StringCollection>] [-StaticAddress <StringCollection>] [-IgnoreNetwork <StringCollection>] [-Wait <int>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216184')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterGroup])]
     param (
@@ -5474,38 +5474,38 @@ function Add-ClusterGenericApplicationRole {
         [ValidateNotNullOrEmpty()]
         [string]
         ${CommandLine},
-        
+
         [string]
         ${Parameters},
-        
+
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${CheckpointKey},
-        
+
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${Storage},
-        
+
         [ValidateNotNull()]
         [System.Collections.Specialized.StringCollection]
         ${StaticAddress},
-        
+
         [ValidateNotNull()]
         [System.Collections.Specialized.StringCollection]
         ${IgnoreNetwork},
-        
+
         [Parameter(Position=0)]
         [string]
         ${Name},
-        
+
         [int]
         ${Wait},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -5520,7 +5520,7 @@ function Add-ClusterGenericScriptRole {
     .SYNOPSIS
         Add-ClusterGenericScriptRole [[-Name] <string>] -ScriptFilePath <string> [-Storage <StringCollection>] [-StaticAddress <StringCollection>] [-IgnoreNetwork <StringCollection>] [-Wait <int>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216186')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterGroup])]
     param (
@@ -5528,31 +5528,31 @@ function Add-ClusterGenericScriptRole {
         [ValidateNotNullOrEmpty()]
         [string]
         ${ScriptFilePath},
-        
+
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${Storage},
-        
+
         [ValidateNotNull()]
         [System.Collections.Specialized.StringCollection]
         ${StaticAddress},
-        
+
         [ValidateNotNull()]
         [System.Collections.Specialized.StringCollection]
         ${IgnoreNetwork},
-        
+
         [Parameter(Position=0)]
         [string]
         ${Name},
-        
+
         [int]
         ${Wait},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -5567,7 +5567,7 @@ function Add-ClusterGenericServiceRole {
     .SYNOPSIS
         Add-ClusterGenericServiceRole [[-Name] <string>] -ServiceName <string> [-CheckpointKey <StringCollection>] [-Storage <StringCollection>] [-StaticAddress <StringCollection>] [-IgnoreNetwork <StringCollection>] [-Wait <int>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216187')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterGroup])]
     param (
@@ -5575,35 +5575,35 @@ function Add-ClusterGenericServiceRole {
         [ValidateNotNullOrEmpty()]
         [string]
         ${ServiceName},
-        
+
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${CheckpointKey},
-        
+
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${Storage},
-        
+
         [ValidateNotNull()]
         [System.Collections.Specialized.StringCollection]
         ${StaticAddress},
-        
+
         [ValidateNotNull()]
         [System.Collections.Specialized.StringCollection]
         ${IgnoreNetwork},
-        
+
         [Parameter(Position=0)]
         [string]
         ${Name},
-        
+
         [int]
         ${Wait},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -5618,7 +5618,7 @@ function Add-ClusterGroup {
     .SYNOPSIS
         Add-ClusterGroup [-Name] <StringCollection> [[-GroupType] <GroupType>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216189')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterGroup])]
     param (
@@ -5626,16 +5626,16 @@ function Add-ClusterGroup {
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${Name},
-        
+
         [Parameter(Position=1)]
         [Microsoft.FailoverClusters.PowerShell.GroupType]
         ${GroupType},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -5650,7 +5650,7 @@ function Add-ClusteriSCSITargetServerRole {
     .SYNOPSIS
         Add-ClusteriSCSITargetServerRole [[-Name] <string>] -Storage <StringCollection> [-StaticAddress <StringCollection>] [-IgnoreNetwork <StringCollection>] [-Wait <int>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=229636')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterGroup])]
     param (
@@ -5658,27 +5658,27 @@ function Add-ClusteriSCSITargetServerRole {
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${Storage},
-        
+
         [ValidateNotNull()]
         [System.Collections.Specialized.StringCollection]
         ${StaticAddress},
-        
+
         [ValidateNotNull()]
         [System.Collections.Specialized.StringCollection]
         ${IgnoreNetwork},
-        
+
         [Parameter(Position=0)]
         [string]
         ${Name},
-        
+
         [int]
         ${Wait},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -5693,25 +5693,25 @@ function Add-ClusterNode {
     .SYNOPSIS
         Add-ClusterNode [[-Name] <StringCollection>] [-Type <NodeType>] [-NoStorage] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216190')]
     param (
         [Parameter(Position=0)]
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${Name},
-        
+
         [Microsoft.FailoverClusters.PowerShell.NodeType]
         ${Type},
-        
+
         [switch]
         ${NoStorage},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -5726,7 +5726,7 @@ function Add-ClusterResource {
     .SYNOPSIS
         Add-ClusterResource [-Name] <string> [[-Group] <string>] [-ResourceType] <string> [-SeparateMonitor] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216192')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterResource])]
     param (
@@ -5734,26 +5734,26 @@ function Add-ClusterResource {
         [ValidateNotNullOrEmpty()]
         [string]
         ${Name},
-        
+
         [Parameter(Position=1)]
         [ValidateNotNullOrEmpty()]
         [string]
         ${Group},
-        
+
         [Parameter(Mandatory=$true, Position=2)]
         [Alias('ResType','Type')]
         [ValidateNotNullOrEmpty()]
         [string]
         ${ResourceType},
-        
+
         [switch]
         ${SeparateMonitor},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -5768,7 +5768,7 @@ function Add-ClusterResourceDependency {
     .SYNOPSIS
         Add-ClusterResourceDependency [[-Resource] <string>] [[-Provider] <string>] [-Reason <string>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216193')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterResource])]
     param (
@@ -5776,20 +5776,20 @@ function Add-ClusterResourceDependency {
         [ValidateNotNullOrEmpty()]
         [string]
         ${Resource},
-        
+
         [Parameter(Position=1)]
         [ValidateNotNullOrEmpty()]
         [string]
         ${Provider},
-        
+
         [string]
         ${Reason},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -5804,7 +5804,7 @@ function Add-ClusterResourceType {
     .SYNOPSIS
         Add-ClusterResourceType [-Name] <string> [-Dll] <string> [[-DisplayName] <string>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216194')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterResourceType])]
     param (
@@ -5812,22 +5812,22 @@ function Add-ClusterResourceType {
         [ValidateNotNullOrEmpty()]
         [string]
         ${Name},
-        
+
         [Parameter(Mandatory=$true, Position=1)]
         [ValidateNotNullOrEmpty()]
         [string]
         ${Dll},
-        
+
         [Parameter(Position=2)]
         [ValidateNotNullOrEmpty()]
         [string]
         ${DisplayName},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -5842,7 +5842,7 @@ function Add-ClusterScaleOutFileServerRole {
     .SYNOPSIS
         Add-ClusterScaleOutFileServerRole [[-Name] <string>] [-Infrastructure] [-Wait <int>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216200')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterGroup])]
     param (
@@ -5850,19 +5850,19 @@ function Add-ClusterScaleOutFileServerRole {
         [Alias('Infra')]
         [switch]
         ${Infrastructure},
-        
+
         [Parameter(Position=0)]
         [string]
         ${Name},
-        
+
         [int]
         ${Wait},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -5877,40 +5877,40 @@ function Add-ClusterServerRole {
     .SYNOPSIS
         Add-ClusterServerRole [[-Name] <string>] [-DnsName <string>] [-NetworkNameName <string>] [-Storage <StringCollection>] [-StaticAddress <StringCollection>] [-IgnoreNetwork <StringCollection>] [-Wait <int>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216195')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterGroup])]
     param (
         [string]
         ${DnsName},
-        
+
         [string]
         ${NetworkNameName},
-        
+
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${Storage},
-        
+
         [ValidateNotNull()]
         [System.Collections.Specialized.StringCollection]
         ${StaticAddress},
-        
+
         [ValidateNotNull()]
         [System.Collections.Specialized.StringCollection]
         ${IgnoreNetwork},
-        
+
         [Parameter(Position=0)]
         [string]
         ${Name},
-        
+
         [int]
         ${Wait},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -5925,7 +5925,7 @@ function Add-ClusterSharedVolume {
     .SYNOPSIS
         Add-ClusterSharedVolume [[-Name] <StringCollection>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216196')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterSharedVolume])]
     param (
@@ -5933,12 +5933,12 @@ function Add-ClusterSharedVolume {
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${Name},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -5953,31 +5953,31 @@ function Add-ClusterVirtualMachineRole {
     .SYNOPSIS
         Add-ClusterVirtualMachineRole [[-VMName] <string>] [-Name <string>] [-VirtualMachine <string>] [-VMId <guid>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(HelpUri='https://go.microsoft.com/fwlink/?LinkId=216198')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterGroup])]
     param (
         [ValidateNotNullOrEmpty()]
         [string]
         ${Name},
-        
+
         [Parameter(Position=0, ValueFromPipelineByPropertyName=$true)]
         [string]
         ${VMName},
-        
+
         [Alias('VM')]
         [string]
         ${VirtualMachine},
-        
+
         [Parameter(ValueFromPipelineByPropertyName=$true)]
         [guid]
         ${VMId},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -5996,43 +5996,43 @@ Add-ClusterVMMonitoredItem [-Service <StringCollection>] [-EventLog <string>] [-
 
 Add-ClusterVMMonitoredItem [-Service <StringCollection>] [-EventLog <string>] [-EventSource <string>] [-EventId <int>] [-OverrideServiceRecoveryActions] [-Wait <int>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='VirtualMachine', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216199')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterVMMonitoredItem])]
     param (
         [System.Collections.Specialized.StringCollection]
         ${Service},
-        
+
         [string]
         ${EventLog},
-        
+
         [string]
         ${EventSource},
-        
+
         [int]
         ${EventId},
-        
+
         [switch]
         ${OverrideServiceRecoveryActions},
-        
+
         [Parameter(ParameterSetName='VirtualMachine', Position=0)]
         [Alias('VM')]
         [ValidateNotNullOrEmpty()]
         [string]
         ${VirtualMachine},
-        
+
         [Parameter(ParameterSetName='VMId', ValueFromPipelineByPropertyName=$true)]
         [guid]
         ${VMId},
-        
+
         [int]
         ${Wait},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -6047,19 +6047,19 @@ function Block-ClusterAccess {
     .SYNOPSIS
         Block-ClusterAccess [-User] <StringCollection> [-InputObject <psobject>] [-Cluster <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', SupportsShouldProcess=$true, ConfirmImpact='Medium', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216202')]
     param (
         [Parameter(Mandatory=$true, Position=0)]
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${User},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -6074,18 +6074,18 @@ function Clear-ClusterDiskReservation {
     .SYNOPSIS
         Clear-ClusterDiskReservation [[-Node] <StringCollection>] -Disk <uint32[]> [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216203')]
     param (
         [Parameter(Position=0)]
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${Node},
-        
+
         [Parameter(Mandatory=$true)]
         [uint32[]]
         ${Disk},
-        
+
         [switch]
         ${Force}
     )
@@ -6099,28 +6099,28 @@ function Clear-ClusterNode {
     .SYNOPSIS
         Clear-ClusterNode [[-Name] <StringCollection>] [-Force] [-Wait <int>] [-CleanupDisks] [-InputObject <psobject>] [-Cluster <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', SupportsShouldProcess=$true, ConfirmImpact='Medium', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216205')]
     param (
         [Parameter(Position=0)]
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${Name},
-        
+
         [switch]
         ${Force},
-        
+
         [int]
         ${Wait},
-        
+
         [switch]
         ${CleanupDisks},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -6137,7 +6137,7 @@ function Get-Cluster {
 
 Get-Cluster [-ClusterSet <ciminstance>] [-Domain <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='Name', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216206')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.Cluster])]
     param (
@@ -6145,12 +6145,12 @@ Get-Cluster [-ClusterSet <ciminstance>] [-Domain <string>] [<CommonParameters>]
         [ValidateNotNullOrEmpty()]
         [string]
         ${Name},
-        
+
         [Parameter(ParameterSetName='ClusterSet', ValueFromPipeline=$true)]
         [ValidateNotNullOrEmpty()]
         [ciminstance]
         ${ClusterSet},
-        
+
         [string]
         ${Domain}
     )
@@ -6164,7 +6164,7 @@ function Get-ClusterAccess {
     .SYNOPSIS
         Get-ClusterAccess [[-User] <StringCollection>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216207')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterAccessRule])]
     param (
@@ -6172,12 +6172,12 @@ function Get-ClusterAccess {
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${User},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -6192,7 +6192,7 @@ function Get-ClusterAvailableDisk {
     .SYNOPSIS
         Get-ClusterAvailableDisk [[-Cluster] <string>] [-Disk <ciminstance>] [-All] [-InputObject <psobject>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216208')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterDiskInfo])]
     param (
@@ -6200,15 +6200,15 @@ function Get-ClusterAvailableDisk {
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster},
-        
+
         [Parameter(ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [ciminstance]
         ${Disk},
-        
+
         [switch]
         ${All},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
@@ -6224,7 +6224,7 @@ function Get-ClusterBitLockerProtector {
     .SYNOPSIS
         Get-ClusterBitLockerProtector [[-Name] <string>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=2200126')]
     [OutputType([System.Collections.Generic.IEnumerable`1[System.String]])]
     param (
@@ -6232,12 +6232,12 @@ function Get-ClusterBitLockerProtector {
         [ValidateNotNullOrEmpty()]
         [string]
         ${Name},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -6252,7 +6252,7 @@ function Get-ClusterCheckpoint {
     .SYNOPSIS
         Get-ClusterCheckpoint [[-ResourceName] <StringCollection>] [-CheckpointName <string>] [-RegistryCheckpoint] [-CryptoCheckpoint] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216209')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterRegistryCheckpoint])]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterCryptoCheckpoint])]
@@ -6261,24 +6261,24 @@ function Get-ClusterCheckpoint {
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${ResourceName},
-        
+
         [Parameter(HelpMessage='Searches for checkpoints with a specific name, wildcard expressions are accepted.')]
         [string]
         ${CheckpointName},
-        
+
         [Parameter(HelpMessage='If specified, command will output registry checkpoints.')]
         [switch]
         ${RegistryCheckpoint},
-        
+
         [Parameter(HelpMessage='If specified, command will output crypto checkpoints.')]
         [switch]
         ${CryptoCheckpoint},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -6293,7 +6293,7 @@ function Get-ClusterCredential {
     .SYNOPSIS
         Get-ClusterCredential [[-NodeName] <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject')]
     [OutputType([System.Management.Automation.PSCredential])]
     param (
@@ -6312,7 +6312,7 @@ function Get-ClusterGroup {
     .SYNOPSIS
         Get-ClusterGroup [[-Name] <StringCollection>] [-VMId <guid>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216210')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterGroup])]
     param (
@@ -6320,16 +6320,16 @@ function Get-ClusterGroup {
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${Name},
-        
+
         [Parameter(ValueFromPipelineByPropertyName=$true)]
         [guid]
         ${VMId},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -6344,7 +6344,7 @@ function Get-ClusterLog {
     .SYNOPSIS
         Get-ClusterLog [[-Node] <StringCollection>] [-Destination <string>] [-PerformanceHistoryTimeFrame <string>] [-TimeSpan <uint32>] [-UseLocalTime] [-SkipClusterState] [-Health] [-Netft] [-ExportClusterPerformanceHistory] [-NetworkDiagnostics] [-NetworkDiagnosticsLevel <int>] [-NoCollateLogs] [-ClusWmi] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216212')]
     [OutputType([System.IO.FileInfo])]
     param (
@@ -6352,61 +6352,61 @@ function Get-ClusterLog {
         [ValidateNotNull()]
         [System.Collections.Specialized.StringCollection]
         ${Node},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Destination},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${PerformanceHistoryTimeFrame},
-        
+
         [Alias('Span')]
         [uint32]
         ${TimeSpan},
-        
+
         [Parameter(HelpMessage='Generate the cluster log using local time instead of GMT.')]
         [Alias('lt')]
         [switch]
         ${UseLocalTime},
-        
+
         [Parameter(HelpMessage='Generate the cluster log without retrieving cluster state information.')]
         [Alias('scs')]
         [switch]
         ${SkipClusterState},
-        
+
         [Parameter(HelpMessage='Generate the cluster health logs.')]
         [switch]
         ${Health},
-        
+
         [Parameter(HelpMessage='Generate the cluster netft logs.')]
         [switch]
         ${Netft},
-        
+
         [Parameter(HelpMessage='Export the ClusterPorformanceHistory data.')]
         [switch]
         ${ExportClusterPerformanceHistory},
-        
+
         [Parameter(HelpMessage='Generate the cluster network diagnotics logs.')]
         [switch]
         ${NetworkDiagnostics},
-        
+
         [Parameter(HelpMessage='Specifies the level of depth of the network diagnotics logs.')]
         [int]
         ${NetworkDiagnosticsLevel},
-        
+
         [switch]
         ${NoCollateLogs},
-        
+
         [Parameter(HelpMessage='Generate the cluster wmi logs.')]
         [switch]
         ${ClusWmi},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -6421,7 +6421,7 @@ function Get-ClusterNetwork {
     .SYNOPSIS
         Get-ClusterNetwork [[-Name] <StringCollection>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216213')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterNetwork])]
     param (
@@ -6429,12 +6429,12 @@ function Get-ClusterNetwork {
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${Name},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -6449,7 +6449,7 @@ function Get-ClusterNetworkInterface {
     .SYNOPSIS
         Get-ClusterNetworkInterface [[-Name] <StringCollection>] [-Node <StringCollection>] [-Network <StringCollection>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216214')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterNetworkInterface])]
     param (
@@ -6457,20 +6457,20 @@ function Get-ClusterNetworkInterface {
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${Name},
-        
+
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${Node},
-        
+
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${Network},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -6485,7 +6485,7 @@ function Get-ClusterNode {
     .SYNOPSIS
         Get-ClusterNode [[-Name] <StringCollection>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216215')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterNode])]
     param (
@@ -6493,12 +6493,12 @@ function Get-ClusterNode {
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${Name},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -6513,7 +6513,7 @@ function Get-ClusterOwnerNode {
     .SYNOPSIS
         Get-ClusterOwnerNode [-Resource <string>] [-Group <string>] [-ResourceType <string>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216216')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterOwnerNodeList])]
     param (
@@ -6521,21 +6521,21 @@ function Get-ClusterOwnerNode {
         [ValidateNotNullOrEmpty()]
         [string]
         ${Resource},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Group},
-        
+
         [Alias('ResType')]
         [ValidateNotNullOrEmpty()]
         [string]
         ${ResourceType},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -6550,7 +6550,7 @@ function Get-ClusterParameter {
     .SYNOPSIS
         Get-ClusterParameter [[-Name] <StringCollection>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(HelpUri='https://go.microsoft.com/fwlink/?LinkId=216217')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterParameter])]
     param (
@@ -6558,12 +6558,12 @@ function Get-ClusterParameter {
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${Name},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -6578,7 +6578,7 @@ function Get-ClusterQuorum {
     .SYNOPSIS
         Get-ClusterQuorum [[-Cluster] <string>] [-InputObject <psobject>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216218')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterQuorumSettings])]
     param (
@@ -6586,7 +6586,7 @@ function Get-ClusterQuorum {
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
@@ -6602,7 +6602,7 @@ function Get-ClusterResource {
     .SYNOPSIS
         Get-ClusterResource [[-Name] <StringCollection>] [-VMId <guid>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216219')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterResource])]
     param (
@@ -6610,16 +6610,16 @@ function Get-ClusterResource {
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${Name},
-        
+
         [Parameter(ValueFromPipelineByPropertyName=$true)]
         [guid]
         ${VMId},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -6634,7 +6634,7 @@ function Get-ClusterResourceDependency {
     .SYNOPSIS
         Get-ClusterResourceDependency [[-Resource] <StringCollection>] [-Guid] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216220')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterResourceDependency])]
     param (
@@ -6642,15 +6642,15 @@ function Get-ClusterResourceDependency {
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${Resource},
-        
+
         [switch]
         ${Guid},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -6665,23 +6665,23 @@ function Get-ClusterResourceDependencyReport {
     .SYNOPSIS
         Get-ClusterResourceDependencyReport [-Resource <string>] [-Group <string>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216221')]
     [OutputType([System.IO.FileInfo])]
     param (
         [ValidateNotNullOrEmpty()]
         [string]
         ${Resource},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Group},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -6696,7 +6696,7 @@ function Get-ClusterResourceType {
     .SYNOPSIS
         Get-ClusterResourceType [[-Name] <StringCollection>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216222')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterResourceType])]
     param (
@@ -6704,12 +6704,12 @@ function Get-ClusterResourceType {
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${Name},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -6724,7 +6724,7 @@ function Get-ClusterSharedVolume {
     .SYNOPSIS
         Get-ClusterSharedVolume [[-Name] <StringCollection>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216223')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterSharedVolume])]
     param (
@@ -6732,12 +6732,12 @@ function Get-ClusterSharedVolume {
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${Name},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -6752,24 +6752,24 @@ function Get-ClusterSharedVolumeState {
     .SYNOPSIS
         Get-ClusterSharedVolumeState [[-Name] <StringCollection>] [-Node <StringCollection>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding()]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterSharedVolumeStateInfo])]
     param (
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${Node},
-        
+
         [Parameter(Position=0)]
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${Name},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -6788,7 +6788,7 @@ Get-ClusterVMMonitoredItem [-VMId <guid>] [-Wait <int>] [-Cluster <string>] [<Co
 
 Get-ClusterVMMonitoredItem [-Wait <int>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='VirtualMachine', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216224')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterVMMonitoredItem])]
     param (
@@ -6797,19 +6797,19 @@ Get-ClusterVMMonitoredItem [-Wait <int>] [-InputObject <psobject>] [-Cluster <st
         [ValidateNotNullOrEmpty()]
         [string]
         ${VirtualMachine},
-        
+
         [Parameter(ParameterSetName='VMId', ValueFromPipelineByPropertyName=$true)]
         [guid]
         ${VMId},
-        
+
         [int]
         ${Wait},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -6824,25 +6824,25 @@ function Grant-ClusterAccess {
     .SYNOPSIS
         Grant-ClusterAccess [-User] <StringCollection> [-Full] [-ReadOnly] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216225')]
     param (
         [Parameter(Mandatory=$true, Position=0)]
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${User},
-        
+
         [switch]
         ${Full},
-        
+
         [switch]
         ${ReadOnly},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -6857,7 +6857,7 @@ function Move-ClusterGroup {
     .SYNOPSIS
         Move-ClusterGroup [[-Name] <string>] [[-Node] <string>] [-IgnoreLocked] [-IgnoreAffinityRule] [-Reason <string>] [-Wait <int>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216226')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterGroup])]
     param (
@@ -6865,29 +6865,29 @@ function Move-ClusterGroup {
         [ValidateNotNullOrEmpty()]
         [string]
         ${Name},
-        
+
         [Parameter(Position=1)]
         [ValidateNotNullOrEmpty()]
         [string]
         ${Node},
-        
+
         [switch]
         ${IgnoreLocked},
-        
+
         [switch]
         ${IgnoreAffinityRule},
-        
+
         [string]
         ${Reason},
-        
+
         [int]
         ${Wait},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -6902,7 +6902,7 @@ function Move-ClusterResource {
     .SYNOPSIS
         Move-ClusterResource [[-Name] <string>] [[-Group] <string>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216227')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterResource])]
     param (
@@ -6910,17 +6910,17 @@ function Move-ClusterResource {
         [ValidateNotNull()]
         [string]
         ${Name},
-        
+
         [Parameter(Position=1)]
         [ValidateNotNull()]
         [string]
         ${Group},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -6935,7 +6935,7 @@ function Move-ClusterSharedVolume {
     .SYNOPSIS
         Move-ClusterSharedVolume [[-Name] <string>] [[-Node] <string>] [-Reason <string>] [-Wait <int>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216228')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterSharedVolume])]
     param (
@@ -6943,23 +6943,23 @@ function Move-ClusterSharedVolume {
         [ValidateNotNullOrEmpty()]
         [string]
         ${Name},
-        
+
         [Parameter(Position=1)]
         [ValidateNotNullOrEmpty()]
         [string]
         ${Node},
-        
+
         [string]
         ${Reason},
-        
+
         [int]
         ${Wait},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -6974,7 +6974,7 @@ function Move-ClusterVirtualMachineRole {
     .SYNOPSIS
         Move-ClusterVirtualMachineRole [[-Name] <string>] [[-Node] <string>] [-Cancel] [-MigrationType <NativeGroupHelp+VmMigrationType>] [-IgnoreLocked] [-IgnoreAffinityRule] [-VMId <guid>] [-Wait <int>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(HelpUri='https://go.microsoft.com/fwlink/?LinkId=216229')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterGroup])]
     param (
@@ -6982,36 +6982,36 @@ function Move-ClusterVirtualMachineRole {
         [ValidateNotNullOrEmpty()]
         [string]
         ${Name},
-        
+
         [Parameter(Position=1)]
         [ValidateNotNullOrEmpty()]
         [string]
         ${Node},
-        
+
         [switch]
         ${Cancel},
-        
+
         [Microsoft.FailoverClusters.NativeHelp.NativeGroupHelp+VmMigrationType]
         ${MigrationType},
-        
+
         [switch]
         ${IgnoreLocked},
-        
+
         [switch]
         ${IgnoreAffinityRule},
-        
+
         [Parameter(ValueFromPipelineByPropertyName=$true)]
         [guid]
         ${VMId},
-        
+
         [int]
         ${Wait},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -7026,7 +7026,7 @@ function New-Cluster {
     .SYNOPSIS
         New-Cluster [-Name] <string> [-Node <StringCollection>] [-StaticAddress <StringCollection>] [-IgnoreNetwork <StringCollection>] [-NoStorage] [-AdministrativeAccessPoint <AdminAccessPoint>] [-Force] [-ManagementPointNetworkType <AdminAccessPointResType>] [-Credentials <pscredential>] [-Domain <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(HelpUri='https://go.microsoft.com/fwlink/?LinkId=216230')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.Cluster])]
     param (
@@ -7034,37 +7034,37 @@ function New-Cluster {
         [ValidateNotNullOrEmpty()]
         [string]
         ${Name},
-        
+
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${Node},
-        
+
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${StaticAddress},
-        
+
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${IgnoreNetwork},
-        
+
         [switch]
         ${NoStorage},
-        
+
         [Alias('aap')]
         [Microsoft.FailoverClusters.PowerShell.AdminAccessPoint]
         ${AdministrativeAccessPoint},
-        
+
         [switch]
         ${Force},
-        
+
         [Alias('apnt')]
         [Microsoft.FailoverClusters.PowerShell.AdminAccessPointResType]
         ${ManagementPointNetworkType},
-        
+
         [Parameter(ParameterSetName='Credentials')]
         [pscredential]
         ${Credentials},
-        
+
         [Parameter(ParameterSetName='Credentials')]
         [string]
         ${Domain}
@@ -7079,14 +7079,14 @@ function New-ClusterLogParser {
     .SYNOPSIS
         New-ClusterLogParser [-WorkingDirectory] <string> [[-NodeLogs] <string[]>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding()]
     [OutputType([ClusterLogParserLib.ClusterLogParser])]
     param (
         [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
         [string]
         ${WorkingDirectory},
-        
+
         [Parameter(Position=1, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
         [string[]]
         ${NodeLogs}
@@ -7103,35 +7103,35 @@ function New-ClusterNameAccount {
 
 New-ClusterNameAccount -Name <string> [-Credentials <pscredential>] [-Domain <string>] [-ManagementPointNetworkType <AdminAccessPointResType>] [-UpgradeVCOs] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?linkid=2204451')]
     param (
         [Parameter(Mandatory=$true)]
         [ValidateNotNullOrEmpty()]
         [string]
         ${Name},
-        
+
         [Parameter(ParameterSetName='Credentials')]
         [Parameter(ParameterSetName='InputObject')]
         [pscredential]
         ${Credentials},
-        
+
         [Parameter(ParameterSetName='Credentials')]
         [Parameter(ParameterSetName='InputObject')]
         [string]
         ${Domain},
-        
+
         [Microsoft.FailoverClusters.PowerShell.AdminAccessPointResType]
         ${ManagementPointNetworkType},
-        
+
         [switch]
         ${UpgradeVCOs},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -7146,14 +7146,14 @@ function New-ClusterNodeLogParser {
     .SYNOPSIS
         New-ClusterNodeLogParser [-WorkingDirectory] <string> [-LogPath] <string> [<CommonParameters>]
     #>
-    
+
     [CmdletBinding()]
     [OutputType([ClusterLogParserLib.ClusterNodeLogParser])]
     param (
         [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
         [string]
         ${WorkingDirectory},
-        
+
         [Parameter(Mandatory=$true, Position=1, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
         [string]
         ${LogPath}
@@ -7168,20 +7168,20 @@ function Remove-Cluster {
     .SYNOPSIS
         Remove-Cluster [[-Cluster] <string>] [-CleanupAD] [-Force] [-InputObject <psobject>] [-WhatIf] [-Confirm] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', SupportsShouldProcess=$true, ConfirmImpact='Medium', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216231')]
     param (
         [Parameter(Position=0)]
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster},
-        
+
         [switch]
         ${CleanupAD},
-        
+
         [switch]
         ${Force},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
@@ -7197,19 +7197,19 @@ function Remove-ClusterAccess {
     .SYNOPSIS
         Remove-ClusterAccess [[-User] <StringCollection>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216232')]
     param (
         [Parameter(Position=0)]
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${User},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -7224,34 +7224,34 @@ function Remove-ClusterCheckpoint {
     .SYNOPSIS
         Remove-ClusterCheckpoint [[-ResourceName] <string>] [-Force] [-CheckpointName <string>] [-RegistryCheckpoint] [-CryptoCheckpoint] [-InputObject <psobject>] [-Cluster <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', SupportsShouldProcess=$true, ConfirmImpact='Medium', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216233')]
     param (
         [Parameter(Position=0)]
         [ValidateNotNullOrEmpty()]
         [string]
         ${ResourceName},
-        
+
         [switch]
         ${Force},
-        
+
         [Parameter(HelpMessage='Searches for checkpoints with a specific name, regular expressions are accepted.')]
         [string]
         ${CheckpointName},
-        
+
         [Parameter(HelpMessage='If specified, command will remove registry checkpoints.')]
         [switch]
         ${RegistryCheckpoint},
-        
+
         [Parameter(HelpMessage='If specified, command will remove crypto checkpoints.')]
         [switch]
         ${CryptoCheckpoint},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -7266,14 +7266,14 @@ function Remove-ClusterFabricControllerManagerRole {
     .SYNOPSIS
         Remove-ClusterFabricControllerManagerRole [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject')]
     param (
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -7288,32 +7288,32 @@ function Remove-ClusterGroup {
     .SYNOPSIS
         Remove-ClusterGroup [[-Name] <StringCollection>] [-VMId <guid>] [-Force] [-RemoveResources] [-Reason <string>] [-InputObject <psobject>] [-Cluster <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', SupportsShouldProcess=$true, ConfirmImpact='Medium', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216234')]
     param (
         [Parameter(ValueFromPipelineByPropertyName=$true)]
         [guid]
         ${VMId},
-        
+
         [Parameter(Position=0)]
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${Name},
-        
+
         [switch]
         ${Force},
-        
+
         [switch]
         ${RemoveResources},
-        
+
         [string]
         ${Reason},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -7328,17 +7328,17 @@ function Remove-ClusterNameAccount {
     .SYNOPSIS
         Remove-ClusterNameAccount [-DeleteComputerObjects] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject')]
     param (
         [switch]
         ${DeleteComputerObjects},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -7353,34 +7353,34 @@ function Remove-ClusterNode {
     .SYNOPSIS
         Remove-ClusterNode [[-Name] <StringCollection>] [-Force] [-Wait <int>] [-IgnoreStorageConnectivityLoss] [-CleanupDisks] [-Reason <string>] [-InputObject <psobject>] [-Cluster <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', SupportsShouldProcess=$true, ConfirmImpact='Medium', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216235')]
     param (
         [Parameter(Position=0)]
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${Name},
-        
+
         [switch]
         ${Force},
-        
+
         [int]
         ${Wait},
-        
+
         [switch]
         ${IgnoreStorageConnectivityLoss},
-        
+
         [switch]
         ${CleanupDisks},
-        
+
         [string]
         ${Reason},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -7395,25 +7395,25 @@ function Remove-ClusterResource {
     .SYNOPSIS
         Remove-ClusterResource [[-Name] <StringCollection>] [-Force] [-Reason <string>] [-InputObject <psobject>] [-Cluster <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', SupportsShouldProcess=$true, ConfirmImpact='Medium', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216236')]
     param (
         [Parameter(Position=0)]
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${Name},
-        
+
         [switch]
         ${Force},
-        
+
         [string]
         ${Reason},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -7428,7 +7428,7 @@ function Remove-ClusterResourceDependency {
     .SYNOPSIS
         Remove-ClusterResourceDependency [[-Resource] <string>] [[-Provider] <string>] [-Reason <string>] [-InputObject <psobject>] [-Cluster <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216237')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterResource])]
     param (
@@ -7436,20 +7436,20 @@ function Remove-ClusterResourceDependency {
         [ValidateNotNullOrEmpty()]
         [string]
         ${Resource},
-        
+
         [Parameter(Position=1)]
         [ValidateNotNullOrEmpty()]
         [string]
         ${Provider},
-        
+
         [string]
         ${Reason},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -7464,22 +7464,22 @@ function Remove-ClusterResourceType {
     .SYNOPSIS
         Remove-ClusterResourceType [[-Name] <StringCollection>] [-Reason <string>] [-InputObject <psobject>] [-Cluster <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', SupportsShouldProcess=$true, ConfirmImpact='Medium', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216238')]
     param (
         [Parameter(Position=0)]
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${Name},
-        
+
         [string]
         ${Reason},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -7494,7 +7494,7 @@ function Remove-ClusterSharedVolume {
     .SYNOPSIS
         Remove-ClusterSharedVolume [[-Name] <StringCollection>] [-InputObject <psobject>] [-Cluster <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', SupportsShouldProcess=$true, ConfirmImpact='Medium', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216239')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterResource])]
     param (
@@ -7502,12 +7502,12 @@ function Remove-ClusterSharedVolume {
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${Name},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -7524,39 +7524,39 @@ function Remove-ClusterVMMonitoredItem {
 
 Remove-ClusterVMMonitoredItem [-InputObject <psobject>] [-Service <StringCollection>] [-EventLog <string>] [-EventSource <string>] [-EventId <int>] [-VMId <guid>] [-Wait <int>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='VirtualMachine', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216240')]
     param (
         [Parameter(ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [System.Collections.Specialized.StringCollection]
         ${Service},
-        
+
         [string]
         ${EventLog},
-        
+
         [string]
         ${EventSource},
-        
+
         [int]
         ${EventId},
-        
+
         [Parameter(ParameterSetName='VirtualMachine', Position=0)]
         [Alias('VM')]
         [ValidateNotNullOrEmpty()]
         [string]
         ${VirtualMachine},
-        
+
         [Parameter(ParameterSetName='VMId', ValueFromPipelineByPropertyName=$true)]
         [guid]
         ${VMId},
-        
+
         [int]
         ${Wait},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -7571,22 +7571,22 @@ function Rename-ClusterSharedVolume {
     .SYNOPSIS
         Rename-ClusterSharedVolume [-Name] <string> [[-VolumeName] <string>] -NewVolumeName <string> [-NewVolumeGuid <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(HelpUri='https://go.microsoft.com/fwlink/?LinkId=216242')]
     param (
         [Parameter(Mandatory=$true, Position=0)]
         [ValidateNotNullOrEmpty()]
         [string]
         ${Name},
-        
+
         [Parameter(Position=1)]
         [string]
         ${VolumeName},
-        
+
         [Parameter(ParameterSetName='NewVolumeName', Mandatory=$true)]
         [string]
         ${NewVolumeName},
-        
+
         [Parameter(ParameterSetName='NewVolumeName')]
         [string]
         ${NewVolumeGuid}
@@ -7601,7 +7601,7 @@ function Repair-ClusterCertificate {
     .SYNOPSIS
         Repair-ClusterCertificate [[-Name] <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(HelpUri='https://go.microsoft.com/fwlink/?LinkId=')]
     param (
         [Parameter(ParameterSetName='Name', Position=0)]
@@ -7621,24 +7621,24 @@ function Repair-ClusterNameAccount {
 
 Repair-ClusterNameAccount [-Credentials <pscredential>] [-Domain <string>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?linkid=2204048')]
     param (
         [Parameter(ParameterSetName='Credentials')]
         [Parameter(ParameterSetName='InputObject')]
         [pscredential]
         ${Credentials},
-        
+
         [Parameter(ParameterSetName='Credentials')]
         [Parameter(ParameterSetName='InputObject')]
         [string]
         ${Domain},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -7653,7 +7653,7 @@ function Reset-ClusterVMMonitoredState {
     .SYNOPSIS
         Reset-ClusterVMMonitoredState [-Wait <int>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216243')]
     param (
         [int]
@@ -7669,7 +7669,7 @@ function Resume-ClusterNode {
     .SYNOPSIS
         Resume-ClusterNode [[-Name] <StringCollection>] [[-Failback] <ResumeClusterNodeFailbackType>] [-FailbackStorage] [-FailbackVMs] [-FailbackPinnedVMsOnly] [-Reason <string>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216244')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterNode])]
     param (
@@ -7677,29 +7677,29 @@ function Resume-ClusterNode {
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${Name},
-        
+
         [Parameter(Position=1)]
         [ValidateNotNullOrEmpty()]
         [Microsoft.FailoverClusters.PowerShell.ResumeClusterNodeFailbackType]
         ${Failback},
-        
+
         [switch]
         ${FailbackStorage},
-        
+
         [switch]
         ${FailbackVMs},
-        
+
         [switch]
         ${FailbackPinnedVMsOnly},
-        
+
         [string]
         ${Reason},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -7714,7 +7714,7 @@ function Resume-ClusterPhysicalDiskResource {
     .SYNOPSIS
         Resume-ClusterPhysicalDiskResource [[-Name] <string>] [-RecoveryPassword <StringCollection>] [-RecoveryKeyPath <StringCollection>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216245')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterResource])]
     param (
@@ -7722,18 +7722,18 @@ function Resume-ClusterPhysicalDiskResource {
         [ValidateNotNullOrEmpty()]
         [string]
         ${Name},
-        
+
         [System.Collections.Specialized.StringCollection]
         ${RecoveryPassword},
-        
+
         [System.Collections.Specialized.StringCollection]
         ${RecoveryKeyPath},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -7748,7 +7748,7 @@ function Resume-ClusterResource {
     .SYNOPSIS
         Resume-ClusterResource [[-Name] <string>] [-VolumeName <string>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216245')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterResource])]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterSharedVolume])]
@@ -7757,15 +7757,15 @@ function Resume-ClusterResource {
         [ValidateNotNullOrEmpty()]
         [string]
         ${Name},
-        
+
         [string]
         ${VolumeName},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -7780,7 +7780,7 @@ function Set-ClusterBitLockerProtector {
     .SYNOPSIS
         Set-ClusterBitLockerProtector [[-Name] <string>] [-ProtectorId <string>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=2199917')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterResource])]
     param (
@@ -7788,16 +7788,16 @@ function Set-ClusterBitLockerProtector {
         [ValidateNotNullOrEmpty()]
         [string]
         ${Name},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${ProtectorId},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -7812,21 +7812,21 @@ function Set-ClusterLog {
     .SYNOPSIS
         Set-ClusterLog [-Size <int>] [-Level <int>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216246')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.Cluster])]
     param (
         [int]
         ${Size},
-        
+
         [int]
         ${Level},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -7841,27 +7841,27 @@ function Set-ClusterOwnerNode {
     .SYNOPSIS
         Set-ClusterOwnerNode -Owners <StringCollection> [-Resource <string>] [-Group <string>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(HelpUri='https://go.microsoft.com/fwlink/?LinkId=216247')]
     param (
         [ValidateNotNullOrEmpty()]
         [string]
         ${Resource},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Group},
-        
+
         [Parameter(Mandatory=$true, ValueFromRemainingArguments=$true)]
         [ValidateNotNull()]
         [System.Collections.Specialized.StringCollection]
         ${Owners},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -7880,34 +7880,34 @@ Set-ClusterParameter [[-Name] <string>] [[-Value] <psobject>] [-InputObject <pso
 
 Set-ClusterParameter [[-Multiple] <hashtable>] [-InputObject <psobject>] [-Create] [-Delete] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='NoMultiple', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216248')]
     param (
         [Parameter(ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [Parameter(ParameterSetName='Single Parameter', Position=0)]
         [ValidateNotNullOrEmpty()]
         [string]
         ${Name},
-        
+
         [Parameter(ParameterSetName='Multiple Parameter', Position=0)]
         [ValidateNotNull()]
         [hashtable]
         ${Multiple},
-        
+
         [Parameter(ParameterSetName='Single Parameter', Position=1)]
         [psobject]
         ${Value},
-        
+
         [switch]
         ${Create},
-        
+
         [switch]
         ${Delete},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -7922,58 +7922,58 @@ function Set-ClusterQuorum {
     .SYNOPSIS
         Set-ClusterQuorum [-DiskOnly <string>] [-NoWitness] [-DiskWitness <string>] [-FileShareWitness <string>] [-CloudWitness] [-AccountName <string>] [-Endpoint <string>] [-AccessKey <string>] [-SASToken <string>] [-ContainerName <string>] [-Credential <pscredential>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216249')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterQuorumSettings])]
     param (
         [ValidateNotNullOrEmpty()]
         [string]
         ${DiskOnly},
-        
+
         [Alias('NodeMajority')]
         [switch]
         ${NoWitness},
-        
+
         [Alias('NodeAndDiskMajority')]
         [ValidateNotNullOrEmpty()]
         [string]
         ${DiskWitness},
-        
+
         [Alias('NodeAndFileShareMajority')]
         [ValidateNotNullOrEmpty()]
         [string]
         ${FileShareWitness},
-        
+
         [switch]
         ${CloudWitness},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${AccountName},
-        
+
         [string]
         ${Endpoint},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${AccessKey},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${SASToken},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${ContainerName},
-        
+
         [pscredential]
         ${Credential},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -7988,23 +7988,23 @@ function Set-ClusterResourceDependency {
     .SYNOPSIS
         Set-ClusterResourceDependency [[-Resource] <string>] [[-Dependency] <string>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216250')]
     param (
         [Parameter(Position=0)]
         [ValidateNotNullOrEmpty()]
         [string]
         ${Resource},
-        
+
         [Parameter(Position=1)]
         [string]
         ${Dependency},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -8019,7 +8019,7 @@ function Show-ClusterExpectedNetworkTopology {
     .SYNOPSIS
         Show-ClusterExpectedNetworkTopology [[-Node] <StringCollection>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding()]
     param (
         [Parameter(Position=0)]
@@ -8037,7 +8037,7 @@ function Start-Cluster {
     .SYNOPSIS
         Start-Cluster [[-Name] <string>] [-IgnorePersistentState] [-Wait <int>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(HelpUri='https://go.microsoft.com/fwlink/?LinkId=216251')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.Cluster])]
     param (
@@ -8046,11 +8046,11 @@ function Start-Cluster {
         [ValidateNotNullOrEmpty()]
         [string]
         ${Name},
-        
+
         [Alias('ips')]
         [switch]
         ${IgnorePersistentState},
-        
+
         [int]
         ${Wait}
     )
@@ -8064,7 +8064,7 @@ function Start-ClusterGroup {
     .SYNOPSIS
         Start-ClusterGroup [[-Name] <string>] [-IgnoreLocked] [-ChooseBestNode] [-IgnoreAffinityRule] [-Reason <string>] [-Wait <int>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216252')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterGroup])]
     param (
@@ -8072,27 +8072,27 @@ function Start-ClusterGroup {
         [ValidateNotNullOrEmpty()]
         [string]
         ${Name},
-        
+
         [switch]
         ${IgnoreLocked},
-        
+
         [switch]
         ${ChooseBestNode},
-        
+
         [switch]
         ${IgnoreAffinityRule},
-        
+
         [string]
         ${Reason},
-        
+
         [int]
         ${Wait},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -8107,7 +8107,7 @@ function Start-ClusterNode {
     .SYNOPSIS
         Start-ClusterNode [[-Name] <StringCollection>] [-ForceQuorum] [-ClearQuarantine] [-IgnorePersistentState] [-PreventQuorum] [-Wait <int>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216253')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterNode])]
     param (
@@ -8115,34 +8115,34 @@ function Start-ClusterNode {
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${Name},
-        
+
         [Parameter(HelpMessage='Specifies if the cluster is in a force quorum state.')]
         [Alias('fq','FixQuorum')]
         [switch]
         ${ForceQuorum},
-        
+
         [Parameter(HelpMessage='Specifies whether to clear quarantine state when starting the cluster node')]
         [Alias('cq')]
         [switch]
         ${ClearQuarantine},
-        
+
         [Parameter(HelpMessage='Specifies whether the cluster will bring online groups that were online when the cluster was shut down.')]
         [Alias('ips')]
         [switch]
         ${IgnorePersistentState},
-        
+
         [Alias('pq')]
         [switch]
         ${PreventQuorum},
-        
+
         [int]
         ${Wait},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -8157,7 +8157,7 @@ function Start-ClusterPhysicalDiskResource {
     .SYNOPSIS
         Start-ClusterPhysicalDiskResource [[-Name] <string>] [-RecoveryPassword <StringCollection>] [-RecoveryKeyPath <StringCollection>] [-Reason <string>] [-Wait <int>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216254')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterSharedVolume])]
     param (
@@ -8165,24 +8165,24 @@ function Start-ClusterPhysicalDiskResource {
         [ValidateNotNullOrEmpty()]
         [string]
         ${Name},
-        
+
         [System.Collections.Specialized.StringCollection]
         ${RecoveryPassword},
-        
+
         [System.Collections.Specialized.StringCollection]
         ${RecoveryKeyPath},
-        
+
         [string]
         ${Reason},
-        
+
         [int]
         ${Wait},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -8197,7 +8197,7 @@ function Start-ClusterResource {
     .SYNOPSIS
         Start-ClusterResource [[-Name] <string>] [-IgnoreLocked] [-ChooseBestNode] [-IgnoreAffinityRule] [-Reason <string>] [-Wait <int>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216254')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterSharedVolume])]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterResource])]
@@ -8206,27 +8206,27 @@ function Start-ClusterResource {
         [ValidateNotNullOrEmpty()]
         [string]
         ${Name},
-        
+
         [switch]
         ${IgnoreLocked},
-        
+
         [switch]
         ${ChooseBestNode},
-        
+
         [switch]
         ${IgnoreAffinityRule},
-        
+
         [string]
         ${Reason},
-        
+
         [int]
         ${Wait},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -8243,7 +8243,7 @@ function Stop-Cluster {
 
 Stop-Cluster [-Force] [-Wait <int>] [-InputObject <psobject>] [-WhatIf] [-Confirm] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='Cluster name', SupportsShouldProcess=$true, ConfirmImpact='Medium', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216255')]
     param (
         [Parameter(ParameterSetName='Cluster name', Position=0)]
@@ -8251,13 +8251,13 @@ Stop-Cluster [-Force] [-Wait <int>] [-InputObject <psobject>] [-WhatIf] [-Confir
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster},
-        
+
         [switch]
         ${Force},
-        
+
         [int]
         ${Wait},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
@@ -8273,7 +8273,7 @@ function Stop-ClusterGroup {
     .SYNOPSIS
         Stop-ClusterGroup [[-Name] <string>] [-IgnoreLocked] [-Reason <string>] [-Wait <int>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216256')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterGroup])]
     param (
@@ -8281,21 +8281,21 @@ function Stop-ClusterGroup {
         [ValidateNotNullOrEmpty()]
         [string]
         ${Name},
-        
+
         [switch]
         ${IgnoreLocked},
-        
+
         [string]
         ${Reason},
-        
+
         [int]
         ${Wait},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -8310,22 +8310,22 @@ function Stop-ClusterNode {
     .SYNOPSIS
         Stop-ClusterNode [[-Name] <StringCollection>] [-Wait <int>] [-InputObject <psobject>] [-Cluster <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', SupportsShouldProcess=$true, ConfirmImpact='Medium', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216257')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterNode])]
     param (
         [Parameter(Position=0)]
         [System.Collections.Specialized.StringCollection]
         ${Name},
-        
+
         [int]
         ${Wait},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -8340,7 +8340,7 @@ function Stop-ClusterResource {
     .SYNOPSIS
         Stop-ClusterResource [[-Name] <string>] [-IgnoreLocked] [-Reason <string>] [-Wait <int>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216258')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterSharedVolume])]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterResource])]
@@ -8349,21 +8349,21 @@ function Stop-ClusterResource {
         [ValidateNotNullOrEmpty()]
         [string]
         ${Name},
-        
+
         [switch]
         ${IgnoreLocked},
-        
+
         [string]
         ${Reason},
-        
+
         [int]
         ${Wait},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -8378,7 +8378,7 @@ function Suspend-ClusterNode {
     .SYNOPSIS
         Suspend-ClusterNode [[-Name] <StringCollection>] [[-TargetNode] <string>] [-Drain] [-ForceDrain] [-RetryDrainOnFailure] [-AvoidPlacement] [-Wait] [-Reason <string>] [-InputObject <psobject>] [-Cluster <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', SupportsShouldProcess=$true, ConfirmImpact='Medium', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216259')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterNode])]
     param (
@@ -8386,35 +8386,35 @@ function Suspend-ClusterNode {
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${Name},
-        
+
         [switch]
         ${Drain},
-        
+
         [switch]
         ${ForceDrain},
-        
+
         [switch]
         ${RetryDrainOnFailure},
-        
+
         [switch]
         ${AvoidPlacement},
-        
+
         [switch]
         ${Wait},
-        
+
         [Parameter(Position=1)]
         [ValidateNotNullOrEmpty()]
         [string]
         ${TargetNode},
-        
+
         [string]
         ${Reason},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -8429,7 +8429,7 @@ function Suspend-ClusterPhysicalDiskResource {
     .SYNOPSIS
         Suspend-ClusterPhysicalDiskResource [[-Name] <string>] [-CleanupClusterProtector] [-Force] [-InputObject <psobject>] [-Cluster <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216260')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterResource])]
     param (
@@ -8437,18 +8437,18 @@ function Suspend-ClusterPhysicalDiskResource {
         [ValidateNotNullOrEmpty()]
         [string]
         ${Name},
-        
+
         [switch]
         ${CleanupClusterProtector},
-        
+
         [switch]
         ${Force},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -8463,7 +8463,7 @@ function Suspend-ClusterResource {
     .SYNOPSIS
         Suspend-ClusterResource [[-Name] <string>] [-VolumeName <string>] [-RedirectedAccess] [-Force] [-InputObject <psobject>] [-Cluster <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216260')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterSharedVolume])]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterResource])]
@@ -8472,22 +8472,22 @@ function Suspend-ClusterResource {
         [ValidateNotNullOrEmpty()]
         [string]
         ${Name},
-        
+
         [string]
         ${VolumeName},
-        
+
         [Alias('FileSystemRedirectedAccess')]
         [switch]
         ${RedirectedAccess},
-        
+
         [switch]
         ${Force},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -8502,7 +8502,7 @@ function Test-Cluster {
     .SYNOPSIS
         Test-Cluster [[-Node] <StringCollection>] [-Disk <Object[]>] [-Pool <Object[]>] [-ReportName <string>] [-List] [-Include <StringCollection>] [-Ignore <StringCollection>] [-Force] [-KeepLocalStoragePoolsOnline] [-InputObject <psobject>] [-Cluster <string>] [-WhatIf] [-Confirm] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', SupportsShouldProcess=$true, ConfirmImpact='Medium', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216261')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterTestInfo])]
     [OutputType([System.IO.FileInfo])]
@@ -8511,41 +8511,41 @@ function Test-Cluster {
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${Node},
-        
+
         [ValidateNotNullOrEmpty()]
         [System.Object[]]
         ${Disk},
-        
+
         [ValidateNotNullOrEmpty()]
         [System.Object[]]
         ${Pool},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${ReportName},
-        
+
         [switch]
         ${List},
-        
+
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${Include},
-        
+
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${Ignore},
-        
+
         [switch]
         ${Force},
-        
+
         [switch]
         ${KeepLocalStoragePoolsOnline},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -8560,7 +8560,7 @@ function Test-ClusterResourceFailure {
     .SYNOPSIS
         Test-ClusterResourceFailure [[-Name] <string>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216262')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterSharedVolume])]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterResource])]
@@ -8569,12 +8569,12 @@ function Test-ClusterResourceFailure {
         [ValidateNotNullOrEmpty()]
         [string]
         ${Name},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -8589,21 +8589,21 @@ function Update-ClusterFunctionalLevel {
     .SYNOPSIS
         Update-ClusterFunctionalLevel [-Force] [-WhatIf] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.Cluster])]
     param (
         [switch]
         ${Force},
-        
+
         [switch]
         ${WhatIf},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -8618,7 +8618,7 @@ function Update-ClusterIPResource {
     .SYNOPSIS
         Update-ClusterIPResource [[-Name] <string>] [-Renew] [-Release] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(HelpUri='https://go.microsoft.com/fwlink/?LinkId=216264')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterResource])]
     param (
@@ -8626,18 +8626,18 @@ function Update-ClusterIPResource {
         [ValidateNotNullOrEmpty()]
         [string]
         ${Name},
-        
+
         [switch]
         ${Renew},
-        
+
         [switch]
         ${Release},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -8652,7 +8652,7 @@ function Update-ClusterNetworkNameResource {
     .SYNOPSIS
         Update-ClusterNetworkNameResource [[-Name] <StringCollection>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(DefaultParameterSetName='InputObject', HelpUri='https://go.microsoft.com/fwlink/?LinkId=216265')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterResource])]
     param (
@@ -8660,12 +8660,12 @@ function Update-ClusterNetworkNameResource {
         [ValidateNotNullOrEmpty()]
         [System.Collections.Specialized.StringCollection]
         ${Name},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -8680,7 +8680,7 @@ function Update-ClusterVirtualMachineConfiguration {
     .SYNOPSIS
         Update-ClusterVirtualMachineConfiguration [[-Name] <string>] [-VMId <guid>] [-InputObject <psobject>] [-Cluster <string>] [<CommonParameters>]
     #>
-    
+
     [CmdletBinding(HelpUri='https://go.microsoft.com/fwlink/?LinkId=216266')]
     [OutputType([Microsoft.FailoverClusters.PowerShell.ClusterResource])]
     param (
@@ -8688,16 +8688,16 @@ function Update-ClusterVirtualMachineConfiguration {
         [ValidateNotNullOrEmpty()]
         [string]
         ${Name},
-        
+
         [Parameter(ValueFromPipelineByPropertyName=$true)]
         [guid]
         ${VMId},
-        
+
         [Parameter(ParameterSetName='InputObject', ValueFromPipeline=$true)]
         [ValidateNotNull()]
         [psobject]
         ${InputObject},
-        
+
         [ValidateNotNullOrEmpty()]
         [string]
         ${Cluster}
@@ -8706,4 +8706,3 @@ function Update-ClusterVirtualMachineConfiguration {
         throw '{0}: StubNotImplemented' -f $MyInvocation.MyCommand
     }
 }
-

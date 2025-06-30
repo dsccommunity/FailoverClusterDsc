@@ -56,7 +56,7 @@ AfterAll {
     Get-Module -Name $script:dscResourceName -All | Remove-Module -Force
 }
 
-Describe 'ClusterQuorum\Get-TargetResource' {
+Describe 'ClusterQuorum\Get-TargetResource' -Tag 'Get' {
     BeforeEach {
         Mock -CommandName 'Get-ClusterQuorum' -MockWith {
             $getClusterQuorumReturnValue = [PSCustomObject] @{
@@ -537,7 +537,7 @@ Describe 'ClusterQuorum\Set-TargetResource' -Tag 'Set' {
         }
     }
 
-    Context 'When quorum type should be NodeMajority' {
+    Context 'When quorum type should be NodeAndDiskMajority' {
         It 'Should set the quorum in the cluster without throwing an error' {
             InModuleScope -ScriptBlock {
                 Set-StrictMode -Version 1.0
@@ -557,7 +557,7 @@ Describe 'ClusterQuorum\Set-TargetResource' -Tag 'Set' {
         }
     }
 
-    Context 'When quorum type should be NodeMajority' {
+    Context 'When quorum type should be NodeAndFileShareMajority' {
         It 'Should set the quorum in the cluster without throwing an error' {
             InModuleScope -ScriptBlock {
                 Set-StrictMode -Version 1.0
@@ -577,7 +577,7 @@ Describe 'ClusterQuorum\Set-TargetResource' -Tag 'Set' {
         }
     }
 
-    Context 'When quorum type should be NodeMajority' {
+    Context 'When quorum type should be DiskOnly' {
         It 'Should set the quorum in the cluster without throwing an error' {
             InModuleScope -ScriptBlock {
                 Set-StrictMode -Version 1.0

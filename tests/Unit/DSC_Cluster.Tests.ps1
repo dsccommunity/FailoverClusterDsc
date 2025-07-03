@@ -57,45 +57,6 @@ AfterAll {
     Get-Module -Name $script:dscResourceName -All | Remove-Module -Force
 }
 
-
-# $mockNewObjectWindowsIdentity = {
-#     return [PSCustomObject] @{ } |
-#         Add-Member -MemberType ScriptMethod -Name Impersonate -Value {
-#             return [PSCustomObject] @{ } |
-#                 Add-Member -MemberType ScriptMethod -Name Undo -PassThru |
-#                 Add-Member -MemberType ScriptMethod -Name Dispose -PassThru -Force
-#             } -PassThru -Force
-# }
-
-# $mockNewObjectWindowsIdentity_ParameterFilter = {
-#     $TypeName -eq 'Security.Principal.WindowsIdentity'
-# }
-
-# class MockLibImpersonation
-# {
-#     static [bool] $ReturnValue = $false
-
-#     static [bool]LogonUser(
-#         [string] $userName,
-#         [string] $domain,
-#         [string] $password,
-#         [int] $logonType,
-#         [int] $logonProvider,
-#         [ref] $token
-#     )
-#     {
-#         return [MockLibImpersonation]::ReturnValue
-#     }
-
-#     static [bool]CloseHandle([System.IntPtr]$Token)
-#     {
-#         return [MockLibImpersonation]::ReturnValue
-#     }
-# }
-
-# [MockLibImpersonation]::ReturnValue = $true
-# $mockLibImpersonationObject = [MockLibImpersonation]::New()
-
 Describe 'Cluster\Get-TargetResource' -Tag 'Get' {
     Context 'When the computers domain name cannot be evaluated' {
         BeforeAll {
@@ -987,8 +948,7 @@ Describe 'Cluster\Test-TargetResource' -Tag 'Test' {
                         )
                     }
 
-                    $result = Test-TargetResource @mockParameters
-                    $result | Should -BeFalse
+                    Test-TargetResource @mockParameters | Should -BeFalse
                 }
 
                 Should -Invoke -CommandName Get-CimInstance -Exactly -Times 1 -Scope It
@@ -1084,8 +1044,7 @@ Describe 'Cluster\Test-TargetResource' -Tag 'Test' {
                         )
                     }
 
-                    $result = Test-TargetResource @mockParameters
-                    $result | Should -BeTrue
+                    Test-TargetResource @mockParameters | Should -BeTrue
                 }
 
                 Should -Invoke -CommandName Get-CimInstance -Exactly -Times 1 -Scope It
@@ -1174,47 +1133,34 @@ Describe 'Cluster\Get-ImpersonateLib' -Tag 'Helper' {
     }
 }
 
-Describe 'Cluster\Set-ImpersonateAs' -Tag 'Helper' -Skip:$true {
-    #     BeforeAll {
-    #         $inModuleScopeScriptBlock = @'
-    # class MockLibImpersonation
-    # {
-    #     static [bool] $ReturnValue = $false
-
-    #     static [bool]LogonUser(
-    #         [string] $userName,
-    #         [string] $domain,
-    #         [string] $password,
-    #         [int] $logonType,
-    #         [int] $logonProvider,
-    #         [ref] $token
-    #     )
-    #     {
-    #         return [MockLibImpersonation]::ReturnValue
-    #     }
-
-    #     static [bool]CloseHandle([System.IntPtr]$Token)
-    #     {
-    #         return [MockLibImpersonation]::ReturnValue
-    #     }
-    # }
-
-    # $script:mockLibImpersonationObject = [MockLibImpersonation]::new()
-    # '@
-
-    #         InModuleScope -ScriptBlock ([Scriptblock]::Create($inModuleScopeScriptBlock))
-    #     }
-
+Describe 'Cluster\Set-ImpersonateAs' -Tag 'Helper' {
     Context 'When impersonating credentials fails' {
         BeforeAll {
-            InModuleScope -ScriptBlock {
-                Mock -CommandName Get-ImpersonateLib -MockWith {
-                    $obj = New-Object -TypeName System.Object |
-                        Add-Member -MemberType ScriptMethod -Name CloseHandle -Value {  } -PassThru -Force |
-                        Add-Member -MemberType ScriptMethod -Name LogonUser -Value { return } -PassThru -Force
-                    # $script:mockLibImpersonationObject::$ReturnValue = $false
-                    # return $script:mockLibImpersonationObject
+            Mock -CommandName Get-ImpersonateLib -MockWith {
+                class MockLibImpersonation
+                {
+                    static [bool] $ReturnValue = $false
+
+                    static [bool]LogonUser(
+                        [string] $userName,
+                        [string] $domain,
+                        [string] $password,
+                        [int] $logonType,
+                        [int] $logonProvider,
+                        [ref] $token
+                    )
+                    {
+                        return [MockLibImpersonation]::ReturnValue
+                    }
+
+                    static [bool]CloseHandle([System.IntPtr]$Token)
+                    {
+                        return [MockLibImpersonation]::ReturnValue
+                    }
                 }
+
+                $mockLib = [MockLibImpersonation]::new()
+                return $mockLib
             }
         }
 
@@ -1233,28 +1179,48 @@ Describe 'Cluster\Set-ImpersonateAs' -Tag 'Helper' -Skip:$true {
                     $mockParameters.Credential.GetNetworkCredential().UserName
                 )
 
-                {
-                    Set-ImpersonateAs @mockParameters
-                } | Should -Throw $mockCorrectErrorRecord
+                { Set-ImpersonateAs @mockParameters } | Should -Throw $mockCorrectErrorRecord
             }
 
             Should -Invoke -CommandName Get-ImpersonateLib -Exactly -Times 1 -Scope It
         }
     }
 
-    Context 'When impersonating credentials succeeds' -Skip:$true {
+    Context 'When impersonating credentials succeeds' {
         BeforeAll {
-            InModuleScope -ScriptBlock {
-                Mock -CommandName Get-ImpersonateLib -MockWith {
-                    $script:mockLibImpersonationObject::ReturnValue = $true
-                    return $script:mockLibImpersonationObject
+            Mock -CommandName Get-ImpersonateLib -MockWith {
+                class MockLibImpersonation
+                {
+                    static [bool] $ReturnValue = $true
+
+                    static [bool]LogonUser(
+                        [string] $userName,
+                        [string] $domain,
+                        [string] $password,
+                        [int] $logonType,
+                        [int] $logonProvider,
+                        [ref] $token
+                    )
+                    {
+                        return [MockLibImpersonation]::ReturnValue
+                    }
+
+                    static [bool]CloseHandle([System.IntPtr]$Token)
+                    {
+                        return [MockLibImpersonation]::ReturnValue
+                    }
                 }
 
-                Mock -CommandName New-Object -MockWith { return [PSCustomObject] @{ } |
-                        Add-Member -MemberType ScriptMethod -Name Impersonate -Value { return } -PassThru -Force
-                } -ParameterFilter {
-                    $TypeName -eq 'Security.Principal.WindowsIdentity'
+                $mockLib = [MockLibImpersonation]::new()
+                return $mockLib
+            }
+
+            Mock -CommandName New-Object -MockWith {
+                return New-MockObject -Type System.Object -Methods @{
+                    Impersonate = { return @{} }
                 }
+            } -ParameterFilter {
+                $TypeName -eq 'Security.Principal.WindowsIdentity'
             }
         }
 
@@ -1269,51 +1235,90 @@ Describe 'Cluster\Set-ImpersonateAs' -Tag 'Helper' -Skip:$true {
                     )
                 }
 
-                { Set-ImpersonateAs @mockParameters } | Should -Not -Throw
+                {Set-ImpersonateAs @mockParameters} | Should -Not -Throw
             }
 
-            # Should -Invoke -CommandName Get-ImpersonateLib -Exactly -Times 1 -Scope It
+            Should -Invoke -CommandName Get-ImpersonateLib -Exactly -Times 1 -Scope It
+            Should -Invoke -CommandName New-Object -Exactly -Times 1 -Scope It
         }
     }
 }
 
-Describe 'Cluster\Close-UserToken' -Tag 'Helper' -Skip:$true {
+Describe 'Cluster\Close-UserToken' -Tag 'Helper' {
     Context 'When closing user token fails' {
         BeforeAll {
-            $mockObject = New-MockObject -Type Object -Methods @{
-                CloseHandle = { return $false }
-                LogonUser   = { return }
-            }
-
             Mock -CommandName Get-ImpersonateLib -MockWith {
-                return $mockObject
+                class MockLibImpersonation
+                {
+                    static [bool] $ReturnValue = $false
+
+                    static [bool]LogonUser(
+                        [string] $userName,
+                        [string] $domain,
+                        [string] $password,
+                        [int] $logonType,
+                        [int] $logonProvider,
+                        [ref] $token
+                    )
+                    {
+                        return [MockLibImpersonation]::ReturnValue
+                    }
+
+                    static [bool]CloseHandle([System.IntPtr]$Token)
+                    {
+                        return [MockLibImpersonation]::ReturnValue
+                    }
+                }
+
+                $mockLib = [MockLibImpersonation]::new()
+                return $mockLib
             }
+        }
+
+        It 'Should throw the correct error message' {
+            InModuleScope -ScriptBlock {
+                Set-StrictMode -Version 1.0
+
+                $mockParameters = @{
+                    Token = [System.IntPtr]::New(12345)
+                }
+
+                $errorRecord = Get-InvalidOperationRecord -Message ($script:localizedData.UnableToCloseToken -f $mockParameters.Token.ToString())
+
+                { Close-UserToken @mockParameters } | Should -Throw $errorRecord
+            }
+
+            Should -Invoke -CommandName Get-ImpersonateLib -Exactly -Times 1 -Scope It
         }
     }
 
-    It 'Should throw the correct error message' {
-        InModuleScope -ScriptBlock {
-            Set-StrictMode -Version 1.0
-
-            $mockParameters = @{
-                Token = [System.IntPtr]::New(12345)
-            }
-
-            $errorRecord = Get-InvalidOperationRecord -Message ($script:localizedData.UnableToCloseToken -f $mockParameters.Token.ToString())
-
-            { Close-UserToken @mockParameters } | Should -Throw $errorRecord
-        }
-
-        Should -Invoke -CommandName Get-ImpersonateLib -Exactly -Times 1 -Scope It
-    }
-
-    Context 'When closing user token succeeds' -Skip:$true {
+    Context 'When closing user token succeeds' {
         BeforeAll {
             Mock -CommandName Get-ImpersonateLib -MockWith {
-                $obj = New-Object -TypeName System.Object |
-                    Add-Member -MemberType ScriptMethod -Name CloseHandle -Value { $true } -PassThru -Force |
-                    Add-Member -MemberType ScriptMethod -Name LogonUser -Value { return } -PassThru -Force
-                return $obj
+                class MockLibImpersonation
+                {
+                    static [bool] $ReturnValue = $true
+
+                    static [bool]LogonUser(
+                        [string] $userName,
+                        [string] $domain,
+                        [string] $password,
+                        [int] $logonType,
+                        [int] $logonProvider,
+                        [ref] $token
+                    )
+                    {
+                        return [MockLibImpersonation]::ReturnValue
+                    }
+
+                    static [bool]CloseHandle([System.IntPtr]$Token)
+                    {
+                        return [MockLibImpersonation]::ReturnValue
+                    }
+                }
+
+                $mockLib = [MockLibImpersonation]::new()
+                return $mockLib
             }
         }
 

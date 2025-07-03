@@ -1133,12 +1133,16 @@ Describe 'Cluster\Get-ImpersonateLib' -Tag 'Helper' {
     }
 }
 
-Describe 'Cluster\Set-ImpersonateAs' -Tag 'Helper' -Skip:$true {
+Describe 'Cluster\Set-ImpersonateAs' -Tag 'Helper' {
     Context 'When impersonating credentials fails' {
         BeforeAll {
             Mock -CommandName Get-ImpersonateLib -MockWith {
                 class MockLibImpersonation
                 {
+                    MockLibImpersonation()
+                    {
+                    }
+
                     static [bool] $ReturnValue = $false
 
                     static [bool]LogonUser(
@@ -1191,6 +1195,10 @@ Describe 'Cluster\Set-ImpersonateAs' -Tag 'Helper' -Skip:$true {
             Mock -CommandName Get-ImpersonateLib -MockWith {
                 class MockLibImpersonation
                 {
+                    MockLibImpersonation()
+                    {
+                    }
+
                     static [bool] $ReturnValue = $true
 
                     static [bool]LogonUser(
@@ -1244,13 +1252,17 @@ Describe 'Cluster\Set-ImpersonateAs' -Tag 'Helper' -Skip:$true {
     }
 }
 
-Describe 'Cluster\Close-UserToken' -Tag 'Helper' -Skip:$true {
+Describe 'Cluster\Close-UserToken' -Tag 'Helper' {
     Context 'When closing user token fails' {
         BeforeAll {
             InModuleScope -ScriptBlock {
                 Mock -CommandName Get-ImpersonateLib -MockWith {
                     class MockLibImpersonation
                     {
+                        MockLibImpersonation()
+                        {
+                        }
+
                         static [bool] $ReturnValue = $false
 
                         static [bool]LogonUser(
@@ -1299,6 +1311,10 @@ Describe 'Cluster\Close-UserToken' -Tag 'Helper' -Skip:$true {
             Mock -CommandName Get-ImpersonateLib -MockWith {
                 class MockLibImpersonation
                 {
+                    MockLibImpersonation()
+                    {
+                    }
+
                     static [bool] $ReturnValue = $true
 
                     static [bool]LogonUser(

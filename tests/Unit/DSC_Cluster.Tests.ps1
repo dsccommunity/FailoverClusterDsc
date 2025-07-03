@@ -290,14 +290,6 @@ Describe 'Cluster\Get-TargetResource' -Tag 'Get' {
 }
 
 Describe 'Cluster\Set-TargetResource' -Tag 'Set' {
-    # BeforeAll {
-    #     Mock -CommandName Add-Type -MockWith {
-    #         return $mockLibImpersonationObject
-    #     }
-
-    #     Mock -CommandName New-Object -MockWith $mockNewObjectWindowsIdentity -ParameterFilter $mockNewObjectWindowsIdentity_ParameterFilter -Verifiable
-    # }
-
     Context 'When computers domain name cannot be evaluated' {
         BeforeAll {
             Mock -CommandName Get-CimInstance -MockWith {
@@ -342,7 +334,18 @@ Describe 'Cluster\Set-TargetResource' -Tag 'Set' {
                 }
             }
 
-            Mock -CommandName Set-ImpersonateAs -MockWith { 0 }
+            Mock -CommandName Set-ImpersonateAs -MockWith {
+                $context = New-MockObject -Type System.Object -Methods @{
+                    Undo    = { return }
+                    Dispose = { return }
+                }
+
+                $newToken = [System.IntPtr]::new(12345)
+
+                $newToken, $context, $newToken
+            }
+
+            Mock -CommandName Close-UserToken
         }
 
         Context 'When the cluster does not exist' {
@@ -747,7 +750,16 @@ Describe 'Cluster\Set-TargetResource' -Tag 'Set' {
                 }
             }
 
-            Mock -CommandName Set-ImpersonateAs
+            Mock -CommandName Set-ImpersonateAs -MockWith {
+                $context = New-MockObject -Type System.Object -Methods @{
+                    Undo    = { return }
+                    Dispose = { return }
+                }
+
+                $newToken = [System.IntPtr]::new(12345)
+
+                $newToken, $context, $newToken
+            }
         }
 
         Context 'When the node already exist' {
@@ -948,9 +960,11 @@ Describe 'Cluster\Test-TargetResource' -Tag 'Test' {
                 }
 
                 Mock -CommandName Set-ImpersonateAs -MockWith {
-                    $context = New-Object -TypeName System.Object |
-                        Add-Member -MemberType ScriptMethod -Name 'Undo' -Value { return } -Force -PassThru |
-                        Add-Member -MemberType ScriptMethod -Name 'Dispose' -Value { return } -Force
+                    $context = New-MockObject -Type System.Object -Methods @{
+                        Undo    = { return }
+                        Dispose = { return }
+                    }
+
                     $newToken = [System.IntPtr]::new(12345)
 
                     $newToken, $context, $newToken
@@ -1113,13 +1127,49 @@ Describe 'Cluster\Test-TargetResource' -Tag 'Test' {
     }
 }
 
-Describe 'Cluster\Get-ImpersonateLib' -Tag 'Helper' -Skip:$true {
-    It 'Should return the correct type' {
-        InModuleScope -ScriptBlock {
-            Set-StrictMode -Version 1.0
+Describe 'Cluster\Get-ImpersonateLib' -Tag 'Helper' {
+    BeforeAll {
+        Mock -CommandName Add-Type -MockWith {
+            return New-MockObject -Type System.Object -Methods @{
+                Undo    = { return }
+                Dispose = { return }
+            }
+        }
+    }
 
-            $result = Get-ImpersonateLib
-            $result | Should -BeOfType [System.Object]
+    Context 'When the type is already loaded' {
+        BeforeAll {
+            InModuleScope -ScriptBlock {
+                $script:ImpersonateLib = $true
+            }
+        }
+
+        It 'Should call the correct mocks' {
+            InModuleScope -ScriptBlock {
+                Set-StrictMode -Version 1.0
+
+                { Get-ImpersonateLib } | Should -Not -Throw
+            }
+
+            Should -Invoke -CommandName Add-Type -Exactly -Times 0 -Scope It
+        }
+    }
+
+    Context 'When the type is not loaded' {
+        BeforeAll {
+            InModuleScope -ScriptBlock {
+                $script:ImpersonateLib = $null
+            }
+        }
+
+        It 'Should call the correct mocks' {
+            InModuleScope -ScriptBlock {
+                Set-StrictMode -Version 1.0
+
+                { Get-ImpersonateLib } | Should -Not -Throw
+            }
+
+            Should -Invoke -CommandName Add-Type -Exactly -Times 1 -Scope It
         }
     }
 }

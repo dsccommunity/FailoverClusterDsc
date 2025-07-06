@@ -1,23 +1,32 @@
-$script:DSCModuleName = 'FailoverClusterDsc'
-$script:DSCResourceName = 'DSC_ClusterDisk'
+# Suppressing this rule because Script Analyzer does not understand Pester's syntax.
+[System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', '')]
+param ()
 
-function Invoke-TestSetup
-{
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [string]
-        $ModuleVersion
-    )
-
+BeforeDiscovery {
     try
     {
-        Import-Module -Name DscResource.Test -Force -ErrorAction 'Stop'
+        if (-not (Get-Module -Name 'DscResource.Test'))
+        {
+            # Assumes dependencies has been resolved, so if this module is not available, run 'noop' task.
+            if (-not (Get-Module -Name 'DscResource.Test' -ListAvailable))
+            {
+                # Redirect all streams to $null, except the error stream (stream 2)
+                & "$PSScriptRoot/../../build.ps1" -Tasks 'noop' 3>&1 4>&1 5>&1 6>&1 > $null
+            }
+
+            # If the dependencies has not been resolved, this will throw an error.
+            Import-Module -Name 'DscResource.Test' -Force -ErrorAction 'Stop'
+        }
     }
     catch [System.IO.FileNotFoundException]
     {
-        throw 'DscResource.Test module dependency not found. Please run ".\build.ps1 -Tasks build" first.'
+        throw 'DscResource.Test module dependency not found. Please run ".\build.ps1 -ResolveDependency -Tasks build" first.'
     }
+}
+
+BeforeAll {
+    $script:DSCModuleName = 'FailoverClusterDsc'
+    $script:DSCResourceName = 'DSC_ClusterDisk'
 
     $script:testEnvironment = Initialize-TestEnvironment `
         -DSCModuleName $script:dscModuleName `
@@ -25,391 +34,502 @@ function Invoke-TestSetup
         -ResourceType 'Mof' `
         -TestType 'Unit'
 
-    Import-Module -Name (Join-Path -Path $PSScriptRoot -ChildPath "Stubs\FailoverClusters$ModuleVersion.stubs.psm1") -Global -Force
-    $global:moduleVersion = $ModuleVersion
+    # Load stub cmdlets and classes.
+    Import-Module (Join-Path -Path $PSScriptRoot -ChildPath 'Stubs\FailoverClusters.stubs.psm1')
+
+    $PSDefaultParameterValues['InModuleScope:ModuleName'] = $script:dscResourceName
+    $PSDefaultParameterValues['Mock:ModuleName'] = $script:dscResourceName
+    $PSDefaultParameterValues['Should:ModuleName'] = $script:dscResourceName
 }
 
-function Invoke-TestCleanup
-{
+AfterAll {
+    $PSDefaultParameterValues.Remove('InModuleScope:ModuleName')
+    $PSDefaultParameterValues.Remove('Mock:ModuleName')
+    $PSDefaultParameterValues.Remove('Should:ModuleName')
+
     Restore-TestEnvironment -TestEnvironment $script:testEnvironment
-    Remove-Variable -Name moduleVersion -Scope Global -ErrorAction SilentlyContinue
+
+    # Unload stub module
+    Remove-Module -Name FailoverClusters.stubs -Force
+
+    # Unload the module being tested so that it doesn't impact any other tests.
+    Get-Module -Name $script:dscResourceName -All | Remove-Module -Force
 }
 
-foreach ($moduleVersion in @('2012', '2016'))
-{
-    Invoke-TestSetup -ModuleVersion $moduleVersion
-
-    try
-    {
-        InModuleScope $script:dscResourceName {
-            $mockDiskNumber = '1'
-            $mockDiskId = '{0182f270-e2b8-4579-8c0a-176e0e05c30c}'
-            $mockDiskLabel = 'First Data'
-
-            $mockNewDisk_Number = '2'
-            $mockNewDisk_Id = '{5182f370-e2b8-4579-8caa-176e0e05c323}'
-            $mockNewDisk_Label = 'Second Data'
-
-            $mockDisk_WrongLabel = 'Wrong Label'
-
-            $mockTestParameter_ShouldBePresentAndDiskExist = @{
-                Number = $mockDiskNumber
-                Ensure = 'Present'
-                Label  = $mockDiskLabel
-            }
-
-            $mockTestParameter_ShouldBeAbsentButDiskExist = @{
-                Number = $mockDiskNumber
-                Ensure = 'Absent'
-                Label  = $mockDiskLabel
-            }
-
-            $mockTestParameter_ShouldBePresentButDiskDoesNotExist = @{
-                Number = $mockNewDisk_Number
-                Ensure = 'Present'
-                Label  = $mockNewDisk_Label
-            }
-
-            $mockTestParameter_ShouldBeAbsentAndDiskDoesNotExist = @{
-                Number = '3'
-                Ensure = 'Absent'
-                Label  = 'Third Data'
-            }
-
-            $mockTestParameter_ShouldBePresentAndDiskExistButWrongLabel = @{
-                Number = $mockDiskNumber
-                Ensure = 'Present'
-                Label  = $mockDisk_WrongLabel
-            }
-
-            $mockCimInstance = {
-                switch ($Filter)
-                {
-                    "Number = $mockDiskNumber"
-                    {
-                        [PSCustomObject] @{
-                            Name = $mockDiskLabel
-                            Id   = $mockDiskId
-                        }
-                    }
-
-                    default
-                    {
-                        $null
-                    }
+Describe 'ClusterDisk\Get-TargetResource' -Tag 'Get' {
+    Context 'When the system is not in the desired state' {
+        BeforeAll {
+            Mock -CommandName Get-CimInstance -MockWith {
+                [PSCustomObject] @{
+                    Name = 'First Data'
+                    Id   = '{0182f270-e2b8-4579-8c0a-176e0e05c30c}'
                 }
+            } -ParameterFilter {
+                $Filter -eq 'Number = 1'
             }
 
-            $mockCimInstance_ParameterFilter = {
-                $ClassName -eq 'MSCluster_Disk' -and $Namespace -eq 'Root\MSCluster'
-            }
-
-            $mockClusterResource = {
+            Mock -CommandName Get-ClusterResource -MockWith {
                 @(
                     [PSCustomObject] @{
-                        Name         = $mockDiskLabel
+                        Name         = 'First Data'
                         ResourceType = 'Physical Disk'
                     } | Add-Member -MemberType ScriptMethod -Name Update -Value { } -PassThru
 
                     [PSCustomObject] @{
-                        Name         = $mockNewDisk_Label
+                        Name         = 'Second Data'
                         ResourceType = 'Physical Disk'
                     } | Add-Member -MemberType ScriptMethod -Name Update -Value { } -PassThru
                 )
             }
 
-            $mockGetClusterParameter = {
-                switch ($InputObject.Name)
-                {
-                    $mockDiskLabel
-                    {
-                        [PSCustomObject] @{
-                            Value = $mockDiskId
-                        }
-                    }
-
-                    $mockNewDisk_Label
-                    {
-                        [PSCustomObject] @{
-                            Value = $mockNewDisk_Id
-                        }
-                    }
+            Mock -CommandName Get-ClusterParameter -MockWith {
+                [PSCustomObject] @{
+                    Value = '{0182f270-e2b8-4579-8c0a-176e0e05c30c}'
                 }
+            } -ParameterFilter {
+                $InputObject.Name -eq 'First Data'
             }
 
-            $mockGetClusterParameter_ParameterFilter = {
-                $Name -eq 'DiskIdGuid'
+            Mock -CommandName Get-ClusterParameter -MockWith {
+                [PSCustomObject] @{
+                    Value = '{5182f370-e2b8-4579-8caa-176e0e05c323}'
+                }
+            } -ParameterFilter {
+                $InputObject.Name -eq 'Second Data'
+            }
+        }
+
+        Context 'When Ensure is set to ''Present'' but the disk is not present' {
+            BeforeAll {
+                Mock -CommandName Get-CimInstance
             }
 
-            $mockGetClusterAvailableDisk = {
-                @(
-                    [PSCustomObject] @{
-                        Number = $mockNewDisk_Number
-                    }
-                )
-            }
-            Describe "ClusterDisk_$moduleVersion\Get-TargetResource" {
-                BeforeAll {
-                    Mock -CommandName 'Get-CimInstance' -MockWith $mockCimInstance -ParameterFilter $mockCimInstance_ParameterFilter
-                    Mock -CommandName 'Get-ClusterResource' -MockWith $mockClusterResource
-                    Mock -CommandName 'Get-ClusterParameter' -MockWith $mockGetClusterParameter -ParameterFilter $mockGetClusterParameter_ParameterFilter
-                }
+            It 'Should return the correct result' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
 
-                Context 'When the system is not in the desired state' {
-                    Context 'When Ensure is set to ''Present'' but the disk is not present' {
-                        BeforeEach {
-                            $mockTestParameters = @{
-                                Number = $mockNewDisk_Number
-                            }
-                        }
-
-                        It 'Should return the correct type' {
-                            $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                            $getTargetResourceResult | Should -BeOfType [System.Collections.Hashtable]
-                        }
-
-                        It 'Should return the same values as passed as parameters' {
-                            $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                            $getTargetResourceResult.Number | Should -Be $mockTestParameters.Number
-                        }
-
-                        It 'Should return the disk as absent' {
-                            $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                            $getTargetResourceResult.Ensure | Should -Be 'Absent'
-                            $getTargetResourceResult.Label | Should -BeNullOrEmpty
-                        }
+                    $mockParameters = @{
+                        Number = '2'
                     }
 
-                    Context 'When Ensure is set to ''Absent'' and the disk is present' {
-                        BeforeEach {
-                            $mockTestParameters = @{
-                                Number = $mockDiskNumber
-                            }
-                        }
+                    $result = Get-TargetResource @mockParameters
 
-                        It 'Should return the same values as passed as parameters' {
-                            $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                            $getTargetResourceResult.Number | Should -Be $mockTestParameters.Number
-                        }
-
-                        It 'Should return the disk as present' {
-                            $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                            $getTargetResourceResult.Ensure | Should -Be 'Present'
-                            $getTargetResourceResult.Label | Should -Be $mockDiskLabel
-                        }
-                    }
-
-                    Context 'When Ensure is set to ''Present'' and the disk is present but has the wrong label' {
-                        BeforeEach {
-                            $mockTestParameters = @{
-                                Number = $mockDiskNumber
-                            }
-                        }
-
-                        It 'Should return the same values as passed as parameters' {
-                            $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                            $getTargetResourceResult.Number | Should -Be $mockTestParameters.Number
-                        }
-
-                        It 'Should return the correct value for property Ensure' {
-                            $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                            $getTargetResourceResult.Ensure | Should -Be 'Present'
-                        }
-
-                        It 'Should return the correct value for property Label' {
-                            $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                            $getTargetResourceResult.Label | Should -Not -Be $mockDisk_WrongLabel
-                            $getTargetResourceResult.Label | Should -Be $mockDiskLabel
-                        }
-                    }
-                }
-
-                Context 'When the system is in the desired state' {
-                    Context 'When Ensure is set to ''Present'' and the disk is present' {
-                        BeforeEach {
-                            $mockTestParameters = @{
-                                Number = $mockDiskNumber
-                            }
-                        }
-
-                        It 'Should return the correct type' {
-                            $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                            $getTargetResourceResult | Should -BeOfType [System.Collections.Hashtable]
-                        }
-
-                        It 'Should return the same values as passed as parameters' {
-                            $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                            $getTargetResourceResult.Number | Should -Be $mockTestParameters.Number
-                            $getTargetResourceResult.Ensure | Should -Be 'Present'
-                            $getTargetResourceResult.Label | Should -Be $mockDiskLabel
-                        }
-                    }
-
-                    Context 'When Ensure is set to ''Absent'' and the disk is not present' {
-                        BeforeEach {
-                            $mockTestParameters = @{
-                                Number = $mockNewDisk_Number
-                            }
-                        }
-
-                        It 'Should return the same values as passed as parameters' {
-                            $getTargetResourceResult = Get-TargetResource @mockTestParameters
-                            $getTargetResourceResult.Number | Should -Be $mockTestParameters.Number
-                            $getTargetResourceResult.Ensure | Should -Be 'Absent'
-                            $getTargetResourceResult.Label | Should -BeNullOrEmpty
-                        }
-                    }
+                    $result | Should -BeOfType [System.Collections.Hashtable]
+                    $result.Number | Should -Be $mockParameters.Number
+                    $result.Ensure | Should -Be 'Absent'
+                    $result.Label | Should -BeNullOrEmpty
                 }
             }
+        }
 
-            Describe "ClusterDisk_$moduleVersion\Test-TargetResource" {
-                BeforeAll {
-                    Mock -CommandName 'Get-CimInstance' -MockWith $mockCimInstance -ParameterFilter $mockCimInstance_ParameterFilter
-                    Mock -CommandName 'Get-ClusterResource' -MockWith $mockClusterResource
-                    Mock -CommandName 'Get-ClusterParameter' -MockWith $mockGetClusterParameter -ParameterFilter $mockGetClusterParameter_ParameterFilter
-                }
+        Context 'When Ensure is set to ''Absent'' and the disk is present' {
+            It 'Should return the correct result' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
 
-                Context 'When the system is not in the desired state' {
-                    Context 'When Ensure is set to ''Present'' but the disk is not present' {
-                        It 'Should return $false' {
-                            $testTargetResourceResult = Test-TargetResource @mockTestParameter_ShouldBePresentButDiskDoesNotExist
-                            $testTargetResourceResult | Should -Be $false
-                        }
+                    $mockParameters = @{
+                        Number = '1'
                     }
 
-                    Context 'When Ensure is set to ''Absent'' and the disk is present' {
-                        It 'Should return $false' {
-                            $testTargetResourceResult = Test-TargetResource @mockTestParameter_ShouldBeAbsentButDiskExist
-                            $testTargetResourceResult | Should -Be $false
-                        }
-                    }
+                    $result = Get-TargetResource @mockParameters
 
-                    Context 'When Ensure is set to ''Present'' and the disk is present but has the wrong label' {
-                        It 'Should return $false' {
-                            $testTargetResourceResult = Test-TargetResource @mockTestParameter_ShouldBePresentAndDiskExistButWrongLabel
-                            $testTargetResourceResult | Should -Be $false
-                        }
-                    }
-                }
-
-                Context 'When the system is in the desired state' {
-                    Context 'When Ensure is set to ''Present'' and the disk is present' {
-                        It 'Should return $true' {
-                            $testTargetResourceResult = Test-TargetResource @mockTestParameter_ShouldBePresentAndDiskExist
-                            $testTargetResourceResult | Should -Be $true
-                        }
-                    }
-
-                    Context 'When Ensure is set to ''Absent'' and the disk is not present' {
-                        It 'Should return $true' {
-                            $testTargetResourceResult = Test-TargetResource @mockTestParameter_ShouldBeAbsentAndDiskDoesNotExist
-                            $testTargetResourceResult | Should -Be $true
-                        }
-                    }
+                    $result.Number | Should -Be $mockParameters.Number
+                    $result.Ensure | Should -Be 'Present'
+                    $result.Label | Should -Be 'First Data'
                 }
             }
+        }
 
-            Describe "ClusterDisk_$moduleVersion\Set-TargetResource" {
-                BeforeAll {
-                    Mock -CommandName 'Get-CimInstance' -MockWith {
-                        [PSCustomObject] @{
-                            Name = $mockNewDisk_Label
-                            Id   = $mockNewDisk_Id
-                        }
+        Context 'When Ensure is set to ''Present'' and the disk is present but has the wrong label' {
+            It 'Should return the same values as passed as parameters' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $mockParameters = @{
+                        Number = '1'
                     }
 
-                    Mock -CommandName 'Get-ClusterResource' -MockWith $mockClusterResource
-                    Mock -CommandName 'Get-ClusterParameter' -MockWith $mockGetClusterParameter -ParameterFilter $mockGetClusterParameter_ParameterFilter
-                    Mock -CommandName 'Get-ClusterAvailableDisk' -MockWith $mockGetClusterAvailableDisk
-                    Mock -CommandName 'Add-ClusterDisk'
-                    Mock -CommandName 'Remove-ClusterResource'
-                }
+                    $result = Get-TargetResource @mockParameters
 
-                Context 'When the system is not in the desired state' {
-                    Context 'When Ensure is set to ''Present'' but the disk is not present' {
-                        BeforeEach {
-                            Mock -CommandName 'Get-TargetResource' -MockWith {
-                                @{
-                                    Number = $mockNewDisk_Number
-                                    Ensure = 'Absent'
-                                    Label  = $null
-                                }
-                            }
-                        }
-
-                        It 'Should add the disk to the cluster' {
-                            { Set-TargetResource @mockTestParameter_ShouldBePresentButDiskDoesNotExist } | Should -Not -Throw
-
-                            Assert-MockCalled -CommandName Add-ClusterDisk -Exactly -Times 1 -Scope It
-                            Assert-MockCalled -CommandName Remove-ClusterResource -Exactly -Times 0 -Scope It
-                        }
-                    }
-
-                    Context 'When Ensure is set to ''Absent'' and the disk is present' {
-                        BeforeEach {
-                            Mock -CommandName 'Get-TargetResource' -MockWith {
-                                @{
-                                    Number = $mockDiskNumber
-                                    Ensure = 'Present'
-                                    Label  = $mockDiskLabel
-                                }
-                            }
-                        }
-
-                        It 'Should remove the disk from the cluster' {
-                            { Set-TargetResource @mockTestParameter_ShouldBeAbsentButDiskExist } | Should -Not -Throw
-
-                            Assert-MockCalled -CommandName Add-ClusterDisk -Exactly -Times 0 -Scope It
-                            Assert-MockCalled -CommandName Remove-ClusterResource -Exactly -Times 1 -Scope It
-                        }
-                    }
-                }
-
-                Context 'When the system is in the desired state' {
-                    Context 'When Ensure is set to ''Present'' and the disk is present' {
-                        BeforeEach {
-                            Mock -CommandName 'Get-TargetResource' -MockWith {
-                                @{
-                                    Number = $mockDiskNumber
-                                    Ensure = 'Present'
-                                    Label  = $mockDiskLabel
-                                }
-                            }
-                        }
-
-                        It 'Should not call any cluster cmdlets' {
-                            { Set-TargetResource @mockTestParameter_ShouldBePresentAndDiskExist } | Should -Not -Throw
-
-                            Assert-MockCalled -CommandName Add-ClusterDisk -Exactly -Times 0 -Scope It
-                            Assert-MockCalled -CommandName Get-CimInstance -Exactly -Times 0 -Scope It
-                            Assert-MockCalled -CommandName Remove-ClusterResource -Exactly -Times 0 -Scope It
-                        }
-                    }
-
-                    Context 'When Ensure is set to ''Absent'' and the disk is not present' {
-                        BeforeEach {
-                            Mock -CommandName 'Get-TargetResource' -MockWith {
-                                @{
-                                    Number = $mockDiskNumber
-                                    Ensure = 'Absent'
-                                    Label  = $mockDiskLabel
-                                }
-                            }
-                        }
-
-                        It 'Should not call any cluster cmdlets' {
-                            { Set-TargetResource @mockTestParameter_ShouldBeAbsentAndDiskDoesNotExist } | Should -Not -Throw
-
-                            Assert-MockCalled -CommandName Add-ClusterDisk -Exactly -Times 0 -Scope It
-                            Assert-MockCalled -CommandName Remove-ClusterResource -Exactly -Times 0 -Scope It
-                        }
-                    }
+                    $result.Number | Should -Be $mockParameters.Number
+                    $result.Ensure | Should -Be 'Present'
+                    $result.Label | Should -Not -Be 'Wrong Label'
+                    $result.Label | Should -Be 'First Data'
                 }
             }
         }
     }
-    finally
-    {
-        Invoke-TestCleanup
+
+    Context 'When the system is in the desired state' {
+        BeforeAll {
+            Mock -CommandName Get-CimInstance
+            Mock -CommandName Get-CimInstance -MockWith {
+                [PSCustomObject] @{
+                    Name = 'First Data'
+                    Id   = '{0182f270-e2b8-4579-8c0a-176e0e05c30c}'
+                }
+            } -ParameterFilter {
+                $Filter -eq 'Number = 1'
+            }
+
+            Mock -CommandName Get-ClusterResource -MockWith {
+                @(
+                    [PSCustomObject] @{
+                        Name         = 'First Data'
+                        ResourceType = 'Physical Disk'
+                    } | Add-Member -MemberType ScriptMethod -Name Update -Value { } -PassThru
+
+                    [PSCustomObject] @{
+                        Name         = 'Second Data'
+                        ResourceType = 'Physical Disk'
+                    } | Add-Member -MemberType ScriptMethod -Name Update -Value { } -PassThru
+                )
+            }
+
+            Mock -CommandName Get-ClusterParameter -MockWith {
+                [PSCustomObject] @{
+                    Value = '{0182f270-e2b8-4579-8c0a-176e0e05c30c}'
+                }
+            } -ParameterFilter {
+                $InputObject.Name -eq 'First Data'
+            }
+
+            Mock -CommandName Get-ClusterParameter -MockWith {
+                [PSCustomObject] @{
+                    Value = '{5182f370-e2b8-4579-8caa-176e0e05c323}'
+                }
+            } -ParameterFilter {
+                $InputObject.Name -eq 'Second Data'
+            }
+        }
+
+        Context 'When Ensure is set to ''Present'' and the disk is present' {
+            It 'Should return the correct result' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $mockParameters = @{
+                        Number = '1'
+                    }
+
+                    $result = Get-TargetResource @mockParameters
+
+                    $result | Should -BeOfType [System.Collections.Hashtable]
+                    $result.Number | Should -Be $mockParameters.Number
+                    $result.Ensure | Should -Be 'Present'
+                    $result.Label | Should -Be 'First Data'
+                }
+            }
+        }
+
+        Context 'When Ensure is set to ''Absent'' and the disk is not present' {
+            It 'Should return the correct result' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $mockParameters = @{
+                        Number = '2'
+                    }
+
+                    $result = Get-TargetResource @mockParameters
+
+                    $result.Number | Should -Be $mockParameters.Number
+                    $result.Ensure | Should -Be 'Absent'
+                    $result.Label | Should -BeNullOrEmpty
+                }
+            }
+        }
+    }
+}
+
+Describe 'ClusterDisk\Test-TargetResource' -Tag 'Test' {
+    BeforeAll {
+        Mock -CommandName Get-TargetResource -MockWith {
+            @{
+                Number = '1'
+                Ensure = 'Present'
+                Label  = 'First Data'
+            }
+        } -ParameterFilter {
+            $Number -eq '1'
+        }
+    }
+
+    Context 'When the system is not in the desired state' {
+        Context 'When Ensure is set to ''Present'' but the disk is not present' {
+            BeforeAll {
+                Mock -CommandName Get-TargetResource -MockWith {
+                    @{
+                        Number = '2'
+                        Ensure = 'Absent'
+                        Label  = ''
+                    }
+                }
+            }
+
+            It 'Should return $false' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $mockParameters = @{
+                        Number = '2'
+                        Ensure = 'Present'
+                        Label  = 'Second Data'
+                    }
+
+                    Test-TargetResource @mockParameters | Should -BeFalse
+                }
+            }
+        }
+
+        Context 'When Ensure is set to ''Absent'' and the disk is present' {
+            It 'Should return $false' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $mockParameters = @{
+                        Number = '1'
+                        Ensure = 'Absent'
+                        Label  = 'First Data'
+                    }
+
+                    Test-TargetResource @mockParameters | Should -BeFalse
+                }
+            }
+        }
+
+        Context 'When Ensure is set to ''Present'' and the disk is present but has the wrong label' {
+            It 'Should return $false' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $mockParameters = @{
+                        Number = '1'
+                        Ensure = 'Present'
+                        Label  = 'Wrong Label'
+                    }
+
+                    Test-TargetResource @mockParameters | Should -BeFalse
+                }
+            }
+        }
+    }
+
+    Context 'When the system is in the desired state' {
+        Context 'When Ensure is set to ''Present'' and the disk is present' {
+            It 'Should return $true' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $mockParameters = @{
+                        Number = '1'
+                        Ensure = 'Present'
+                        Label  = 'First Data'
+                    }
+
+                    Test-TargetResource @mockParameters | Should -BeTrue
+                }
+            }
+        }
+
+        Context 'When Ensure is set to ''Absent'' and the disk is not present' {
+            BeforeAll {
+                Mock -CommandName Get-TargetResource -MockWith {
+                    @{
+                        Number = '3'
+                        Ensure = 'Absent'
+                        Label  = ''
+                    }
+                }
+            }
+
+            It 'Should return $true' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $mockParameters = @{
+                        Number = '3'
+                        Ensure = 'Absent'
+                        Label  = 'Third Data'
+                    }
+
+                    Test-TargetResource @mockParameters | Should -BeTrue
+                }
+            }
+        }
+    }
+}
+
+Describe 'ClusterDisk\Set-TargetResource' -Tag 'Set' {
+    BeforeAll {
+        Mock -CommandName Get-CimInstance -MockWith {
+            [PSCustomObject] @{
+                Name = 'Second Data'
+                Id   = '{5182f370-e2b8-4579-8caa-176e0e05c323}'
+            }
+        }
+
+        Mock -CommandName Get-ClusterResource -MockWith {
+            @(
+                [PSCustomObject] @{
+                    Name         = 'First Data'
+                    ResourceType = 'Physical Disk'
+                } | Add-Member -MemberType ScriptMethod -Name Update -Value { } -PassThru
+
+                [PSCustomObject] @{
+                    Name         = 'Second Data'
+                    ResourceType = 'Physical Disk'
+                } | Add-Member -MemberType ScriptMethod -Name Update -Value { } -PassThru
+            )
+        }
+
+        Mock -CommandName Get-ClusterParameter -MockWith {
+            [PSCustomObject] @{
+                Value = '{0182f270-e2b8-4579-8c0a-176e0e05c30c}'
+            }
+        } -ParameterFilter {
+            $InputObject.Name -eq 'First Data'
+        }
+
+        Mock -CommandName Get-ClusterParameter -MockWith {
+            [PSCustomObject] @{
+                Value = '{5182f370-e2b8-4579-8caa-176e0e05c323}'
+            }
+        } -ParameterFilter {
+            $InputObject.Name -eq 'Second Data'
+        }
+
+        Mock -CommandName Get-ClusterAvailableDisk -MockWith {
+            @(
+                [PSCustomObject] @{
+                    Number = '2'
+                }
+            )
+        }
+
+        Mock -CommandName Add-ClusterDisk
+        Mock -CommandName Remove-ClusterResource
+    }
+
+    Context 'When the system is not in the desired state' {
+        Context 'When Ensure is set to ''Present'' but the disk is not present' {
+            BeforeEach {
+                Mock -CommandName Get-TargetResource -MockWith {
+                    @{
+                        Number = '2'
+                        Ensure = 'Absent'
+                        Label  = $null
+                    }
+                }
+            }
+
+            It 'Should add the disk to the cluster' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $mockParameters = @{
+                        Number = '2'
+                        Ensure = 'Present'
+                        Label  = 'Second Data'
+                    }
+
+
+                    { Set-TargetResource @mockParameters } | Should -Not -Throw
+                }
+
+                Should -Invoke -CommandName Add-ClusterDisk -Exactly -Times 1 -Scope It
+                Should -Invoke -CommandName Remove-ClusterResource -Exactly -Times 0 -Scope It
+            }
+        }
+
+        Context 'When Ensure is set to ''Absent'' and the disk is present' {
+            BeforeEach {
+                Mock -CommandName Get-TargetResource -MockWith {
+                    @{
+                        Number = '1'
+                        Ensure = 'Present'
+                        Label  = 'First Data'
+                    }
+                }
+            }
+
+            It 'Should remove the disk from the cluster' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $mockParameters = @{
+                        Number = '1'
+                        Ensure = 'Absent'
+                        Label  = 'First Data'
+                    }
+
+                    { Set-TargetResource @mockParameters } | Should -Not -Throw
+                }
+
+                Should -Invoke -CommandName Add-ClusterDisk -Exactly -Times 0 -Scope It
+                Should -Invoke -CommandName Remove-ClusterResource -Exactly -Times 1 -Scope It
+            }
+        }
+    }
+
+    Context 'When the system is in the desired state' {
+        Context 'When Ensure is set to ''Present'' and the disk is present' {
+            BeforeAll {
+                Mock -CommandName Get-TargetResource -MockWith {
+                    @{
+                        Number = '1'
+                        Ensure = 'Present'
+                        Label  = 'First Data'
+                    }
+                }
+            }
+
+            It 'Should not call any cluster cmdlets' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $mockParameters = @{
+                        Number = '1'
+                        Ensure = 'Present'
+                        Label  = 'First Data'
+                    }
+
+                    { Set-TargetResource @mockParameters } | Should -Not -Throw
+                }
+
+                Should -Invoke -CommandName Add-ClusterDisk -Exactly -Times 0 -Scope It
+                Should -Invoke -CommandName Get-CimInstance -Exactly -Times 0 -Scope It
+                Should -Invoke -CommandName Remove-ClusterResource -Exactly -Times 0 -Scope It
+            }
+        }
+
+        Context 'When Ensure is set to ''Absent'' and the disk is not present' {
+            BeforeEach {
+                Mock -CommandName Get-TargetResource -MockWith {
+                    @{
+                        Number = '1'
+                        Ensure = 'Absent'
+                        Label  = 'First Data'
+                    }
+                }
+            }
+
+            It 'Should not call any cluster cmdlets' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $mockParameters = @{
+                        Number = '3'
+                        Ensure = 'Absent'
+                        Label  = 'Third Data'
+                    }
+
+                    { Set-TargetResource @mockParameters } | Should -Not -Throw
+                }
+
+                Should -Invoke -CommandName Add-ClusterDisk -Exactly -Times 0 -Scope It
+                Should -Invoke -CommandName Remove-ClusterResource -Exactly -Times 0 -Scope It
+            }
+        }
     }
 }

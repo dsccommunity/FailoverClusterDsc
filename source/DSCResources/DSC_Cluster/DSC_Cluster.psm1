@@ -65,6 +65,7 @@ function Get-TargetResource
         New-InvalidOperationException -Message $errorMessage
     }
     $context = $null
+    $address = $null
     try
     {
         if ($PSBoundParameters.ContainsKey('DomainAdministratorCredential'))
@@ -100,7 +101,6 @@ function Get-TargetResource
         IgnoreNetwork                 = $IgnoreNetwork
         DomainAdministratorCredential = $DomainAdministratorCredential
     }
-
 }
 
 <#
@@ -374,7 +374,7 @@ function Test-TargetResource
 
         if ($cluster)
         {
-            $targetNodeName = $env:COMPUTERNAME
+            $targetNodeName = Get-ComputerName
 
             Write-Verbose -Message ($script:localizedData.CheckClusterNodeIsUp -f $targetNodeName, $Name)
 

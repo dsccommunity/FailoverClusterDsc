@@ -1,23 +1,32 @@
-$script:DSCModuleName = 'FailoverClusterDsc'
-$script:DSCResourceName = 'DSC_ClusterPreferredOwner'
+# Suppressing this rule because Script Analyzer does not understand Pester's syntax.
+[System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', '')]
+param ()
 
-function Invoke-TestSetup
-{
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [string]
-        $ModuleVersion
-    )
-
+BeforeDiscovery {
     try
     {
-        Import-Module -Name DscResource.Test -Force -ErrorAction 'Stop'
+        if (-not (Get-Module -Name 'DscResource.Test'))
+        {
+            # Assumes dependencies has been resolved, so if this module is not available, run 'noop' task.
+            if (-not (Get-Module -Name 'DscResource.Test' -ListAvailable))
+            {
+                # Redirect all streams to $null, except the error stream (stream 2)
+                & "$PSScriptRoot/../../build.ps1" -Tasks 'noop' 3>&1 4>&1 5>&1 6>&1 > $null
+            }
+
+            # If the dependencies has not been resolved, this will throw an error.
+            Import-Module -Name 'DscResource.Test' -Force -ErrorAction 'Stop'
+        }
     }
     catch [System.IO.FileNotFoundException]
     {
-        throw 'DscResource.Test module dependency not found. Please run ".\build.ps1 -Tasks build" first.'
+        throw 'DscResource.Test module dependency not found. Please run ".\build.ps1 -ResolveDependency -Tasks build" first.'
     }
+}
+
+BeforeAll {
+    $script:DSCModuleName = 'FailoverClusterDsc'
+    $script:DSCResourceName = 'DSC_ClusterPreferredOwner'
 
     $script:testEnvironment = Initialize-TestEnvironment `
         -DSCModuleName $script:dscModuleName `
@@ -25,84 +34,34 @@ function Invoke-TestSetup
         -ResourceType 'Mof' `
         -TestType 'Unit'
 
-    Import-Module -Name (Join-Path -Path $PSScriptRoot -ChildPath "Stubs\FailoverClusters$ModuleVersion.stubs.psm1") -Global -Force
-    $global:moduleVersion = $ModuleVersion
+    # Load stub cmdlets and classes.
+    Import-Module (Join-Path -Path $PSScriptRoot -ChildPath 'Stubs\FailoverClusters.stubs.psm1')
+
+    $PSDefaultParameterValues['InModuleScope:ModuleName'] = $script:dscResourceName
+    $PSDefaultParameterValues['Mock:ModuleName'] = $script:dscResourceName
+    $PSDefaultParameterValues['Should:ModuleName'] = $script:dscResourceName
 }
 
-function Invoke-TestCleanup
-{
+AfterAll {
+    $PSDefaultParameterValues.Remove('InModuleScope:ModuleName')
+    $PSDefaultParameterValues.Remove('Mock:ModuleName')
+    $PSDefaultParameterValues.Remove('Should:ModuleName')
+
     Restore-TestEnvironment -TestEnvironment $script:testEnvironment
-    Remove-Variable -Name moduleVersion -Scope Global -ErrorAction SilentlyContinue
+
+    # Unload stub module
+    Remove-Module -Name FailoverClusters.stubs -Force
+
+    # Unload the module being tested so that it doesn't impact any other tests.
+    Get-Module -Name $script:dscResourceName -All | Remove-Module -Force
 }
 
-foreach ($moduleVersion in @('2012', '2016'))
-{
-    Invoke-TestSetup -ModuleVersion $moduleVersion
-
-    try
-    {
-        InModuleScope $script:DSCResourceName {
-            $mockPreferredOwnerNode1 = 'Node1'
-            $mockPreferredOwnerNode2 = 'Node2'
-            $mockPreferredOwnerNode3 = 'Node3'
-            $mockDesiredPreferredOwnerNodes = @($mockPreferredOwnerNode1, $mockPreferredOwnerNode2)
-            $mockAllPreferredOwnerNodes = @($mockPreferredOwnerNode1, $mockPreferredOwnerNode2, $mockPreferredOwnerNode3)
-
-            $mockWrongPreferredOwnerNode1 = 'Node4'
-            $mockWrongPreferredOwnerNode2 = 'Node5'
-            $mockWrongPreferredOwnerNodes = @($mockWrongPreferredOwnerNode1, $mockWrongPreferredOwnerNode2)
-
-            $mockKnownClusterResourceName = 'Resource1'
-            $mockUnknownClusterResourceName = 'UnknownResource'
-
-            $mockDefaultTestParameters = @{
-                ClusterGroup = 'ClusterGroup1'
-                ClusterName  = 'ClusterName1'
-            }
-
-            $mockTestParameters_Present_DesiredPreferredOwners = $mockDefaultTestParameters.Clone()
-            $mockTestParameters_Present_DesiredPreferredOwners += @{
-                Nodes            = $mockDesiredPreferredOwnerNodes
-                ClusterResources = $mockKnownClusterResourceName
-                Ensure           = 'Present'
-            }
-
-            $mockTestParameters_Present_AllPreferredOwners = $mockDefaultTestParameters.Clone()
-            $mockTestParameters_Present_AllPreferredOwners += @{
-                Nodes            = $mockAllPreferredOwnerNodes
-                ClusterResources = $mockKnownClusterResourceName
-                Ensure           = 'Present'
-            }
-
-            $mockTestParameters_Present_WrongPreferredOwnerNodes = $mockDefaultTestParameters.Clone()
-            $mockTestParameters_Present_WrongPreferredOwnerNodes += @{
-                Nodes            = $mockWrongPreferredOwnerNodes
-                ClusterResources = $mockKnownClusterResourceName
-                Ensure           = 'Present'
-            }
-
-            $mockTestParameters_Present_WrongClusterResources = $mockDefaultTestParameters.Clone()
-            $mockTestParameters_Present_WrongClusterResources += @{
-                Nodes            = $mockDesiredPreferredOwnerNodes
-                ClusterResources = $mockUnknownClusterResourceName
-                Ensure           = 'Present'
-            }
-
-            $mockTestParameters_Absent_ButPreferredOwnersExist = $mockDefaultTestParameters.Clone()
-            $mockTestParameters_Absent_ButPreferredOwnersExist += @{
-                Nodes            = $mockDesiredPreferredOwnerNodes
-                ClusterResources = $mockKnownClusterResourceName
-                Ensure           = 'Absent'
-            }
-
-            $mockTestParameters_Absent_AndPreferredOwnersDoesNotExist = $mockDefaultTestParameters.Clone()
-            $mockTestParameters_Absent_AndPreferredOwnersDoesNotExist += @{
-                Nodes            = $mockWrongPreferredOwnerNodes
-                ClusterResources = $mockKnownClusterResourceName
-                Ensure           = 'Absent'
-            }
-
-            $mockGetClusterGroup = {
+Describe 'ClusterPreferredOwner\Get-TargetResource' -Tag 'Get' {
+    Context 'When the system is not in the desired state' {
+        BeforeAll {
+            Mock -CommandName Get-ClusterGroup -ParameterFilter {
+                $Cluster -eq 'ClusterName1'
+            } -MockWith {
                 @{
                     Name      = 'ClusterGroup1'
                     OwnerNode = 'Node1'
@@ -110,265 +69,546 @@ foreach ($moduleVersion in @('2012', '2016'))
                 }
             }
 
-            $mockGetClusterGroup_ParameterFilter = {
-                $Cluster -eq 'ClusterName1'
-            }
-
-            $GetClusterOwnerNode = {
+            Mock -CommandName Get-ClusterOwnerNode -MockWith {
                 @{
                     ClusterObject = 'ClusterName1'
                     OwnerNodes    = @(
-                        @{name = $mockPreferredOwnerNode1 }
-                        @{name = $mockPreferredOwnerNode2 }
-                        @{name = $mockPreferredOwnerNode3 }
+                        @{ name = 'Node1' }
+                        @{ name = 'Node2' }
+                        @{ name = 'Node3' }
                     )
                 }
             }
 
-            $mockGetClusterNode = {
+            Mock -CommandName Get-ClusterNode -MockWith {
                 @{
-                    Name = $mockDesiredPreferredOwnerNodes
+                    Name = @('Node1', 'Node2')
                 }
             }
 
-            $mockGetClusterResource = {
+            Mock -CommandName Get-ClusterResource -MockWith {
                 @{
-                    Name         = $mockKnownClusterResourceName
+                    Name         = 'Resource1'
+                    State        = 'Online'
+                    OwnerGroup   = 'ClusterGroup1'
+                    ResourceType = 'type1'
+                }
+            }
+        }
+
+        Context 'When Ensure is set to ''Present'' but the preferred owner is not a possible owner of the cluster nodes and the cluster resources' {
+            It 'Should return the correct result' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $mockParameters = @{
+                        ClusterGroup     = 'ClusterGroup1'
+                        ClusterName      = 'ClusterName1'
+                        Nodes            = @('Node4', 'Node5')
+                        ClusterResources = 'Resource1'
+                        Ensure           = 'Present'
+                    }
+
+                    $result = Get-TargetResource @mockParameters
+
+                    $result | Should -BeOfType [System.Collections.Hashtable]
+
+                    $result.ClusterGroup | Should -Be $mockParameters.ClusterGroup
+                    $result.ClusterName | Should -Be $mockParameters.ClusterName
+                    $result.Ensure | Should -Be $mockParameters.Ensure
+
+                    $result.Nodes | Should -Not -Contain $mockParameters.Nodes
+                    $result.ClusterResources | Should -Be $mockParameters.ClusterResources
+                }
+            }
+        }
+
+        Context 'When Ensure is set to ''Present'' but the preferred owner is a possible owner of the cluster nodes but the cluster resources is missing' {
+            It 'Should return the correct result' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $mockParameters = @{
+                        ClusterGroup     = 'ClusterGroup1'
+                        ClusterName      = 'ClusterName1'
+                        Nodes            = @('Node1', 'Node2')
+                        ClusterResources = 'UnknownResource'
+                        Ensure           = 'Present'
+                    }
+
+                    $result = Get-TargetResource @mockParameters
+
+                    $result.ClusterGroup | Should -Be $mockParameters.ClusterGroup
+                    $result.ClusterName | Should -Be $mockParameters.ClusterName
+                    $result.Ensure | Should -Be $mockParameters.Ensure
+
+                    $result.Nodes | Should -Be @('Node1', 'Node2', 'Node3')
+                    $result.ClusterResources | Should -Be $mockParameters.ClusterResources
+                }
+            }
+        }
+
+        Context 'When Ensure is set to ''Absent'' and the preferred owner is still a possible owner of the cluster nodes and the cluster resources' {
+            It 'Should return the correct result' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $mockParameters = @{
+                        ClusterGroup     = 'ClusterGroup1'
+                        ClusterName      = 'ClusterName1'
+                        Nodes            = @('Node1', 'Node2')
+                        ClusterResources = 'Resource1'
+                        Ensure           = 'Absent'
+                    }
+
+                    $result = Get-TargetResource @mockParameters
+
+                    $result.ClusterGroup | Should -Be $mockParameters.ClusterGroup
+                    $result.ClusterName | Should -Be $mockParameters.ClusterName
+                    $result.Ensure | Should -Be $mockParameters.Ensure
+
+                    $result.Nodes | Should -Be @('Node1', 'Node2', 'Node3')
+                    $result.ClusterResources | Should -Be $mockParameters.ClusterResources
+                }
+            }
+        }
+    }
+
+    Context 'When the system is in the desired state' {
+        BeforeAll {
+            Mock -CommandName Get-ClusterGroup -ParameterFilter {
+                $Cluster -eq 'ClusterName1'
+            } -MockWith {
+                @{
+                    Name      = 'ClusterGroup1'
+                    OwnerNode = 'Node1'
+                    State     = 'Online'
+                }
+            }
+
+            Mock -CommandName Get-ClusterOwnerNode -MockWith {
+                @{
+                    ClusterObject = 'ClusterName1'
+                    OwnerNodes    = @(
+                        @{ name = 'Node1' }
+                        @{ name = 'Node2' }
+                        @{ name = 'Node3' }
+                    )
+                }
+            }
+
+            Mock -CommandName Get-ClusterNode -MockWith {
+                @{
+                    Name = @('Node1', 'Node2')
+                }
+            }
+
+            Mock -CommandName Get-ClusterResource -MockWith {
+                @{
+                    Name         = 'Resource1'
+                    State        = 'Online'
+                    OwnerGroup   = 'ClusterGroup1'
+                    ResourceType = 'type1'
+                }
+            }
+        }
+
+        Context 'When Ensure is set to ''Present'' and the preferred owner is a possible owner of the cluster nodes and the cluster resources' {
+            It 'Should return the correct result' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $mockParameters = @{
+                        ClusterGroup     = 'ClusterGroup1'
+                        ClusterName      = 'ClusterName1'
+                        Nodes            = @('Node1', 'Node2')
+                        ClusterResources = 'Resource1'
+                        Ensure           = 'Present'
+                    }
+
+                    $result = Get-TargetResource @mockParameters
+
+                    $result.ClusterGroup | Should -Be $mockParameters.ClusterGroup
+                    $result.ClusterName | Should -Be $mockParameters.ClusterName
+                    $result.Ensure | Should -Be $mockParameters.Ensure
+
+                    $result.Nodes | Should -Be @('Node1', 'Node2', 'Node3')
+                    $result.ClusterResources | Should -Be $mockParameters.ClusterResources
+                }
+            }
+        }
+
+        Context 'When Ensure is set to ''Absent'' and the preferred owner is not a possible owner of the cluster nodes and the cluster resources' {
+            It 'Should return the correct result' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $mockParameters = @{
+                        ClusterGroup     = 'ClusterGroup1'
+                        ClusterName      = 'ClusterName1'
+                        Nodes            = @('Node4', 'Node5')
+                        ClusterResources = 'Resource1'
+                        Ensure           = 'Absent'
+                    }
+
+                    $result = Get-TargetResource @mockParameters
+
+                    $result.ClusterGroup | Should -Be $mockParameters.ClusterGroup
+                    $result.ClusterName | Should -Be $mockParameters.ClusterName
+                    $result.Ensure | Should -Be $mockParameters.Ensure
+                    $result.Nodes | Should -Not -Be $mockParameters.Nodes
+                    $result.ClusterResources | Should -Be $mockParameters.ClusterResources
+                }
+            }
+        }
+    }
+}
+
+Describe 'ClusterPreferredOwner\Test-TargetResource' -Tag 'Test' {
+    Context 'When the system is not in the desired state' {
+        BeforeAll {
+            Mock -CommandName Get-TargetResource -MockWith {
+                @{
+                    ClusterGroup     = 'ClusterGroup1'
+                    ClusterName      = 'ClusterName1'
+                    Nodes            = @('Node1', 'Node2')
+                    ClusterResources = 'Resource1'
+                    Ensure           = 'Present'
+                }
+            }
+        }
+
+        Context 'When Ensure is set to ''Present'' but the preferred owner is not a possible owner of the cluster nodes and the cluster resources' {
+            It 'Should return the result as $false' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $mockParameters = @{
+                        ClusterGroup     = 'ClusterGroup1'
+                        ClusterName      = 'ClusterName1'
+                        Nodes            = @('Node4', 'Node5')
+                        ClusterResources = 'Resource1'
+                        Ensure           = 'Present'
+                    }
+
+                    Test-TargetResource @mockParameters | Should -BeFalse
+                }
+            }
+        }
+
+        # This test is skipped due to a logic error in the code that needs to be fixed (issue #94).
+        Context 'When Ensure is set to ''Present'' but the preferred owner is a possible owner of the cluster nodes but the cluster resources is missing' {
+            It 'Should return the result as $false' -Skip {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $mockParameters = @{
+                        ClusterGroup     = 'ClusterGroup1'
+                        ClusterName      = 'ClusterName1'
+                        Nodes            = @('Node1', 'Node2')
+                        ClusterResources = 'UnknownResource'
+                        Ensure           = 'Present'
+                    }
+
+                    Test-TargetResource @mockParameters | Should -BeFalse
+                }
+            }
+        }
+
+        Context 'When Ensure is set to ''Absent'' and the preferred owner is still a possible owner of the cluster nodes and the cluster resources' {
+            It 'Should return the result as $false' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $mockParameters = @{
+                        ClusterGroup     = 'ClusterGroup1'
+                        ClusterName      = 'ClusterName1'
+                        Nodes            = @('Node1', 'Node2')
+                        ClusterResources = 'Resource1'
+                        Ensure           = 'Absent'
+                    }
+
+                    Test-TargetResource @mockParameters | Should -BeFalse
+                }
+            }
+        }
+
+        Context 'When Ensure is set to ''Present'' and the preferred owners is a possible owners of the cluster nodes and the cluster resources, but there are one additional preferred owner on the nodes that should not be present' {
+            It 'Should return the result as $false' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $mockParameters = @{
+                        ClusterGroup     = 'ClusterGroup1'
+                        ClusterName      = 'ClusterName1'
+                        Nodes            = @('Node1', 'Node2', 'Node3')
+                        ClusterResources = 'Resource1'
+                        Ensure           = 'Present'
+                    }
+
+                    Test-TargetResource @mockParameters | Should -BeFalse
+                }
+            }
+        }
+    }
+
+    Context 'When the system is in the desired state' {
+        BeforeAll {
+            Mock -CommandName Get-TargetResource -MockWith {
+                @{
+                    ClusterGroup     = 'ClusterGroup1'
+                    ClusterName      = 'ClusterName1'
+                    Nodes            = @('Node1', 'Node2', 'Node3')
+                    ClusterResources = 'Resource1'
+                    Ensure           = 'Present'
+                }
+            }
+        }
+
+        Context 'When Ensure is set to ''Present'' and the preferred owner is a possible owner of the cluster nodes and the cluster resources' {
+            It 'Should return the result as $true ' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $mockParameters = @{
+                        ClusterGroup     = 'ClusterGroup1'
+                        ClusterName      = 'ClusterName1'
+                        Nodes            = @('Node1', 'Node2', 'Node3')
+                        ClusterResources = 'Resource1'
+                        Ensure           = 'Present'
+                    }
+
+                    Test-TargetResource @mockParameters | Should -BeTrue
+                }
+            }
+        }
+
+        Context 'When Ensure is set to ''Absent'' and the preferred owner is not a possible owner of the cluster nodes and the cluster resources' {
+            It 'Should return the result as $true ' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $mockParameters = @{
+                        ClusterGroup     = 'ClusterGroup1'
+                        ClusterName      = 'ClusterName1'
+                        Nodes            = @('Node4', 'Node5')
+                        ClusterResources = 'Resource1'
+                        Ensure           = 'Absent'
+                    }
+
+                    Test-TargetResource @mockParameters | Should -BeTrue
+                }
+            }
+        }
+    }
+}
+
+Describe 'ClusterPreferredOwner\Set-TargetResource' -Tag 'Set' {
+    Context 'When the system is not in the desired state' {
+        BeforeAll {
+            Mock -CommandName Get-ClusterGroup -ParameterFilter {
+                $Cluster -eq 'ClusterName1'
+            } -MockWith {
+                @{
+                    Name      = 'ClusterGroup1'
+                    OwnerNode = 'Node1'
+                    State     = 'Online'
+                }
+            }
+
+            Mock -CommandName Get-ClusterOwnerNode -MockWith {
+                @{
+                    ClusterObject = 'ClusterName1'
+                    OwnerNodes    = @(
+                        @{ name = 'Node1' }
+                        @{ name = 'Node2' }
+                        @{ name = 'Node3' }
+                    )
+                }
+            }
+
+            Mock -CommandName Get-ClusterNode -MockWith {
+                @{
+                    Name = @('Node1', 'Node2')
+                }
+            }
+
+            Mock -CommandName Get-ClusterResource -MockWith {
+                @{
+                    Name         = 'Resource1'
                     State        = 'Online'
                     OwnerGroup   = 'ClusterGroup1'
                     ResourceType = 'type1'
                 }
             }
 
-            Describe "ClusterPreferredOwner_$moduleVersion\Get-TargetResource" {
-                BeforeAll {
-                    Mock -CommandName 'Get-ClusterGroup' -ParameterFilter $mockGetClusterGroup_ParameterFilter -MockWith $mockGetClusterGroup
-                    Mock -CommandName 'Get-ClusterOwnerNode' -MockWith $GetClusterOwnerNode
-                    Mock -CommandName 'Get-ClusterNode' -MockWith $mockGetClusterNode
-                    Mock -CommandName 'Get-ClusterResource' -MockWith $mockGetClusterResource
+            Mock -CommandName Set-ClusterOwnerNode
+            Mock -CommandName Move-ClusterGroup
+        }
+
+        Context 'When Ensure is set to ''Present'' but the preferred owner is not a possible owner of the cluster nodes and the cluster resources' {
+            It 'Should set the preferred owners' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $mockParameters = @{
+                        ClusterGroup     = 'ClusterGroup1'
+                        ClusterName      = 'ClusterName1'
+                        Nodes            = @('Node4', 'Node5')
+                        ClusterResources = 'Resource1'
+                        Ensure           = 'Present'
+                    }
+
+                    { Set-TargetResource @mockParameters } | Should -Not -Throw
                 }
 
-                Context 'When the system is not in the desired state' {
-                    Context 'When Ensure is set to ''Present'' but the preferred owner is not a possible owner of the cluster nodes and the cluster resources' {
-                        It 'Should return the correct type' {
-                            $getTargetResourceResult = Get-TargetResource @mockTestParameters_Present_WrongPreferredOwnerNodes
-                            $getTargetResourceResult | Should -BeOfType [System.Collections.Hashtable]
-                        }
+                # Called three times, one times for each node (2 nodes), and one time for each cluster resource (1 resource).
+                Should -Invoke -CommandName 'Set-ClusterOwnerNode' -Exactly -Times 3 -Scope It
 
-                        It 'Should return the same values as passed as parameters' {
-                            $getTargetResourceResult = Get-TargetResource @mockTestParameters_Present_WrongPreferredOwnerNodes
-                            $getTargetResourceResult.ClusterGroup | Should -Be $mockTestParameters_Present_WrongPreferredOwnerNodes.ClusterGroup
-                            $getTargetResourceResult.ClusterName | Should -Be $mockTestParameters_Present_WrongPreferredOwnerNodes.ClusterName
-                            $getTargetResourceResult.Ensure | Should -Be $mockTestParameters_Present_WrongPreferredOwnerNodes.Ensure
-                        }
-
-                        It 'Should return the wrong preferred owner nodes and the right cluster resources' {
-                            $getTargetResourceResult = Get-TargetResource @mockTestParameters_Present_WrongPreferredOwnerNodes
-                            $getTargetResourceResult.Nodes | Should -Not -Be $mockTestParameters_Present_WrongPreferredOwnerNodes.Nodes
-                            $getTargetResourceResult.ClusterResources | Should -Be $mockTestParameters_Present_WrongPreferredOwnerNodes.ClusterResources
-                        }
-                    }
-
-                    Context 'When Ensure is set to ''Present'' but the preferred owner is a possible owner of the cluster nodes but the cluster resources is missing' {
-                        It 'Should return the same values as passed as parameters' {
-                            $getTargetResourceResult = Get-TargetResource @mockTestParameters_Present_WrongClusterResources
-                            $getTargetResourceResult.ClusterGroup | Should -Be $mockTestParameters_Present_WrongClusterResources.ClusterGroup
-                            $getTargetResourceResult.ClusterName | Should -Be $mockTestParameters_Present_WrongClusterResources.ClusterName
-                            $getTargetResourceResult.Ensure | Should -Be $mockTestParameters_Present_WrongClusterResources.Ensure
-                        }
-
-                        It 'Should return the correct preferred owner nodes and the wrong cluster resources' {
-                            $getTargetResourceResult = Get-TargetResource @mockTestParameters_Present_WrongClusterResources
-                            $getTargetResourceResult.Nodes | Should -Be $mockAllPreferredOwnerNodes
-                            $getTargetResourceResult.ClusterResources | Should -Be $mockTestParameters_Present_WrongClusterResources.ClusterResources
-                        }
-                    }
-
-                    Context 'When Ensure is set to ''Absent'' and the preferred owner is still a possible owner of the cluster nodes and the cluster resources' {
-                        It 'Should return the same values as passed as parameters' {
-                            $getTargetResourceResult = Get-TargetResource @mockTestParameters_Absent_ButPreferredOwnersExist
-                            $getTargetResourceResult.ClusterGroup | Should -Be $mockTestParameters_Absent_ButPreferredOwnersExist.ClusterGroup
-                            $getTargetResourceResult.ClusterName | Should -Be $mockTestParameters_Absent_ButPreferredOwnersExist.ClusterName
-                            $getTargetResourceResult.Ensure | Should -Be $mockTestParameters_Absent_ButPreferredOwnersExist.Ensure
-                        }
-
-                        It 'Should return the correct preferred owner nodes and the wrong cluster resources' {
-                            $getTargetResourceResult = Get-TargetResource @mockTestParameters_Absent_ButPreferredOwnersExist
-                            $getTargetResourceResult.Nodes | Should -Be $mockAllPreferredOwnerNodes
-                            $getTargetResourceResult.ClusterResources | Should -Be $mockTestParameters_Absent_ButPreferredOwnersExist.ClusterResources
-                        }
-                    }
-                }
-
-                Context 'When the system is in the desired state' {
-                    Context 'When Ensure is set to ''Present'' and the preferred owner is a possible owner of the cluster nodes and the cluster resources' {
-                        It 'Should return the same values as passed as parameters' {
-                            $getTargetResourceResult = Get-TargetResource @mockTestParameters_Present_DesiredPreferredOwners
-                            $getTargetResourceResult.ClusterGroup | Should -Be $mockTestParameters_Present_DesiredPreferredOwners.ClusterGroup
-                            $getTargetResourceResult.ClusterName | Should -Be $mockTestParameters_Present_DesiredPreferredOwners.ClusterName
-                            $getTargetResourceResult.Ensure | Should -Be $mockTestParameters_Present_DesiredPreferredOwners.Ensure
-                        }
-
-                        It 'Should return the right preferred owner nodes and the right cluster resources' {
-                            $getTargetResourceResult = Get-TargetResource @mockTestParameters_Present_DesiredPreferredOwners
-                            $getTargetResourceResult.Nodes | Should -Be $mockAllPreferredOwnerNodes
-                            $getTargetResourceResult.ClusterResources | Should -Be $mockTestParameters_Present_DesiredPreferredOwners.ClusterResources
-                        }
-                    }
-
-                    Context 'When Ensure is set to ''Absent'' and the preferred owner is not a possible owner of the cluster nodes and the cluster resources' {
-                        It 'Should return the same values as passed as parameters' {
-                            $getTargetResourceResult = Get-TargetResource @mockTestParameters_Absent_AndPreferredOwnersDoesNotExist
-                            $getTargetResourceResult.ClusterGroup | Should -Be $mockTestParameters_Absent_AndPreferredOwnersDoesNotExist.ClusterGroup
-                            $getTargetResourceResult.ClusterName | Should -Be $mockTestParameters_Absent_AndPreferredOwnersDoesNotExist.ClusterName
-                            $getTargetResourceResult.Ensure | Should -Be $mockTestParameters_Absent_AndPreferredOwnersDoesNotExist.Ensure
-                        }
-
-                        It 'Should return the correct preferred owner nodes and the wrong cluster resources' {
-                            $getTargetResourceResult = Get-TargetResource @mockTestParameters_Absent_AndPreferredOwnersDoesNotExist
-                            $getTargetResourceResult.Nodes | Should -Not -Be $mockTestParameters_Absent_AndPreferredOwnersDoesNotExist.Nodes
-                            $getTargetResourceResult.ClusterResources | Should -Be $mockTestParameters_Absent_AndPreferredOwnersDoesNotExist.ClusterResources
-                        }
-                    }
-                }
+                # Moves the cluster group to the target node (issue #64 open).
+                Should -Invoke -CommandName 'Move-ClusterGroup' -Exactly -Times 1 -Scope It
             }
+        }
 
-            Describe "ClusterPreferredOwner_$moduleVersion\Test-TargetResource" {
-                BeforeAll {
-                    Mock -CommandName 'Get-ClusterGroup' -ParameterFilter $mockGetClusterGroup_ParameterFilter -MockWith $mockGetClusterGroup
-                    Mock -CommandName 'Get-ClusterOwnerNode' -MockWith $GetClusterOwnerNode
-                    Mock -CommandName 'Get-ClusterNode' -MockWith $mockGetClusterNode
-                    Mock -CommandName 'Get-ClusterResource' -MockWith $mockGetClusterResource
+        Context 'When Ensure is set to ''Present'' but the preferred owner is a possible owner of the cluster nodes but the cluster resources is missing' {
+            It 'Should set the preferred owners' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $mockParameters = @{
+                        ClusterGroup     = 'ClusterGroup1'
+                        ClusterName      = 'ClusterName1'
+                        Nodes            = @('Node1', 'Node2')
+                        ClusterResources = 'UnknownResource'
+                        Ensure           = 'Present'
+                    }
+
+                    { Set-TargetResource @mockParameters } | Should -Not -Throw
                 }
 
-                Context 'When the system is not in the desired state' {
-                    Context 'When Ensure is set to ''Present'' but the preferred owner is not a possible owner of the cluster nodes and the cluster resources' {
-                        It 'Should return the result as $false ' {
-                            $testTargetResourceResult = Test-TargetResource @mockTestParameters_Present_WrongPreferredOwnerNodes
-                            $testTargetResourceResult | Should -Be $false
-                        }
-                    }
+                # Called two times, one times for each node (2 nodes), and not called for cluster resource because cluster resource is missing.
+                Should -Invoke -CommandName 'Set-ClusterOwnerNode' -Exactly -Times 2 -Scope It
 
-                    # This test is skipped due to a logic error in the code that needs to be fixed (issue #94).
-                    Context 'When Ensure is set to ''Present'' but the preferred owner is a possible owner of the cluster nodes but the cluster resources is missing' {
-                        It 'Should return the result as $false ' -Skip {
-                            $testTargetResourceResult = Test-TargetResource @mockTestParameters_Present_WrongClusterResources
-                            $testTargetResourceResult | Should -Be $false
-                        }
-                    }
-
-                    Context 'When Ensure is set to ''Absent'' and the preferred owner is still a possible owner of the cluster nodes and the cluster resources' {
-                        It 'Should return the result as $false ' {
-                            $testTargetResourceResult = Test-TargetResource @mockTestParameters_Absent_ButPreferredOwnersExist
-                            $testTargetResourceResult | Should -Be $false
-                        }
-                    }
-
-                    Context 'When Ensure is set to ''Present'' and the preferred owners is a possible owners of the cluster nodes and the cluster resources, but there are one additional preferred owner on the nodes that should not be present' {
-                        It 'Should return the result as $false ' {
-                            $testTargetResourceResult = Test-TargetResource @mockTestParameters_Present_DesiredPreferredOwners
-                            $testTargetResourceResult | Should -Be $false
-                        }
-                    }
-                }
-
-                Context 'When the system is in the desired state' {
-                    Context 'When Ensure is set to ''Present'' and the preferred owner is a possible owner of the cluster nodes and the cluster resources' {
-                        It 'Should return the result as $true ' {
-                            $testTargetResourceResult = Test-TargetResource @mockTestParameters_Present_AllPreferredOwners
-                            $testTargetResourceResult | Should -Be $true
-                        }
-                    }
-
-                    Context 'When Ensure is set to ''Absent'' and the preferred owner is not a possible owner of the cluster nodes and the cluster resources' {
-                        It 'Should return the result as $true ' {
-                            $testTargetResourceResult = Test-TargetResource @mockTestParameters_Absent_AndPreferredOwnersDoesNotExist
-                            $testTargetResourceResult | Should -Be $true
-                        }
-                    }
-                }
+                # Moves the cluster group to the target node (issue #64 open).
+                Should -Invoke -CommandName 'Move-ClusterGroup' -Exactly -Times 1 -Scope It
             }
+        }
 
-            Describe "ClusterPreferredOwner_$moduleVersion\Set-TargetResource" {
-                BeforeAll {
-                    Mock -CommandName 'Get-ClusterGroup' -ParameterFilter $mockGetClusterGroup_ParameterFilter -MockWith $mockGetClusterGroup
-                    Mock -CommandName 'Get-ClusterOwnerNode' -MockWith $GetClusterOwnerNode
-                    Mock -CommandName 'Get-ClusterNode' -MockWith $mockGetClusterNode
-                    Mock -CommandName 'Get-ClusterResource' -MockWith $mockGetClusterResource
-                    Mock -CommandName 'Set-ClusterOwnerNode'
-                    Mock -CommandName 'Move-ClusterGroup'
+        Context 'When Ensure is set to ''Absent'' and the preferred owner is still a possible owner of the cluster nodes and the cluster resources' {
+            It 'Should remove the preferred owners, leaving one preferred owner' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $mockParameters = @{
+                        ClusterGroup     = 'ClusterGroup1'
+                        ClusterName      = 'ClusterName1'
+                        Nodes            = @('Node1', 'Node2')
+                        ClusterResources = 'Resource1'
+                        Ensure           = 'Absent'
+                    }
+
+                    { Set-TargetResource @mockParameters } | Should -Not -Throw
                 }
 
-                Context 'When the system is not in the desired state' {
-                    Context 'When Ensure is set to ''Present'' but the preferred owner is not a possible owner of the cluster nodes and the cluster resources' {
-                        It 'Should set the preferred owners' {
-                            { Set-TargetResource @mockTestParameters_Present_WrongPreferredOwnerNodes } | Should -Not -Throw
+                # Called two times, one times for each node (2 nodes), and one time for each cluster resource (1 resource).
+                Should -Invoke -CommandName 'Set-ClusterOwnerNode' -Exactly -Times 3 -Scope It
 
-                            # Called three times, one times for each node (2 nodes), and one time for each cluster resource (1 resource).
-                            Assert-MockCalled -CommandName 'Set-ClusterOwnerNode' -Exactly -Times 3 -Scope It
-
-                            # Moves the cluster group to the target node (issue #64 open).
-                            Assert-MockCalled -CommandName 'Move-ClusterGroup' -Exactly -Times 1 -Scope It
-                        }
-                    }
-
-                    Context 'When Ensure is set to ''Present'' but the preferred owner is a possible owner of the cluster nodes but the cluster resources is missing' {
-                        It 'Should set the preferred owners' {
-                            { Set-TargetResource @mockTestParameters_Present_WrongClusterResources } | Should -Not -Throw
-
-                            # Called two times, one times for each node (2 nodes), and not called for cluster resource because cluster resource is missing.
-                            Assert-MockCalled -CommandName 'Set-ClusterOwnerNode' -Exactly -Times 2 -Scope It
-
-                            # Moves the cluster group to the target node (issue #64 open).
-                            Assert-MockCalled -CommandName 'Move-ClusterGroup' -Exactly -Times 1 -Scope It
-                        }
-                    }
-
-                    Context 'When Ensure is set to ''Absent'' and the preferred owner is still a possible owner of the cluster nodes and the cluster resources' {
-                        It 'Should remove the preferred owners, leaving one preferred owner' {
-                            { Set-TargetResource @mockTestParameters_Absent_ButPreferredOwnersExist } | Should -Not -Throw
-
-                            # Called two times, one times for each node (2 nodes), and one time for each cluster resource (1 resource).
-                            Assert-MockCalled -CommandName 'Set-ClusterOwnerNode' -Exactly -Times 3 -Scope It
-
-                            # Moves the cluster group to the target node (issue #64 open).
-                            Assert-MockCalled -CommandName 'Move-ClusterGroup' -Exactly -Times 1 -Scope It
-                        }
-                    }
-                }
-
-                Context 'When the system is in the desired state' {
-                    # This tests wrongly calls Set-ClusterOwnerNode and Move-ClusterGroup. See issue #97.
-                    Context 'When Ensure is set to ''Present'' and the preferred owner is a possible owner of the cluster nodes and the cluster resources' {
-                        It 'Should do nothing' {
-                            { Set-TargetResource @mockTestParameters_Present_AllPreferredOwners } | Should -Not -Throw
-
-                            # Called two times, one times for each node (2 nodes), and one time for each cluster resource (1 resource).
-                            Assert-MockCalled -CommandName 'Set-ClusterOwnerNode' -Exactly -Times 3 -Scope It
-
-                            # Moves the cluster group to the target node (issue #64 open).
-                            Assert-MockCalled -CommandName 'Move-ClusterGroup' -Exactly -Times 1 -Scope It
-                        }
-                    }
-
-                    # This tests wrongly calls Set-ClusterOwnerNode and Move-ClusterGroup. See issue #97.
-                    Context 'When Ensure is set to ''Absent'' and the preferred owner is not a possible owner of the cluster nodes and the cluster resources' {
-                        It 'Should do nothing' {
-                            { Set-TargetResource @mockTestParameters_Absent_AndPreferredOwnersDoesNotExist } | Should -Not -Throw
-
-                            # Called two times, one times for each node (2 nodes), and one time for each cluster resource (1 resource).
-                            Assert-MockCalled -CommandName 'Set-ClusterOwnerNode' -Exactly -Times 3 -Scope It
-
-                            # Moves the cluster group to the target node (issue #64 open).
-                            Assert-MockCalled -CommandName 'Move-ClusterGroup' -Exactly -Times 1 -Scope It
-                        }
-                    }
-                }
+                # Moves the cluster group to the target node (issue #64 open).
+                Should -Invoke -CommandName 'Move-ClusterGroup' -Exactly -Times 1 -Scope It
             }
         }
     }
-    finally
-    {
-        Invoke-TestCleanup
+
+    Context 'When the system is in the desired state' {
+        BeforeAll {
+            Mock -CommandName Get-ClusterGroup -ParameterFilter {
+                $Cluster -eq 'ClusterName1'
+            } -MockWith {
+                @{
+                    Name      = 'ClusterGroup1'
+                    OwnerNode = 'Node1'
+                    State     = 'Online'
+                }
+            }
+
+            Mock -CommandName Get-ClusterOwnerNode -MockWith {
+                @{
+                    ClusterObject = 'ClusterName1'
+                    OwnerNodes    = @(
+                        @{ name = 'Node1' }
+                        @{ name = 'Node2' }
+                        @{ name = 'Node3' }
+                    )
+                }
+            }
+
+            Mock -CommandName Get-ClusterNode -MockWith {
+                @{
+                    Name = @('Node1', 'Node2')
+                }
+            }
+
+            Mock -CommandName Get-ClusterResource -MockWith {
+                @{
+                    Name         = 'Resource1'
+                    State        = 'Online'
+                    OwnerGroup   = 'ClusterGroup1'
+                    ResourceType = 'type1'
+                }
+            }
+
+            Mock -CommandName Set-ClusterOwnerNode
+            Mock -CommandName Move-ClusterGroup
+        }
+
+        # This tests wrongly calls Set-ClusterOwnerNode and Move-ClusterGroup. See issue #97.
+        Context 'When Ensure is set to ''Present'' and the preferred owner is a possible owner of the cluster nodes and the cluster resources' {
+            It 'Should do nothing' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $mockParameters = @{
+                        ClusterGroup     = 'ClusterGroup1'
+                        ClusterName      = 'ClusterName1'
+                        Nodes            = @('Node1', 'Node2', 'Node3')
+                        ClusterResources = 'Resource1'
+                        Ensure           = 'Present'
+                    }
+
+                    { Set-TargetResource @mockParameters } | Should -Not -Throw
+                }
+
+                # Called two times, one times for each node (2 nodes), and one time for each cluster resource (1 resource).
+                Should -Invoke -CommandName Set-ClusterOwnerNode -Exactly -Times 3 -Scope It
+
+                # Moves the cluster group to the target node (issue #64 open).
+                Should -Invoke -CommandName Move-ClusterGroup -Exactly -Times 1 -Scope It
+            }
+        }
+
+        # This tests wrongly calls Set-ClusterOwnerNode and Move-ClusterGroup. See issue #97.
+        Context 'When Ensure is set to ''Absent'' and the preferred owner is not a possible owner of the cluster nodes and the cluster resources' {
+            It 'Should do nothing' {
+                InModuleScope -ScriptBlock {
+                    Set-StrictMode -Version 1.0
+
+                    $mockParameters = @{
+                        ClusterGroup     = 'ClusterGroup1'
+                        ClusterName      = 'ClusterName1'
+                        Nodes            = @('Node4', 'Node5')
+                        ClusterResources = 'Resource1'
+                        Ensure           = 'Absent'
+                    }
+
+                    { Set-TargetResource @mockParameters } | Should -Not -Throw
+                }
+
+                # Called two times, one times for each node (2 nodes), and one time for each cluster resource (1 resource).
+                Should -Invoke -CommandName 'Set-ClusterOwnerNode' -Exactly -Times 3 -Scope It
+
+                # Moves the cluster group to the target node (issue #64 open).
+                Should -Invoke -CommandName 'Move-ClusterGroup' -Exactly -Times 1 -Scope It
+            }
+        }
     }
 }

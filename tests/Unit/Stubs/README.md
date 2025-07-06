@@ -8,8 +8,8 @@ the cmdlet or function installed.
 
 ## How to
 
->**NOTE!** The stubs have been altered after that the modules have been
->generated. How they were altered is described in the below procedure.
+>**NOTE!** The stubs have been altered after the modules were generated.
+>How they were altered is described in the below procedure.
 
 Install the module 'Indented.StubCommand' from PowerShell Gallery.
 
